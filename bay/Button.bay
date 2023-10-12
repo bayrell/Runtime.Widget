@@ -1,0 +1,131 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Button">
+
+<use name="Runtime.Core.Message" />
+<use name="Runtime.Web.LayoutModel" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+
+<style>
+.web_button{
+	padding: 0.5em 1em;
+	font-size: 1rem;
+	cursor: pointer;
+	background-color: ${ vars["button", "default", "background"] };
+	border: 1px ${ vars["button", "default", "border"] } solid;
+	color: ${ vars["button", "default", "text"] };
+	/*box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);*/
+	outline: 0;
+	line-height: normal;
+}
+.web_button:hover{
+	background-color: ${ vars["button", "default", "hover_bg"] };
+	border: 1px ${ vars["button", "default", "border"] } solid;
+	color: ${ vars["button", "default", "hover_text"] };
+}
+.web_button:active{
+	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
+}
+.web_button.primary{
+	background-color: ${ vars["button", "primary", "background"] };
+	border: 1px ${ vars["button", "primary", "border"] } solid;
+	color: ${ vars["button", "primary", "text"] };
+}
+.web_button.primary:hover{
+	background-color: ${ vars["button", "primary", "hover_bg"] };
+	border: 1px ${ vars["button", "primary", "hover_border"] } solid;
+	color: ${ vars["button", "primary", "hover_text"] };
+}
+.web_button.danger{
+	background-color: ${ vars["button", "danger", "background"] };
+	border: 1px ${ vars["button", "danger", "border"] } solid;
+	color: ${ vars["button", "danger", "text"] };
+}
+.web_button.danger:hover{
+	background-color: ${ vars["button", "danger", "hover_bg"] };
+	border: 1px ${ vars["button", "danger", "hover_border"] } solid;
+	color: ${ vars["button", "danger", "hover_text"] };
+}
+.web_button.success{
+	background-color: ${ vars["button", "success", "background"] };
+	border: 1px ${ vars["button", "success", "border"] } solid;
+	color: ${ vars["button", "success", "text"] };
+}
+.web_button.success:hover{
+	background-color: ${ vars["button", "success", "hover_bg"] };
+	border: 1px ${ vars["button", "success", "hover_border"] } solid;
+	color: ${ vars["button", "success", "hover_text"] };
+}
+.web_button.green{
+	background-color: ${ vars["button", "green", "background"] };
+	border: 1px ${ vars["button", "green", "border"] } solid;
+	color: ${ vars["button", "green", "text"] };
+}
+.web_button.green:hover{
+	background-color: ${ vars["button", "green", "hover_bg"] };
+	border: 1px ${ vars["button", "green", "hover_border"] } solid;
+	color: ${ vars["button", "green", "hover_text"] };
+}
+.web_button.small{
+	padding: 0.35rem 0.7rem;
+	font-size: 0.95rem;
+}
+.web_button.large{
+	padding: 0.75em 1.5em;
+	font-size: 1.2rem;
+}
+</style>
+
+
+<template name="render">
+	%set string href = render_params["href"];
+	%if (href == null)
+	{
+		<button class="web_button" class={{ render_params["type"] |> default string "button" }}
+			@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
+		>
+			%render render_content;
+		</button>
+	}
+	%else
+	{
+		<a class="nolink web_button__href" href={{ href }}>
+			<button class="web_button" class={{ render_params["type"] |> default string "button" }}
+				@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
+			>
+				%render render_content;
+			</button>
+		</a>
+	}
+</template>
+
+
+<script>
+
+/**
+ * Mouse click event
+ */
+async void onClick(Message<MouseClickEvent> msg)
+{
+	await this.sendEvent(msg.event);
+}
+
+</script>
+
+</class>

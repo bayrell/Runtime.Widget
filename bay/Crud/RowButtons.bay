@@ -1,0 +1,77 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Web.Crud.RowButtons">
+
+
+<use name="Runtime.Core.Message" />
+<use name="Runtime.Web.FormEvent" />
+<use name="Runtime.Web.RenderProvider" />
+<use name="Runtime.Web.Events.ChangeEvent" />
+<use name="Runtime.Web.Events.ChangeEvent" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Web.Crud.Button" />
+<use name="Runtime.Web.Crud.Helper" />
+
+
+<style>
+.row_buttons %(Button)web_button{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+</style>
+
+
+<template name="renderButton" args="Dict button, int index">
+	%set Collection value = render_params["value"];
+	<Button type={{ button["type"] }} name={{ button["name"] }}
+		@event:MouseClickEvent="onButtonClick"
+		href={{ button["link"] == 1 ? value[index] : null }}
+	>
+		{{ button["label"] }}
+	</Button>
+</template>
+
+
+<template>
+	%set Collection<Dict> buttons = render_params["buttons"];
+	%if (buttons)
+	{
+		<div class="row_buttons">
+		%for (int i=0; i<buttons.count(); i++)
+		{
+			%render static::renderButton(buttons[i], i);
+		}
+		</div>
+	}
+</template>
+
+
+<script>
+
+/**
+ * Button click
+ */
+public void onButtonClick(Message<MouseClickEvent> msg)
+{
+}
+
+</script>
+
+
+</class>
