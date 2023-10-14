@@ -16,13 +16,13 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.Select">
+<class name="Runtime.Widget.Select">
 
 
 <use name="Runtime.Core.Message" />
 <use name="Runtime.Web.RenderProvider" />
 <use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.Crud.Helper" />
+<use name="Runtime.Widget.Helper" />
 
 
 <style>
@@ -73,6 +73,7 @@
 			</option>
 		}
 	}
+	
 	</select>
 	
 </template>

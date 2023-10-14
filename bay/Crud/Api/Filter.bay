@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,26 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Web.Crud.SavePage">
+namespace Runtime.Widget.Crud.Api;
 
-<use name="Runtime.ModelProxy" />
-<use name="Runtime.Web.LayoutModel" />
-<use name="Runtime.Web.Message" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Form.FormCrud" component="true" />
-
-
-<template name="renderTop">
-	<h1>{{ model.getWidget("form").getPageTitle( model.action ) }}</h1>
-</template>
+use Runtime.lib;
+use Runtime.BaseStruct;
+use Runtime.ORM.Cursor;
+use Runtime.ORM.Database;
+use Runtime.ORM.Query;
+use Runtime.Web.ApiResult;
+use Runtime.Web.Crud.Api.CrudApi;
+use Runtime.Web.Crud.Api.CrudRule;
 
 
-<template name="render">
-	%render static::renderTop();
-	<FormCrud @model=["widgets", "form"] />
-</template>
-
-
-</class>
+struct Filter extends CrudRule
+{
+	string api_name = "";
+	string field_name = "";	
+}

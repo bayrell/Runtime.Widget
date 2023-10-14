@@ -1,0 +1,259 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Form;
+
+use Runtime.ModelProxy;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.BaseModel;
+use Runtime.Web.Bus;
+use Runtime.Widget.FieldInfo;
+
+
+struct FormModel extends BaseModel
+{
+	Dict item = null;
+	int error_code = 0;
+	string api_name = "";
+	string error_message = "";
+	string route_class = "";
+	Dict field_result = null;
+	Dict fields = {};
+	Collection fields_list = [];
+	
+	
+	/**
+	 * Set page
+	 */
+	FormModel setApiName(string api_name) => this.clone({ "api_name": api_name });
+	
+	
+	/**
+	 * Set route class
+	 */
+	FormModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
+	
+	
+	/**
+	 * Set item
+	 */
+	FormModel setItem(Dict item)
+	{
+		return this.clone({ "item": item });
+	}
+	
+	
+	/**
+	 * Clear item
+	 */
+	FormModel clearItem()
+	{
+		return this.clone({ "item": {} });
+	}
+	
+	
+	/**
+	 * Add field
+	 */
+	FormModel addField(FieldInfo field)
+	{
+		Dict fields = this.fields;
+		string field_name = field.name;
+		fields <= { field_name } <= field;
+		return this.clone{
+			"fields": fields,
+		}
+	}
+	
+	
+	/**
+	 * Setup field options
+	 */
+	FormModel setFieldOptions(string field_name, Collection options)
+	{
+		Dict fields = this.fields;
+		fields <= { field_name } <= options <= options;
+		return this.clone{
+			"fields": fields,
+		}
+	}
+	
+	
+	/**
+	 * Set fields list
+	 */
+	FormModel setFieldsList(Collection fields_list) => this.clone{
+		"fields_list": fields_list,
+	};
+	
+	
+	/**
+	 * Set wait message
+	 */
+	FormModel setWaitMessage()
+	{
+		FormModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "Wait please ...";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Clear error message
+	 */
+	FormModel clearErrorMessage()
+	{
+		FormModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Message
+	 */
+	FormModel setMessage(string error_message) => this.copy
+	{
+		"error_message": error_message,
+	};
+	
+	
+	/**
+	 * Success
+	 */
+	FormModel setSuccess(string error_message, int error_code = 1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Error
+	 */
+	FormModel setError(string error_message, int error_code = -1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Returns true if error
+	 */
+	bool isError() => this.error_code < 0;
+	
+	
+	/**
+	 * Returns true if success
+	 */
+	bool isSuccess() => this.error_code > 0;
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string event, ApiResult res)
+	{
+		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+	}
+	
+	
+	/**
+	 * Returns form class
+	 */
+	string getErrorClass()
+	{
+		if (this.error_message == "") return "web_form__result--hide";
+		if (this.error_code > 0) return "web_form__result--success";
+		if (this.error_code < 0) return "web_form__result--error";
+		return "";
+	}
+	
+	
+	/**
+	 * Get field result
+	 */
+	Collection<string> getFieldResult(string field_name)
+	{
+		if (this.field_result == null) return [];
+		if (not this.field_result.has(field_name)) return [];
+		return this.field_result[field_name];
+	}
+	
+	
+	/**
+	 * Set field result
+	 */
+	FormModel setFieldResult(Dict field_result) => this.clone{
+		"field_result": field_result,
+	};
+	
+	
+	/**
+	 * Init widget
+	 */
+	async void initWidget(ModelProxy<FormModel> model, BaseRoute route)
+	{
+		model.commit("clearItem");
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async static ApiResult doSave(ModelProxy model)
+	{
+		Dict item_pk = model.data("item_pk");
+		Dict item = model.data("item");
+		
+		Dict post_data = {
+			"pk": item_pk,
+			"item": item,
+		};
+		
+		/* Send api */
+		ApiResult res = await static::callApiSave(model, post_data);
+		
+		/* Set api result */
+		model.commit("setApiResult", "save", res);
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 *
+	string getSaveApiName() => this.api_name ~ "::form.save";
+	
+	
+	/**
+	 * Call api save
+	 */
+	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getSaveApiName"), post_data);
+	}
+	
+}

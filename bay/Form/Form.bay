@@ -1,0 +1,150 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Form.Form">
+
+<use name="Runtime.ModelProxy" />
+<use name="Runtime.Web.LayoutModel" />
+<use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.ChangeEvent" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Widget.Button" />
+
+
+<template name="renderField" args="string class_name, FieldInfo params">
+	
+	%set string field_name = params.field_name;
+	%set Collection options = params.options;
+	%set Dict component_settings = params.component_settings;
+	
+	<{class_name}
+		name={{ field_name }}
+		options={{ options }}
+		@model={{ ["item"].concat( field_name ) }}
+		@event:ChangeEvent="onFieldChange"
+		...component_settings
+	/>
+	
+</template>
+
+
+<template name="renderRow" args="string class_name, FieldInfo params">
+	
+	%set string field_name = params.field_name;
+	
+	<div class="web_form__row" @key={{ field_name }}>
+		
+		<label class="web_form__row_label">{{ params.label }}</label>
+		
+		%render static::renderField(class_name, params);
+		
+		%set Collection<string> field_result = model.getFieldResult(field_name);
+		%if (field_result.count() == 0)
+		{
+			<div class="web_form__field_result web_form__field_result--hide"
+				data-name={{ field_name }} @key="result1"></div>
+		}
+		%else
+		{
+			<div class="web_form__field_result" data-name={{ field_name }} @key="result2">
+				%for (int i=0; i<field_result.count(); i++)
+				{
+					<div>{{ field_result[i] }}</div>
+				}
+			</div>
+		}
+		
+	</div>
+	
+</template>
+
+
+<template name="renderContent">
+	<div class="web_form__content">
+	</div>
+</template>
+
+
+<template name="renderButtons">
+	<div class="web_form__buttons">
+		<Button type="primary large" @event:MouseClickEvent="onSaveClick">Save</Button>
+	</div>
+</template>
+
+
+<template name="renderForm">
+	%if (model.item != null)
+	{
+		<form class="web_form web_form--save" method="POST"
+			enctype="multipart/form-data" onsubmit="return false;"
+		>
+			%render static::renderContent();
+			%render static::renderButtons();
+			%render static::renderResult();
+		</form>
+	}
+	%else
+	{
+		<div class="web_form__item_not_found">
+			Item not found
+		</div>
+	}
+</template>
+
+
+<template name="renderResult">
+	<div class="web_form__result" class={{ model.getErrorClass() }} >
+		{{ model.error_message }}
+	</div>
+</template>
+
+
+<template name="render">
+	%render static::renderForm();
+</template>
+
+
+<script>
+
+/**
+ * Save click
+ */
+async void onSaveClick(Message<MouseClickEvent> msg)
+{
+	ModelProxy model = this.modelProxy();
+	
+	/* Set wait message */
+	model.commit("setWaitMessage");
+	
+	/* Send delete form */
+	await model.commitAsync("doSave");
+}
+
+
+/**
+ * On change event
+ */
+async void onFieldChange(Message<MouseClickEvent> msg)
+{
+}
+
+
+</script>
+
+
+</class>

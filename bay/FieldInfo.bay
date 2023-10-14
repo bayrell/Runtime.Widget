@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2020 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,20 +16,34 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Tab;
+namespace Runtime.Widget;
 
+use Runtime.lib;
 use Runtime.BaseStruct;
 
 
-struct TabModel extends BaseStruct
+struct FieldInfo extends BaseStruct
 {
-    string active = "";
+	/* Common info */
+	string description = "";
+	string name = "";
+	string label = "";
+	var default = null;
+
+	/* Field component settings */
+	Dict component_settings = {};
     
-    
-    /**
-     * Set active
-     */
-    TabModel setActive(string active) => this.clone{"active": active};
-    TabModel setTab(string active) => this.clone{"active": active}; 
-    
+    /* Options for select */
+	Collection<Dict> options = null;
+	
+	
+	/**
+	 * Returns options label
+	 */
+	string getOptionLabel(var value)
+	{
+		Dict option = this.options.findItem( lib::equalAttr("value", value) );
+		if (option == null) return "";
+		return option["label"];
+	}
 }

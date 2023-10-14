@@ -16,13 +16,12 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.RowNumber">
+<class name="Runtime.Widget.RowNumber">
 
 
 <use name="Runtime.Core.Message" />
 <use name="Runtime.Web.RenderProvider" />
 <use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.Crud.Helper" />
 
 
 <template>

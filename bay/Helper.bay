@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Web.Crud;
+namespace Runtime.Widget;
 
 use Runtime.Web.App.LayoutModel;
 

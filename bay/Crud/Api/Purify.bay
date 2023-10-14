@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,26 +14,40 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Web.Crud.SavePage">
+namespace Runtime.Widget.Crud.Api;
 
-<use name="Runtime.ModelProxy" />
-<use name="Runtime.Web.LayoutModel" />
-<use name="Runtime.Web.Message" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Form.FormCrud" component="true" />
-
-
-<template name="renderTop">
-	<h1>{{ model.getWidget("form").getPageTitle( model.action ) }}</h1>
-</template>
+use Runtime.re;
+use Runtime.BaseStruct;
+use Runtime.Widget.Crud.Api.CrudApi;
+use Runtime.Widget.Crud.Api.CrudRule;
 
 
-<template name="render">
-	%render static::renderTop();
-	<FormCrud @model=["widgets", "form"] />
-</template>
-
-
-</class>
+struct Purify extends CrudRule
+{
+	string name = "";
+	
+	
+	/**
+	 * Purify item
+	 */
+	string purify(string value)
+	{
+		value = re::replace("^[a-z0-9_\-\.\@]$", "", value);
+		return value;
+	}
+	
+	
+	/**
+	 * Validate item
+	 */
+	async Dict validateItem(CrudApi api, Dict update_data)
+	{
+		var value = update_data[this.name];
+		value = this.purify(value);
+		update_data <= { this.name } <= value;
+		return update_data;
+	}
+	
+}

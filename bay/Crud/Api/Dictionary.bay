@@ -1,0 +1,84 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud.Api;
+
+use Runtime.lib;
+use Runtime.BaseStruct;
+use Runtime.ORM.Connection;
+use Runtime.ORM.Query;
+use Runtime.ORM.Relation;
+use Runtime.ORM.RelationArray;
+use Runtime.ORM.Annotations.ForeignKey as ForeignKeyORM;
+use Runtime.Web.ApiResult;
+use Runtime.Widget.Crud.CrudApi;
+use Runtime.Widget.Crud.Api.CrudRule;
+
+
+struct Dictionary extends CrudRule
+{
+	string dictionary_name = "";
+	string table_name = "";
+	string model_name = "";
+	fn query = null;
+	
+	
+	/**
+	 * Search final event
+	 */
+	async void onSearchFinal(CrudApi api)
+	{
+		if (this.dictionary_name == "") return ;
+		
+		/* Check action */
+		if (api.action != "actionSearch" and api.action != "actionItem")
+		{
+			return;
+		}
+		
+		Connection conn = api.getDatabaseConnection();
+		RelationArray result = null;
+		
+		/* Get item */
+		if (api.action == "actionItem")
+		{
+			Query q = new Query
+				|> .select(this.table_name)
+			;
+			
+			if (this.query != null)
+			{
+				fn f = this.query;
+				q = await f(api, q);
+			}
+			
+			RelationArray result = await conn.fetchAll(q);
+			api.dictionary.setValue(this.dictionary_name, result);
+		}
+		
+		/* Transform items */
+		Collection items = null;
+		if (result and this.model_name != "")
+		{
+			items = result.toModel(this.model_name);
+			
+			/* Set dictionary result */
+			api.container.setDictionary(this.dictionary_name, items);
+		}
+	}
+}

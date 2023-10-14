@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.TabItem">
+<class name="Runtime.Widget.Tab.TabItem">
 
 <style>
 .tabs__content_item{

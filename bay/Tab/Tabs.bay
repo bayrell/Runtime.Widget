@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.Tabs">
+<class name="Runtime.Widget.Tab">
 
 <use name="Runtime.Core.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />

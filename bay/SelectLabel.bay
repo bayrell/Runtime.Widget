@@ -16,11 +16,11 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.SelectLabel">
+<class name="Runtime.Widget.SelectLabel">
 
 <use name="Runtime.Core.Message" />
 <use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Web.Crud.Helper" />
+<use name="Runtime.Widget.Helper" />
 
 
 <style>

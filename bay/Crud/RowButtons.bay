@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.RowButtons">
+<class name="Runtime.Widget.Crud.RowButtons">
 
 
 <use name="Runtime.Core.Message" />
@@ -25,8 +25,8 @@
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Web.Crud.Button" />
-<use name="Runtime.Web.Crud.Helper" />
+<use name="Runtime.Widget.Button" />
+<use name="Runtime.Widget.Helper" />
 
 
 <style>

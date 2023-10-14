@@ -95,9 +95,10 @@
 
 <template name="render">
 	%set string href = render_params["href"];
+	%set string button_type = render_params["type"] |> default string "button";
 	%if (href == null)
 	{
-		<button class="web_button" class={{ render_params["type"] |> default string "button" }}
+		<button class="web_button" class={{ button_type }}
 			@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
 		>
 			%render render_content;
@@ -106,7 +107,7 @@
 	%else
 	{
 		<a class="nolink web_button__href" href={{ href }}>
-			<button class="web_button" class={{ render_params["type"] |> default string "button" }}
+			<button class="web_button" class={{ button_type }}
 				@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
 			>
 				%render render_content;

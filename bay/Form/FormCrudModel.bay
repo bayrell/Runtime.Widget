@@ -1,0 +1,228 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Form;
+
+use Runtime.ModelProxy;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.BaseWidget;
+use Runtime.Web.Bus;
+use Runtime.Widget.Form.FormModel;
+
+
+struct FormCrudModel extends FormModel
+{
+	Dict item_pk = null;
+	Dict dictionary = {};
+	bool is_loading = false;
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey()
+	{
+		return this.item_pk;
+	}
+	
+	
+	/**
+	 * Set primary key
+	 */
+	FormCrudModel setPrimaryKey(Dict item_pk)
+	{
+		return this.clone({ "item_pk": item_pk });
+	}
+	
+	
+	/**
+	 * Set loading
+	 */
+	FormCrudModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string event, ApiResult res)
+	{
+		if (res.isSuccess())
+		{
+			Dict item = res["data", "item"];
+			model.commit("setItem", item);
+			
+			Dict pk = res["data", "pk"];
+			model.commit("setPrimaryKey", pk);
+		}
+		
+		/* Set validation result */
+		if (res.data != null and res.data.has("field_result"))
+		{
+			model.commit("setFieldResult", res.data["field_result"]);
+		}
+		else
+		{
+			model.commit("setFieldResult", null);
+		}
+		
+		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Set dictionary
+	 */
+	FormCrudModel setDictionary(ApiResult res)
+	{
+	}
+	
+	
+	/**
+	 * Returns true if form is new
+	 */
+	bool isNew() => this.item_pk == null;
+	
+	
+	/**
+	 * Init widget
+	 */
+	async void initWidget(ModelProxy<FormCrudModel> model, BaseRoute route)
+	{
+		Dict item_pk = model.data("item_pk");
+		if (item_pk != null)
+		{
+			model.commit("clearItem");
+		}
+		else
+		{
+			model.commitAsync("doLoadItem");
+		}
+	}
+	
+	
+	/**
+	 * Load item
+	 */
+	async static ApiResult doLoadItem(ModelProxy model)
+	{
+		/* Setup loading */
+		model.commit("setLoading", true);
+		
+		/* Get post data */
+		Dict item_pk = model.data("item_pk");
+		Dict post_data = {
+			"pk": item_pk,
+		};
+		
+		/* Send api */
+		ApiResult res = await static::callApiItem(model, post_data);
+		
+		/* Set api result */
+		model.commit("setLoading", false);
+		model.commit("setApiResult", "item", res);
+		model.commit("setDictionary", res);
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 *
+	string getItemApiName() => this.api_name ~ "::crud.item";
+	
+	
+	/**
+	 * Call api item
+	 */
+	async static ApiResult callApiItem(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getItemApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async static ApiResult doSave(ModelProxy model)
+	{
+		Dict item_pk = model.data("item_pk");
+		Dict item = model.data("item");
+		
+		Dict post_data = {
+			"pk": item_pk,
+			"item": item,
+		};
+		
+		/* Send api */
+		ApiResult res = await static::callApiSave(model, post_data);
+		
+		/* Set api result */
+		model.commit("setApiResult", "save", res);
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 *
+	string getSaveApiName() => this.api_name ~ "::crud.save";
+	
+	
+	/**
+	 * Call api save
+	 */
+	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getSaveApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Delete item
+	 */
+	async static ApiResult doDelete(ModelProxy model)
+	{
+		Dict item_pk = model.data("item_pk");
+		Dict post_data = {
+			"pk": item_pk,
+		};
+		
+		/* Send api */
+		ApiResult res = await static::callApiDelete(model, post_data);
+		
+		/* Set api result */
+		model.commit("setApiResult", "delete", res);
+	}
+	
+	
+	/**
+	 * Returns delete api name
+	 *
+	string getDeleteApiName() => this.api_name ~ "::crud.delete";
+	
+	
+	/**
+	 * Call api delete
+	 */
+	async static ApiResult callApiDelete(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getDeleteApiName"), post_data);
+	}
+	
+}

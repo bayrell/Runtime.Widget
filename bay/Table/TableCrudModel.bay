@@ -1,0 +1,322 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Table;
+
+use Runtime.ModelProxy;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.BaseModel;
+use Runtime.Web.Bus;
+use Runtime.Widget.FieldInfo;
+
+
+struct TableCrudModel extends BaseModel
+{
+	int error_code = 0;
+	string api_name = "";
+	string error_message = "";
+	string route_class = "";
+	Dict fields = {};
+	Collection fields_list = [];
+	Dict dictionary = {};
+	bool is_loading = false;
+	
+	int page = 0;
+	int pages = 0;
+	int limit = 10;
+	Collection<Dict> items = null;
+	Dict search_data = null;
+	
+	
+	/**
+	 * Set page
+	 */
+	TableCrudModel setApiName(string api_name) => this.clone({ "api_name": api_name });
+	
+	
+	/**
+	 * Set route class
+	 */
+	TableCrudModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
+	
+	
+	/**
+	 * Set dictionary
+	 */
+	TableCrudModel setDictionary(ApiResult res)
+	{
+	}
+	
+	
+	/**
+	 * Set search data
+	 */
+	TableCrudModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
+	
+	
+	/**
+	 * Set page
+	 */
+	TableCrudModel setPage(int page = 0) => this.clone({ "page": page });
+	
+	
+	/**
+	 * Set pages
+	 */
+	TableCrudModel setPages(int pages = 0) => this.clone({ "pages": pages });
+	
+	
+	/**
+	 * Set limit
+	 */
+	TableCrudModel setLimit(int limit = 10) => this.clone({ "limit": limit });
+	
+	
+	/**
+	 * Set loading
+	 */
+	TableCrudModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
+	
+	
+	/**
+	 * Set items
+	 */
+	TableCrudModel setItems(Collection items) => this.clone({ "items": items });
+	
+	
+	/**
+	 * Add field
+	 */
+	TableCrudModel addField(FieldInfo field)
+	{
+		Dict fields = this.fields;
+		string field_name = field.name;
+		fields <= { field_name } <= field;
+		return this.clone{
+			"fields": fields,
+		}
+	}
+	
+	
+	/**
+	 * Setup field options
+	 */
+	TableCrudModel setFieldOptions(string field_name, Collection options)
+	{
+		Dict fields = this.fields;
+		fields <= { field_name } <= options <= options;
+		return this.clone{
+			"fields": fields,
+		}
+	}
+	
+	
+	/**
+	 * Set fields list
+	 */
+	TableCrudModel setFieldsList(Collection fields_list) => this.clone{
+		"fields_list": fields_list,
+	};
+	
+	
+	/**
+	 * Returns page title
+	 */
+	string getPageTitle(string action)
+	{
+		fn route_get_page_title = null;
+		
+		if (this.route_class != "")
+		{
+			route_get_page_title = rtl::method(this.route_class, "getPageTitle");
+		}
+		
+		if (route_get_page_title != null)
+		{
+			string result = route_get_page_title(this, action);
+			if (result !== null)
+			{
+				return result;
+			}
+		}
+		
+		if (action == "index")
+		{
+			return "List of " ~ this.getPageTitle("names");
+		}
+		else if (action == "add")
+		{
+			return "Add " ~ this.getPageTitle("name");
+		}
+		else if (action == "edit")
+		{
+			return "Edit "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete")
+		{
+			return "Delete "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete_content")
+		{
+			return "Delete " ~ this.getPageTitle("item") ~ " ?";
+		}
+		return "";
+	}
+	
+	
+	
+	/**
+	 * Set wait message
+	 */
+	TableCrudModel setWaitMessage()
+	{
+		TableCrudModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "Wait please ...";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Clear error message
+	 */
+	TableCrudModel clearErrorMessage()
+	{
+		TableCrudModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Message
+	 */
+	TableCrudModel setMessage(string error_message) => this.copy
+	{
+		"error_message": error_message,
+	};
+	
+	
+	/**
+	 * Success
+	 */
+	TableCrudModel setSuccess(string error_message, int error_code = 1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Error
+	 */
+	TableCrudModel setError(string error_message, int error_code = -1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Returns true if error
+	 */
+	bool isError() => this.error_code < 0;
+	
+	
+	/**
+	 * Returns true if success
+	 */
+	bool isSuccess() => this.error_code > 0;
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string event, ApiResult res)
+	{
+		if (res.isSuccess())
+		{
+			model.commit("setItems", res["data"]["items"]);
+			model.commit("setLimit", res["data"]["limit"]);
+			model.commit("setPage", res["data"]["page"]);
+			model.commit("setPages", res["data"]["pages"]);
+			/*model.commit("setDictionary", res["data"]["dictionary"]);*/
+		}
+		
+		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+	}
+	
+	
+	/**
+	 * Load item
+	 */
+	async static ApiResult doSearch(ModelProxy model)
+	{
+		/* Setup loading */
+		model.commit("setLoading", true);
+		
+		/* Get post data */
+		int page = model.data("page");
+		int limit = model.data("limit");
+		Dict search_data = model.data("search_data");
+		Dict post_data = {
+			"page": page,
+			"limit": limit,
+		};
+		if (search_data != null) post_data = post_data.concat(search_data);
+		
+		/* Send api */
+		ApiResult res = await static::callApiSearch(model, post_data);
+		
+		/* Set api result */
+		model.commit("setLoading", false);
+		model.commit("setApiResult", "item", res);
+	}
+	
+	
+	/**
+	 * Returns search api name
+	 */
+	string getSearchApiName() => this.api_name ~ "::crud.search";
+	
+	
+	/**
+	 * Call api search
+	 */
+	async static ApiResult callApiSearch(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getSearchApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Load widgets data
+	 */
+	async static void loadWidgets(ModelProxy model)
+	{
+		await parent::loadWidgets(model);
+		await static::doSearch(model);
+	}
+	
+}
