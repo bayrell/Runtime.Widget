@@ -31,7 +31,6 @@ struct TableCrudModel extends BaseModel
 	int error_code = 0;
 	string api_name = "";
 	string error_message = "";
-	string route_class = "";
 	Dict fields = {};
 	Collection fields_list = [];
 	Dict dictionary = {};
@@ -48,12 +47,6 @@ struct TableCrudModel extends BaseModel
 	 * Set page
 	 */
 	TableCrudModel setApiName(string api_name) => this.clone({ "api_name": api_name });
-	
-	
-	/**
-	 * Set route class
-	 */
-	TableCrudModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
 	
 	
 	/**
@@ -133,52 +126,6 @@ struct TableCrudModel extends BaseModel
 	TableCrudModel setFieldsList(Collection fields_list) => this.clone{
 		"fields_list": fields_list,
 	};
-	
-	
-	/**
-	 * Returns page title
-	 */
-	string getPageTitle(string action)
-	{
-		fn route_get_page_title = null;
-		
-		if (this.route_class != "")
-		{
-			route_get_page_title = rtl::method(this.route_class, "getPageTitle");
-		}
-		
-		if (route_get_page_title != null)
-		{
-			string result = route_get_page_title(this, action);
-			if (result !== null)
-			{
-				return result;
-			}
-		}
-		
-		if (action == "index")
-		{
-			return "List of " ~ this.getPageTitle("names");
-		}
-		else if (action == "add")
-		{
-			return "Add " ~ this.getPageTitle("name");
-		}
-		else if (action == "edit")
-		{
-			return "Edit "  ~ this.getPageTitle("name");
-		}
-		else if (action == "delete")
-		{
-			return "Delete "  ~ this.getPageTitle("name");
-		}
-		else if (action == "delete_content")
-		{
-			return "Delete " ~ this.getPageTitle("item") ~ " ?";
-		}
-		return "";
-	}
-	
 	
 	
 	/**

@@ -32,7 +32,6 @@ struct FormModel extends BaseModel
 	int error_code = 0;
 	string api_name = "";
 	string error_message = "";
-	string route_class = "";
 	Dict field_result = null;
 	Dict fields = {};
 	Collection fields_list = [];
@@ -42,13 +41,7 @@ struct FormModel extends BaseModel
 	 * Set page
 	 */
 	FormModel setApiName(string api_name) => this.clone({ "api_name": api_name });
-	
-	
-	/**
-	 * Set route class
-	 */
-	FormModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
-	
+		
 	
 	/**
 	 * Set item

@@ -28,7 +28,7 @@
 
 <template name="renderTop">
 	<div class="web_table__top">
-		%set string route_class = model.widgets.get("table").route_class;
+		%set string route_class = model.route_class;
 		<Button type="success middle"
 			href={{ rtl::callMethod(route_class, "getHref", ["add"]) }}>[+] Add</Button>
 	</div>

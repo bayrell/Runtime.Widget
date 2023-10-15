@@ -1,0 +1,103 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Crud.DeletePage">
+
+<use name="Runtime.ModelProxy" />
+<use name="Runtime.Web.LayoutModel" />
+<use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Widget.Form.FormModel" />
+<use name="Runtime.Widget.Button" component="true" />
+
+
+<template name="renderTop">
+	<div class="web_table__top">
+		<Button type="default" href={{ model.back_page_url }}>Back</Button>
+	</div>
+</template>
+
+
+<template name="render">
+	%render static::renderTop();
+	%render static::renderForm();
+</template>
+
+
+<template name="renderForm">
+	%if (model.getWidget("form").item != null)
+	{
+		<form class="web_form web_form--delete" method="POST"
+			enctype="multipart/form-data" onsubmit="return false;"
+		>
+			%render static::renderContent();
+			%render static::renderButtons();
+			%render static::renderResult();
+		</form>
+	}
+	%else
+	{
+		<div class="web_form__item_not_found">
+			Item not found
+		</div>
+	}
+</template>
+
+
+<template name="renderContent">
+	<div class="web_form__content">
+		{{ model.getPageTitle("delete_content") }}
+	</div>
+</template>
+
+
+<template name="renderButtons">
+	<div class="web_form__buttons">
+		<Button type="danger large" @event:MouseClickEvent="onDeleteClick">Delete</Button>
+	</div>
+</template>
+
+
+<template name="renderResult">
+    %set FormModel form = model.getWidget("form");
+	<div class="web_form__result" class={{ form.getErrorClass() }} >
+		{{ form.error_message }}
+	</div>
+</template>
+
+
+<script>
+
+/**
+ * Delete click
+ */
+async void onDeleteClick(Message<MouseClickEvent> msg)
+{
+	ModelProxy<FormModel> form = this.modelProxy(["widgets", "form"]);
+	
+	/* Set wait message */
+	form.commit("setWaitMessage");
+	
+	/* Send delete form */
+	await form.commitAsync("doDelete");
+}
+
+</script>
+
+
+</class>

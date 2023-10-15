@@ -26,6 +26,7 @@ use Runtime.Widget.Form.FormCrud;
 
 struct CrudPageModel extends BaseModel
 {
+	string route_class = "";
 	string back_page_url = "";
 	string form_class_name = classof FormCrud;
 	string table_class_name = classof TableCrud;
@@ -53,5 +54,56 @@ struct CrudPageModel extends BaseModel
 	CrudPageModel setTableClassName(string class_name) => this.clone{
 		"table_class_name": class_name,
 	};
+	
+	
+	/**
+	 * Set route class
+	 */
+	CrudPageModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
+	
+	
+	/**
+	 * Returns page title
+	 */
+	string getPageTitle(string action)
+	{
+		fn route_get_page_title = null;
+		
+		if (this.route_class != "")
+		{
+			route_get_page_title = rtl::method(this.route_class, "getPageTitle");
+		}
+		
+		if (route_get_page_title != null)
+		{
+			string result = route_get_page_title(this, action);
+			if (result !== null)
+			{
+				return result;
+			}
+		}
+		
+		if (action == "index")
+		{
+			return "List of " ~ this.getPageTitle("names");
+		}
+		else if (action == "add")
+		{
+			return "Add " ~ this.getPageTitle("name");
+		}
+		else if (action == "edit")
+		{
+			return "Edit "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete")
+		{
+			return "Delete "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete_content")
+		{
+			return "Delete " ~ this.getPageTitle("item") ~ " ?";
+		}
+		return "";
+	}
 	
 }
