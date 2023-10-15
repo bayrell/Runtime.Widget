@@ -22,10 +22,10 @@ use Runtime.lib;
 use Runtime.BaseStruct;
 
 
-struct FieldComponent extends BaseStruct
+struct FieldItem extends BaseStruct
 {
 	string name = "";
 	string component = null;
-	string class = null;
-	string method = null;
+	string value_method = null;
+	string render_method = null;
 }

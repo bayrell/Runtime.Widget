@@ -19,15 +19,15 @@
 <class name="Runtime.Widget.Form.FormCrud"
 	extends="Runtime.Widget.Form.Form">
 
-<use name="Runtime.Widget.FieldComponent" />
+<use name="Runtime.Widget.FieldItem" />
 
 
 <template name="renderContent">
 	<div class="web_form__content">
 		%for (int i=0; i<model.fields_list.count(); i++)
 		{
-			%set FieldComponent item = model.fields_list[i];
-			%render static::renderRow(item.component, model.fields[item.name]);
+			%set FieldItem field = model.fields_list[i];
+			%render static::renderRow(field);
 		}
 	</div>
 </template>

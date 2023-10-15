@@ -31,7 +31,10 @@
 	
 	%set string value = Helper::getValue(layout, model_path, render_params);
 	%set Collection options = render_params["options"];
-	%set Dict item = options.findItem( bool (Dict item) use (value) => item["value"] == value );
+	%set Dict item = options
+		? options.findItem( bool (Dict item) use (value) => item["value"] == value )
+		: null
+	;
 	
 	{{ item != null ? item["label"] : "" }}
 	

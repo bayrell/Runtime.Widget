@@ -24,8 +24,10 @@
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Widget.Crud.CrudPageModel" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.FieldComponent" />
+<use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.Pagination" component="true" />
 
 
@@ -41,10 +43,9 @@
 	}
 	%elseif (field.name == "row_buttons")
 	{
-		%set string route_class = layout.page_route_class_name;
-		%set fn getHref = rtl::method(route_class, "getHref");
-		%set string href_edit = getHref("edit", {"item": item});
-		%set string href_delete = getHref("delete", {"item": item});
+		%set CrudPageModel page_model = layout.getPageModel();
+		%set string href_edit = page_model.getHref("edit", {"item": item});
+		%set string href_delete = page_model.getHref("delete", {"item": item});
 		
 		<div class="web_table__td_row_buttons">
 			<Button type="small" href={{ href_edit }}>
@@ -57,16 +58,43 @@
 	}
 	%elseif (field.component != null)
 	{
-		<{field.component} value={{ item[field.name] }} />
+		%set FieldInfo params = model.fields[field.name];
+		%if (params)
+		{
+			%set Collection options = params.options;
+			%set Dict component_settings = params.component_settings;
+			
+			%set var value = "";
+			%if (field.value_method)
+			{
+				%set fn f = rtl::method(field.value_method.get(0), field.value_method.get(1));
+				%set value = f(layout, model, row_number, field, item);
+			}
+			
+			<{field.component}
+				name={{ field.name }}
+				options={{ options }}
+				value={{ item[field.name] }}
+				...component_settings
+			/>
+		}
 	}
-	%elseif (field.class != null and field.method != null)
+	%elseif (field.render_method)
 	{
-		%set fn f = rtl::method(field.class, field.method);
+		%set fn f = rtl::method(field.render_method.get(0), field.render_method.get(1));
 		%render f(row_number, field, item);
 	}
 	%else
 	{
-		{{ item[field.name] }}
+		%if (field.value_method)
+		{
+			%set fn f = rtl::method(field.value_method.get(0), field.value_method.get(1));
+			{{ f(layout, model, row_number, field, item) }}
+		}
+		%else
+		{
+			{{ item[field.name] }}
+		}
 	}
 	
 </template>
@@ -75,6 +103,7 @@
 <template name="renderHeader">
 	%set Collection<string> columns = model.fields_list;
 	%set Dict fields = model.fields;
+	
 	%if (columns)
 	{
 		<tr class="web_table__row_header">

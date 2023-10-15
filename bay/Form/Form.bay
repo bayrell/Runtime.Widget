@@ -24,27 +24,34 @@
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.FieldInfo" />
+<use name="Runtime.Widget.FieldItem" />
 
 
-<template name="renderField" args="string class_name, FieldInfo params">
+<template name="renderField" args="FieldItem field">
 	
-	%set string field_name = params.name;
-	%set Collection options = params.options;
-	%set Dict component_settings = params.component_settings;
-	
-	<{class_name}
-		name={{ field_name }}
-		options={{ options }}
-		@model={{ ["item"].concat( field_name ) }}
-		@event:ChangeEvent="onFieldChange"
-		...component_settings
-	/>
+	%set FieldInfo params = model.fields[field.name];
+	%if (params and field.component != null)
+	{
+		%set string field_name = field.name;
+		%set Collection options = params.options;
+		%set Dict component_settings = params.component_settings;
+		
+		<{field.component}
+			name={{ field_name }}
+			options={{ options }}
+			@model={{ ["item"].concat( field_name ) }}
+			@event:ChangeEvent="onFieldChange"
+			...component_settings
+		/>
+	}
 	
 </template>
 
 
-<template name="renderRow" args="string class_name, FieldInfo params">
+<template name="renderRow" args="var field">
 	
+	%set FieldInfo params = model.fields[field.name];
 	%if (params != null)
 	{
 		%set string field_name = params.name;
@@ -53,7 +60,7 @@
 			
 			<label class="web_form__row_label">{{ params.label }}</label>
 			
-			%render static::renderField(class_name, params);
+			%render static::renderField(field);
 			
 			%set Collection<string> field_result = model.getFieldResult(field_name);
 			%if (field_result.count() == 0)

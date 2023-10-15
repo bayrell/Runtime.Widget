@@ -104,9 +104,9 @@ struct FormCrudModel extends FormModel
 	/**
 	 * Load widgets data
 	 */
-	async static void loadWidgets(ModelProxy model)
+	async static void loadWidgets(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidgets(model);
+		await parent::loadWidgets(model, layout);
 		
 		Dict item_pk = model.data("item_pk");
 		if (item_pk == null)

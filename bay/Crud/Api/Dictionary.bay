@@ -34,7 +34,7 @@ struct Dictionary extends CrudRule
 {
 	string dictionary_name = "";
 	string table_name = "";
-	string model_name = "";
+	Collection fields = null;
 	fn query = null;
 	
 	
@@ -75,7 +75,7 @@ struct Dictionary extends CrudRule
 		Collection items = null;
 		if (result and this.model_name != "")
 		{
-			items = result.toModel(this.model_name);
+			items = result.toDict(this.fields);
 			
 			/* Set dictionary result */
 			api.container.setDictionary(this.dictionary_name, items);

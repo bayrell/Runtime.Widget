@@ -76,6 +76,14 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Set fields
+	 */
+	FormModel setFields(Dict fields) => this.clone{
+		"fields": fields,
+	};
+	
+	
+	/**
 	 * Setup field options
 	 */
 	FormModel setFieldOptions(string field_name, Collection options)

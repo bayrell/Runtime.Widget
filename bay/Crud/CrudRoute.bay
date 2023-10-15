@@ -54,29 +54,6 @@ class CrudRoute extends BaseRoute
 	
 	
 	/**
-	 * Setup crud widget
-	 */
-	Dict setupWidget(ModelProxy<BaseWidget> widget)
-	{
-		/* Setup route class */
-		this.page_model.commit("setRouteClass", static::getClassName());
-		
-		/* Load widgets data */
-		await this.page_model.commitAsync("setupWidgets");
-		await this.page_model.commitAsync("loadWidgets");
-	}
-	
-	
-	/**
-	 * Returns page title
-	 */
-	static string getPageTitle(BaseModel page_model, string action)
-	{
-		return null;
-	}
-	
-	
-	/**
 	 * Action index
 	 */
 	async void actionIndex()
@@ -87,10 +64,12 @@ class CrudRoute extends BaseRoute
 		this.page_model.commit("addWidget", new TableCrudModel{ "widget_name": "table" });
 		
 		/* Setup widgets */
-		await this.setupWidget(widget);
+		this.page_model.commit("setAction", "index");
+		await this.page_model.commitAsync("setupWidgets", this);
+		await this.page_model.commitAsync("loadWidgets", this);
 		
 		/* Set title */
-		this.setPageTitle( this.page_model.call("getPageTitle", this.getClassName(), "index") );
+		this.setPageTitle( this.page_model.call("getPageTitle", "index") );
 		
 		/* Render page */
 		this.container.render( classof TablePage );
@@ -108,10 +87,12 @@ class CrudRoute extends BaseRoute
 		this.page_model.commit("addWidget", new FormCrudModel{ "widget_name": "form" });
 		
 		/* Setup widgets */
-		await this.setupWidget(widget);
+		this.page_model.commit("setAction", "save");
+		await this.page_model.commitAsync("setupWidgets", this);
+		await this.page_model.commitAsync("loadWidgets", this);
 		
 		/* Set title */
-		this.setPageTitle( this.page_model.call("getPageTitle", this.getClassName(), "save") );
+		this.setPageTitle( this.page_model.call("getPageTitle", "save") );
 		
 		/* Render page */
 		this.container.render( classof SavePage );
@@ -129,10 +110,12 @@ class CrudRoute extends BaseRoute
 		this.page_model.commit("addWidget", new FormCrudModel{ "widget_name": "form" });
 		
 		/* Setup widgets */
-		this.setupWidget(widget);
+		this.page_model.commit("setAction", "delete");
+		await this.page_model.commitAsync("setupWidgets", this);
+		await this.page_model.commitAsync("loadWidgets", this);
 		
 		/* Set title */
-		this.setPageTitle( this.page_model.call("getPageTitle", this.getClassName(), "delete") );
+		this.setPageTitle( this.page_model.call("getPageTitle", "delete") );
 		
 		/* Render page */
 		this.container.render( classof DeletePage );

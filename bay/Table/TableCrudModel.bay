@@ -108,6 +108,14 @@ struct TableCrudModel extends BaseModel
 	
 	
 	/**
+	 * Set fields
+	 */
+	TableCrudModel setFields(Dict fields) => this.clone{
+		"fields": fields,
+	};
+	
+	
+	/**
 	 * Setup field options
 	 */
 	TableCrudModel setFieldOptions(string field_name, Collection options)
@@ -260,9 +268,9 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Load widgets data
 	 */
-	async static void loadWidgets(ModelProxy model)
+	async static void loadWidgets(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidgets(model);
+		await parent::loadWidgets(model, layout);
 		await static::doSearch(model);
 	}
 	

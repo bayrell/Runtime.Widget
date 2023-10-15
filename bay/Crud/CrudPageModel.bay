@@ -20,15 +20,26 @@ namespace Runtime.Widget.Crud;
 
 use Runtime.ModelProxy;
 use Runtime.Web.BaseModel;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.Layout;
 use Runtime.Widget.Table.TableCrud;
 use Runtime.Widget.Form.FormCrud;
 
 
 struct CrudPageModel extends BaseModel
 {
+	string action = "";
 	string back_page_url = "";
 	string form_class_name = classof FormCrud;
 	string table_class_name = classof TableCrud;
+	
+	
+	/**
+	 * Set action
+	 */
+	CrudPageModel setAction(string action) => this.clone{
+		"action": action,
+	};
 	
 	
 	/**
@@ -58,60 +69,63 @@ struct CrudPageModel extends BaseModel
 	/**
 	 * Returns page title
 	 */
-	string getPageTitle(string route_class, string action)
+	string getPageTitle(string action)
 	{
-		fn route_get_page_title = null;
-		
-		if (route_class != "")
-		{
-			route_get_page_title = rtl::method(route_class, "getPageTitle");
-		}
-		
-		if (route_get_page_title != null)
-		{
-			string result = route_get_page_title(this, action);
-			if (result !== null)
-			{
-				return result;
-			}
-		}
-		
 		if (action == "index")
 		{
-			return "List of " ~ this.getPageTitle(route_class, "names");
+			return "List of " ~ this.getPageTitle("names");
 		}
 		else if (action == "add")
 		{
-			return "Add " ~ this.getPageTitle(route_class, "name");
+			return "Add " ~ this.getPageTitle("name");
 		}
 		else if (action == "edit")
 		{
 			return "Edit " ~
-				this.getPageTitle(route_class, "name") ~
-				" '" ~ this.getPageTitle(route_class, "item") ~ "'"
+				this.getPageTitle("name") ~
+				" '" ~ this.getPageTitle("item") ~ "'"
 			;
 		}
 		else if (action == "delete")
 		{
 			return "Delete " ~
-				this.getPageTitle(route_class, "name") ~
-				" '" ~ this.getPageTitle(route_class, "item") ~ "'"
+				this.getPageTitle("name") ~
+				" '" ~ this.getPageTitle("item") ~ "'"
 			;
 		}
 		else if (action == "delete_content")
 		{
-			return "Delete " ~ this.getPageTitle(route_class, "item") ~ " ?";
+			return "Delete " ~ this.getPageTitle("item") ~ " ?";
 		}
 		else if (action == "save")
 		{
 			bool is_new = this.getWidget("form").isNew();
 			if (is_new)
 			{
-				return this.getPageTitle(route_class, "add");
+				return this.getPageTitle("add");
 			}
-			return this.getPageTitle(route_class, "edit");
+			return this.getPageTitle("edit");
 		}
 		return "";
+	}
+	
+	
+	/**
+	 * Setup crud widget
+	 */
+	async static void setupWidget(ModelProxy<BaseModel> widget, BaseRoute route)
+	{
+	}
+	
+	
+	/**
+	 * Setup widgets
+	 */
+	async static void setupWidgets(ModelProxy<BaseModel> model, BaseRoute route)
+	{
+		await static::setupWidget(model.proxy(["widgets", "table"]), route);
+		await static::setupWidget(model.proxy(["widgets", "form"]), route);
+		await parent::setupWidgets(model, route);
 	}
 	
 }
