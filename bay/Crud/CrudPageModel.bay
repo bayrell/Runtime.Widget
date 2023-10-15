@@ -109,23 +109,4 @@ struct CrudPageModel extends BaseModel
 		return "";
 	}
 	
-	
-	/**
-	 * Setup crud widget
-	 */
-	async static void setupWidget(ModelProxy<BaseModel> widget, BaseRoute route)
-	{
-	}
-	
-	
-	/**
-	 * Setup widgets
-	 */
-	async static void setupWidgets(ModelProxy<BaseModel> model, BaseRoute route)
-	{
-		await static::setupWidget(model.proxy(["widgets", "table"]), route);
-		await static::setupWidget(model.proxy(["widgets", "form"]), route);
-		await parent::setupWidgets(model, route);
-	}
-	
 }
