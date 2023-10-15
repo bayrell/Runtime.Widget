@@ -26,7 +26,6 @@ use Runtime.Widget.Form.FormCrud;
 
 struct CrudPageModel extends BaseModel
 {
-	string route_class = "";
 	string back_page_url = "";
 	string form_class_name = classof FormCrud;
 	string table_class_name = classof TableCrud;
@@ -57,21 +56,15 @@ struct CrudPageModel extends BaseModel
 	
 	
 	/**
-	 * Set route class
-	 */
-	CrudPageModel setRouteClass(string route_class) => this.clone({ "route_class": route_class });
-	
-	
-	/**
 	 * Returns page title
 	 */
-	string getPageTitle(string action)
+	string getPageTitle(string route_class, string action)
 	{
 		fn route_get_page_title = null;
 		
-		if (this.route_class != "")
+		if (route_class != "")
 		{
-			route_get_page_title = rtl::method(this.route_class, "getPageTitle");
+			route_get_page_title = rtl::method(route_class, "getPageTitle");
 		}
 		
 		if (route_get_page_title != null)
@@ -85,23 +78,38 @@ struct CrudPageModel extends BaseModel
 		
 		if (action == "index")
 		{
-			return "List of " ~ this.getPageTitle("names");
+			return "List of " ~ this.getPageTitle(route_class, "names");
 		}
 		else if (action == "add")
 		{
-			return "Add " ~ this.getPageTitle("name");
+			return "Add " ~ this.getPageTitle(route_class, "name");
 		}
 		else if (action == "edit")
 		{
-			return "Edit "  ~ this.getPageTitle("name");
+			return "Edit " ~
+				this.getPageTitle(route_class, "name") ~
+				" '" ~ this.getPageTitle(route_class, "item") ~ "'"
+			;
 		}
 		else if (action == "delete")
 		{
-			return "Delete "  ~ this.getPageTitle("name");
+			return "Delete " ~
+				this.getPageTitle(route_class, "name") ~
+				" '" ~ this.getPageTitle(route_class, "item") ~ "'"
+			;
 		}
 		else if (action == "delete_content")
 		{
-			return "Delete " ~ this.getPageTitle("item") ~ " ?";
+			return "Delete " ~ this.getPageTitle(route_class, "item") ~ " ?";
+		}
+		else if (action == "save")
+		{
+			bool is_new = this.getWidget("form").isNew();
+			if (is_new)
+			{
+				return this.getPageTitle(route_class, "add");
+			}
+			return this.getPageTitle(route_class, "edit");
 		}
 		return "";
 	}

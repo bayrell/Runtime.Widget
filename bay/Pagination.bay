@@ -1,0 +1,137 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Pagination">
+
+<use name="Runtime.math" />
+<use name="Runtime.Web.Layout" />
+
+
+<style>
+.pagination {
+	text-align: center;
+	padding: 10px 0;
+	width: 100%;
+}
+.pagination ul, .pagination li {
+	padding: 0;
+	margin: 0;
+}
+.pagination li {
+	display: inline-block;
+	vertical-align: top;
+	list-style: none;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+.pagination a, .pagination a:hover, .pagination span {
+	display: table-cell;
+	vertical-align: middle;
+	background-color: #fff;
+	border: 1px #ccc solid;
+	color: #000;
+	text-align: center;
+	width: 30px;
+	height: 30px;
+	font-size: 14px;
+	text-decoration: none;
+}
+.pagination li:first-child{
+	margin-left: 0px;
+}
+.pagination li.active a, .pagination li.active a:hover {
+	background-color: #337ab7;
+	border: 1px #337ab7 solid;
+	color: #fff;
+}
+</style>
+
+
+<template>
+	%set int page = render_params["page"];
+	%set int pages = render_params["pages"];
+	%set int delta = render_params["delta"] |> default int 5;
+	%set int page_start = math::max(2, page - delta + 1);
+	%set int page_end = math::min(page + delta, pages - 1);
+	
+	%if (pages > 1)
+	{
+		<nav class="pagination">
+			<ul>
+				
+				<li class={{ page == 1 ? "active" : "" }}>
+					<a href={{ static::getPageUrl(layout, 1) }}>
+						1
+					</a>
+				</li>
+				
+				%if (page_start > 2)
+				{
+					<li>
+						...
+					</li>
+				}
+				
+				%if (page_start <= page_end)
+				{
+					%for (int p=page_start; p<=page_end; p++)
+					{
+						<li class={{ page == p ? "active" : "" }}>
+							<a href={{ static::getPageUrl(layout, p) }}>
+								{{ p }}
+							</a>
+						</li>
+					}
+				}
+				
+				%if (page_end < pages - 1)
+				{
+					<li>
+						...
+					</li>
+				}
+				
+				%if (pages > 1)
+				{
+					<li class={{ page == pages ? "active" : "" }}>
+						<a href={{ static::getPageUrl(layout, pages) }}>
+							{{ pages }}
+						</a>
+					</li>
+				}
+			</ul>
+		</nav>
+	}
+</template>
+
+
+<script>
+
+/**
+ * Returns page url
+ */
+pure int getPageUrl(Layout layout, int page)
+{
+	string uri = layout.request_full_uri;
+	return rs::url_get_add(uri, "page", page);
+}
+
+</script>
+
+
+</class>

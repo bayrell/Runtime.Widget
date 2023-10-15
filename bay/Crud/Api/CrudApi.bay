@@ -67,7 +67,7 @@ class CrudApi extends BaseApi
 	/**
 	 * Returns table name
 	 */
-	string getTableName() => "";
+	pure string getTableName() => "";
 	
 	
 	/**

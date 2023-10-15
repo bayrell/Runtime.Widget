@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"Crud/CrudPageModel.bay",
+		"Crud/CrudRoute.bay",
 		"Crud/DeletePage.bay",
 		"Crud/RowButtons.bay",
 		"Crud/RowNumber.bay",
@@ -25,6 +26,7 @@
 		"Helper.bay",
 		"Input.bay",
 		"Label.bay",
+		"Pagination.bay",
 		"Select.bay",
 		"SelectLabel.bay",
 		"TextArea.bay",

@@ -61,7 +61,7 @@
 
 <template name="renderContent">
 	<div class="web_form__content">
-		{{ model.getPageTitle("delete_content") }}
+		{{ model.getPageTitle(layout.page_route_class_name, "delete_content") }}
 	</div>
 </template>
 

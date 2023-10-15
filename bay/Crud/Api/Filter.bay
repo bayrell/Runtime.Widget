@@ -24,8 +24,8 @@ use Runtime.ORM.Cursor;
 use Runtime.ORM.Database;
 use Runtime.ORM.Query;
 use Runtime.Web.ApiResult;
-use Runtime.Web.Crud.Api.CrudApi;
-use Runtime.Web.Crud.Api.CrudRule;
+use Runtime.Widget.Crud.Api.CrudApi;
+use Runtime.Widget.Crud.Api.CrudRule;
 
 
 struct Filter extends CrudRule

@@ -45,31 +45,34 @@
 
 <template name="renderRow" args="string class_name, FieldInfo params">
 	
-	%set string field_name = params.name;
-	
-	<div class="web_form__row" @key={{ field_name }}>
+	%if (params != null)
+	{
+		%set string field_name = params.name;
 		
-		<label class="web_form__row_label">{{ params.label }}</label>
-		
-		%render static::renderField(class_name, params);
-		
-		%set Collection<string> field_result = model.getFieldResult(field_name);
-		%if (field_result.count() == 0)
-		{
-			<div class="web_form__field_result web_form__field_result--hide"
-				data-name={{ field_name }} @key="result1"></div>
-		}
-		%else
-		{
-			<div class="web_form__field_result" data-name={{ field_name }} @key="result2">
-				%for (int i=0; i<field_result.count(); i++)
-				{
-					<div>{{ field_result[i] }}</div>
-				}
-			</div>
-		}
-		
-	</div>
+		<div class="web_form__row" @key={{ field_name }}>
+			
+			<label class="web_form__row_label">{{ params.label }}</label>
+			
+			%render static::renderField(class_name, params);
+			
+			%set Collection<string> field_result = model.getFieldResult(field_name);
+			%if (field_result.count() == 0)
+			{
+				<div class="web_form__field_result web_form__field_result--hide"
+					data-name={{ field_name }} @key="result1"></div>
+			}
+			%else
+			{
+				<div class="web_form__field_result" data-name={{ field_name }} @key="result2">
+					%for (int i=0; i<field_result.count(); i++)
+					{
+						<div>{{ field_result[i] }}</div>
+					}
+				</div>
+			}
+			
+		</div>
+	}
 	
 </template>
 
