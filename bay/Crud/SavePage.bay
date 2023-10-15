@@ -16,17 +16,20 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Web.Crud.SavePage">
+<class name="Runtime.Widget.Crud.SavePage">
 
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Form.FormCrud" component="true" />
 
 
 <template name="renderTop">
-	<h1>{{ model.getWidget("form").getPageTitle( model.action ) }}</h1>
+	<div class="web_table__top">
+		<Button type="default" href={{ model.back_page_url }}>Back</Button>
+	</div>
 </template>
 
 

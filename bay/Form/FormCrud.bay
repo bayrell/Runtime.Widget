@@ -24,7 +24,7 @@
 
 <template name="renderContent">
 	<div class="web_form__content">
-		%for (int i=0; i<model.fields.count(); i++)
+		%for (int i=0; i<model.fields_list.count(); i++)
 		{
 			%set FieldComponent item = model.fields_list[i];
 			%render static::renderRow(item.component, model.fields[item.name]);

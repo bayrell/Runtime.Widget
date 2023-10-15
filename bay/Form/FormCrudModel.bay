@@ -58,6 +58,51 @@ struct FormCrudModel extends FormModel
 	
 	
 	/**
+	 * Returns page title
+	 */
+	string getPageTitle(string action)
+	{
+		fn route_get_page_title = null;
+		
+		if (this.route_class != "")
+		{
+			route_get_page_title = rtl::method(this.route_class, "getPageTitle");
+		}
+		
+		if (route_get_page_title != null)
+		{
+			string result = route_get_page_title(this, action);
+			if (result !== null)
+			{
+				return result;
+			}
+		}
+		
+		if (action == "index")
+		{
+			return "List of " ~ this.getPageTitle("names");
+		}
+		else if (action == "add")
+		{
+			return "Add " ~ this.getPageTitle("name");
+		}
+		else if (action == "edit")
+		{
+			return "Edit "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete")
+		{
+			return "Delete "  ~ this.getPageTitle("name");
+		}
+		else if (action == "delete_content")
+		{
+			return "Delete " ~ this.getPageTitle("item") ~ " ?";
+		}
+		return "";
+	}
+	
+	
+	/**
 	 * Set api result
 	 */
 	static void setApiResult(ModelProxy model, string event, ApiResult res)
@@ -102,12 +147,14 @@ struct FormCrudModel extends FormModel
 	
 	
 	/**
-	 * Init widget
+	 * Load widgets data
 	 */
-	async void initWidget(ModelProxy<FormCrudModel> model, BaseRoute route)
+	async static void loadWidgets(ModelProxy model)
 	{
+		await parent::loadWidgets(model);
+		
 		Dict item_pk = model.data("item_pk");
-		if (item_pk != null)
+		if (item_pk == null)
 		{
 			model.commit("clearItem");
 		}
@@ -138,13 +185,18 @@ struct FormCrudModel extends FormModel
 		/* Set api result */
 		model.commit("setLoading", false);
 		model.commit("setApiResult", "item", res);
-		model.commit("setDictionary", res);
+		
+		/* Clear message if success */
+		if (res.isSuccess())
+		{
+			model.commit("clearErrorMessage");
+		}
 	}
 	
 	
 	/**
 	 * Returns save api name
-	 *
+	 */
 	string getItemApiName() => this.api_name ~ "::crud.item";
 	
 	
@@ -180,7 +232,7 @@ struct FormCrudModel extends FormModel
 	
 	/**
 	 * Returns save api name
-	 *
+	 */
 	string getSaveApiName() => this.api_name ~ "::crud.save";
 	
 	
@@ -213,7 +265,7 @@ struct FormCrudModel extends FormModel
 	
 	/**
 	 * Returns delete api name
-	 *
+	 */
 	string getDeleteApiName() => this.api_name ~ "::crud.delete";
 	
 	

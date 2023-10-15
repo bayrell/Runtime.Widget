@@ -23,12 +23,12 @@
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Button" />
+<use name="Runtime.Widget.Button" component="true" />
 
 
 <template name="renderField" args="string class_name, FieldInfo params">
 	
-	%set string field_name = params.field_name;
+	%set string field_name = params.name;
 	%set Collection options = params.options;
 	%set Dict component_settings = params.component_settings;
 	
@@ -45,7 +45,7 @@
 
 <template name="renderRow" args="string class_name, FieldInfo params">
 	
-	%set string field_name = params.field_name;
+	%set string field_name = params.name;
 	
 	<div class="web_form__row" @key={{ field_name }}>
 		
