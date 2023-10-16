@@ -28,6 +28,13 @@ use Runtime.Widget.FieldInfo;
 
 struct FormModel extends BaseModel
 {
+	static const string ON_LOAD_ITEM_BEFORE = "runtime.widget.form::load_item_before";
+	static const string ON_LOAD_ITEM_AFTER = "runtime.widget.form::load_item_after";
+	static const string ON_SAVE_BEFORE = "runtime.widget.form::save_before";
+	static const string ON_SAVE_AFTER = "runtime.widget.form::save_after";
+	static const string ON_DELETE_BEFORE = "runtime.widget.form::delete_after";
+	static const string ON_DELETE_AFTER = "runtime.widget.form::delete_after";
+	
 	Dict item = null;
 	int error_code = 0;
 	string api_name = "";
@@ -35,6 +42,7 @@ struct FormModel extends BaseModel
 	Dict field_result = null;
 	Dict fields = {};
 	Collection fields_list = [];
+	Dict dictionary = {};
 	
 	
 	/**
@@ -92,6 +100,52 @@ struct FormModel extends BaseModel
 		fields <= { field_name } <= options <= options;
 		return this.clone{
 			"fields": fields,
+		}
+	}
+	
+	
+	/**
+	 * Setup field options from api
+	 */
+	FormModel setFieldOptionsFromApi(Dict obj)
+	{
+		ApiResult api_res = obj["api"];
+		string from = obj["from"];
+		string to = obj["to"];
+		fn item = obj["item"]
+		fn filter = obj["filter"]
+		
+		Collection options = api_res["data", "dictionary", from];
+		if (options == null) return this;
+		
+		/* Filter options */
+		if (filter != null)
+		{
+			options = options.map(filter);
+		}
+		
+		/* Map options */
+		if (item != null)
+		{
+			options = options.map(item);
+		}
+		
+		/* Sort options */
+		options = options.sort(
+			int (Dict a, Dict b) => a["label"] > b["label"]
+		);
+		
+		/* Set fields */
+		Dict fields = this.fields;
+		fields <= { to } <= options <= options;
+		
+		/* Set dictionary */
+		Dict dictionary = this.dictionary;
+		dictionary <= { from } <= api_res["data", "dictionary", from];
+		
+		return this.clone{
+			"fields": fields,
+			"dictionary": dictionary,
 		}
 	}
 	
@@ -235,11 +289,25 @@ struct FormModel extends BaseModel
 			"item": item,
 		};
 		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_SAVE_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
 		/* Send api */
 		ApiResult res = await static::callApiSave(model, post_data);
 		
 		/* Set api result */
 		model.commit("setApiResult", "save", res);
+		
+		/* After event */
+		await static::callEvent(model, static::ON_SAVE_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
 	}
 	
 	

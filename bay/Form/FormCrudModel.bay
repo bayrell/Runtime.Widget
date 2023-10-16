@@ -29,7 +29,6 @@ use Runtime.Widget.Form.FormModel;
 struct FormCrudModel extends FormModel
 {
 	Dict item_pk = null;
-	Dict dictionary = {};
 	bool is_loading = false;
 	
 	
@@ -88,14 +87,6 @@ struct FormCrudModel extends FormModel
 	
 	
 	/**
-	 * Set dictionary
-	 */
-	FormCrudModel setDictionary(ApiResult res)
-	{
-	}
-	
-	
-	/**
 	 * Returns true if form is new
 	 */
 	bool isNew() => this.item_pk == null;
@@ -134,8 +125,16 @@ struct FormCrudModel extends FormModel
 			"pk": item_pk,
 		};
 		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_LOAD_ITEM_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
 		/* Send api */
-		ApiResult res = await static::callApiItem(model, post_data);
+		ApiResult res = await static::callApiItem(model, d["post_data"]);
 		
 		/* Set api result */
 		model.commit("setLoading", false);
@@ -146,6 +145,12 @@ struct FormCrudModel extends FormModel
 		{
 			model.commit("clearErrorMessage");
 		}
+		
+		/* After event */
+		await static::callEvent(model, static::ON_LOAD_ITEM_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
 	}
 	
 	
@@ -177,11 +182,25 @@ struct FormCrudModel extends FormModel
 			"item": item,
 		};
 		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_SAVE_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
 		/* Send api */
 		ApiResult res = await static::callApiSave(model, post_data);
 		
 		/* Set api result */
 		model.commit("setApiResult", "save", res);
+		
+		/* After event */
+		await static::callEvent(model, static::ON_SAVE_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
 	}
 	
 	
@@ -210,11 +229,25 @@ struct FormCrudModel extends FormModel
 			"pk": item_pk,
 		};
 		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_DELETE_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
 		/* Send api */
 		ApiResult res = await static::callApiDelete(model, post_data);
 		
 		/* Set api result */
 		model.commit("setApiResult", "delete", res);
+		
+		/* After event */
+		Dict d = await static::callEvent(model, static::ON_DELETE_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
 	}
 	
 	

@@ -69,13 +69,9 @@ struct Dictionary extends CrudRule
 			
 			RelationArray result = await conn.fetchAll(q);
 			api.dictionary.setValue(this.dictionary_name, result);
-		}
-		
-		/* Transform items */
-		Collection items = null;
-		if (result and this.model_name != "")
-		{
-			items = result.toDict(this.fields);
+			
+			/* Transform items */
+			Collection items = result.toDict(this.fields);
 			
 			/* Set dictionary result */
 			api.container.setDictionary(this.dictionary_name, items);
