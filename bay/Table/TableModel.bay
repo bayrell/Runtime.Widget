@@ -40,6 +40,8 @@ struct TableModel extends BaseModel
 	Dict dictionary = {};
 	bool is_loading = false;
 	Callback get_href = null;
+	string foreign_key = null;
+	var foreign_value = null;
 	
 	int page = 0;
 	int pages = 0;
@@ -58,6 +60,16 @@ struct TableModel extends BaseModel
 	 * Set href
 	 */
 	TableModel setGetHref(string get_href) => this.clone({ "get_href": get_href });
+	
+	
+	/**
+	 * Set foreign key
+	 */
+	TableModel setForeignKey(string foreign_key, var foreign_value) =>
+		this.clone({
+			"foreign_key": foreign_key,
+			"foreign_value": foreign_value,
+		});
 	
 	
 	/**
@@ -240,6 +252,28 @@ struct TableModel extends BaseModel
 	{
 		await parent::loadWidgets(model, route);
 		await static::doSearch(model);
+	}
+	
+	
+	/**
+	 * Widget event
+	 */
+	async static Dict event
+	(
+		ModelProxy<BaseModel> page_model,
+		ModelProxy<BaseModel> widget,
+		string action, Dict obj
+	)
+	{
+		if (action == static::ON_SEARCH_BEFORE)
+		{
+			string foreign_key = widget.data('foreign_key');
+			if (foreign_key != null)
+			{
+				obj <= post_data <= { foreign_key } <= widget.data('foreign_value');
+			}
+		}
+		return obj;
 	}
 	
 	
