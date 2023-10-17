@@ -22,21 +22,12 @@
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Table.TableCrud" component="true" />
+<use name="Runtime.Widget.Table.Table" component="true" />
 <use name="Runtime.Widget.Button" component="true" />
 
 
-<template name="renderTop">
-	<div class="web_table__top">
-		<Button type="success middle"
-			href={{ model.getHref("add") }}>[+] Add</Button>
-	</div>
-</template>
-
-
 <template name="render">
-	%render static::renderTop();
-	<TableCrud @model=["widgets", "table"] />
+	<Table @model=["widgets", "table"] />
 </template>
 
 

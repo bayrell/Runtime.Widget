@@ -43,6 +43,8 @@ struct FormModel extends BaseModel
 	Dict fields = {};
 	Collection fields_list = [];
 	Dict dictionary = {};
+	Dict item_pk = null;
+	bool is_loading = false;
 	
 	
 	/**
@@ -67,6 +69,36 @@ struct FormModel extends BaseModel
 	{
 		return this.clone({ "item": {} });
 	}
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey()
+	{
+		return this.item_pk;
+	}
+	
+	
+	/**
+	 * Set primary key
+	 */
+	FormModel setPrimaryKey(Dict item_pk)
+	{
+		return this.clone({ "item_pk": item_pk });
+	}
+	
+	
+	/**
+	 * Returns true if form is new
+	 */
+	bool isNew() => this.item_pk == null;
+	
+	
+	/**
+	 * Set loading
+	 */
+	FormModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
 	
 	
 	/**
@@ -232,7 +264,29 @@ struct FormModel extends BaseModel
 	 */
 	static void setApiResult(ModelProxy model, string event, ApiResult res)
 	{
+		if (res.isSuccess())
+		{
+			Dict item = res["data", "item"];
+			model.commit("setItem", item);
+			
+			Dict pk = res["data", "pk"];
+			model.commit("setPrimaryKey", pk);
+		}
+		
+		/* Set validation result */
+		if (res.data != null and res.data.has("field_result"))
+		{
+			model.commit("setFieldResult", res.data["field_result"]);
+		}
+		else
+		{
+			model.commit("setFieldResult", null);
+		}
+		
+		/* Set error */
 		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+		
+		return model;
 	}
 	
 	
@@ -268,11 +322,81 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Init widget
+	 * Load widgets data
 	 */
-	async void initWidget(ModelProxy<FormModel> model, BaseRoute route)
+	async static void loadWidgets(ModelProxy model, BaseRoute route)
 	{
-		model.commit("clearItem");
+		await parent::loadWidgets(model, route);
+		
+		Dict item_pk = model.data("item_pk");
+		if (item_pk == null)
+		{
+			model.commit("clearItem");
+		}
+		else
+		{
+			model.commitAsync("doLoadItem");
+		}
+	}
+	
+	
+	/**
+	 * Load item
+	 */
+	async static ApiResult doLoadItem(ModelProxy model)
+	{
+		if (model.data("api_name") == "") return;
+		
+		/* Setup loading */
+		model.commit("setLoading", true);
+		
+		/* Get post data */
+		Dict item_pk = model.data("item_pk");
+		Dict post_data = {
+			"pk": item_pk,
+		};
+		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_LOAD_ITEM_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
+		/* Send api */
+		ApiResult res = await static::callApiItem(model, d["post_data"]);
+		
+		/* Set api result */
+		model.commit("setLoading", false);
+		model.commit("setApiResult", "item", res);
+		
+		/* Clear message if success */
+		if (res.isSuccess())
+		{
+			model.commit("clearErrorMessage");
+		}
+		
+		/* After event */
+		await static::callEvent(model, static::ON_LOAD_ITEM_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 */
+	string getItemApiName() => this.api_name ~ "::crud.item";
+	
+	
+	/**
+	 * Call api item
+	 */
+	async static ApiResult callApiItem(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getItemApiName"), post_data);
 	}
 	
 	
@@ -281,6 +405,8 @@ struct FormModel extends BaseModel
 	 */
 	async static ApiResult doSave(ModelProxy model)
 	{
+		if (model.data("api_name") == "") return;
+		
 		Dict item_pk = model.data("item_pk");
 		Dict item = model.data("item");
 		
@@ -313,8 +439,8 @@ struct FormModel extends BaseModel
 	
 	/**
 	 * Returns save api name
-	 *
-	string getSaveApiName() => this.api_name ~ "::form.save";
+	 */
+	string getSaveApiName() => this.api_name ~ "::crud.save";
 	
 	
 	/**
@@ -323,6 +449,55 @@ struct FormModel extends BaseModel
 	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
 	{
 		return await Bus::callApi(model.call("getSaveApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Delete item
+	 */
+	async static ApiResult doDelete(ModelProxy model)
+	{
+		if (model.data("api_name") == "") return;
+		
+		Dict item_pk = model.data("item_pk");
+		Dict post_data = {
+			"pk": item_pk,
+		};
+		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_DELETE_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
+		/* Send api */
+		ApiResult res = await static::callApiDelete(model, post_data);
+		
+		/* Set api result */
+		model.commit("setApiResult", "delete", res);
+		
+		/* After event */
+		Dict d = await static::callEvent(model, static::ON_DELETE_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
+	}
+	
+	
+	/**
+	 * Returns delete api name
+	 */
+	string getDeleteApiName() => this.api_name ~ "::crud.delete";
+	
+	
+	/**
+	 * Call api delete
+	 */
+	async static ApiResult callApiDelete(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getDeleteApiName"), post_data);
 	}
 	
 }

@@ -20,12 +20,14 @@ namespace Runtime.Widget;
 
 use Runtime.lib;
 use Runtime.BaseStruct;
+use Runtime.Callback;
 
 
 struct FieldItem extends BaseStruct
 {
 	string name = "";
+	string label = "";
 	string component = null;
-	string value_method = null;
-	string render_method = null;
+	Callback value_method = null;
+	Callback render_method = null;
 }

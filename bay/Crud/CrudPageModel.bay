@@ -22,24 +22,14 @@ use Runtime.ModelProxy;
 use Runtime.Web.BaseModel;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.Layout;
-use Runtime.Widget.Table.TableCrud;
+use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Form.FormCrud;
+use Runtime.Widget.Table.TableCrud;
 
 
-struct CrudPageModel extends BaseModel
+struct CrudPageModel extends CrudWidget
 {
-	string action = "";
 	string back_page_url = "";
-	string form_class_name = classof FormCrud;
-	string table_class_name = classof TableCrud;
-	
-	
-	/**
-	 * Set action
-	 */
-	CrudPageModel setAction(string action) => this.clone{
-		"action": action,
-	};
 	
 	
 	/**
@@ -47,22 +37,6 @@ struct CrudPageModel extends BaseModel
 	 */
 	CrudPageModel setBackPage(string url) => this.clone{
 		"back_page_url": url,
-	};
-	
-	
-	/**
-	 * Set form widget class name
-	 */
-	CrudPageModel setFormClassName(string class_name) => this.clone{
-		"form_class_name": class_name,
-	};
-	
-	
-	/**
-	 * Set table widget class name
-	 */
-	CrudPageModel setTableClassName(string class_name) => this.clone{
-		"table_class_name": class_name,
 	};
 	
 	

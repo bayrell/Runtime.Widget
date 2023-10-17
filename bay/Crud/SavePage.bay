@@ -23,7 +23,7 @@
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.Form.FormCrud" component="true" />
+<use name="Runtime.Widget.Form.Form" component="true" />
 
 
 <template name="renderTop">
@@ -35,7 +35,7 @@
 
 <template name="render">
 	%render static::renderTop();
-	<FormCrud @model=["widgets", "form"] />
+	<Form @model=["widgets", "form"] />
 </template>
 
 

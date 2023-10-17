@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.Table;
 
+use Runtime.Callback;
 use Runtime.ModelProxy;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseRoute;
@@ -26,8 +27,11 @@ use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
 
 
-struct TableCrudModel extends BaseModel
+struct TableModel extends BaseModel
 {
+	static const string ON_SEARCH_BEFORE = "runtime.widget.table::search_before";
+	static const string ON_SEARCH_AFTER = "runtime.widget.table::search_after";
+	
 	int error_code = 0;
 	string api_name = "";
 	string error_message = "";
@@ -35,6 +39,7 @@ struct TableCrudModel extends BaseModel
 	Collection fields_list = [];
 	Dict dictionary = {};
 	bool is_loading = false;
+	Callback get_href = null;
 	
 	int page = 0;
 	int pages = 0;
@@ -46,13 +51,19 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Set page
 	 */
-	TableCrudModel setApiName(string api_name) => this.clone({ "api_name": api_name });
+	TableModel setApiName(string api_name) => this.clone({ "api_name": api_name });
+	
+	
+	/**
+	 * Set href
+	 */
+	TableModel setGetHref(string get_href) => this.clone({ "get_href": get_href });
 	
 	
 	/**
 	 * Set dictionary
 	 */
-	TableCrudModel setDictionary(ApiResult res)
+	TableModel setDictionary(ApiResult res)
 	{
 	}
 	
@@ -60,43 +71,43 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Set search data
 	 */
-	TableCrudModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
+	TableModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
 	
 	
 	/**
 	 * Set page
 	 */
-	TableCrudModel setPage(int page = 0) => this.clone({ "page": page });
+	TableModel setPage(int page = 0) => this.clone({ "page": page });
 	
 	
 	/**
 	 * Set pages
 	 */
-	TableCrudModel setPages(int pages = 0) => this.clone({ "pages": pages });
+	TableModel setPages(int pages = 0) => this.clone({ "pages": pages });
 	
 	
 	/**
 	 * Set limit
 	 */
-	TableCrudModel setLimit(int limit = 10) => this.clone({ "limit": limit });
+	TableModel setLimit(int limit = 10) => this.clone({ "limit": limit });
 	
 	
 	/**
 	 * Set loading
 	 */
-	TableCrudModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
+	TableModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
 	
 	
 	/**
 	 * Set items
 	 */
-	TableCrudModel setItems(Collection items) => this.clone({ "items": items });
+	TableModel setItems(Collection items) => this.clone({ "items": items });
 	
 	
 	/**
 	 * Add field
 	 */
-	TableCrudModel addField(FieldInfo field)
+	TableModel addField(FieldInfo field)
 	{
 		Dict fields = this.fields;
 		string field_name = field.name;
@@ -110,7 +121,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Set fields
 	 */
-	TableCrudModel setFields(Dict fields) => this.clone{
+	TableModel setFields(Dict fields) => this.clone{
 		"fields": fields,
 	};
 	
@@ -118,7 +129,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Setup field options
 	 */
-	TableCrudModel setFieldOptions(string field_name, Collection options)
+	TableModel setFieldOptions(string field_name, Collection options)
 	{
 		Dict fields = this.fields;
 		fields <= { field_name } <= options <= options;
@@ -131,7 +142,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Set fields list
 	 */
-	TableCrudModel setFieldsList(Collection fields_list) => this.clone{
+	TableModel setFieldsList(Collection fields_list) => this.clone{
 		"fields_list": fields_list,
 	};
 	
@@ -139,9 +150,9 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Set wait message
 	 */
-	TableCrudModel setWaitMessage()
+	TableModel setWaitMessage()
 	{
-		TableCrudModel model = this;
+		TableModel model = this;
 		
 		model <= error_code <= 0;
 		model <= error_message <= "Wait please ...";
@@ -153,9 +164,9 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Clear error message
 	 */
-	TableCrudModel clearErrorMessage()
+	TableModel clearErrorMessage()
 	{
-		TableCrudModel model = this;
+		TableModel model = this;
 		
 		model <= error_code <= 0;
 		model <= error_message <= "";
@@ -167,7 +178,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Message
 	 */
-	TableCrudModel setMessage(string error_message) => this.copy
+	TableModel setMessage(string error_message) => this.copy
 	{
 		"error_message": error_message,
 	};
@@ -176,7 +187,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Success
 	 */
-	TableCrudModel setSuccess(string error_message, int error_code = 1) => this.copy
+	TableModel setSuccess(string error_message, int error_code = 1) => this.copy
 	{
 		"error_message": error_message,
 		"error_code": error_code,
@@ -186,7 +197,7 @@ struct TableCrudModel extends BaseModel
 	/**
 	 * Error
 	 */
-	TableCrudModel setError(string error_message, int error_code = -1) => this.copy
+	TableModel setError(string error_message, int error_code = -1) => this.copy
 	{
 		"error_message": error_message,
 		"error_code": error_code,
@@ -216,10 +227,19 @@ struct TableCrudModel extends BaseModel
 			model.commit("setLimit", res["data"]["limit"]);
 			model.commit("setPage", res["data"]["page"]);
 			model.commit("setPages", res["data"]["pages"]);
-			/*model.commit("setDictionary", res["data"]["dictionary"]);*/
 		}
 		
 		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+	}
+	
+	
+	/**
+	 * Load widget
+	 */
+	async static void loadWidgets(ModelProxy model, BaseRoute route)
+	{
+		await parent::loadWidgets(model, route);
+		await static::doSearch(model);
 	}
 	
 	
@@ -228,6 +248,8 @@ struct TableCrudModel extends BaseModel
 	 */
 	async static ApiResult doSearch(ModelProxy model)
 	{
+		if (model.data("api_name") == "") return;
+		
 		/* Setup loading */
 		model.commit("setLoading", true);
 		
@@ -241,12 +263,26 @@ struct TableCrudModel extends BaseModel
 		};
 		if (search_data != null) post_data = post_data.concat(search_data);
 		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_SEARCH_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
 		/* Send api */
-		ApiResult res = await static::callApiSearch(model, post_data);
+		ApiResult res = await static::callApiSearch(model, d["post_data"]);
 		
 		/* Set api result */
 		model.commit("setLoading", false);
 		model.commit("setApiResult", "item", res);
+		
+		/* After event */
+		Dict d = await static::callEvent(model, static::ON_SEARCH_AFTER, {
+			"api": res,
+			"post_data": post_data,
+		});
 	}
 	
 	
@@ -262,16 +298,6 @@ struct TableCrudModel extends BaseModel
 	async static ApiResult callApiSearch(ModelProxy model, Dict post_data)
 	{
 		return await Bus::callApi(model.call("getSearchApiName"), post_data);
-	}
-	
-	
-	/**
-	 * Load widgets data
-	 */
-	async static void loadWidgets(ModelProxy model, ModelProxy layout)
-	{
-		await parent::loadWidgets(model, layout);
-		await static::doSearch(model);
 	}
 	
 }

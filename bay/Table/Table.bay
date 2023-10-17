@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Table.TableCrud">
+<class name="Runtime.Widget.Table.Table">
 
 <use name="Runtime.BaseStruct" />
 <use name="Runtime.ModelProxy" />
@@ -31,6 +31,14 @@
 <use name="Runtime.Widget.Pagination" component="true" />
 
 
+<template name="renderTop">
+	<div class="web_table__top">
+		<Button type="success middle"
+			href={{ model.get_href.call(["add"]) }}>[+] Add</Button>
+	</div>
+</template>
+
+
 <template name="renderHeaderField" args="string field_name">
 </template>
 
@@ -43,9 +51,8 @@
 	}
 	%elseif (field.name == "row_buttons")
 	{
-		%set CrudPageModel page_model = layout.getPageModel();
-		%set string href_edit = page_model.getHref("edit", {"item": item});
-		%set string href_delete = page_model.getHref("delete", {"item": item});
+		%set string href_edit = model.get_href.call(["edit", {"item": item}]);
+		%set string href_delete = model.get_href.call(["delete", {"item": item}]);
 		
 		<div class="web_table__td_row_buttons">
 			<Button type="small" href={{ href_edit }}>
@@ -81,20 +88,16 @@
 	}
 	%elseif (field.render_method)
 	{
-		%set fn f = rtl::method(field.render_method.get(0), field.render_method.get(1));
+		%set fn f = rtl::method(field.render_method.obj, field.render_method.name);
 		%render f(row_number, field, item);
+	}
+	%elseif (field.value_method)
+	{
+		{{ field.value_method.call([layout, model, row_number, field, item]) }}
 	}
 	%else
 	{
-		%if (field.value_method)
-		{
-			%set fn f = rtl::method(field.value_method.get(0), field.value_method.get(1));
-			{{ f(layout, model, row_number, field, item) }}
-		}
-		%else
-		{
-			{{ item[field.name] }}
-		}
+		{{ item[field.name] }}
 	}
 	
 </template>
@@ -120,7 +123,7 @@
 				%else
 				{
 					<th class={{ "web_table__th--" ~ field_name }}>
-						%render static::renderHeaderField(field_name);
+						{{ field.label }}
 					</th>
 				}
 			}
@@ -179,6 +182,7 @@
 
 
 <template>
+	%render static::renderTop();
 	%render static::renderTable();
 </template>
 

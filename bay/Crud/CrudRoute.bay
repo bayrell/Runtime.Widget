@@ -24,11 +24,12 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseWidget;
 use Runtime.Web.RouteInfo;
 use Runtime.Widget.Crud.CrudPageModel;
+use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Crud.DeletePage;
 use Runtime.Widget.Crud.SavePage;
 use Runtime.Widget.Crud.TablePage;
-use Runtime.Widget.Table.TableCrudModel;
-use Runtime.Widget.Form.FormCrudModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableModel;
 
 
 class CrudRoute extends BaseRoute
@@ -54,25 +55,39 @@ class CrudRoute extends BaseRoute
 	
 	
 	/**
+	 * Returns index page name
+	 */
+	string getIndexPageName() => classof TablePage;
+	
+	
+	/**
+	 * Returns save page name
+	 */
+	string getSavePageName() => classof SavePage;
+	
+	
+	/**
+	 * Returns delete page name
+	 */
+	string getDeletePageName() => classof DeletePage;
+	
+	
+	/**
 	 * Action index
 	 */
 	async void actionIndex()
 	{
-		ModelProxy<TableCrudModel> widget = this.page_model.proxy(["widgets", "table"]);
-		
-		/* Add widgets */
-		this.page_model.commit("addWidget", new TableCrudModel{ "widget_name": "table" });
-		
-		/* Setup widgets */
 		this.page_model.commit("setAction", "index");
-		await this.page_model.commitAsync("setupWidgets", this);
-		await this.page_model.commitAsync("loadWidgets", this);
+		TableModel table = this.addWidget(new TableModel{"widget_name": "table"});
+		
+		/* Load widgets */
+		await this.loadWidgets();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "index") );
 		
 		/* Render page */
-		this.container.render( classof TablePage );
+		this.container.render( static::getIndexPageName() );
 	}
 	
 	
@@ -81,21 +96,17 @@ class CrudRoute extends BaseRoute
 	 */
 	async void actionSave()
 	{
-		ModelProxy<FormCrudModel> widget = this.page_model.proxy(["widgets", "form"]);
-		
-		/* Add widgets */
-		this.page_model.commit("addWidget", new FormCrudModel{ "widget_name": "form" });
-		
-		/* Setup widgets */
 		this.page_model.commit("setAction", "save");
-		await this.page_model.commitAsync("setupWidgets", this);
-		await this.page_model.commitAsync("loadWidgets", this);
+		FormModel form = this.addWidget(new FormModel{"widget_name": "form"});
+		
+		/* Load widgets */
+		await this.loadWidgets();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "save") );
 		
 		/* Render page */
-		this.container.render( classof SavePage );
+		this.container.render( static::getSavePageName() );
 	}
 	
 	
@@ -104,20 +115,16 @@ class CrudRoute extends BaseRoute
 	 */
 	async void actionDelete()
 	{
-		ModelProxy<FormCrudModel> widget = this.page_model.proxy(["widgets", "form"]);
-		
-		/* Add widgets */
-		this.page_model.commit("addWidget", new FormCrudModel{ "widget_name": "form" });
-		
-		/* Setup widgets */
 		this.page_model.commit("setAction", "delete");
-		await this.page_model.commitAsync("setupWidgets", this);
-		await this.page_model.commitAsync("loadWidgets", this);
+		FormModel form = this.addWidget(new FormModel{"widget_name": "form"});
+		
+		/* Load widgets */
+		await this.loadWidgets();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "delete") );
 		
 		/* Render page */
-		this.container.render( classof DeletePage );
+		this.container.render( static::getDeletePageName() );
 	}
 }
