@@ -67,11 +67,27 @@ struct CrudWidget extends BaseModel
 		string action = model.data("action");
 		if (action == "index")
 		{
-			route.addWidget(new TableModel{"widget_name": "table"});
+			TableModel table = model.data(["widgets", "table"]);
+			if (table == null)
+			{
+				route.addWidget(new TableModel{"widget_name": "table"});
+			}
 		}
 		else if (action == "save")
 		{
-			route.addWidget(new FormModel{"widget_name": "form"});
+			FormModel form = model.data(["widgets", "form"]);
+			if (form == null)
+			{
+				route.addWidget(new FormModel{"widget_name": "form", "action": "save"});
+			}
+		}
+		else if (action == "delete")
+		{
+			FormModel form = model.data(["widgets", "form"]);
+			if (form == null)
+			{
+				route.addWidget(new FormModel{"widget_name": "form", "action": "delete"});
+			}
 		}
 	}
 	

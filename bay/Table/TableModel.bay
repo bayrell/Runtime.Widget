@@ -40,6 +40,8 @@ struct TableModel extends BaseModel
 	Dict dictionary = {};
 	bool is_loading = false;
 	Callback get_href = null;
+	Callback get_item_pk = null;
+	Callback get_names = null;
 	string foreign_key = null;
 	var foreign_value = null;
 	
@@ -59,7 +61,19 @@ struct TableModel extends BaseModel
 	/**
 	 * Set href
 	 */
-	TableModel setGetHref(string get_href) => this.clone({ "get_href": get_href });
+	TableModel setGetHref(Callback value) => this.clone({ "get_href": value });
+	
+	
+	/**
+	 * Set get item primary key function
+	 */
+	TableModel setGetItemPk(Callback value) => this.clone({ "get_item_pk": value });
+	
+	
+	/**
+	 * Set get names
+	 */
+	TableModel setGetNames(Callback value) => this.clone({ "get_names": value });
 	
 	
 	/**
@@ -260,9 +274,8 @@ struct TableModel extends BaseModel
 	 */
 	async static Dict event
 	(
-		ModelProxy<BaseModel> page_model,
 		ModelProxy<BaseModel> widget,
-		string action, Dict obj
+		string action, Dict obj, var tag = null
 	)
 	{
 		if (action == static::ON_SEARCH_BEFORE)
@@ -315,7 +328,7 @@ struct TableModel extends BaseModel
 		/* After event */
 		Dict d = await static::callEvent(model, static::ON_SEARCH_AFTER, {
 			"api": res,
-			"post_data": post_data,
+			"post_data": d["post_data"],
 		});
 	}
 	

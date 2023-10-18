@@ -18,6 +18,8 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.lib;
+use Runtime.Callback;
 use Runtime.ModelProxy;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseRoute;
@@ -36,7 +38,9 @@ struct FormModel extends BaseModel
 	static const string ON_DELETE_AFTER = "runtime.widget.form::delete_after";
 	
 	Dict item = null;
+	Dict default_item = {};
 	int error_code = 0;
+	string action = "";
 	string api_name = "";
 	string error_message = "";
 	Dict field_result = null;
@@ -45,6 +49,7 @@ struct FormModel extends BaseModel
 	Dict dictionary = {};
 	Dict item_pk = null;
 	bool is_loading = false;
+	Callback get_names = null;
 	string foreign_key = null;
 	var foreign_value = null;
 	
@@ -56,31 +61,51 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Set page
+	 */
+	FormModel setAction(string action) => this.clone({ "action": action });
+	
+	
+	/**
+	 * Set get names
+	 */
+	FormModel setGetNames(Callback value) => this.clone({ "get_names": value });
+	
+	
+	/**
 	 * Set foreign key
 	 */
 	FormModel setForeignKey(string foreign_key, var foreign_value) =>
 		this.clone({
 			"foreign_key": foreign_key,
 			"foreign_value": foreign_value,
-		});
+		})
+	;
 	
 	
 	/**
 	 * Set item
 	 */
-	FormModel setItem(Dict item)
-	{
-		return this.clone({ "item": item });
-	}
+	FormModel setItem(Dict item) => this.clone({ "item": item });
+	
+	
+	/**
+	 * Set default item
+	 */
+	FormModel setDefaultItem(Dict item) => this.clone({ "default_item": item });
 	
 	
 	/**
 	 * Clear item
 	 */
-	FormModel clearItem()
-	{
-		return this.clone({ "item": {} });
-	}
+	FormModel clearItem() => this.clone({ "item": this.default_item });
+	
+	
+	/**
+	 * Clear error
+	 */
+	FormModel clearFieldErrors() => this.clone({ "field_result": null });
+	
 	
 	
 	/**
@@ -199,6 +224,14 @@ struct FormModel extends BaseModel
 	 */
 	FormModel setFieldsList(Collection fields_list) => this.clone{
 		"fields_list": fields_list,
+	};
+	
+	
+	/**
+	 * Remove field from list
+	 */
+	FormModel removeFieldFromList(string key) => this.clone{
+		"fields_list": this.fields_list.findAndRemove( lib::equalAttr("name", key) )
 	};
 	
 	
@@ -357,9 +390,8 @@ struct FormModel extends BaseModel
 	 */
 	async static Dict event
 	(
-		ModelProxy<BaseModel> page_model,
 		ModelProxy<BaseModel> widget,
-		string action, Dict obj
+		string action, Dict obj, var tag = null
 	)
 	{
 		if (
@@ -372,6 +404,7 @@ struct FormModel extends BaseModel
 			if (foreign_key != null)
 			{
 				obj <= post_data <= { foreign_key } <= widget.data('foreign_value');
+				obj <= post_data <= item <= { foreign_key } <= widget.data('foreign_value');
 			}
 		}
 		return obj;
@@ -418,7 +451,7 @@ struct FormModel extends BaseModel
 		/* After event */
 		await static::callEvent(model, static::ON_LOAD_ITEM_AFTER, {
 			"api": res,
-			"post_data": post_data,
+			"post_data": d["post_data"],
 		});
 	}
 	
@@ -462,7 +495,7 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiSave(model, post_data);
+		ApiResult res = await static::callApiSave(model, d["post_data"]);
 		
 		/* Set api result */
 		model.commit("setApiResult", "save", res);
@@ -470,7 +503,7 @@ struct FormModel extends BaseModel
 		/* After event */
 		await static::callEvent(model, static::ON_SAVE_AFTER, {
 			"api": res,
-			"post_data": post_data,
+			"post_data": d["post_data"],
 		});
 	}
 	
@@ -511,7 +544,7 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiDelete(model, post_data);
+		ApiResult res = await static::callApiDelete(model, d["post_data"]);
 		
 		/* Set api result */
 		model.commit("setApiResult", "delete", res);
@@ -519,7 +552,7 @@ struct FormModel extends BaseModel
 		/* After event */
 		Dict d = await static::callEvent(model, static::ON_DELETE_AFTER, {
 			"api": res,
-			"post_data": post_data,
+			"post_data": d["post_data"],
 		});
 	}
 	

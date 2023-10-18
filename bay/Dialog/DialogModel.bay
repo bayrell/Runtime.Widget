@@ -169,6 +169,15 @@ struct DialogModel extends BaseStruct
 	
 	
 	/**
+	 * Error code
+	 */
+	DialogModel setErrorCode(int error_code) => this.copy
+	{
+		"error_code": error_code,
+	};
+	
+	
+	/**
 	 * Success
 	 */
 	DialogModel setSuccess(string error_message, int error_code = 1) => this.copy
