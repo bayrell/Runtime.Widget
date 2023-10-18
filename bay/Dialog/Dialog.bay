@@ -1,0 +1,448 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2021 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Dialog.Dialog">
+
+<use name="Runtime.ModelProxy" />
+<use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.KeyDownEvent" />
+<use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Web.Events.SignalEvent" />
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Dialog.DialogEvent" />
+<use name="Runtime.Widget.Dialog.DialogModel" />
+<use name="Runtime.Widget.Form.Form" component="true" />
+
+
+<style>
+.dialog_box, .dialog_shadow{
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	z-index: 1001;
+}
+.dialog_box{
+	overflow: auto;
+	overflow-y: scroll;
+	display: none;
+}
+.dialog_box--open{
+	display: block;
+}
+.dialog_shadow{
+	background-color: #000;
+	opacity: 0.2;
+	overflow: hidden;
+	display: none;
+}
+.dialog_shadow--open{
+	display: block;
+}
+.dialog_wrap{
+	width: 100%;
+	min-height: 100%;
+}
+.dialog_wrap > tr > td{
+	padding: 20px;
+}
+.dialog{
+	position: relative;
+	padding: 20px;
+	background-color: white;
+	max-width: 350px;
+	margin: 0 auto;
+	width: auto;
+	z-index: 1002;
+	box-shadow: 2px 4px 10px 0px rgba(0,0,0,0.5);
+	font-size: ${ vars["font", "size"] };
+}
+.dialog %(Form)web_form__content{
+	margin-bottom: 0;
+}
+.dialog_title, .dialog_text, .dialog_promt{
+	text-align: center;
+	padding-bottom: 12px;
+}
+.dialog_title{
+	font-weight: bold;
+}
+.dialog_promt_input{
+	padding: 6px 12px;
+	width: 100%;
+}
+.dialog_text{
+	white-space: pre-wrap;
+}
+.dialog_buttons{
+	margin-top: 12px;
+}
+.dialog_buttons--right{
+	text-align: right;
+}
+.dialog_buttons--yes_no{
+    display: flex;
+    justify-content: space-between;
+}
+.dialog_buttons %(Button)web_button{
+	margin: 0 5px;
+	min-width: 80px;
+}
+.dialog_buttons %(Button)web_button:first-child{
+	margin-left: 0;
+}
+.dialog_buttons %(Button)web_button:last-child{
+	margin-right: 0;
+}
+.dialog_row{
+	margin-bottom: 6px;
+}
+.dialog_row:last-child{
+	margin-bottom: 0px;
+}
+.dialog_result{
+	text-align: center;
+	margin-top: 12px;
+	white-space: break-spaces;
+}
+.dialog_result--hide{
+	display: none;
+}
+.dialog_result--success{
+	color: green;
+}
+.dialog_result--error{
+	color: red;
+}
+</style>
+
+
+<template>
+	%set string width = static::getParams(model, render_params, "width");
+	
+	<div class='dialog_shadow'
+		class={{ model.is_open ? 'dialog_shadow--open' : 'dialog_shadow--hide' }}></div>
+	
+	<div class="dialog_box" @ref="dialog_box"
+		class={{ model.is_open ? 'dialog_box--open' : 'dialog_box--hide' }}>
+		<table class='dialog_wrap'><tr><td>
+			<div class='dialog' style={{ ((width != "") ? "max-width:" ~ width ~ ";" : "") }}>
+				%render static::renderDialog();
+			</div>
+		</td></tr></table>
+	</div>
+	
+</template>
+
+
+<template name="renderDialog">
+	%render static::renderTitle();
+	%render static::renderText();
+	%render static::renderPromt();
+	%render static::renderContent();
+	%render static::renderResult();
+	%render static::renderButtons();
+</template>
+
+
+<template name="renderTitle">
+	%if (model.title != "")
+	{
+		<div class='dialog_title'>{{ model.title }}</div>
+	}
+</template>
+
+
+<template name="renderText">
+	%if (model.text != "")
+	{
+		<div class='dialog_text'>{{ model.text }}</div>
+	}
+</template>
+
+
+<template name="renderPromt">
+	%set string style = static::getStyle(model, render_params);
+	%if (style == DialogModel::STYLE_PROMT)
+	{
+		<div class='dialog_promt'>
+			<input 
+				class='dialog_promt_input'
+				@event:KeyDownEvent="onInputKeyDown"
+				@bind="input"
+			/>
+		</div>
+	}
+</template>
+
+
+<template name="renderContent">
+	%set string style = static::getStyle(model, render_params);
+	%if (
+		style == DialogModel::STYLE_CONTENT or
+		style == DialogModel::STYLE_YES_NO
+	)
+	{
+		<div class='dialog_content'>
+			{{ render_content }}
+		</div>
+	}
+</template>
+
+
+<template name="renderButtons">
+	%set Collection buttons = render_params["buttons"] |> default Collection null;
+	%set fn renderButtons = render_params["renderButtons"];
+	%set bool show_buttons = render_params["show_buttons"] |> default bool true;
+	%set string style = static::getStyle(model, render_params);
+	%if (show_buttons)
+	{
+		%if (rtl::exists(renderButtons) and rtl::isFn(renderButtons))
+		{
+			<div class='dialog_buttons'>
+				%render renderButtons();
+			</div>
+		}
+		%else if (rtl::exists(buttons))
+		{
+			<div class='dialog_buttons'>
+			%for (int i=0; i<buttons.count(); i++)
+			{
+				%set Dict button = buttons[i];
+				<Button @event:MouseClickEvent="onButtonClick" ...button>
+					{{ button["value"] }}
+				</Button>
+			}
+			</div>
+		}
+		%else if (style == DialogModel::STYLE_ALERT)
+		{
+			<div class='dialog_buttons'>
+				<Button data-action='ok' @event:MouseClickEvent="onButtonClick">OK</Button>
+			</div>
+		}
+		%else if (style == DialogModel::STYLE_YES_NO)
+		{
+			<div class='dialog_buttons dialog_buttons--yes_no'>
+				<Button data-action='cancel' @event:MouseClickEvent="onButtonClick">Cancel</Button>
+				<Button type="success" data-action='yes'
+					@event:MouseClickEvent="onButtonClick">Yes</Button>
+			</div>
+		}
+		%else
+		{
+			<div class='dialog_buttons'>
+				<Button data-action='cancel' @event:MouseClickEvent="onButtonClick">Cancel</Button>
+				<Button type="primary" data-action='ok'
+					@event:MouseClickEvent="onButtonClick">OK</Button>
+			</div>
+		}
+	}
+</template>
+
+
+<template name="renderButton" args="string button_type">
+	%if (button_type == "ok")
+	{
+		<Button data-action="ok" @event:MouseClickEvent="onButtonClick" @key="ok">OK</Button>
+	}
+	%if (button_type == "cancel")
+	{
+		<Button data-action="cancel" @event:MouseClickEvent="onButtonClick" @key="cancel">Cancel</Button>
+	}
+</template>
+
+
+<template name="renderButtonInfo" args="Dict button_info">
+	<Button @event:MouseClickEvent="onButtonClick" ...button_info>{{ button_info["value"] }}</Button>
+</template>
+
+
+<template name="renderResult">
+	%if (model.message != "")
+	{
+		<div class='dialog_result' class={{ static::getResultClass(model) }}>
+			{{ model.error_message }}
+		</div>
+	}
+</template>
+
+
+
+<script>
+
+var dialog_box;
+bool reset_scroll = false;
+
+
+/**
+ * Returns params
+ */
+pure string getParams(DialogModel model, Dict render_params, string name, var default_value=null)
+{
+	if (render_params.has(name))
+	{
+		return render_params.get(name);
+	}
+	
+	var value = model[name];
+	if (value == null) value = default_value;
+	return value;
+}
+
+
+/**
+ * Returns dialog style
+ */
+pure string getStyle(DialogModel model, Dict render_params)
+{
+	return static::getParams(model, render_params, "style");
+}
+
+
+/**
+ * Returns result class
+ */
+pure string getResultClass(DialogModel model)
+{
+	if (model.error_code == 0 and model.error_message == "") return "dialog_result--hide";
+	if (model.error_code < 0) return "dialog_result--error";
+	if (model.error_code > 0) return "dialog_result--success";
+	return "";
+}
+
+
+/**
+ * Validate
+ */
+public bool validate()
+{
+	if (this.params.style == DialogModel::STYLE_PROMT)
+	{
+		if (this.model.input == "")
+		{
+			this.commit("setError", "Type input");
+			return false;
+		}
+	}
+	return true;
+}
+
+
+/**
+ * Input keydown
+ */
+public async void onInputKeyDown(Message<KeyDownEvent> msg)
+{
+	KeyDownEvent e = msg.data;
+	if (e.keyCode == 13)
+	{
+		this.commit("setInput", e.value);
+		this.commit("setError", "");
+		this.pressButton(DialogModel::BUTTON_RESULT_OK);
+	}
+}
+
+
+/**
+ * Button click
+ */
+public async void onButtonClick(Message<MouseClickEvent> msg)
+{
+	string tag = msg.sender.params.get("data-action", "");
+	await this.pressButton(tag);
+}
+
+
+/**
+ * Press button
+ * @param string value
+ */
+public async void pressButton(string value)
+{
+	bool auto_hide = static::getParams(this.model(), this.params, "auto_hide");
+	
+	if (value == DialogModel::BUTTON_RESULT_OK)
+	{
+		bool is_valid = this.validate();
+		if (not is_valid)
+		{
+			return;
+		}
+	}
+	
+	DialogModel model = this.model();
+	if (auto_hide) this.commit("hide");
+	
+	await this.sendEvent
+	(
+		new DialogEvent
+		{
+			"input": model.input,
+			"model": model,
+			"tag": model.tag,
+			"button_result": value,
+		}
+	);
+}
+
+
+string is_open = "";
+
+
+/**
+ * Returns true if component is changed and need to repaint
+ */
+bool isChanged(var model, Dict params, var content)
+{
+	bool res = parent::isChanged(model, params, content);
+	if (!res) return false;
+	
+	if (this.old_model.is_open == false and model.is_open == true)
+	{
+		this.do_open = "show";
+	}
+	else if (this.old_model.is_open == true and model.is_open == false)
+	{
+		this.do_open = "hide";
+	}
+	
+	return true;
+}
+
+
+/**
+ * Repaint component
+ */
+void onRepaint()
+{
+	if (this.do_open == "show")
+	{
+		document.body.classList.add('scroll-lock');
+		this.dialog_box.elem.scrollTop = 0;
+		this.do_open = "";
+	}
+	if (this.do_open == "hide")
+	{
+		document.body.classList.remove('scroll-lock');
+		this.do_open = "";
+	}
+}
+
+</script>
+
+</class>

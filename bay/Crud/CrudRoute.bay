@@ -78,10 +78,9 @@ class CrudRoute extends BaseRoute
 	async void actionIndex()
 	{
 		this.page_model.commit("setAction", "index");
-		TableModel table = this.addWidget(new TableModel{"widget_name": "table"});
 		
-		/* Load widgets */
-		await this.loadWidgets();
+		/* Setup widget */
+		await this.setupWidget();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "index") );
@@ -97,10 +96,9 @@ class CrudRoute extends BaseRoute
 	async void actionSave()
 	{
 		this.page_model.commit("setAction", "save");
-		FormModel form = this.addWidget(new FormModel{"widget_name": "form"});
 		
-		/* Load widgets */
-		await this.loadWidgets();
+		/* Setup widget */
+		await this.setupWidget();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "save") );
@@ -116,10 +114,9 @@ class CrudRoute extends BaseRoute
 	async void actionDelete()
 	{
 		this.page_model.commit("setAction", "delete");
-		FormModel form = this.addWidget(new FormModel{"widget_name": "form"});
 		
-		/* Load widgets */
-		await this.loadWidgets();
+		/* Setup widget */
+		await this.setupWidget();
 		
 		/* Set title */
 		this.setPageTitle( this.page_model.call("getPageTitle", "delete") );

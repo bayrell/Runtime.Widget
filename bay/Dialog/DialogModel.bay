@@ -1,0 +1,214 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Dialog;
+
+use Runtime.BaseStruct;
+use Runtime.Web.ApiResult;
+
+
+struct DialogModel extends BaseStruct
+{
+	static const string STYLE_PROMT = "promt";
+	static const string STYLE_CONFIRM = "confirm";
+	static const string STYLE_ALERT = "alert";
+	static const string STYLE_CONTENT = "content";
+	static const string STYLE_YES_NO = "yes_no";
+	
+	static const string BUTTON_RESULT_OK = "ok";
+	static const string BUTTON_RESULT_CANCEL = "cancel";
+	static const string BUTTON_RESULT_EXIT = "exit";
+	
+	public bool is_open = false;
+	public bool is_modal = false;
+	public bool auto_hide = true;
+	public string title = "";
+	public string style = "";
+	public string text = "";
+	public string input = "";
+	public string button_result = "";
+	public int error_code = 0;
+	public string width = "";
+	public string error_message = "";
+	public primitive tag = null;
+	
+	
+	/**
+	 * Show dialog
+	 */
+	DialogModel show(Dict params = null)
+	{
+		if (params == null)
+		{
+			return this.copy
+			{
+				"input": "",
+				"is_open": true,
+				"button_result": "",
+				"error_message": "",
+			};
+		}
+		
+		params = params.concat
+		{
+			"input": params.get("input", ""),
+			"title": params.get("title", ""),
+			"text": params.get("text", ""),
+			"is_open": true,
+			"button_result": "",
+			"message": "",
+			"success_message": "",
+			"error_message": "",
+		};
+		
+		return this.copy(params);
+	}
+	
+	
+	/**
+	 * Hide dialog
+	 */
+	DialogModel hide(string button_result = "") => this.copy
+	{
+		"is_open": false,
+		"button_result": button_result
+		"tag": null,
+	};
+	
+	
+	/**
+	 * Set input
+	 */
+	DialogModel setInput(string input) => this.copy{ "input": input };
+	
+	
+	/**
+	 * Set title
+	 */
+	DialogModel setTitle(string title) => this.copy{ "title": title };
+	
+	
+	/**
+	 * Set wait message
+	 */
+	DialogModel setWaitMessage()
+	{
+		DialogModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "Wait please ...";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Clear error message
+	 */
+	DialogModel clearErrorMessage()
+	{
+		DialogModel model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Returns true if error
+	 */
+	bool isError() => this.error_code < 0;
+	
+	
+	/**
+	 * Returns true if success
+	 */
+	bool isSuccess() => this.error_code > 0;
+	
+	
+	/**
+	 * Set api result
+	 */
+	DialogModel setApiResult(string event, ApiResult res)
+	{
+		if (res == null) return this;
+		
+		DialogModel model = this;
+		
+		model <= error_message <= res.getErrorMessage();
+		model <= error_code <= res.getErrorCode();
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Message
+	 */
+	DialogModel setMessage(string error_message) => this.copy
+	{
+		"error_message": error_message,
+	};
+	
+	
+	/**
+	 * Success
+	 */
+	DialogModel setSuccess(string error_message, int error_code = 1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Error
+	 */
+	DialogModel setError(string error_message, int error_code = -1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Alert
+	 */
+	pure DialogModel alert(string text) => this.show
+	(
+		{
+			"style": static::STYLE_ALERT,
+			"text": text,
+		}
+	);
+	
+	
+	/**
+	 * Confirm
+	 */
+	DialogModel confirm(string text) => this.show
+	(
+		{
+			"style": static::STYLE_CONFIRM,
+			"text": text,
+		}
+	);
+	
+}

@@ -109,8 +109,16 @@
 			enctype="multipart/form-data" onsubmit="return false;"
 		>
 			%render static::renderContent();
-			%render static::renderButtons();
-			%render static::renderResult();
+			
+			%if (static::checkParams(render_params, "show_buttons"))
+			{
+				%render static::renderButtons();
+			}
+			
+			%if (static::checkParams(render_params, "show_result"))
+			{
+				%render static::renderResult();
+			}
 		</form>
 	}
 	%else
@@ -135,6 +143,20 @@
 
 
 <script>
+
+/**
+ * Check params
+ */
+static void checkParams(Dict render_params, string key)
+{
+	if (not render_params.has(key)) return true;
+	
+	var value = render_params[key];
+	if (value === false or value == "false") return false;
+	
+	return true;
+}
+
 
 /**
  * Save click
