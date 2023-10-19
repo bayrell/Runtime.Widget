@@ -48,21 +48,25 @@
 
 
 <template name="renderField" args="int row_number, FieldComponent field, Dict item">
-    
-    %if (field.name == "row_buttons")
+	
+	%if (field.component != null or field.render_method or field.value_method)
+	{
+		%render parent::renderField(row_number, field, item);
+	}
+	%elseif (field.name == "row_buttons")
 	{
 		<div class="web_table__td_row_buttons">
 			<Button type="small"
-    			@event:MouseClickEvent="onEditClick" data-item={{ item }}>Edit</Button>
-    		<Button type="danger small"
-    			@event:MouseClickEvent="onDeleteClick" data-item={{ item }}>Delete</Button>
+				@event:MouseClickEvent="onEditClick" data-item={{ item }}>Edit</Button>
+			<Button type="danger small"
+				@event:MouseClickEvent="onDeleteClick" data-item={{ item }}>Delete</Button>
 		</div>
 	}
-    %else
-    {
-        %render parent::renderField(row_number, field, item);
-    }
-    
+	%else
+	{
+		%render parent::renderField(row_number, field, item);
+	}
+	
 </template>
 
 

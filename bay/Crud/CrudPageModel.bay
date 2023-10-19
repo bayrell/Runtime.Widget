@@ -52,12 +52,12 @@ struct CrudPageModel extends CrudWidget
 		
 		if (table.data() != null)
 		{
-			await static::setupWidgetTable(model, table, route);
+			await static::initWidgetTable(model, table, route);
 		}
 		
 		if (form.data() != null)
 		{
-			await static::setupWidgetForm(model, form, route);
+			await static::initWidgetForm(model, form, route);
 		}
 		
 		await static::initComponents(model,  route);
@@ -75,7 +75,7 @@ struct CrudPageModel extends CrudWidget
 	/**
 	 * Setup widget routes
 	 */
-	async static void setupWidgetTable
+	async static void initWidgetTable
 	(
 		ModelProxy<BaseModel> page_model,
 		ModelProxy<BaseModel> widget,
@@ -88,7 +88,7 @@ struct CrudPageModel extends CrudWidget
 	/**
 	 * Setup widget routes
 	 */
-	async static void setupWidgetForm
+	async static void initWidgetForm
 	(
 		ModelProxy<BaseModel> page_model,
 		ModelProxy<BaseModel> widget,

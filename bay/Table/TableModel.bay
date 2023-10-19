@@ -37,14 +37,13 @@ struct TableModel extends BaseModel
 	string error_message = "";
 	Dict fields = {};
 	Collection fields_list = [];
-	Dict dictionary = {};
 	bool is_loading = false;
 	Callback get_href = null;
 	Callback get_item_pk = null;
 	Callback get_names = null;
 	string foreign_key = null;
 	var foreign_value = null;
-	bool show_table_top = false;
+	bool show_table_top = true;
 	
 	int page = 0;
 	int pages = 0;
@@ -91,14 +90,6 @@ struct TableModel extends BaseModel
 			"foreign_key": foreign_key,
 			"foreign_value": foreign_value,
 		});
-	
-	
-	/**
-	 * Set dictionary
-	 */
-	TableModel setDictionary(ApiResult res)
-	{
-	}
 	
 	
 	/**

@@ -46,6 +46,7 @@ struct FormModel extends BaseModel
 	Dict field_result = null;
 	Dict fields = {};
 	Collection fields_list = [];
+	Collection dictionary_list = [];
 	Dict dictionary = {};
 	Dict item_pk = null;
 	bool is_loading = false;
@@ -153,6 +154,15 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Add dictionary field list
+	 */
+	FormModel addDictionaryField(Dict obj) => this.clone
+	{
+		"dictionary_list": this.dictionary_list.pushIm(obj)
+	};
+	
+	
+	/**
 	 * Set fields
 	 */
 	FormModel setFields(Dict fields) => this.clone{
@@ -174,18 +184,30 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Setup dictionary
+	 */
+	FormModel setDictionary(string from, Collection items)
+	{
+		Dict dictionary = this.dictionary;
+		dictionary <= { from } <= items;
+		return this.clone{
+			"dictionary": dictionary,
+		}
+	}
+	
+	
+	/**
 	 * Setup field options from api
 	 */
-	FormModel setFieldOptionsFromApi(Dict obj)
+	static FormModel convertDictionaryToOptions(Dict obj)
 	{
 		ApiResult api_res = obj["api"];
 		string from = obj["from"];
-		string to = obj["to"];
-		fn item = obj["item"]
-		fn filter = obj["filter"]
+		Callback filter = obj["filter"];
+		Callback option = obj["option"];
 		
 		Collection options = api_res["data", "dictionary", from];
-		if (options == null) return this;
+		if (options == null) return null;
 		
 		/* Filter options */
 		if (filter != null)
@@ -194,15 +216,31 @@ struct FormModel extends BaseModel
 		}
 		
 		/* Map options */
-		if (item != null)
+		if (option != null)
 		{
-			options = options.map(item);
+			options = options.map(option);
 		}
 		
 		/* Sort options */
 		options = options.sort(
 			int (Dict a, Dict b) => a["label"] > b["label"]
 		);
+		
+		return options;
+	}
+	
+	
+	/**
+	 * Setup field options from api
+	 */
+	FormModel setFieldOptionsFromApi(Dict obj)
+	{
+		ApiResult api_res = obj["api"];
+		string from = obj["from"];
+		string to = obj["to"];
+		
+		Collection options = static::convertDictionaryToOptions(obj);
+		if (options == null) return this;
 		
 		/* Set fields */
 		Dict fields = this.fields;
@@ -394,6 +432,7 @@ struct FormModel extends BaseModel
 		string action, Dict obj, var tag = null
 	)
 	{
+		/* Setup foreign keys */
 		if (
 			action == static::ON_LOAD_ITEM_BEFORE or
 			action == static::ON_SAVE_BEFORE or
@@ -407,6 +446,22 @@ struct FormModel extends BaseModel
 				obj <= post_data <= item <= { foreign_key } <= widget.data('foreign_value');
 			}
 		}
+		
+		/* Setup dictionary */
+		if (
+			action == FormModel::ON_LOAD_ITEM_AFTER and
+			obj["api"].isSuccess()
+		)
+		{
+			Collection dictionary_list = widget.data('dictionary_list');
+			for (int i=0; i<dictionary_list.count(); i++)
+			{
+				Dict item = dictionary_list.item(i);
+				item <= api <= obj["api"];
+				widget.commit("setFieldOptionsFromApi", item);
+			}
+		}
+		
 		return obj;
 	}
 	

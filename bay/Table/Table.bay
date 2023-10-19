@@ -56,32 +56,7 @@
 
 <template name="renderField" args="int row_number, FieldComponent field, Dict item">
 	
-	%if (field.name == "row_number")
-	{
-		{{ model.limit * (model.page - 1) + row_number + 1 }}
-	}
-	%elseif (field.name == "row_buttons")
-	{
-		%if (model.get_href == null)
-		{
-			{{ "table model.get_href is null" }}
-		}
-		%else
-		{
-			%set string href_edit = model.get_href.call(["edit", {"item": item}]);
-			%set string href_delete = model.get_href.call(["delete", {"item": item}]);
-			
-			<div class="web_table__td_row_buttons">
-				<Button type="small" href={{ href_edit }}>
-					Edit
-				</Button>
-				<Button type="danger small" href={{ href_delete }}>
-					Delete
-				</Button>
-			</div>
-		}
-	}
-	%elseif (field.component != null)
+	%if (field.component != null)
 	{
 		%set FieldInfo params = model.fields[field.name];
 		%if (params)
@@ -112,6 +87,31 @@
 	%elseif (field.value_method)
 	{
 		{{ field.value_method.call([layout, model, row_number, field, item]) }}
+	}
+	%elseif (field.name == "row_number")
+	{
+		{{ model.limit * (model.page - 1) + row_number + 1 }}
+	}
+	%elseif (field.name == "row_buttons")
+	{
+		%if (model.get_href == null)
+		{
+			{{ "table model.get_href is null" }}
+		}
+		%else
+		{
+			%set string href_edit = model.get_href.call(["edit", {"item": item}]);
+			%set string href_delete = model.get_href.call(["delete", {"item": item}]);
+			
+			<div class="web_table__td_row_buttons">
+				<Button type="small" href={{ href_edit }}>
+					Edit
+				</Button>
+				<Button type="danger small" href={{ href_delete }}>
+					Delete
+				</Button>
+			</div>
+		}
 	}
 	%else
 	{
