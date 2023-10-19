@@ -47,7 +47,7 @@
 </template>
 
 
-<template name="renderField" args="int row_number, FieldComponent field, Dict item">
+<template name="renderField" args="int row_number, FieldInfo field, Dict item">
 	
 	%if (field.component != null or field.render_method or field.value_method)
 	{
@@ -166,10 +166,8 @@ async void onEditClick(Message<MouseClickEvent> msg)
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	ModelProxy page_model = this.proxy();
 	
-	Callback get_item_pk = page_model.data("get_item_pk");
-	rtl::assert(get_item_pk != null, "get_item_pk is null");
-	
-	Dict item_pk = get_item_pk.call([msg.sender.params.get("data-item")]);
+	Dict item = msg.sender.params.get("data-item");
+	Dict item_pk = page_model.call("getPrimaryKey", item);
 	
 	form.commit("setAction", "save");
 	form.commit("setPrimaryKey", item_pk);
@@ -190,11 +188,8 @@ async void onDeleteClick(Message<MouseClickEvent> msg)
 	ModelProxy delete_dialog = this.proxy("delete_dialog");
 	ModelProxy page_model = this.proxy();
 	
-	Callback get_item_pk = page_model.data("get_item_pk");
-	rtl::assert(get_item_pk != null, "get_item_pk is null");
-	
 	Dict item = msg.sender.params.get("data-item");
-	Dict item_pk = page_model.data("get_item_pk").call([item]);
+	Dict item_pk = page_model.call("getPrimaryKey", item);
 	
 	form.commit("setAction", "delete");
 	form.commit("setPrimaryKey", item_pk);

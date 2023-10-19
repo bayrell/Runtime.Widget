@@ -79,7 +79,7 @@ struct TableDialogModel extends TableModel
 	static void createWidget(ModelProxy<BaseModel> model)
 	{
 		/* Add form widget */
-		model.commit(new FormModel{ "widget_name": "form" });
+		model.commit("addWidget", new FormModel{ "widget_name": "form" });
 	}
 	
 }

@@ -275,7 +275,7 @@ struct FormModel extends BaseModel
 	 * Remove field from list
 	 */
 	FormModel removeFieldFromList(string key) => this.clone{
-		"fields_list": this.fields_list.findAndRemove( lib::equalAttr("name", key) )
+		"fields_list": this.fields_list.removeItem(key)
 	};
 	
 	
