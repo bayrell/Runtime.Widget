@@ -407,9 +407,9 @@ struct FormModel extends BaseModel
 	/**
 	 * Load widget
 	 */
-	async static void loadWidget(ModelProxy model, BaseRoute route)
+	async static void loadWidget(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidget(model, route);
+		await parent::loadWidget(model, layout);
 		
 		Dict item_pk = model.data("item_pk");
 		if (item_pk == null)

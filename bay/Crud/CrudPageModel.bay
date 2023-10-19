@@ -22,14 +22,22 @@ use Runtime.ModelProxy;
 use Runtime.Web.BaseModel;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.Layout;
-use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Form.FormCrud;
 use Runtime.Widget.Table.TableCrud;
 
 
-struct CrudPageModel extends CrudWidget
+struct CrudPageModel extends BaseModel
 {
+	string action = "";
 	string back_page_url = "";
+	
+	
+	/**
+	 * Set action
+	 */
+	CrudPageModel setAction(string action) => this.clone{
+		"action": action,
+	};
 	
 	
 	/**
@@ -38,64 +46,6 @@ struct CrudPageModel extends CrudWidget
 	CrudPageModel setBackPage(string url) => this.clone{
 		"back_page_url": url,
 	};
-	
-	
-	/**
-	 * Init widget
-	 */
-	async static void initWidget(ModelProxy<BaseModel> model, BaseRoute route)
-	{
-		await parent::initWidget(model, route);
-		
-		ModelProxy form = model.proxy(["widgets", "form"]);
-		ModelProxy table = model.proxy(["widgets", "table"]);
-		
-		if (table.data() != null)
-		{
-			await static::initWidgetTable(model, table, route);
-		}
-		
-		if (form.data() != null)
-		{
-			await static::initWidgetForm(model, form, route);
-		}
-		
-		await static::initComponents(model,  route);
-	}
-	
-	
-	/**
-	 * Init components
-	 */
-	async static void initComponents(ModelProxy<BaseModel> model, BaseRoute route)
-	{
-	}
-	
-	
-	/**
-	 * Setup widget routes
-	 */
-	async static void initWidgetTable
-	(
-		ModelProxy<BaseModel> page_model,
-		ModelProxy<BaseModel> widget,
-		BaseRoute route
-	)
-	{
-	}
-	
-	
-	/**
-	 * Setup widget routes
-	 */
-	async static void initWidgetForm
-	(
-		ModelProxy<BaseModel> page_model,
-		ModelProxy<BaseModel> widget,
-		BaseRoute route
-	)
-	{
-	}
 	
 	
 	/**

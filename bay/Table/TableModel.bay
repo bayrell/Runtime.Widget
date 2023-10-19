@@ -260,9 +260,9 @@ struct TableModel extends BaseModel
 	/**
 	 * Load widget
 	 */
-	async static void loadWidget(ModelProxy model, BaseRoute route)
+	async static void loadWidget(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidget(model, route);
+		await parent::loadWidget(model, layout);
 		await static::doSearch(model);
 	}
 	

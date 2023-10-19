@@ -25,17 +25,15 @@
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.FieldInfo" />
-<use name="Runtime.Widget.FieldItem" />
 
 
-<template name="renderField" args="FieldItem field">
+<template name="renderField" args="FieldInfo field">
 	
-	%set FieldInfo params = model.fields[field.name];
-	%if (params and field.component != null)
+	%if (field.component != null)
 	{
 		%set string field_name = field.name;
-		%set Collection options = params.options;
-		%set Dict component_settings = params.component_settings;
+		%set Collection options = field.options;
+		%set Dict component_settings = field.component_settings;
 		
 		<{field.component}
 			name={{ field_name }}
@@ -49,37 +47,33 @@
 </template>
 
 
-<template name="renderRow" args="var field">
+<template name="renderRow" args="FieldInfo field">
 	
-	%set FieldInfo params = model.fields[field.name];
-	%if (params != null)
-	{
-		%set string field_name = params.name;
+	%set string field_name = field.name;
+	
+	<div class="web_form__row" @key={{ field_name }}>
 		
-		<div class="web_form__row" @key={{ field_name }}>
-			
-			<label class="web_form__row_label">{{ params.label }}</label>
-			
-			%render static::renderField(field);
-			
-			%set Collection<string> field_result = model.getFieldResult(field_name);
-			%if (field_result.count() == 0)
-			{
-				<div class="web_form__field_result web_form__field_result--hide"
-					data-name={{ field_name }} @key="result1"></div>
-			}
-			%else
-			{
-				<div class="web_form__field_result" data-name={{ field_name }} @key="result2">
-					%for (int i=0; i<field_result.count(); i++)
-					{
-						<div>{{ field_result[i] }}</div>
-					}
-				</div>
-			}
-			
-		</div>
-	}
+		<label class="web_form__row_label">{{ field.label }}</label>
+		
+		%render static::renderField(field);
+		
+		%set Collection<string> field_result = model.getFieldResult(field_name);
+		%if (field_result.count() == 0)
+		{
+			<div class="web_form__field_result web_form__field_result--hide"
+				data-name={{ field_name }} @key="result1"></div>
+		}
+		%else
+		{
+			<div class="web_form__field_result" data-name={{ field_name }} @key="result2">
+				%for (int i=0; i<field_result.count(); i++)
+				{
+					<div>{{ field_result[i] }}</div>
+				}
+			</div>
+		}
+		
+	</div>
 	
 </template>
 
@@ -88,8 +82,11 @@
 	<div class="web_form__content">
 		%for (int i=0; i<model.fields_list.count(); i++)
 		{
-			%set FieldItem field = model.fields_list[i];
-			%render static::renderRow(field);
+			%set string field_name = model.fields_list[i];
+			%if (model.fields.has(field_name))
+			{
+				%render static::renderRow(model.fields.get(field_name));
+			}
 		}
 	</div>
 </template>

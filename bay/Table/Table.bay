@@ -26,7 +26,7 @@
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Crud.CrudPageModel" />
 <use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.FieldComponent" />
+<use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.Pagination" component="true" />
 
@@ -54,30 +54,26 @@
 </template>
 
 
-<template name="renderField" args="int row_number, FieldComponent field, Dict item">
+<template name="renderField" args="int row_number, FieldInfo field, Dict item">
 	
 	%if (field.component != null)
 	{
-		%set FieldInfo params = model.fields[field.name];
-		%if (params)
+		%set Collection options = field.options;
+		%set Dict component_settings = field.component_settings;
+		
+		%set var value = "";
+		%if (field.value_method)
 		{
-			%set Collection options = params.options;
-			%set Dict component_settings = params.component_settings;
-			
-			%set var value = "";
-			%if (field.value_method)
-			{
-				%set fn f = rtl::method(field.value_method.get(0), field.value_method.get(1));
-				%set value = f(layout, model, row_number, field, item);
-			}
-			
-			<{field.component}
-				name={{ field.name }}
-				options={{ options }}
-				value={{ item[field.name] }}
-				...component_settings
-			/>
+			%set fn f = rtl::method(field.value_method.get(0), field.value_method.get(1));
+			%set value = f(layout, model, row_number, field, item);
 		}
+		
+		<{field.component}
+			name={{ field.name }}
+			options={{ options }}
+			value={{ item[field.name] }}
+			...component_settings
+		/>
 	}
 	%elseif (field.render_method)
 	{
@@ -130,18 +126,11 @@
 		<tr class="web_table__row_header">
 			%for (int i=0; i<columns.count(); i++)
 			{
-				%set FieldComponent field = columns[i];
-				%set string field_name = field.name;
+				%set string field_name = columns[i];
 				%if (fields.has(field_name))
 				{
 					<th class={{ "web_table__th--" ~ field_name }}>
-						{{ fields[field_name].label }}
-					</th>
-				}
-				%else
-				{
-					<th class={{ "web_table__th--" ~ field_name }}>
-						{{ field.label }}
+						{{ fields.get(field_name).label }}
 					</th>
 				}
 			}
@@ -156,10 +145,14 @@
 	<tr class="web_table__row_item">
 		%for (int i=0; i<columns.count(); i++)
 		{
-			%set FieldComponent field = columns[i];
-			<td class={{ "web_table__td--" ~ field.name }}>
-				%render static::renderField(row_number, field, item);
-			</td>
+			%set string field_name = columns[i];
+			%set FieldInfo field = model.fields.get(field_name);
+			%if (field)
+			{
+				<td class={{ "web_table__td--" ~ field.name }}>
+					%render static::renderField(row_number, field, item);
+				</td>
+			}
 		}
 	</tr>
 </template>

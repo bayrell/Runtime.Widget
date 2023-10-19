@@ -76,10 +76,10 @@ struct TableDialogModel extends TableModel
 	/**
 	 * Create widget
 	 */
-	async static void createWidget(ModelProxy<BaseModel> model, BaseRoute route)
+	static void createWidget(ModelProxy<BaseModel> model)
 	{
 		/* Add form widget */
-		route.addWidget(new FormModel{ "widget_name": "form" }, model);
+		model.commit(new FormModel{ "widget_name": "form" });
 	}
 	
 }
