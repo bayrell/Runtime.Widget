@@ -36,14 +36,14 @@
 	{
 		<div class="web_table__top">
 		
-			%if (model.get_href == null)
+			%if (model.get_route_name == null)
 			{
-				{{ "table model.get_href is null" }}
+				{{ "table model.get_route_name is null" }}
 			}
 			%else
 			{
 				<Button type="success middle"
-					href={{ model.get_href.call(["add"]) }}>[+] Add</Button>
+					href={{ static::url(model.get_route_name.call(["add"])) }}>[+] Add</Button>
 			}
 		</div>
 	}
@@ -90,20 +90,21 @@
 	}
 	%elseif (field.name == "row_buttons")
 	{
-		%if (model.get_href == null)
+		%if (model.get_route_name == null)
 		{
-			{{ "table model.get_href is null" }}
+			{{ "table model.get_route_name is null" }}
 		}
 		%else
 		{
-			%set string href_edit = model.get_href.call(["edit", {"item": item}]);
-			%set string href_delete = model.get_href.call(["delete", {"item": item}]);
+			%set string href_edit = model.get_route_name.call(["edit", {"item": item}]);
+			%set string href_delete = model.get_route_name.call(["delete", {"item": item}]);
 			
 			<div class="web_table__td_row_buttons">
-				<Button type="small" href={{ href_edit }}>
+				<Button type="small" href={{ static::url(href_edit, model.getPrimaryKey(item)) }}>
 					Edit
 				</Button>
-				<Button type="danger small" href={{ href_delete }}>
+				<Button type="danger small"
+					href={{ static::url(href_delete, model.getPrimaryKey(item)) }}>
 					Delete
 				</Button>
 			</div>

@@ -49,6 +49,7 @@ struct FormModel extends BaseModel
 	Collection dictionary_list = [];
 	Dict dictionary = {};
 	Dict item_pk = null;
+	Collection primary_keys = [];
 	bool is_loading = false;
 	Callback get_names = null;
 	string foreign_key = null;
@@ -71,6 +72,12 @@ struct FormModel extends BaseModel
 	 * Set get names
 	 */
 	FormModel setGetNames(Callback value) => this.clone({ "get_names": value });
+	
+	
+	/**
+	 * Set primary keys list
+	 */
+	FormModel setPrimaryKeys(Collection primary_keys) => this.clone({ "primary_keys": primary_keys });
 	
 	
 	/**
@@ -106,7 +113,6 @@ struct FormModel extends BaseModel
 	 * Clear error
 	 */
 	FormModel clearFieldErrors() => this.clone({ "field_result": null });
-	
 	
 	
 	/**

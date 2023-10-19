@@ -38,9 +38,9 @@ struct TableModel extends BaseModel
 	Dict fields = {};
 	Collection fields_list = [];
 	bool is_loading = false;
-	Callback get_href = null;
-	Callback get_item_pk = null;
 	Callback get_names = null;
+	Callback get_route_name = null;
+	Collection primary_keys = [];
 	string foreign_key = null;
 	var foreign_value = null;
 	bool show_table_top = true;
@@ -48,6 +48,7 @@ struct TableModel extends BaseModel
 	int page = 0;
 	int pages = 0;
 	int limit = 10;
+	string page_name = "page";
 	Collection<Dict> items = null;
 	Dict search_data = null;
 	
@@ -59,21 +60,36 @@ struct TableModel extends BaseModel
 	
 	
 	/**
-	 * Set href
-	 */
-	TableModel setGetHref(Callback value) => this.clone({ "get_href": value });
-	
-	
-	/**
-	 * Set get item primary key function
-	 */
-	TableModel setGetItemPk(Callback value) => this.clone({ "get_item_pk": value });
-	
-	
-	/**
 	 * Set get names
 	 */
 	TableModel setGetNames(Callback value) => this.clone({ "get_names": value });
+	
+	
+	/**
+	 * Set get route name
+	 */
+	TableModel setGetRouteName(Callback value) => this.clone({ "get_route_name": value });
+	
+	
+	/**
+	 * Set primary keys list
+	 */
+	TableModel setPrimaryKeys(Collection primary_keys) => this.clone({ "primary_keys": primary_keys });
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Dict item)
+	{
+		Map keys = new Map();
+		for (int i=0; i<this.primary_keys.count(); i++)
+		{
+			string field_name = this.primary_keys.get(i);
+			keys.setValue(field_name, item.get(field_name));
+		}
+		return keys.toDict();
+	}
 	
 	
 	/**
