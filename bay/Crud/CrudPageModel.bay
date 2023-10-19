@@ -41,6 +41,64 @@ struct CrudPageModel extends CrudWidget
 	
 	
 	/**
+	 * Init widget
+	 */
+	async static void initWidget(ModelProxy<BaseModel> model, BaseRoute route)
+	{
+		await parent::initWidget(model, route);
+		
+		ModelProxy form = model.proxy(["widgets", "form"]);
+		ModelProxy table = model.proxy(["widgets", "table"]);
+		
+		if (table.data() != null)
+		{
+			await static::setupWidgetTable(model, table, route);
+		}
+		
+		if (form.data() != null)
+		{
+			await static::setupWidgetForm(model, form, route);
+		}
+		
+		await static::initComponents(model,  route);
+	}
+	
+	
+	/**
+	 * Init components
+	 */
+	async static void initComponents(ModelProxy<BaseModel> model, BaseRoute route)
+	{
+	}
+	
+	
+	/**
+	 * Setup widget routes
+	 */
+	async static void setupWidgetTable
+	(
+		ModelProxy<BaseModel> page_model,
+		ModelProxy<BaseModel> widget,
+		BaseRoute route
+	)
+	{
+	}
+	
+	
+	/**
+	 * Setup widget routes
+	 */
+	async static void setupWidgetForm
+	(
+		ModelProxy<BaseModel> page_model,
+		ModelProxy<BaseModel> widget,
+		BaseRoute route
+	)
+	{
+	}
+	
+	
+	/**
 	 * Returns page title
 	 */
 	string getPageTitle(string action)
@@ -57,19 +115,19 @@ struct CrudPageModel extends CrudWidget
 		{
 			return "Edit " ~
 				this.getPageTitle("name") ~
-				" '" ~ this.getPageTitle("item") ~ "'"
+				" '" ~ this.getPageTitle("item_name") ~ "'"
 			;
 		}
 		else if (action == "delete")
 		{
 			return "Delete " ~
 				this.getPageTitle("name") ~
-				" '" ~ this.getPageTitle("item") ~ "'"
+				" '" ~ this.getPageTitle("item_name") ~ "'"
 			;
 		}
 		else if (action == "delete_content")
 		{
-			return "Delete " ~ this.getPageTitle("item") ~ " ?";
+			return "Delete '" ~ this.getPageTitle("item_name") ~ "' ?";
 		}
 		else if (action == "save")
 		{
@@ -80,6 +138,28 @@ struct CrudPageModel extends CrudWidget
 			}
 			return this.getPageTitle("edit");
 		}
+		else if (action == "name")
+		{
+			return static::getNames("name");
+		}
+		else if (action == "names")
+		{
+			return static::getNames("names");
+		}
+		else if (action == "item_name")
+		{
+			Dict item = this.getWidget("form").item;
+			return static::getNames("item_name", {"item": item});
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * Get names
+	 */
+	static string getNames(string action, Dict obj = null)
+	{
 		return "";
 	}
 	

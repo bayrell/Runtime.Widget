@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.Table.TableDialog" extends="Runtime.Widget.Table.Table">
 
+<use name="Runtime.Callback" />
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
@@ -37,9 +38,12 @@
 
 
 <template name="renderTop">
-	<div class="web_table__top">
-		<Button type="success middle" @event:MouseClickEvent="onAddClick">[+] Add</Button>
-	</div>
+	%if (model.show_table_top)
+	{
+		<div class="web_table__top">
+			<Button type="success middle" @event:MouseClickEvent="onAddClick">[+] Add</Button>
+		</div>
+	}
 </template>
 
 
@@ -47,9 +51,6 @@
     
     %if (field.name == "row_buttons")
 	{
-		%set string href_edit = model.get_href.call(["edit", {"item": item}]);
-		%set string href_delete = model.get_href.call(["delete", {"item": item}]);
-		
 		<div class="web_table__td_row_buttons">
 			<Button type="small"
     			@event:MouseClickEvent="onEditClick" data-item={{ item }}>Edit</Button>
@@ -88,7 +89,10 @@
 		}
 		%else
 		{
-			{{ form.get_names.call(["delete_content", {"item": form.item}]) }}
+			{{ form.get_names
+				? form.get_names.call(["delete_content", {"item": form.item}])
+				: "Error: form get_names is null"
+			}}
 		}
 		</div>
 	}
@@ -158,9 +162,10 @@ async void onEditClick(Message<MouseClickEvent> msg)
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	ModelProxy page_model = this.proxy();
 	
-	Dict item_pk = page_model.data("get_item_pk")
-		.call([msg.sender.params.get("data-item")])
-	;
+	Callback get_item_pk = page_model.data("get_item_pk");
+	rtl::assert(get_item_pk != null, "get_item_pk is null");
+	
+	Dict item_pk = get_item_pk.call([msg.sender.params.get("data-item")]);
 	
 	form.commit("setAction", "save");
 	form.commit("setPrimaryKey", item_pk);
@@ -180,6 +185,9 @@ async void onDeleteClick(Message<MouseClickEvent> msg)
 	ModelProxy form = this.proxy(["widgets", "form"]);
 	ModelProxy delete_dialog = this.proxy("delete_dialog");
 	ModelProxy page_model = this.proxy();
+	
+	Callback get_item_pk = page_model.data("get_item_pk");
+	rtl::assert(get_item_pk != null, "get_item_pk is null");
 	
 	Dict item = msg.sender.params.get("data-item");
 	Dict item_pk = page_model.data("get_item_pk").call([item]);
