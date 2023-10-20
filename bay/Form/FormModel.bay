@@ -26,6 +26,7 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
+use Runtime.Widget.Form.Form;
 
 
 struct FormModel extends BaseModel
@@ -54,6 +55,7 @@ struct FormModel extends BaseModel
 	Callback get_names = null;
 	string foreign_key = null;
 	var foreign_value = null;
+	string component_name = classof Form;
 	
 	
 	/**

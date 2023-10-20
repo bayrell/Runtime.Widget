@@ -27,7 +27,8 @@
 
 
 <template name="render">
-	<Table @model=["widgets", "table"] />
+	%set string component_name = model.getWidget("table").component_name;
+	<{component_name} @model=["widgets", "table"] />
 </template>
 
 

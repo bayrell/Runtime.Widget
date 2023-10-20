@@ -25,6 +25,7 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
+use Runtime.Widget.Table.Table;
 
 
 struct TableModel extends BaseModel
@@ -51,6 +52,7 @@ struct TableModel extends BaseModel
 	string page_name = "page";
 	Collection<Dict> items = null;
 	Dict search_data = null;
+	string component_name = classof Table;
 	
 	
 	/**

@@ -45,7 +45,7 @@
 	%set string type = (render_params != null) ? render_params.get("type", "input") : "";
 	%set primitive tag = (render_params != null) ? render_params.get("@tag", "") : "";
 	<textarea class='textarea' @tag={ tag } @event:ChangeEvent="onChange"
-		name={ name } type={ type } value={ value } />
+		name={ name } type={ type }>{{ value }}</textarea>
 	
 </template>
 

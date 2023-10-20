@@ -74,7 +74,8 @@
 	%set FormModel form = model.getWidget("form");
 	%if (form.action == "save")
 	{
-		<Form @model=["widgets", "form"]
+		%set string component_name = form.component_name;
+		<{component_name} @model=["widgets", "form"]
 			show_buttons="false"
 			show_result="false"
 		/>

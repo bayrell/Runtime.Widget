@@ -35,7 +35,8 @@
 
 <template name="render">
 	%render static::renderTop();
-	<Form @model=["widgets", "form"] />
+	%set string component_name = model.getWidget("form").component_name;
+	<{component_name} @model=["widgets", "form"] />
 </template>
 
 
