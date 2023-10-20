@@ -160,6 +160,20 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Edit field
+	 */
+	FormModel editField(FieldInfo field)
+	{
+		FormModel model = this;
+		if (model.fields.has(field.name))
+		{
+			model <= fields <= { field.name } <= field;
+		}
+		return model;
+	}
+	
+	
+	/**
 	 * Add dictionary field list
 	 */
 	FormModel addDictionaryField(Dict obj) => this.clone
