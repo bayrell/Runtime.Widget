@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.Table.TableDialog" extends="Runtime.Widget.Table.Table">
 
+<use name="Runtime.BaseModel" />
 <use name="Runtime.Callback" />
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.Message" />
@@ -84,6 +85,7 @@
 
 
 <template name="renderDeleteDialogContent">
+	%set BaseModel parent_model = model.getParentWidget(layout);
 	%set FormModel form = model.getParentWidget(layout).getWidget("form");
 	%if (form.action == "delete")
 	{
@@ -94,10 +96,22 @@
 		}
 		%else
 		{
-			{{ form.get_names
-				? form.get_names.call(["delete_content", {"item": form.data.item}])
-				: "Error: form get_names is null"
-			}}
+			%set string delete_content = "";
+			%if (form.get_names != null)
+			{
+				%set delete_content = form.get_names
+					.call(["delete_content", {"item": form.data.item}])
+				;
+			}
+			%if (rtl::isEmpty(delete_content))
+			{
+				%set delete_content = "Error: form get_names is null";
+				%if (parent_model.getPageTitle != null)
+				{
+					%set delete_content = parent_model.getPageTitle("delete_content");
+				}
+			}
+			{{ delete_content }}
 		}
 		</div>
 	}

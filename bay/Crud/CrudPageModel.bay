@@ -129,15 +129,8 @@ struct CrudPageModel extends BaseModel
 	async static void initWidget(ModelProxy<CrudPageModel> widget, ModelProxy<Layout> layout)
 	{
 		/* Add widgets */
-		string action = widget.data("action");
-		if (action == "index")
-		{
-			widget.commit("addWidget", static::createTableModel());
-		}
-		else if (action == "save" or action == "delete")
-		{
-			widget.commit("addWidget", static::createFormModel());
-		}
+		widget.commit("addWidget", static::createTableModel());
+		widget.commit("addWidget", static::createFormModel());
 		
 		await parent::initWidget(widget, layout);
 		
@@ -222,6 +215,9 @@ struct CrudPageModel extends BaseModel
 			widget_form = widget.call("addWidget", rtl::newInstance(form_model_name));
 		}
 		
+		/* Init widget form */
+		await widget_form.commitAsync("initWidget", layout);
+		
 		/* Init form */
 		Callback form_model_init = params["form_model_init"];
 		if (form_model_init != null)
@@ -241,6 +237,9 @@ struct CrudPageModel extends BaseModel
 			string table_model_name = params["table_model_name"] |> default string classof TableModel;
 			widget_table = widget.call("addWidget", rtl::newInstance(table_model_name));
 		}
+		
+		/* Init widget table */
+		await widget_table.commitAsync("initWidget", layout);
 		
 		/* Init table */
 		Callback table_model_init = params["table_model_init"];
