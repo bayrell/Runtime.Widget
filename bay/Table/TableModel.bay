@@ -25,6 +25,8 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
+use Runtime.Widget.FieldList;
+use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Table.Table;
 
 
@@ -33,32 +35,15 @@ struct TableModel extends BaseModel
 	static const string ON_SEARCH_BEFORE = "runtime.widget.table::search_before";
 	static const string ON_SEARCH_AFTER = "runtime.widget.table::search_after";
 	
-	int error_code = 0;
-	string api_name = "";
-	string error_message = "";
-	Dict fields = {};
-	Collection fields_list = [];
+	FieldList fields = new FieldList;
+	CrudDataStorage data = new CrudDataStorage;
 	bool is_loading = false;
 	Callback get_names = null;
 	Callback get_route_name = null;
-	Collection primary_keys = [];
-	string foreign_key = null;
-	var foreign_value = null;
 	bool show_table_top = true;
-	
-	int page = 0;
-	int pages = 0;
-	int limit = 10;
 	string page_name = "page";
-	Collection<Dict> items = null;
 	Dict search_data = null;
 	string component_name = classof Table;
-	
-	
-	/**
-	 * Set page
-	 */
-	TableModel setApiName(string api_name) => this.clone({ "api_name": api_name });
 	
 	
 	/**
@@ -74,40 +59,18 @@ struct TableModel extends BaseModel
 	
 	
 	/**
-	 * Set primary keys list
+	 * Set fields
 	 */
-	TableModel setPrimaryKeys(Collection primary_keys) => this.clone({ "primary_keys": primary_keys });
-	
-	
-	/**
-	 * Returns primary key
-	 */
-	Dict getPrimaryKey(Dict item)
-	{
-		Map keys = new Map();
-		for (int i=0; i<this.primary_keys.count(); i++)
-		{
-			string field_name = this.primary_keys.get(i);
-			keys.setValue(field_name, item.get(field_name));
-		}
-		return keys.toDict();
-	}
+	TableModel setFieldsList(FieldList fields) => this.clone{
+		"fields": fields,
+	};
 	
 	
 	/**
 	 * Show table top
 	 */
-	TableModel showTableTop(bool value) => this.clone({ "show_table_top": value });
+	TableModel setShowTableTop(bool value) => this.clone({ "show_table_top": value });
 	
-	
-	/**
-	 * Set foreign key
-	 */
-	TableModel setForeignKey(string foreign_key, var foreign_value) =>
-		this.clone({
-			"foreign_key": foreign_key,
-			"foreign_value": foreign_value,
-		});
 	
 	
 	/**
@@ -117,176 +80,9 @@ struct TableModel extends BaseModel
 	
 	
 	/**
-	 * Set page
-	 */
-	TableModel setPage(int page = 0) => this.clone({ "page": page });
-	
-	
-	/**
-	 * Set pages
-	 */
-	TableModel setPages(int pages = 0) => this.clone({ "pages": pages });
-	
-	
-	/**
-	 * Set limit
-	 */
-	TableModel setLimit(int limit = 10) => this.clone({ "limit": limit });
-	
-	
-	/**
 	 * Set loading
 	 */
 	TableModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
-	
-	
-	/**
-	 * Set items
-	 */
-	TableModel setItems(Collection items) => this.clone({ "items": items });
-	
-	
-	/**
-	 * Add field
-	 */
-	TableModel addField(FieldInfo field)
-	{
-		Dict fields = this.fields;
-		string field_name = field.name;
-		fields <= { field_name } <= field;
-		return this.clone{
-			"fields": fields,
-		}
-	}
-	
-	
-	/**
-	 * Set fields
-	 */
-	TableModel setFields(Dict fields) => this.clone{
-		"fields": fields,
-	};
-	
-	
-	/**
-	 * Edit field
-	 */
-	TableModel editField(FieldInfo field)
-	{
-		TableModel model = this;
-		if (model.fields.has(field.name))
-		{
-			model <= fields <= { field.name } <= field;
-		}
-		return model;
-	}
-	
-	
-	/**
-	 * Setup field options
-	 */
-	TableModel setFieldOptions(string field_name, Collection options)
-	{
-		Dict fields = this.fields;
-		fields <= { field_name } <= options <= options;
-		return this.clone{
-			"fields": fields,
-		}
-	}
-	
-	
-	/**
-	 * Set fields list
-	 */
-	TableModel setFieldsList(Collection fields_list) => this.clone{
-		"fields_list": fields_list,
-	};
-	
-	
-	/**
-	 * Set wait message
-	 */
-	TableModel setWaitMessage()
-	{
-		TableModel model = this;
-		
-		model <= error_code <= 0;
-		model <= error_message <= "Wait please ...";
-		
-		return model;
-	}
-	
-	
-	/**
-	 * Clear error message
-	 */
-	TableModel clearErrorMessage()
-	{
-		TableModel model = this;
-		
-		model <= error_code <= 0;
-		model <= error_message <= "";
-		
-		return model;
-	}
-	
-	
-	/**
-	 * Message
-	 */
-	TableModel setMessage(string error_message) => this.copy
-	{
-		"error_message": error_message,
-	};
-	
-	
-	/**
-	 * Success
-	 */
-	TableModel setSuccess(string error_message, int error_code = 1) => this.copy
-	{
-		"error_message": error_message,
-		"error_code": error_code,
-	};
-	
-	
-	/**
-	 * Error
-	 */
-	TableModel setError(string error_message, int error_code = -1) => this.copy
-	{
-		"error_message": error_message,
-		"error_code": error_code,
-	};
-	
-	
-	/**
-	 * Returns true if error
-	 */
-	bool isError() => this.error_code < 0;
-	
-	
-	/**
-	 * Returns true if success
-	 */
-	bool isSuccess() => this.error_code > 0;
-	
-	
-	/**
-	 * Set api result
-	 */
-	static void setApiResult(ModelProxy model, string event, ApiResult res)
-	{
-		if (res.isSuccess())
-		{
-			model.commit("setItems", res["data"]["items"]);
-			model.commit("setLimit", res["data"]["limit"]);
-			model.commit("setPage", res["data"]["page"]);
-			model.commit("setPages", res["data"]["pages"]);
-		}
-		
-		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
-	}
 	
 	
 	/**
@@ -308,15 +104,15 @@ struct TableModel extends BaseModel
 		string action, Dict obj, var tag = null
 	)
 	{
-		if (action == static::ON_SEARCH_BEFORE)
-		{
-			string foreign_key = widget.data('foreign_key');
-			if (foreign_key != null)
-			{
-				obj <= post_data <= { foreign_key } <= widget.data('foreign_value');
-			}
-		}
 		return obj;
+	}
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string action, ApiResult res)
+	{
 	}
 	
 	
@@ -325,20 +121,16 @@ struct TableModel extends BaseModel
 	 */
 	async static ApiResult doSearch(ModelProxy model)
 	{
-		if (model.data("api_name") == "") return;
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		if (not data.call("isReady")) return;
 		
 		/* Setup loading */
 		model.commit("setLoading", true);
 		
 		/* Get post data */
-		int page = model.data("page");
-		int limit = model.data("limit");
 		Dict search_data = model.data("search_data");
-		Dict post_data = {
-			"page": page,
-			"limit": limit,
-		};
-		if (search_data != null) post_data = post_data.concat(search_data);
+		Dict post_data = data.call("getSearchPostData", search_data);
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_SEARCH_BEFORE, {
@@ -349,32 +141,20 @@ struct TableModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiSearch(model, d["post_data"]);
+		ApiResult res = await data.callAsync("callApiSearch", d["post_data"]);
 		
 		/* Set api result */
+		data.commit("setApiResult", "search", res);
+		model.commit("setApiResult", "search", res);
+		
+		/* Set loading */
 		model.commit("setLoading", false);
-		model.commit("setApiResult", "item", res);
 		
 		/* After event */
 		Dict d = await static::callEvent(model, static::ON_SEARCH_AFTER, {
 			"api": res,
 			"post_data": d["post_data"],
 		});
-	}
-	
-	
-	/**
-	 * Returns search api name
-	 */
-	string getSearchApiName() => this.api_name ~ "::crud.search";
-	
-	
-	/**
-	 * Call api search
-	 */
-	async static ApiResult callApiSearch(ModelProxy model, Dict post_data)
-	{
-		return await Bus::callApi(model.call("getSearchApiName"), post_data);
 	}
 	
 }

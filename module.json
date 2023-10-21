@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget",
 	"assets":
 	[
+		"Crud/CrudDataStorage.bay",
 		"Crud/CrudPageModel.bay",
 		"Crud/CrudRoute.bay",
 		"Crud/DeletePage.bay",
@@ -24,6 +25,7 @@
 		"Table/TableDialogModel.bay",
 		"Button.bay",
 		"FieldInfo.bay",
+		"FieldList.bay",
 		"Helper.bay",
 		"Input.bay",
 		"Label.bay",

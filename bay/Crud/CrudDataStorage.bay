@@ -1,0 +1,357 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2020 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.lib;
+use Runtime.BaseStruct;
+use Runtime.Callback;
+use Runtime.ModelProxy;
+use Runtime.Web.ApiResult;
+use Runtime.Web.Bus;
+use Runtime.Widget.FieldInfo;
+
+
+struct CrudDataStorage extends BaseStruct
+{
+	string api_name = "";
+	Dict default_item = {};
+	string foreign_key = null;
+	var foreign_value = null;
+	
+	Dict item = null;
+	Dict item_pk = null;
+	Collection<Dict> items = null;
+	
+	int page = 0;
+	int pages = 0;
+	int limit = 10;
+	
+	int error_code = 0;
+	string error_message = "";
+	
+	
+	/**
+	 * Returns true if ready
+	 */
+	bool isReady() => this.api_name != "";
+	
+	
+	/**
+	 * Set page
+	 */
+	CrudDataStorage setApiName(string api_name) => this.clone({ "api_name": api_name });
+	
+	
+	/**
+	 * Set foreign key
+	 */
+	CrudDataStorage setForeignKey(string foreign_key, var foreign_value) =>
+		this.clone({
+			"foreign_key": foreign_key,
+			"foreign_value": foreign_value,
+		});
+	
+	
+	/**
+	 * Set page
+	 */
+	CrudDataStorage setPage(int page = 0) => this.clone({ "page": page });
+	
+	
+	/**
+	 * Set pages
+	 */
+	CrudDataStorage setPages(int pages = 0) => this.clone({ "pages": pages });
+	
+	
+	/**
+	 * Set limit
+	 */
+	CrudDataStorage setLimit(int limit = 10) => this.clone({ "limit": limit });
+	
+	
+	/**
+	 * Set items
+	 */
+	CrudDataStorage setItems(Collection items) => this.clone({ "items": items });
+	
+	
+	/**
+	 * Set item
+	 */
+	CrudDataStorage setItem(Dict item) => this.clone({ "item": item });
+	
+	
+	
+	/**
+	 * Set default item
+	 */
+	CrudDataStorage setDefaultItem(Dict item) => this.clone({ "default_item": item });
+	
+	
+	/**
+	 * Clear item
+	 */
+	CrudDataStorage clearItem() => this.clone({ "item": this.default_item });
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey()
+	{
+		return this.item_pk;
+	}
+	
+	
+	/**
+	 * Set primary key
+	 */
+	CrudDataStorage setPrimaryKey(Dict item_pk)
+	{
+		return this.clone({ "item_pk": item_pk });
+	}
+	
+	
+	/**
+	 * Returns true if form is new
+	 */
+	bool isNew() => this.item_pk == null;
+	
+	
+	/**
+	 * Message
+	 */
+	CrudDataStorage setMessage(string error_message) => this.copy
+	{
+		"error_message": error_message,
+	};
+	
+	
+	/**
+	 * Success
+	 */
+	CrudDataStorage setSuccess(string error_message, int error_code = 1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Error
+	 */
+	CrudDataStorage setError(string error_message, int error_code = -1) => this.copy
+	{
+		"error_message": error_message,
+		"error_code": error_code,
+	};
+	
+	
+	/**
+	 * Set wait message
+	 */
+	CrudDataStorage setWaitMessage()
+	{
+		CrudDataStorage model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "Wait please ...";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Clear error message
+	 */
+	CrudDataStorage clearErrorMessage()
+	{
+		CrudDataStorage model = this;
+		
+		model <= error_code <= 0;
+		model <= error_message <= "";
+		
+		return model;
+	}
+	
+	
+	/**
+	 * Returns true if error
+	 */
+	bool isError() => this.error_code < 0;
+	
+	
+	/**
+	 * Returns true if success
+	 */
+	bool isSuccess() => this.error_code > 0;
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string action, ApiResult res)
+	{
+		if (action == "search")
+		{
+			if (res.isSuccess())
+			{
+				model.commit("setItems", res["data"]["items"]);
+				model.commit("setLimit", res["data"]["limit"]);
+				model.commit("setPage", res["data"]["page"]);
+				model.commit("setPages", res["data"]["pages"]);
+			}
+		}
+		
+		if (action == "item")
+		{
+			if (res.isSuccess())
+			{
+				Dict item = res["data", "item"];
+				model.commit("setItem", item);
+				
+				Dict pk = res["data", "pk"];
+				model.commit("setPrimaryKey", pk);
+			}
+		}
+		
+		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+	}
+	
+	
+	/**
+	 * Set foreign post data
+	 */
+	Dict setForeignPostData(Dict post_data)
+	{
+		if (this.foreign_key != null)
+		{
+			post_data <= { this.foreign_key } <= this.foreign_value;
+			if (post_data.has("item"))
+			{
+				post_data <= item <= { this.foreign_key } <= this.foreign_value;
+			}
+		}
+		return post_data;
+	}
+	
+	
+	/**
+	 * Returns search post data
+	 */
+	Dict getSearchPostData(Dict search_data = null)
+	{
+		Dict post_data = {
+			"page": this.page,
+			"limit": this.limit,
+		};
+		post_data = this.setForeignPostData(post_data);
+		if (search_data != null) post_data = post_data.concat(search_data);
+		return post_data;
+	}
+	
+	
+	/**
+	 * Returns search api name
+	 */
+	string getSearchApiName() => this.api_name ~ "::crud.search";
+	
+	
+	/**
+	 * Call api search
+	 */
+	async static ApiResult callApiSearch(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getSearchApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Returns load item post data
+	 */
+	Dict getItemPostData()
+	{
+		Dict post_data = {
+			"pk": this.item_pk,
+		};
+		post_data = this.setForeignPostData(post_data);
+		return post_data;
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 */
+	string getItemApiName() => this.api_name ~ "::crud.item";
+	
+	
+	/**
+	 * Call api item
+	 */
+	async static ApiResult callApiItem(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getItemApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Returns save item post data
+	 */
+	Dict getSavePostData()
+	{
+		Dict post_data = {
+			"pk": this.item_pk,
+			"item": this.item,
+		};
+		post_data = this.setForeignPostData(post_data);
+		return post_data;
+	}
+	
+	
+	/**
+	 * Returns save api name
+	 */
+	string getSaveApiName() => this.api_name ~ "::crud.save";
+	
+	
+	/**
+	 * Call api save
+	 */
+	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getSaveApiName"), post_data);
+	}
+	
+	
+	/**
+	 * Returns delete api name
+	 */
+	string getDeleteApiName() => this.api_name ~ "::crud.delete";
+	
+	
+	/**
+	 * Call api delete
+	 */
+	async static ApiResult callApiDelete(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getDeleteApiName"), post_data);
+	}
+	
+}

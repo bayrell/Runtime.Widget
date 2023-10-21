@@ -38,7 +38,7 @@
 		<{field.component}
 			name={{ field_name }}
 			options={{ options }}
-			@model={{ ["item"].concat( field_name ) }}
+			@model={{ ["data", "item"].concat( field_name ) }}
 			@event:ChangeEvent="onFieldChange"
 			...component_settings
 		/>
@@ -80,12 +80,13 @@
 
 <template name="renderContent">
 	<div class="web_form__content">
-		%for (int i=0; i<model.fields_list.count(); i++)
+		%for (int i=0; i<model.fields.fields_list.count(); i++)
 		{
-			%set string field_name = model.fields_list[i];
-			%if (model.fields.has(field_name))
+			%set string field_name = model.fields.fields_list[i];
+			%set FieldInfo field = model.fields.getField(field_name);
+			%if (field)
 			{
-				%render static::renderRow(model.fields.get(field_name));
+				%render static::renderRow(field);
 			}
 		}
 	</div>
@@ -100,7 +101,7 @@
 
 
 <template name="renderForm">
-	%if (model.item != null)
+	%if (model.data.item != null)
 	{
 		<form class="web_form web_form--save" method="POST"
 			enctype="multipart/form-data" onsubmit="return false;"
@@ -129,7 +130,7 @@
 
 <template name="renderResult">
 	<div class="web_form__result" class={{ model.getErrorClass() }} >
-		{{ model.error_message }}
+		{{ model.data.error_message }}
 	</div>
 </template>
 
@@ -163,7 +164,7 @@ async void onSaveClick(Message<MouseClickEvent> msg)
 	ModelProxy model = this.modelProxy();
 	
 	/* Set wait message */
-	model.commit("setWaitMessage");
+	model.proxy("data").commit("setWaitMessage");
 	
 	/* Send delete form */
 	await model.commitAsync("doSave");

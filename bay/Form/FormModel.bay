@@ -24,8 +24,9 @@ use Runtime.ModelProxy;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
-use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
+use Runtime.Widget.FieldList;
+use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Form.Form;
 
 
@@ -38,23 +39,12 @@ struct FormModel extends BaseModel
 	static const string ON_DELETE_BEFORE = "runtime.widget.form::delete_after";
 	static const string ON_DELETE_AFTER = "runtime.widget.form::delete_after";
 	
-	Dict item = null;
-	Dict default_item = {};
-	int error_code = 0;
 	string action = "";
-	string api_name = "";
-	string error_message = "";
 	Dict field_result = null;
-	Dict fields = {};
-	Collection fields_list = [];
-	Collection dictionary_list = [];
-	Dict dictionary = {};
-	Dict item_pk = null;
-	Collection primary_keys = [];
+	FieldList fields = new FieldList;
+	CrudDataStorage data = new CrudDataStorage;
 	bool is_loading = false;
 	Callback get_names = null;
-	string foreign_key = null;
-	var foreign_value = null;
 	string component_name = classof Form;
 	
 	
@@ -77,68 +67,9 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Set primary keys list
-	 */
-	FormModel setPrimaryKeys(Collection primary_keys) => this.clone({ "primary_keys": primary_keys });
-	
-	
-	/**
-	 * Set foreign key
-	 */
-	FormModel setForeignKey(string foreign_key, var foreign_value) =>
-		this.clone({
-			"foreign_key": foreign_key,
-			"foreign_value": foreign_value,
-		})
-	;
-	
-	
-	/**
-	 * Set item
-	 */
-	FormModel setItem(Dict item) => this.clone({ "item": item });
-	
-	
-	/**
-	 * Set default item
-	 */
-	FormModel setDefaultItem(Dict item) => this.clone({ "default_item": item });
-	
-	
-	/**
-	 * Clear item
-	 */
-	FormModel clearItem() => this.clone({ "item": this.default_item });
-	
-	
-	/**
 	 * Clear error
 	 */
 	FormModel clearFieldErrors() => this.clone({ "field_result": null });
-	
-	
-	/**
-	 * Returns primary key
-	 */
-	Dict getPrimaryKey()
-	{
-		return this.item_pk;
-	}
-	
-	
-	/**
-	 * Set primary key
-	 */
-	FormModel setPrimaryKey(Dict item_pk)
-	{
-		return this.clone({ "item_pk": item_pk });
-	}
-	
-	
-	/**
-	 * Returns true if form is new
-	 */
-	bool isNew() => this.item_pk == null;
 	
 	
 	/**
@@ -148,236 +79,10 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Add field
-	 */
-	FormModel addField(FieldInfo field)
-	{
-		Dict fields = this.fields;
-		string field_name = field.name;
-		fields <= { field_name } <= field;
-		return this.clone{
-			"fields": fields,
-		}
-	}
-	
-	
-	/**
-	 * Edit field
-	 */
-	FormModel editField(FieldInfo field)
-	{
-		FormModel model = this;
-		if (model.fields.has(field.name))
-		{
-			model <= fields <= { field.name } <= field;
-		}
-		return model;
-	}
-	
-	
-	/**
-	 * Add dictionary field list
-	 */
-	FormModel addDictionaryField(Dict obj) => this.clone
-	{
-		"dictionary_list": this.dictionary_list.pushIm(obj)
-	};
-	
-	
-	/**
-	 * Set fields
-	 */
-	FormModel setFields(Dict fields) => this.clone{
-		"fields": fields,
-	};
-	
-	
-	/**
-	 * Setup field options
-	 */
-	FormModel setFieldOptions(string field_name, Collection options)
-	{
-		Dict fields = this.fields;
-		fields <= { field_name } <= options <= options;
-		return this.clone{
-			"fields": fields,
-		}
-	}
-	
-	
-	/**
-	 * Setup dictionary
-	 */
-	FormModel setDictionary(string from, Collection items)
-	{
-		Dict dictionary = this.dictionary;
-		dictionary <= { from } <= items;
-		return this.clone{
-			"dictionary": dictionary,
-		}
-	}
-	
-	
-	/**
-	 * Setup field options from api
-	 */
-	static FormModel convertDictionaryToOptions(Dict obj)
-	{
-		ApiResult api_res = obj["api"];
-		string from = obj["from"];
-		Callback filter = obj["filter"];
-		Callback option = obj["option"];
-		
-		Collection options = api_res["data", "dictionary", from];
-		if (options == null) return null;
-		
-		/* Filter options */
-		if (filter != null)
-		{
-			options = options.map(filter);
-		}
-		
-		/* Map options */
-		if (option != null)
-		{
-			options = options.map(option);
-		}
-		
-		/* Sort options */
-		options = options.sort(
-			int (Dict a, Dict b) => a["label"] > b["label"]
-		);
-		
-		return options;
-	}
-	
-	
-	/**
-	 * Setup field options from api
-	 */
-	FormModel setFieldOptionsFromApi(Dict obj)
-	{
-		ApiResult api_res = obj["api"];
-		string from = obj["from"];
-		string to = obj["to"];
-		
-		Collection options = static::convertDictionaryToOptions(obj);
-		if (options == null) return this;
-		
-		/* Set fields */
-		Dict fields = this.fields;
-		fields <= { to } <= options <= options;
-		
-		/* Set dictionary */
-		Dict dictionary = this.dictionary;
-		dictionary <= { from } <= api_res["data", "dictionary", from];
-		
-		return this.clone{
-			"fields": fields,
-			"dictionary": dictionary,
-		}
-	}
-	
-	
-	/**
-	 * Set fields list
-	 */
-	FormModel setFieldsList(Collection fields_list) => this.clone{
-		"fields_list": fields_list,
-	};
-	
-	
-	/**
-	 * Remove field from list
-	 */
-	FormModel removeFieldFromList(string key) => this.clone{
-		"fields_list": this.fields_list.removeItem(key)
-	};
-	
-	
-	/**
-	 * Set wait message
-	 */
-	FormModel setWaitMessage()
-	{
-		FormModel model = this;
-		
-		model <= error_code <= 0;
-		model <= error_message <= "Wait please ...";
-		
-		return model;
-	}
-	
-	
-	/**
-	 * Clear error message
-	 */
-	FormModel clearErrorMessage()
-	{
-		FormModel model = this;
-		
-		model <= error_code <= 0;
-		model <= error_message <= "";
-		
-		return model;
-	}
-	
-	
-	/**
-	 * Message
-	 */
-	FormModel setMessage(string error_message) => this.copy
-	{
-		"error_message": error_message,
-	};
-	
-	
-	/**
-	 * Success
-	 */
-	FormModel setSuccess(string error_message, int error_code = 1) => this.copy
-	{
-		"error_message": error_message,
-		"error_code": error_code,
-	};
-	
-	
-	/**
-	 * Error
-	 */
-	FormModel setError(string error_message, int error_code = -1) => this.copy
-	{
-		"error_message": error_message,
-		"error_code": error_code,
-	};
-	
-	
-	/**
-	 * Returns true if error
-	 */
-	bool isError() => this.error_code < 0;
-	
-	
-	/**
-	 * Returns true if success
-	 */
-	bool isSuccess() => this.error_code > 0;
-	
-	
-	/**
 	 * Set api result
 	 */
 	static void setApiResult(ModelProxy model, string event, ApiResult res)
 	{
-		if (res.isSuccess())
-		{
-			Dict item = res["data", "item"];
-			model.commit("setItem", item);
-			
-			Dict pk = res["data", "pk"];
-			model.commit("setPrimaryKey", pk);
-		}
-		
 		/* Set validation result */
 		if (res.data != null and res.data.has("field_result"))
 		{
@@ -388,9 +93,6 @@ struct FormModel extends BaseModel
 			model.commit("setFieldResult", null);
 		}
 		
-		/* Set error */
-		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
-		
 		return model;
 	}
 	
@@ -400,9 +102,9 @@ struct FormModel extends BaseModel
 	 */
 	string getErrorClass()
 	{
-		if (this.error_message == "") return "web_form__result--hide";
-		if (this.error_code > 0) return "web_form__result--success";
-		if (this.error_code < 0) return "web_form__result--error";
+		if (this.data.error_message == "") return "web_form__result--hide";
+		if (this.data.error_code > 0) return "web_form__result--success";
+		if (this.data.error_code < 0) return "web_form__result--error";
 		return "";
 	}
 	
@@ -433,10 +135,12 @@ struct FormModel extends BaseModel
 	{
 		await parent::loadWidget(model, layout);
 		
-		Dict item_pk = model.data("item_pk");
+		ModelProxy data = model.proxy("data");
+		
+		Dict item_pk = data.data("item_pk");
 		if (item_pk == null)
 		{
-			model.commit("clearItem");
+			data.commit("clearItem");
 		}
 		else
 		{
@@ -454,33 +158,18 @@ struct FormModel extends BaseModel
 		string action, Dict obj, var tag = null
 	)
 	{
-		/* Setup foreign keys */
-		if (
-			action == static::ON_LOAD_ITEM_BEFORE or
-			action == static::ON_SAVE_BEFORE or
-			action == static::ON_DELETE_BEFORE
-		)
-		{
-			string foreign_key = widget.data('foreign_key');
-			if (foreign_key != null)
-			{
-				obj <= post_data <= { foreign_key } <= widget.data('foreign_value');
-				obj <= post_data <= item <= { foreign_key } <= widget.data('foreign_value');
-			}
-		}
-		
 		/* Setup dictionary */
 		if (
 			action == FormModel::ON_LOAD_ITEM_AFTER and
 			obj["api"].isSuccess()
 		)
 		{
-			Collection dictionary_list = widget.data('dictionary_list');
+			Collection dictionary_list = widget.data(["fields", "dictionary_list"]);
 			for (int i=0; i<dictionary_list.count(); i++)
 			{
 				Dict item = dictionary_list.item(i);
 				item <= api <= obj["api"];
-				widget.commit("setFieldOptionsFromApi", item);
+				widget.proxy("fields").commit("setFieldOptionsFromApi", item);
 			}
 		}
 		
@@ -493,16 +182,18 @@ struct FormModel extends BaseModel
 	 */
 	async static ApiResult doLoadItem(ModelProxy model)
 	{
-		if (model.data("api_name") == "") return;
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		if (not data.call("isReady")) return;
 		
 		/* Setup loading */
 		model.commit("setLoading", true);
 		
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		
 		/* Get post data */
-		Dict item_pk = model.data("item_pk");
-		Dict post_data = {
-			"pk": item_pk,
-		};
+		Dict post_data = data.call("getItemPostData");
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_LOAD_ITEM_BEFORE, {
@@ -513,16 +204,20 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiItem(model, d["post_data"]);
+		ModelProxy data = model.proxy("data");
+		ApiResult res = await data.callAsync("callApiItem", d["post_data"]);
 		
 		/* Set api result */
-		model.commit("setLoading", false);
+		data.commit("setApiResult", "item", res);
 		model.commit("setApiResult", "item", res);
+		
+		/* Set loading */
+		model.commit("setLoading", false);
 		
 		/* Clear message if success */
 		if (res.isSuccess())
 		{
-			model.commit("clearErrorMessage");
+			data.commit("clearErrorMessage");
 		}
 		
 		/* After event */
@@ -534,34 +229,22 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Returns save api name
-	 */
-	string getItemApiName() => this.api_name ~ "::crud.item";
-	
-	
-	/**
-	 * Call api item
-	 */
-	async static ApiResult callApiItem(ModelProxy model, Dict post_data)
-	{
-		return await Bus::callApi(model.call("getItemApiName"), post_data);
-	}
-	
-	
-	/**
 	 * Save form
 	 */
 	async static ApiResult doSave(ModelProxy model)
 	{
-		if (model.data("api_name") == "") return;
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		if (not data.call("isReady")) return;
 		
 		Dict item_pk = model.data("item_pk");
 		Dict item = model.data("item");
 		
-		Dict post_data = {
-			"pk": item_pk,
-			"item": item,
-		};
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		
+		/* Get post data */
+		Dict post_data = data.call("getSavePostData");
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_SAVE_BEFORE, {
@@ -572,9 +255,11 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiSave(model, d["post_data"]);
+		ModelProxy data = model.proxy("data");
+		ApiResult res = await data.callAsync("callApiSave", d["post_data"]);
 		
 		/* Set api result */
+		data.commit("setApiResult", "save", res);
 		model.commit("setApiResult", "save", res);
 		
 		/* After event */
@@ -586,31 +271,19 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Returns save api name
-	 */
-	string getSaveApiName() => this.api_name ~ "::crud.save";
-	
-	
-	/**
-	 * Call api save
-	 */
-	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
-	{
-		return await Bus::callApi(model.call("getSaveApiName"), post_data);
-	}
-	
-	
-	/**
 	 * Delete item
 	 */
 	async static ApiResult doDelete(ModelProxy model)
 	{
-		if (model.data("api_name") == "") return;
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		if (not data.call("isReady")) return;
 		
-		Dict item_pk = model.data("item_pk");
-		Dict post_data = {
-			"pk": item_pk,
-		};
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		
+		/* Get post data */
+		Dict post_data = data.call("getItemPostData");
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_DELETE_BEFORE, {
@@ -621,9 +294,11 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ApiResult res = await static::callApiDelete(model, d["post_data"]);
+		ModelProxy data = model.proxy("data");
+		ApiResult res = await data.callAsync("callApiDelete", d["post_data"]);
 		
 		/* Set api result */
+		data.commit("setApiResult", "delete", res);
 		model.commit("setApiResult", "delete", res);
 		
 		/* After event */
@@ -632,20 +307,4 @@ struct FormModel extends BaseModel
 			"post_data": d["post_data"],
 		});
 	}
-	
-	
-	/**
-	 * Returns delete api name
-	 */
-	string getDeleteApiName() => this.api_name ~ "::crud.delete";
-	
-	
-	/**
-	 * Call api delete
-	 */
-	async static ApiResult callApiDelete(ModelProxy model, Dict post_data)
-	{
-		return await Bus::callApi(model.call("getDeleteApiName"), post_data);
-	}
-	
 }

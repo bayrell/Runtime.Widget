@@ -86,7 +86,7 @@
 	}
 	%elseif (field.name == "row_number")
 	{
-		{{ model.limit * (model.page - 1) + row_number + 1 }}
+		{{ model.data.limit * (model.data.page - 1) + row_number + 1 }}
 	}
 	%elseif (field.name == "row_buttons")
 	{
@@ -98,13 +98,14 @@
 		{
 			%set string href_edit = model.get_route_name.call(["edit", {"item": item}]);
 			%set string href_delete = model.get_route_name.call(["delete", {"item": item}]);
+			%set Dict item_pk = model.fields.getPrimaryKey(item);
 			
 			<div class="web_table__td_row_buttons">
-				<Button type="small" href={{ static::url(href_edit, model.getPrimaryKey(item)) }}>
+				<Button type="small" href={{ static::url(href_edit, item_pk) }}>
 					Edit
 				</Button>
 				<Button type="danger small"
-					href={{ static::url(href_delete, model.getPrimaryKey(item)) }}>
+					href={{ static::url(href_delete, item_pk) }}>
 					Delete
 				</Button>
 			</div>
@@ -119,19 +120,18 @@
 
 
 <template name="renderHeader">
-	%set Collection<string> columns = model.fields_list;
-	%set Dict fields = model.fields;
-	
+	%set Collection<string> columns = model.fields.fields_list;
 	%if (columns)
 	{
 		<tr class="web_table__row_header">
 			%for (int i=0; i<columns.count(); i++)
 			{
 				%set string field_name = columns[i];
-				%if (fields.has(field_name))
+				%set FieldInfo field = model.fields.getField(field_name);
+				%if (field)
 				{
 					<th class={{ "web_table__th--" ~ field_name }}>
-						{{ fields.get(field_name).label }}
+						{{ field.label }}
 					</th>
 				}
 			}
@@ -141,13 +141,13 @@
 
 
 <template name="renderRow" args="int row_number">
-	%set Collection<string> columns = model.fields_list;
-	%set BaseStruct item = model.items[row_number];
+	%set Collection<string> columns = model.fields.fields_list;
+	%set BaseStruct item = model.data.items[row_number];
 	<tr class="web_table__row_item">
 		%for (int i=0; i<columns.count(); i++)
 		{
 			%set string field_name = columns[i];
-			%set FieldInfo field = model.fields.get(field_name);
+			%set FieldInfo field = model.fields.getField(field_name);
 			%if (field)
 			{
 				<td class={{ "web_table__td--" ~ field.name }}>
@@ -160,7 +160,7 @@
 
 
 <template name="renderTable">
-	%set Collection items = model["items"];
+	%set Collection items = model["data", "items"];
 	<table class="web_table">
 		%render static::renderHeader();
 		%if (items)
