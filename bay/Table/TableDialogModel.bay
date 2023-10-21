@@ -27,11 +27,13 @@ use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableDialog;
 use Runtime.Widget.Table.TableModel;
 
 
 struct TableDialogModel extends TableModel
 {
+	string component_name = classof TableDialog;
 	string foreign_key = "";
 	var foreign_value = "";
 	
@@ -71,15 +73,4 @@ struct TableDialogModel extends TableModel
 			}
 		}
 	}
-	
-	
-	/**
-	 * Create widget
-	 */
-	static void createWidget(ModelProxy<BaseModel> model)
-	{
-		/* Add form widget */
-		model.commit("addWidget", new FormModel{ "widget_name": "form" });
-	}
-	
 }

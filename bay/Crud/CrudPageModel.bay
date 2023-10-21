@@ -21,6 +21,7 @@ namespace Runtime.Widget.Crud;
 use Runtime.ModelProxy;
 use Runtime.Web.BaseModel;
 use Runtime.Web.BaseRoute;
+use Runtime.Web.Callback;
 use Runtime.Web.Layout;
 use Runtime.Web.RouteInfo;
 use Runtime.Widget.Form.FormModel;
@@ -36,8 +37,8 @@ struct CrudPageModel extends BaseModel
 	/**
 	 * Factory
 	 */
-	static TableModel createTableModel() => new TableModel{"widget_name": "table"};
-	static FormModel createFormModel() => new FormModel{"widget_name": "form"};
+	static TableModel createTableModel() => new TableModel{};
+	static FormModel createFormModel() => new FormModel{};
 	
 	
 	/**
@@ -125,7 +126,7 @@ struct CrudPageModel extends BaseModel
 	/**
 	 * Init widget
 	 */
-	async static void initWidget(ModelProxy<BaseModel> widget, ModelProxy<Layout> layout)
+	async static void initWidget(ModelProxy<CrudPageModel> widget, ModelProxy<Layout> layout)
 	{
 		/* Add widgets */
 		string action = widget.data("action");
@@ -183,6 +184,79 @@ struct CrudPageModel extends BaseModel
 			/* Add component */
 			layout.commit("addComponent", form.data("component_name"));
 		}
+	}
+	
+	
+	/**
+	 * Add foreign model
+	 */
+	static async void addForeignModel(
+		ModelProxy<CrudPageModel> model, ModelProxy<Layout> layout, Dict params
+	)
+	{
+		ModelProxy<FormModel> form = model.proxy(["widgets", "form"]);
+		
+		if (form.data() == null) return;
+		if (model.data("action") != "save") return;
+		if (form.proxy("data").call("isNew")) return;
+		
+		string widget_name = params["widget_name"];
+		string component_name = params["component_name"] |> default string classof BaseModel;
+		string foreign_key = params["foreign_key"];
+		string primary_key = params["primary_key"] |> default string "id";
+		
+		/* Add widget */
+		BaseModel widget_item = rtl::newInstance(component_name, [{"widget_name": widget_name}]);
+		ModelProxy widget = model.call("addWidget", widget_item);
+		
+		/* Add form */
+		ModelProxy widget_form = null;
+		Callback form_model = params["form_model"];
+		if (form_model != null)
+		{
+			widget_form = widget.call("addWidget", form_model.call());
+		}
+		else
+		{
+			string form_model_name = params["form_model_name"] |> default string classof TableModel;
+			widget_form = widget.call("addWidget", rtl::newInstance(form_model_name));
+		}
+		
+		/* Init form */
+		Callback form_model_init = params["form_model_init"];
+		if (form_model_init != null)
+		{
+			await form_model_init.callAsync([widget_form, layout]);
+		}
+		
+		/* Add table */
+		ModelProxy widget_table = null;
+		Callback table_model = params["table_model"];
+		if (table_model != null)
+		{
+			widget_table = widget.call("addWidget", table_model.call());
+		}
+		else
+		{
+			string table_model_name = params["table_model_name"] |> default string classof TableModel;
+			widget_table = widget.call("addWidget", rtl::newInstance(table_model_name));
+		}
+		
+		/* Init table */
+		Callback table_model_init = params["table_model_init"];
+		if (table_model_init != null)
+		{
+			await table_model_init.callAsync([widget_table, layout]);
+		}
+		
+		/* Set foreign key */
+		var value_id = (int)form.data(["data", "item_pk", primary_key]);
+		widget_form.proxy("data").commit("setForeignKey", foreign_key, value_id);
+		widget_table.proxy("data").commit("setForeignKey", foreign_key, value_id);
+		
+		/* Remove foreign key */
+		widget_form.proxy("fields").commit("removeFieldFromList", foreign_key);
+		widget_table.proxy("fields").commit("removeFieldFromList", foreign_key);
 	}
 	
 }

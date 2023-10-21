@@ -44,6 +44,7 @@ struct TableModel extends BaseModel
 	string page_name = "page";
 	Dict search_data = null;
 	string component_name = classof Table;
+	string widget_name = "table";
 	
 	
 	/**

@@ -71,11 +71,11 @@
 
 
 <template name="renderSaveDialogContent">
-	%set FormModel form = model.getWidget("form");
+	%set FormModel form = model.getParentWidget(layout).getWidget("form");
 	%if (form.action == "save")
 	{
 		%set string component_name = form.component_name;
-		<{component_name} @model=["widgets", "form"]
+		<{component_name} @global={{ layout.getWidgetGlobalPath(form.widget_path) }}
 			show_buttons="false"
 			show_result="false"
 		/>
@@ -84,18 +84,18 @@
 
 
 <template name="renderDeleteDialogContent">
-	%set FormModel form = model.getWidget("form");
+	%set FormModel form = model.getParentWidget(layout).getWidget("form");
 	%if (form.action == "delete")
 	{
 		<div class="table_dialog__delete_content">
-		%if (form.item == null)
+		%if (form.data.item == null)
 		{
 			{{ "Loading..." }}
 		}
 		%else
 		{
 			{{ form.get_names
-				? form.get_names.call(["delete_content", {"item": form.item}])
+				? form.get_names.call(["delete_content", {"item": form.data.item}])
 				: "Error: form get_names is null"
 			}}
 		}
@@ -145,13 +145,14 @@
  */
 async void onAddClick(Message<MouseClickEvent> msg)
 {
-	ModelProxy form = this.proxy(["widgets", "form"]);
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
 	ModelProxy page_model = this.proxy();
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	
 	form.commit("setAction", "save");
-	form.commit("setPrimaryKey", null);
-	form.commit("clearItem");
+	form.proxy("data").commit("setPrimaryKey", null);
+	form.proxy("data").commit("clearItem");
 	form.commit("clearFieldErrors");
 	save_dialog.commit("setTitle", "Add item");
 	save_dialog.commit("show");
@@ -163,16 +164,17 @@ async void onAddClick(Message<MouseClickEvent> msg)
  */
 async void onEditClick(Message<MouseClickEvent> msg)
 {
-	ModelProxy form = this.proxy(["widgets", "form"]);
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	ModelProxy page_model = this.proxy();
 	
 	Dict item = msg.sender.params.get("data-item");
-	Dict item_pk = page_model.call("getPrimaryKey", item);
+	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item);
 	
 	form.commit("setAction", "save");
-	form.commit("setPrimaryKey", item_pk);
-	form.commit("clearItem");
+	form.proxy("data").commit("setPrimaryKey", item_pk);
+	form.proxy("data").commit("clearItem");
 	form.commit("clearFieldErrors");
 	save_dialog.commit("setTitle", "Edit item");
 	save_dialog.commit("show");
@@ -185,16 +187,17 @@ async void onEditClick(Message<MouseClickEvent> msg)
  */
 async void onDeleteClick(Message<MouseClickEvent> msg)
 {
-	ModelProxy form = this.proxy(["widgets", "form"]);
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
 	ModelProxy delete_dialog = this.proxy("delete_dialog");
 	ModelProxy page_model = this.proxy();
 	
 	Dict item = msg.sender.params.get("data-item");
-	Dict item_pk = page_model.call("getPrimaryKey", item);
+	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item);
 	
 	form.commit("setAction", "delete");
-	form.commit("setPrimaryKey", item_pk);
-	form.commit("setItem", item);
+	form.proxy("data").commit("setPrimaryKey", item_pk);
+	form.proxy("data").commit("setItem", item);
 	delete_dialog.commit("setTitle", "Delete item");
 	delete_dialog.commit("show");
 }

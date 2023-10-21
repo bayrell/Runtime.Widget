@@ -46,16 +46,11 @@ struct FormModel extends BaseModel
 	bool is_loading = false;
 	Callback get_names = null;
 	string component_name = classof Form;
+	string widget_name = "form";
 	
 	
 	/**
-	 * Set page
-	 */
-	FormModel setApiName(string api_name) => this.clone({ "api_name": api_name });
-	
-	
-	/**
-	 * Set page
+	 * Set action
 	 */
 	FormModel setAction(string action) => this.clone({ "action": action });
 	
