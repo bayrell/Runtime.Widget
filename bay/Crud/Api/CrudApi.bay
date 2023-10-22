@@ -477,6 +477,28 @@ class CrudApi extends BaseApi
 	
 	
 	/**
+	 * Action dictionary
+	 */
+	async void actionDictionary()
+	{
+		/* Init api */
+		await this.initApi("actionDictionary");
+		if (this.container.response.error_name != "") return;
+		
+		/* Set answer */
+		this.container.success({
+			"data":
+			{
+				"dictionary": {},
+			}
+		});
+		
+		/* After event */
+		await this.onSearchFinal();
+	}
+	
+	
+	/**
 	 * Action item
 	 */
 	async void actionItem()

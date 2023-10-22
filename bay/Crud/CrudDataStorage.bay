@@ -269,6 +269,21 @@ struct CrudDataStorage extends BaseStruct
 	
 	
 	/**
+	 * Returns dictionary api name
+	 */
+	string getDictionaryApiName() => this.api_name ~ "::crud.dictionary";
+	
+	
+	/**
+	 * Call api search
+	 */
+	async static ApiResult callApiDictionary(ModelProxy model, Dict post_data)
+	{
+		return await Bus::callApi(model.call("getDictionaryApiName"), post_data);
+	}
+	
+	
+	/**
 	 * Returns search api name
 	 */
 	string getSearchApiName() => this.api_name ~ "::crud.search";

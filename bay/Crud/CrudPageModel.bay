@@ -126,17 +126,29 @@ struct CrudPageModel extends BaseModel
 	/**
 	 * Init widget
 	 */
-	async static void initWidget(ModelProxy<CrudPageModel> widget, ModelProxy<Layout> layout)
+	async static void initWidget(ModelProxy<CrudPageModel> model, ModelProxy<Layout> layout)
 	{
 		/* Add widgets */
-		widget.commit("addWidget", static::createTableModel());
-		widget.commit("addWidget", static::createFormModel());
+		string action = model.data("action");
+		if (action == "index")
+		{
+			model.commit("addWidget", static::createTableModel());
+		}
+		else if (action == "save" or action == "delete")
+		{
+			model.commit("addWidget", static::createFormModel());
+		}
+		else
+		{
+			model.commit("addWidget", static::createTableModel());
+			model.commit("addWidget", static::createFormModel());
+		}
 		
-		await parent::initWidget(widget, layout);
+		await parent::initWidget(model, layout);
 		
 		RouteInfo route = layout.data("route");
-		ModelProxy<FormModel> form = widget.proxy(["widgets", "form"]);
-		ModelProxy<TableModel> table = widget.proxy(["widgets", "table"]);
+		ModelProxy<FormModel> form = model.proxy(["widgets", "form"]);
+		ModelProxy<TableModel> table = model.proxy(["widgets", "table"]);
 		
 		/* Setup table page */
 		if (table.data() != null)
@@ -224,6 +236,9 @@ struct CrudPageModel extends BaseModel
 		{
 			await form_model_init.callAsync([widget_form, layout]);
 		}
+		
+		/* Disable dictionary load */
+		widget_form.commit("setDictionaryLoad", false);
 		
 		/* Add table */
 		ModelProxy widget_table = null;

@@ -182,11 +182,13 @@ async void onAddClick(Message<MouseClickEvent> msg)
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	
 	form.commit("setAction", "save");
+	form.commit("setDictionaryLoad", true);
 	form.proxy("data").commit("setPrimaryKey", null);
 	form.proxy("data").commit("clearItem");
 	form.commit("clearFieldErrors");
 	save_dialog.commit("setTitle", "Add item");
 	save_dialog.commit("show");
+	await form.commitAsync("doLoadDictionary");
 }
 
 
@@ -264,8 +266,8 @@ async void onSaveDialogEvent(Message<DialogEvent> msg)
 		}
 		else
 		{
-			save_dialog.commit("setMessage", form.data("error_message"));
-			save_dialog.commit("setErrorCode", form.data("error_code"));
+			save_dialog.commit("setMessage", form.data(["data", "error_message"]));
+			save_dialog.commit("setErrorCode", form.data(["data", "error_code"]));
 		}
 		
 		return;

@@ -46,7 +46,11 @@ struct Dictionary extends CrudRule
 		if (this.dictionary_name == "") return ;
 		
 		/* Check action */
-		if (api.action != "actionSearch" and api.action != "actionItem")
+		if (
+			api.action != "actionSearch" and
+			api.action != "actionItem" and
+			api.action != "actionDictionary"
+		)
 		{
 			return;
 		}
@@ -55,7 +59,7 @@ struct Dictionary extends CrudRule
 		RelationArray result = null;
 		
 		/* Get item */
-		if (api.action == "actionItem")
+		if (api.action == "actionItem" or api.action == "actionDictionary")
 		{
 			Query q = new Query
 				|> .select(this.table_name)
@@ -64,7 +68,7 @@ struct Dictionary extends CrudRule
 			if (this.query != null)
 			{
 				fn f = this.query;
-				q = await f(api, q);
+				q = await f(api, this, q);
 			}
 			
 			RelationArray result = await conn.fetchAll(q);

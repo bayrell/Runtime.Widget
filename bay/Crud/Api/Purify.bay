@@ -34,7 +34,7 @@ struct Purify extends CrudRule
 	 */
 	string purify(string value)
 	{
-		value = re::replace("^[a-z0-9_\-\.\@]$", "", value);
+		value = re::replace("[^a-z0-9_\-\.\@]$", "", value);
 		return value;
 	}
 	

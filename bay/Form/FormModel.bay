@@ -34,6 +34,8 @@ struct FormModel extends BaseModel
 {
 	static const string ON_LOAD_ITEM_BEFORE = "runtime.widget.form::load_item_before";
 	static const string ON_LOAD_ITEM_AFTER = "runtime.widget.form::load_item_after";
+	static const string ON_LOAD_DICTIONARY_BEFORE = "runtime.widget.form::load_dictionary_before";
+	static const string ON_LOAD_DICTIONARY_AFTER = "runtime.widget.form::load_dictionary_after";
 	static const string ON_SAVE_BEFORE = "runtime.widget.form::save_before";
 	static const string ON_SAVE_AFTER = "runtime.widget.form::save_after";
 	static const string ON_DELETE_BEFORE = "runtime.widget.form::delete_after";
@@ -47,6 +49,7 @@ struct FormModel extends BaseModel
 	Callback get_names = null;
 	string component_name = classof Form;
 	string widget_name = "form";
+	bool can_dictionary_load = true;
 	
 	
 	/**
@@ -70,7 +73,13 @@ struct FormModel extends BaseModel
 	/**
 	 * Set loading
 	 */
-	FormModel setLoading(bool is_loading) => this.clone({ "is_loading": is_loading });
+	FormModel setLoading(bool value) => this.clone({ "is_loading": value });
+	
+	
+	/**
+	 * Set dictionary load
+	 */
+	FormModel setDictionaryLoad(bool value) => this.clone({ "can_dictionary_load": value });
 	
 	
 	/**
@@ -136,10 +145,11 @@ struct FormModel extends BaseModel
 		if (item_pk == null)
 		{
 			data.commit("clearItem");
+			await model.commitAsync("doLoadDictionary");
 		}
 		else
 		{
-			model.commitAsync("doLoadItem");
+			await model.commitAsync("doLoadItem");
 		}
 	}
 	
@@ -153,22 +163,53 @@ struct FormModel extends BaseModel
 		string action, Dict obj, var tag = null
 	)
 	{
-		/* Setup dictionary */
-		if (
-			action == FormModel::ON_LOAD_ITEM_AFTER and
-			obj["api"].isSuccess()
-		)
-		{
-			Collection dictionary_list = widget.data(["fields", "dictionary_list"]);
-			for (int i=0; i<dictionary_list.count(); i++)
-			{
-				Dict item = dictionary_list.item(i);
-				item <= api <= obj["api"];
-				widget.proxy("fields").commit("setFieldOptionsFromApi", item);
-			}
-		}
-		
 		return obj;
+	}
+	
+	
+	/**
+	 * Load dictionary
+	 */
+	async static ApiResult doLoadDictionary(ModelProxy model)
+	{
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		if (not data.call("isReady")) return;
+		if (not model.data("can_dictionary_load")) return;
+		
+		/* Setup loading */
+		model.commit("setLoading", true);
+		
+		/* Get data storage */
+		ModelProxy data = model.proxy("data");
+		ModelProxy fields = model.proxy("fields");
+		
+		/* Get post data */
+		Dict post_data = {};
+		
+		/* Before event */
+		Dict d = await static::callEvent(model, static::ON_LOAD_DICTIONARY_BEFORE, {
+			"post_data": post_data,
+			"success": true,
+		});
+		
+		if (not d["success"]) return;
+		
+		/* Send api */
+		ApiResult res = await data.callAsync("callApiDictionary", d["post_data"]);
+		
+		/* Set api result */
+		fields.commit("setApiResult", "dictionary", res);
+		model.commit("setApiResult", "dictionary", res);
+		
+		/* Set loading */
+		model.commit("setLoading", false);
+		
+		/* After event */
+		await static::callEvent(model, static::ON_LOAD_DICTIONARY_AFTER, {
+			"api": res,
+			"post_data": d["post_data"],
+		});
 	}
 	
 	
@@ -186,6 +227,7 @@ struct FormModel extends BaseModel
 		
 		/* Get data storage */
 		ModelProxy data = model.proxy("data");
+		ModelProxy fields = model.proxy("fields");
 		
 		/* Get post data */
 		Dict post_data = data.call("getItemPostData");
@@ -204,6 +246,7 @@ struct FormModel extends BaseModel
 		
 		/* Set api result */
 		data.commit("setApiResult", "item", res);
+		fields.commit("setApiResult", "item", res);
 		model.commit("setApiResult", "item", res);
 		
 		/* Set loading */

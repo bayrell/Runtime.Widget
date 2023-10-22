@@ -21,6 +21,7 @@ namespace Runtime.Widget;
 use Runtime.lib;
 use Runtime.BaseStruct;
 use Runtime.Callback;
+use Runtime.ModelProxy;
 use Runtime.Web.ApiResult;
 use Runtime.Widget.FieldInfo;
 
@@ -210,5 +211,33 @@ struct FieldList extends BaseStruct
 	FieldList removeFieldFromList(string key) => this.clone{
 		"fields_list": this.fields_list.removeItem(key)
 	};
+	
+	
+	/**
+	 * Set api result
+	 */
+	static void setApiResult(ModelProxy model, string event, ApiResult res)
+	{
+		if (
+			res.isSuccess() and
+			(
+				event == "dictionary" or
+				event == "item" or
+				event == "search"
+			)
+		)
+		{
+			Collection dictionary_list = model.data(["dictionary_list"]);
+			if (dictionary_list)
+			{
+				for (int i=0; i<dictionary_list.count(); i++)
+				{
+					Dict item = dictionary_list.item(i);
+					item <= api <= res;
+					model.commit("setFieldOptionsFromApi", item);
+				}
+			}
+		}
+	}
 	
 }
