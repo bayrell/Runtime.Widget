@@ -76,7 +76,9 @@
 	%if (form.action == "save")
 	{
 		%set string component_name = form.component_name;
-		<{component_name} @global={{ layout.getWidgetGlobalPath(form.widget_path) }}
+		<{component_name}
+			@global={{ layout.getWidgetGlobalPath(form.widget_path) }}
+			@ref="form"
 			show_buttons="false"
 			show_result="false"
 		/>
@@ -153,6 +155,21 @@
 
 <script>
 
+var form;
+
+
+/**
+ * Returns true if component is changed and need to repaint
+ */
+bool isChanged(var model, Dict params, var content)
+{
+	if (this.form and this.form.isChanged(this.form.params, this.form.content))
+	{
+		return true;
+	}
+	return parent::isChanged(model, params, content);
+}
+
 
 /**
  * Add click
@@ -222,7 +239,8 @@ async void onDeleteClick(Message<MouseClickEvent> msg)
  */
 async void onSaveDialogEvent(Message<DialogEvent> msg)
 {
-	ModelProxy form = this.proxy(["widgets", "form"]);
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	ModelProxy page_model = this.proxy();
 	
@@ -239,7 +257,7 @@ async void onSaveDialogEvent(Message<DialogEvent> msg)
 		await form.commitAsync("doSave");
 		
 		/* Check if success */
-		if (form.call("isSuccess"))
+		if (form.proxy("data").call("isSuccess"))
 		{
 			save_dialog.commit("hide");
 			await page_model.commitAsync("doSearch");
@@ -260,7 +278,8 @@ async void onSaveDialogEvent(Message<DialogEvent> msg)
  */
 async void onDeleteDialogEvent(Message<DialogEvent> msg)
 {
-	ModelProxy form = this.proxy(["widgets", "form"]);
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
 	ModelProxy delete_dialog = this.proxy("delete_dialog");
 	ModelProxy page_model = this.proxy();
 	
@@ -277,7 +296,7 @@ async void onDeleteDialogEvent(Message<DialogEvent> msg)
 		await form.commitAsync("doDelete");
 		
 		/* Check if success */
-		if (form.call("isSuccess"))
+		if (form.proxy("data").call("isSuccess"))
 		{
 			delete_dialog.commit("hide");
 			await page_model.commitAsync("doSearch");
