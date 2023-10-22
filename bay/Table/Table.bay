@@ -69,6 +69,7 @@
 		}
 		
 		<{field.component}
+			crud_item={{ item }}
 			name={{ field.name }}
 			options={{ options }}
 			value={{ item[field.name] }}
@@ -176,11 +177,11 @@
 
 
 <template name="renderPagination">
-	%set int page = model.page;
-	%set int pages = model.pages;
+	%set int page = model.data.page;
+	%set int pages = model.data.pages;
 	%if (pages > 1)
 	{
-		%set Collection<string> columns = model.fields_list;
+		%set Collection<string> columns = model.fields.fields_list;
 		<tr>
 			<td colspan={{ columns.count() }} class="web_table__row_pagination">
 				<Pagination

@@ -177,6 +177,9 @@ struct FormModel extends BaseModel
 		if (not data.call("isReady")) return;
 		if (not model.data("can_dictionary_load")) return;
 		
+		/* Is dictionary exists */
+		if (model.data(["fields", "dictionary_list"]).count() == 0) return;
+		
 		/* Setup loading */
 		model.commit("setLoading", true);
 		
