@@ -220,7 +220,7 @@ struct CrudDataStorage extends BaseStruct
 			}
 		}
 		
-		if (action == "item")
+		if (action == "item" or action == "save")
 		{
 			if (res.isSuccess())
 			{

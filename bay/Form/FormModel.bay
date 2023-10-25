@@ -107,6 +107,20 @@ struct FormModel extends BaseModel
 			model.commit("setFieldResult", null);
 		}
 		
+		/* Change action */
+		if (event == "save" and res.isSuccess())
+		{
+			bool is_new = model.proxy("data").call("isNew");
+			if (is_new)
+			{
+				model.commit("setAction", "add");
+			}
+			else
+			{
+				model.commit("setAction", "edit");
+			}
+		}
+		
 		return model;
 	}
 	
@@ -143,9 +157,9 @@ struct FormModel extends BaseModel
 	
 	
 	/**
-	 * Add foreign model
+	 * Add foreign widget
 	 */
-	static async void addForeignModel(
+	static async void addForeignWidget(
 		ModelProxy<FormModel> model, ModelProxy<Layout> layout, Dict params
 	)
 	{
@@ -217,14 +231,10 @@ struct FormModel extends BaseModel
 		/* Remove foreign key */
 		widget_form.proxy("fields").commit("removeFieldFromList", foreign_key);
 		widget_table.proxy("fields").commit("removeFieldFromList", foreign_key);
-	}
-	
-	
-	/**
-	 * Init foreign models
-	 */
-	async static void initForeignModels(ModelProxy<BaseModel> model, ModelProxy<Layout> layout)
-	{
+		
+		/* Init sub widgets */
+		await widget_form.commitAsync("initSubWidgets", layout);
+		await widget_table.commitAsync("initSubWidgets", layout);
 	}
 	
 	
@@ -235,15 +245,15 @@ struct FormModel extends BaseModel
 	{
 		await parent::loadWidget(model, layout);
 		
+		string action = model.data("action");
 		ModelProxy data = model.proxy("data");
+		data.commit("clearItem");
 		
-		Dict item_pk = data.data("item_pk");
-		if (item_pk == null)
+		if (action == "add")
 		{
-			data.commit("clearItem");
 			await model.commitAsync("doLoadDictionary");
 		}
-		else
+		else if (action == "edit" or action == "delete")
 		{
 			await model.commitAsync("doLoadItem");
 		}

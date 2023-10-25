@@ -24,6 +24,7 @@
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Crud.CrudWidget" />
 <use name="Runtime.Widget.Dialog.Dialog" component="true" />
 <use name="Runtime.Widget.Dialog.DialogEvent" />
 <use name="Runtime.Widget.Form.Form" component="true" />
@@ -73,7 +74,7 @@
 
 <template name="renderSaveDialogContent">
 	%set FormModel form = model.getParentWidget(layout).getWidget("form");
-	%if (form.action == "save")
+	%if (form.action == "add" or form.action == "edit")
 	{
 		%set string component_name = form.component_name;
 		<{component_name}
@@ -87,7 +88,7 @@
 
 
 <template name="renderDeleteDialogContent">
-	%set BaseModel parent_model = model.getParentWidget(layout);
+	%set CrudWidget parent_model = model.getParentWidget(layout);
 	%set FormModel form = model.getParentWidget(layout).getWidget("form");
 	%if (form.action == "delete")
 	{
@@ -98,22 +99,7 @@
 		}
 		%else
 		{
-			%set string delete_content = "";
-			%if (form.get_names != null)
-			{
-				%set delete_content = form.get_names
-					.call(["delete_content", {"item": form.data.item}])
-				;
-			}
-			%if (rtl::isEmpty(delete_content))
-			{
-				%set delete_content = "Error: form get_names('delete_content') is null";
-				%if (parent_model.getPageTitle != null)
-				{
-					%set delete_content = parent_model.getPageTitle("delete_content");
-				}
-			}
-			{{ delete_content }}
+			{{ parent_model.getPageTitle("delete_content") }}
 		}
 		</div>
 	}
@@ -181,7 +167,7 @@ async void onAddClick(Message<MouseClickEvent> msg)
 	ModelProxy page_model = this.proxy();
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	
-	form.commit("setAction", "save");
+	form.commit("setAction", "add");
 	form.commit("setDictionaryLoad", true);
 	form.proxy("data").commit("setPrimaryKey", null);
 	form.proxy("data").commit("clearItem");
@@ -205,7 +191,7 @@ async void onEditClick(Message<MouseClickEvent> msg)
 	Dict item = msg.sender.params.get("data-item");
 	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item);
 	
-	form.commit("setAction", "save");
+	form.commit("setAction", "edit");
 	form.proxy("data").commit("setPrimaryKey", item_pk);
 	form.proxy("data").commit("clearItem");
 	form.commit("clearFieldErrors");
@@ -248,6 +234,7 @@ async void onSaveDialogEvent(Message<DialogEvent> msg)
 	
 	if (msg.event.button_result == "cancel")
 	{
+		form.commit("setAction", "");
 		save_dialog.commit("hide");
 		return;
 	}
@@ -287,6 +274,7 @@ async void onDeleteDialogEvent(Message<DialogEvent> msg)
 	
 	if (msg.event.button_result == "cancel")
 	{
+		form.commit("setAction", "");
 		delete_dialog.commit("hide");
 		return;
 	}

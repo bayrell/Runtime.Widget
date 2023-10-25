@@ -24,13 +24,16 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.Callback;
 use Runtime.Web.Layout;
 use Runtime.Web.RouteInfo;
+use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.Table.TableModel;
+use Runtime.Widget.FieldList;
 
 
 struct CrudWidget extends BaseModel
 {
 	string action = "";
+	bool show_table_top = true;
 	
 	
 	/**
@@ -39,6 +42,40 @@ struct CrudWidget extends BaseModel
 	CrudWidget setAction(string action) => this.clone{
 		"action": action,
 	};
+	
+	
+	/**
+	 * Fields
+	 */
+	pure static Dict fields(string type) =>
+	{
+	};
+	
+	
+	/**
+	 * Primary keys
+	 */
+	pure static Collection primaryKeys() => [];
+	
+	
+	/**
+	 * Api name
+	 */
+	pure static Dict apiName(string type) => "";
+	
+	
+	/**
+	 * Factory table
+	 */
+	static TableModel createTableModel(ModelProxy<BaseModel> model, ModelProxy<Layout> layout)
+		=> new TableModel{};
+	
+	
+	/**
+	 * Factory form
+	 */
+	static FormModel createFormModel(ModelProxy<BaseModel> model, ModelProxy<Layout> layout)
+		=> new FormModel{};
 	
 	
 	/**
@@ -83,41 +120,145 @@ struct CrudWidget extends BaseModel
 		}
 		else if (action == "name")
 		{
-			FormModel form = this.getWidget("form");
-			if (form.get_names != null)
-			{
-				return form.get_names.call(["names"]);
-			}
-			return static::getNames("name");
+			return "";
 		}
 		else if (action == "names")
 		{
-			FormModel form = this.getWidget("form");
-			if (form.get_names != null)
-			{
-				return form.get_names.call(["names"]);
-			}
-			return static::getNames("names");
+			return "";
 		}
 		else if (action == "item_name")
 		{
-			FormModel form = this.getWidget("form");
-			Dict item = this.getWidget("form").data.item;
-			if (form.get_names != null)
-			{
-				return form.get_names.call(["item_name", {"item": item}]);
-			}
-			return static::getNames("item_name", {"item": item});
+			return "";
 		}
 		return "";
 	}
 	
 	
 	/**
-	 * Get names
+	 * Init sub widgets
 	 */
-	static string getNames(string action, Dict obj = null)
+	static void initWidget(ModelProxy<CrudWidget> model, ModelProxy<Layout> layout)
 	{
-		return "";
+		await parent::initWidget(model, layout);
+		
+		/* Add widgets */
+		string action = model.data("action");
+		if (action == "index")
+		{
+			model.commit("addWidget", static::createTableModel(model, layout));
+		}
+		else if (action == "add" or action == "edit" or action == "delete")
+		{
+			model.commit("addWidget", static::createFormModel(model, layout));
+		}
+		else
+		{
+			model.commit("addWidget", static::createTableModel(model, layout));
+			model.commit("addWidget", static::createFormModel(model, layout));
+		}
+		
+		ModelProxy<FormModel> form = model.proxy(["widgets", "form"]);
+		ModelProxy<TableModel> table = model.proxy(["widgets", "table"]);
+		
+		/* Setup table page */
+		if (table.data() != null)
+		{
+			await static::initTableWidget(model, table, layout);
+			
+			/* Init table */
+			await table.commitAsync("initWidget", layout);
+		}
+		
+		/* Setup form page */
+		if (form.data() != null)
+		{
+			await static::initFormWidget(model, form, layout);
+			
+			/* Init form */
+			await form.commitAsync("initWidget", layout);
+		}
 	}
+	
+	
+	/**
+	 * Init table
+	 */
+	async static void initTableWidget(
+		ModelProxy<CrudWidget> model,
+		ModelProxy<TableModel> table,
+		ModelProxy<Layout> layout
+	)
+	{
+		/* Get storage */
+		ModelProxy<CrudDataStorage> data = table.proxy("data");
+		ModelProxy<FieldList> fields = table.proxy("fields");
+		
+		/* Api name */
+		data.commit("setApiName", static::apiName("table"));
+		
+		/* Set fields */
+		fields.commit("setFields", static::fields("table"));
+		fields.commit("setPrimaryKeys", static::primaryKeys());
+		
+		Dict request_query = layout.data("request_query");
+		table.proxy("data").commit("setPage", request_query.get(table.data("page_name"), 1));
+		
+		/* Add component */
+		layout.commit("addComponent", table.data("component_name"));
+	}
+	
+	
+	/**
+	 * Init form
+	 */
+	async static void initFormWidget(
+		ModelProxy<CrudWidget> model,
+		ModelProxy<FormModel> form,
+		ModelProxy<Layout> layout
+	)
+	{
+		string action = model.data("action");
+		
+		/* Set action */
+		if (action == "add" or action == "edit" or action == "delete")
+		{
+			form.commit("setAction", action);
+		}
+		
+		/* Get storage */
+		ModelProxy<CrudDataStorage> data = form.proxy("data");
+		ModelProxy<FieldList> fields = form.proxy("fields");
+		
+		/* Api name */
+		data.commit("setApiName", static::apiName("form"));
+		
+		/* Set fields */
+		fields.commit("setFields", static::fields("form"));
+		fields.commit("setPrimaryKeys", static::primaryKeys());
+		
+		/* Set primary key */
+		if (action != "add")
+		{
+			RouteInfo route = layout.data("route");
+			Collection primary_keys = form.proxy("fields").data("primary_keys");
+			
+			Map keys = new Map();
+			for (int i=0; i<primary_keys.count(); i++)
+			{
+				string field_name = primary_keys.get(i);
+				keys.setValue(field_name, route.matches.get(field_name));
+			}
+			
+			form.proxy("data").commit("setPrimaryKey", keys.toDict());
+		}
+		
+		/* Setup back page */
+		ModelProxy page_model = layout.proxy(layout.call("getPageModelPath"));
+		page_model.commit("setBackPage", static::url(static::getRouteName("index")));
+		
+		/* Add component */
+		layout.commit("addComponent", form.data("component_name"));
+	}
+	
+	
 }
