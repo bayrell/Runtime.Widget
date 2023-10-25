@@ -135,6 +135,15 @@ struct CrudWidget extends BaseModel
 	
 	
 	/**
+	 * Returns route href
+	 */
+	string getRouteHref(string name, Dict obj = null)
+	{
+		return "";
+	}
+	
+	
+	/**
 	 * Init sub widgets
 	 */
 	static void initWidget(ModelProxy<CrudWidget> model, ModelProxy<Layout> layout)
@@ -254,7 +263,7 @@ struct CrudWidget extends BaseModel
 		
 		/* Setup back page */
 		ModelProxy page_model = layout.proxy(layout.call("getPageModelPath"));
-		page_model.commit("setBackPage", static::url(static::getRouteName("index")));
+		page_model.commit("setBackPage", page_model.call("getRouteHref", "index"));
 		
 		/* Add component */
 		layout.commit("addComponent", form.data("component_name"));

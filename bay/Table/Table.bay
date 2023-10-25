@@ -25,6 +25,7 @@
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Crud.CrudPageModel" />
+<use name="Runtime.Widget.Crud.CrudWidget" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.FieldInfo" />
@@ -35,16 +36,9 @@
 	%if (model.show_table_top)
 	{
 		<div class="web_table__top">
-		
-			%if (model.get_route_name == null)
-			{
-				{{ "table model.get_route_name is null" }}
-			}
-			%else
-			{
-				<Button type="success middle"
-					href={{ static::url(model.get_route_name.call(["add"])) }}>[+] Add</Button>
-			}
+			%set CrudWidget parent_model = model.getParentWidget(layout);
+			<Button type="success middle"
+				href={{ parent_model.getRouteHref("add") }}>[+] Add</Button>
 		</div>
 	}
 </template>
@@ -91,26 +85,21 @@
 	}
 	%elseif (field.name == "row_buttons")
 	{
-		%if (model.get_route_name == null)
-		{
-			{{ "table model.get_route_name is null" }}
-		}
-		%else
-		{
-			%set string href_edit = model.get_route_name.call(["edit", {"item": item}]);
-			%set string href_delete = model.get_route_name.call(["delete", {"item": item}]);
-			%set Dict item_pk = model.fields.getPrimaryKey(item);
-			
-			<div class="web_table__td_row_buttons">
-				<Button type="small" href={{ static::url(href_edit, item_pk) }}>
-					Edit
-				</Button>
-				<Button type="danger small"
-					href={{ static::url(href_delete, item_pk) }}>
-					Delete
-				</Button>
-			</div>
-		}
+		%set CrudWidget parent_model = model.getParentWidget(layout);
+		
+		%set string href_edit = parent_model.getRouteHref("edit", {"item": item});
+		%set string href_delete = parent_model.getRouteHref("delete", {"item": item});
+		%set Dict item_pk = model.fields.getPrimaryKey(item);
+		
+		<div class="web_table__td_row_buttons">
+			<Button type="small" href={{ href_edit }}>
+				Edit
+			</Button>
+			<Button type="danger small"
+				href={{ href_delete }}>
+				Delete
+			</Button>
+		</div>
 	}
 	%else
 	{
