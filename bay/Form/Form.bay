@@ -176,6 +176,8 @@ async void onSaveClick(Message<MouseClickEvent> msg)
  */
 async void onFieldChange(Message<MouseClickEvent> msg)
 {
+	ModelProxy model = this.modelProxy();
+	model.proxy("fields").commit("rebuildFieldsOptions");
 }
 
 

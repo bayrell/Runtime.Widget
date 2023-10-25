@@ -107,7 +107,7 @@
 			}
 			%if (rtl::isEmpty(delete_content))
 			{
-				%set delete_content = "Error: form get_names is null";
+				%set delete_content = "Error: form get_names('delete_content') is null";
 				%if (parent_model.getPageTitle != null)
 				{
 					%set delete_content = parent_model.getPageTitle("delete_content");

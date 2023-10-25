@@ -301,12 +301,13 @@ struct CrudDataStorage extends BaseStruct
 	/**
 	 * Returns load item post data
 	 */
-	Dict getItemPostData()
+	Dict getItemPostData(Dict search_data = null)
 	{
 		Dict post_data = {
 			"pk": this.item_pk,
 		};
 		post_data = this.setForeignPostData(post_data);
+		if (search_data != null) post_data = post_data.concat(search_data);
 		return post_data;
 	}
 	
@@ -329,13 +330,14 @@ struct CrudDataStorage extends BaseStruct
 	/**
 	 * Returns save item post data
 	 */
-	Dict getSavePostData()
+	Dict getSavePostData(Dict search_data = null)
 	{
 		Dict post_data = {
 			"pk": this.item_pk,
 			"item": this.item,
 		};
 		post_data = this.setForeignPostData(post_data);
+		if (search_data != null) post_data = post_data.concat(search_data);
 		return post_data;
 	}
 	

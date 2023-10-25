@@ -1,0 +1,123 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.ModelProxy;
+use Runtime.Web.BaseModel;
+use Runtime.Web.BaseRoute;
+use Runtime.Web.Callback;
+use Runtime.Web.Layout;
+use Runtime.Web.RouteInfo;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableModel;
+
+
+struct CrudWidget extends BaseModel
+{
+	string action = "";
+	
+	
+	/**
+	 * Set action
+	 */
+	CrudWidget setAction(string action) => this.clone{
+		"action": action,
+	};
+	
+	
+	/**
+	 * Returns page title
+	 */
+	string getPageTitle(string action)
+	{
+		if (action == "index")
+		{
+			return "List of " ~ this.getPageTitle("names");
+		}
+		else if (action == "add")
+		{
+			return "Add " ~ this.getPageTitle("name");
+		}
+		else if (action == "edit")
+		{
+			return "Edit " ~
+				this.getPageTitle("name") ~
+				" '" ~ this.getPageTitle("item_name") ~ "'"
+			;
+		}
+		else if (action == "delete")
+		{
+			return "Delete " ~
+				this.getPageTitle("name") ~
+				" '" ~ this.getPageTitle("item_name") ~ "'"
+			;
+		}
+		else if (action == "delete_content")
+		{
+			return "Delete '" ~ this.getPageTitle("item_name") ~ "' ?";
+		}
+		else if (action == "save")
+		{
+			bool is_new = this.getWidget("form").data.isNew();
+			if (is_new)
+			{
+				return this.getPageTitle("add");
+			}
+			return this.getPageTitle("edit");
+		}
+		else if (action == "name")
+		{
+			FormModel form = this.getWidget("form");
+			if (form.get_names != null)
+			{
+				return form.get_names.call(["names"]);
+			}
+			return static::getNames("name");
+		}
+		else if (action == "names")
+		{
+			FormModel form = this.getWidget("form");
+			if (form.get_names != null)
+			{
+				return form.get_names.call(["names"]);
+			}
+			return static::getNames("names");
+		}
+		else if (action == "item_name")
+		{
+			FormModel form = this.getWidget("form");
+			Dict item = this.getWidget("form").data.item;
+			if (form.get_names != null)
+			{
+				return form.get_names.call(["item_name", {"item": item}]);
+			}
+			return static::getNames("item_name", {"item": item});
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * Get names
+	 */
+	static string getNames(string action, Dict obj = null)
+	{
+		return "";
+	}
+}

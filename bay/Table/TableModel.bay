@@ -73,7 +73,6 @@ struct TableModel extends BaseModel
 	TableModel setShowTableTop(bool value) => this.clone({ "show_table_top": value });
 	
 	
-	
 	/**
 	 * Set search data
 	 */

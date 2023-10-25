@@ -5,6 +5,7 @@
 		"Crud/CrudDataStorage.bay",
 		"Crud/CrudPageModel.bay",
 		"Crud/CrudRoute.bay",
+		"Crud/CrudWidget.bay",
 		"Crud/DeletePage.bay",
 		"Crud/RowButtons.bay",
 		"Crud/RowNumber.bay",

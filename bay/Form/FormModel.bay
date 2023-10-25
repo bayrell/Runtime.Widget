@@ -24,10 +24,13 @@ use Runtime.ModelProxy;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
+use Runtime.Web.Layout;
 use Runtime.Widget.FieldInfo;
 use Runtime.Widget.FieldList;
 use Runtime.Widget.Crud.CrudDataStorage;
+use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Form.Form;
+use Runtime.Widget.Table.TableModel;
 
 
 struct FormModel extends BaseModel
@@ -42,6 +45,7 @@ struct FormModel extends BaseModel
 	static const string ON_DELETE_AFTER = "runtime.widget.form::delete_after";
 	
 	string action = "";
+	Dict search_data = null;
 	Dict field_result = null;
 	FieldList fields = new FieldList;
 	CrudDataStorage data = new CrudDataStorage;
@@ -62,6 +66,12 @@ struct FormModel extends BaseModel
 	 * Set get names
 	 */
 	FormModel setGetNames(Callback value) => this.clone({ "get_names": value });
+	
+	
+	/**
+	 * Set search data
+	 */
+	TableModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
 	
 	
 	/**
@@ -133,6 +143,92 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Add foreign model
+	 */
+	static async void addForeignModel(
+		ModelProxy<FormModel> model, ModelProxy<Layout> layout, Dict params
+	)
+	{
+		if (model.proxy("data").call("isNew")) return;
+		
+		string widget_name = params["widget_name"];
+		string component_name = params["component_name"] |> default string classof CrudWidget;
+		string foreign_key = params["foreign_key"] |> default string "id";
+		string primary_key = params["primary_key"] |> default string "id";
+		
+		/* Add widget */
+		CrudWidget widget_item = rtl::newInstance(component_name, [{"widget_name": widget_name}]);
+		ModelProxy widget = model.call("addWidget", widget_item);
+		
+		/* Add form */
+		ModelProxy widget_form = null;
+		Callback form_model = params["form_model"];
+		if (form_model != null)
+		{
+			widget_form = widget.call("addWidget", form_model.call());
+		}
+		else
+		{
+			string form_model_name = params["form_model_name"] |> default string classof FormModel;
+			widget_form = widget.call("addWidget", rtl::newInstance(form_model_name));
+		}
+		
+		/* Init widget form */
+		await widget_form.commitAsync("initWidget", layout);
+		
+		/* Init form */
+		Callback form_model_init = params["form_model_init"];
+		if (form_model_init != null)
+		{
+			await form_model_init.callAsync([widget_form, layout]);
+		}
+		
+		/* Disable dictionary load */
+		widget_form.commit("setDictionaryLoad", false);
+		
+		/* Add table */
+		ModelProxy widget_table = null;
+		Callback table_model = params["table_model"];
+		if (table_model != null)
+		{
+			widget_table = widget.call("addWidget", table_model.call());
+		}
+		else
+		{
+			string table_model_name = params["table_model_name"] |> default string classof TableModel;
+			widget_table = widget.call("addWidget", rtl::newInstance(table_model_name));
+		}
+		
+		/* Init widget table */
+		await widget_table.commitAsync("initWidget", layout);
+		
+		/* Init table */
+		Callback table_model_init = params["table_model_init"];
+		if (table_model_init != null)
+		{
+			await table_model_init.callAsync([widget_table, layout]);
+		}
+		
+		/* Set foreign key */
+		var value_id = (int)model.data(["data", "item_pk", primary_key]);
+		widget_form.proxy("data").commit("setForeignKey", foreign_key, value_id);
+		widget_table.proxy("data").commit("setForeignKey", foreign_key, value_id);
+		
+		/* Remove foreign key */
+		widget_form.proxy("fields").commit("removeFieldFromList", foreign_key);
+		widget_table.proxy("fields").commit("removeFieldFromList", foreign_key);
+	}
+	
+	
+	/**
+	 * Init foreign models
+	 */
+	async static void initForeignModels(ModelProxy<BaseModel> model, ModelProxy<Layout> layout)
+	{
+	}
+	
+	
+	/**
 	 * Load widget
 	 */
 	async static void loadWidget(ModelProxy model, ModelProxy layout)
@@ -188,7 +284,8 @@ struct FormModel extends BaseModel
 		ModelProxy fields = model.proxy("fields");
 		
 		/* Get post data */
-		Dict post_data = {};
+		Dict search_data = model.data("search_data");
+		Dict post_data = data.call("getItemPostData", search_data);
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_LOAD_DICTIONARY_BEFORE, {
@@ -233,7 +330,8 @@ struct FormModel extends BaseModel
 		ModelProxy fields = model.proxy("fields");
 		
 		/* Get post data */
-		Dict post_data = data.call("getItemPostData");
+		Dict search_data = model.data("search_data");
+		Dict post_data = data.call("getItemPostData", search_data);
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_LOAD_ITEM_BEFORE, {
@@ -285,7 +383,8 @@ struct FormModel extends BaseModel
 		ModelProxy data = model.proxy("data");
 		
 		/* Get post data */
-		Dict post_data = data.call("getSavePostData");
+		Dict search_data = model.data("search_data");
+		Dict post_data = data.call("getSavePostData", search_data);
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_SAVE_BEFORE, {
@@ -324,7 +423,8 @@ struct FormModel extends BaseModel
 		ModelProxy data = model.proxy("data");
 		
 		/* Get post data */
-		Dict post_data = data.call("getItemPostData");
+		Dict search_data = model.data("search_data");
+		Dict post_data = data.call("getItemPostData", search_data);
 		
 		/* Before event */
 		Dict d = await static::callEvent(model, static::ON_DELETE_BEFORE, {

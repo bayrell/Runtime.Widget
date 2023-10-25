@@ -94,9 +94,27 @@ struct FieldList extends BaseStruct
 	
 	
 	/**
+	 * Set fields list
+	 */
+	FieldList setFieldsList(Collection fields_list) => this.clone{
+		"fields_list": fields_list,
+	};
+	
+	
+	/**
+	 * Remove field from list
+	 */
+	FieldList removeFieldFromList(string key) => this.clone{
+		"fields_list": this.fields_list.removeItem(key)
+	};
+	
+	
+	/**
 	 * Set primary keys list
 	 */
-	FieldList setPrimaryKeys(Collection primary_keys) => this.clone({ "primary_keys": primary_keys });
+	FieldList setPrimaryKeys(Collection primary_keys) =>
+		this.clone({ "primary_keys": primary_keys })
+	;
 	
 	
 	/**
@@ -137,80 +155,93 @@ struct FieldList extends BaseStruct
 	
 	
 	/**
-	 * Setup field options from api
+	 * Set dictionary items
 	 */
-	static FieldList convertDictionaryToOptions(Dict obj)
+	FieldList setDictionaryItems(string name, Collection items)
 	{
-		ApiResult api_res = obj["api"];
-		string from = obj["from"];
-		Callback filter = obj["filter"];
-		Callback option = obj["option"];
-		
-		Collection options = api_res["data", "dictionary", from];
-		if (options == null) return null;
-		
-		/* Filter options */
-		if (filter != null)
-		{
-			options = options.map(filter);
-		}
-		
-		/* Map options */
-		if (option != null)
-		{
-			options = options.map(option);
-		}
-		
-		/* Sort options */
-		options = options.sort(
-			int (Dict a, Dict b) => a["label"] > b["label"]
-		);
-		
-		return options;
-	}
-	
-	
-	/**
-	 * Setup field options from api
-	 */
-	FieldList setFieldOptionsFromApi(Dict obj)
-	{
-		ApiResult api_res = obj["api"];
-		string from = obj["from"];
-		string to = obj["to"];
-		
-		Collection options = static::convertDictionaryToOptions(obj);
-		if (options == null) return this;
-		
-		/* Set fields */
-		Dict fields = this.fields;
-		fields <= { to } <= options <= options;
-		
 		/* Set dictionary */
 		Dict dictionary = this.dictionary;
-		dictionary <= { from } <= api_res["data", "dictionary", from];
+		dictionary <= { name } <= items;
 		
 		return this.clone{
-			"fields": fields,
 			"dictionary": dictionary,
 		}
 	}
 	
 	
 	/**
-	 * Set fields list
+	 * Update field options
 	 */
-	FieldList setFieldsList(Collection fields_list) => this.clone{
-		"fields_list": fields_list,
-	};
+	static FieldList updateFieldOptions(
+		ModelProxy model, Dict dictionary
+	)
+	{
+		string dictionary_name = dictionary["from"];
+		string field_name = dictionary["to"];
+		Callback filter = dictionary["filter"];
+		Callback option = dictionary["option"];
+		Collection items = model.data(["dictionary", dictionary_name]);
+		
+		/* Filter items */
+		if (filter != null)
+		{
+			items = items.filter(
+				Dict (Dict item) use (model, filter) => rtl::apply(filter, [model, item])
+			);
+		}
+		
+		/* Map items */
+		if (option != null)
+		{
+			items = items.map(
+				Dict (Dict item) use (model, option) => rtl::apply(option, [model, item])
+			);
+		}
+		
+		/* Sort items */
+		items = items.sort(
+			int (Dict a, Dict b) => a["label"] > b["label"]
+		);
+		
+		/* Set fields options */
+		model.commit("setFieldOptions", field_name, items);
+	}
 	
 	
 	/**
-	 * Remove field from list
+	 * Rebuild field options
 	 */
-	FieldList removeFieldFromList(string key) => this.clone{
-		"fields_list": this.fields_list.removeItem(key)
-	};
+	static FieldList rebuildFieldsOptions(ModelProxy model)
+	{
+		Collection dictionary_list = model.data(["dictionary_list"]);
+		if (dictionary_list)
+		{
+			for (int i=0; i<dictionary_list.count(); i++)
+			{
+				Dict item = dictionary_list.item(i);
+				if (item["auto"] == true)
+				{
+					model.commit("updateFieldOptions", item);
+				}
+			}
+		}
+	}
+	
+	
+	/**
+	 * Setup field options from api
+	 */
+	static void setFieldOptionsFromApi(ModelProxy model, ApiResult api_res, Dict dictionary)
+	{
+		string from = dictionary["from"];
+		Collection items = api_res["data", "dictionary", from];
+		
+		/* Update dictionary */
+		model.commit("setDictionaryItems", from, items);
+		
+		/* Update options */
+		model.commit("updateFieldOptions", dictionary);
+	}
 	
 	
 	/**
@@ -233,8 +264,7 @@ struct FieldList extends BaseStruct
 				for (int i=0; i<dictionary_list.count(); i++)
 				{
 					Dict item = dictionary_list.item(i);
-					item <= api <= res;
-					model.commit("setFieldOptionsFromApi", item);
+					model.commit("setFieldOptionsFromApi", res, item);
 				}
 			}
 		}
