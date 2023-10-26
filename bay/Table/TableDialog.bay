@@ -293,8 +293,8 @@ async void onDeleteDialogEvent(Message<DialogEvent> msg)
 		}
 		else
 		{
-			delete_dialog.commit("setMessage", form.data("error_message"));
-			delete_dialog.commit("setErrorCode", form.data("error_code"));
+			delete_dialog.commit("setMessage", form.data(["data", "error_message"]));
+			delete_dialog.commit("setErrorCode", form.data(["data", "error_code"]));
 		}
 		
 		return;
