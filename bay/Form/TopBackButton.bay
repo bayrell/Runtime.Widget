@@ -16,31 +16,20 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Crud.SavePage">
+<class name="Runtime.Widget.Form.TopBackButton">
 
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
-
-
-<template name="renderTop">
-	%set bool show_top_buttons = model.getWidget("form").show_top_buttons;
-	%if (show_top_buttons)
-	{
-		<div class="web_table__top">
-			<Button type="default" href={{ model.back_page_url }}>Back</Button>
-		</div>
-	}
-</template>
 
 
 <template name="render">
-	%render static::renderTop();
-	%set string component_name = model.getWidget("form").component_name;
-	<{component_name} @model=["widgets", "form"] />
+	<div class="web_form__top_button">
+		<Button type="default" href={{ model.back_page_url }}>Back</Button>
+	</div>
 </template>
 
 

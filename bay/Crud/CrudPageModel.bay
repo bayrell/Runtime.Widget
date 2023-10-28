@@ -28,17 +28,6 @@ use Runtime.Widget.Table.TableModel;
 
 struct CrudPageModel extends CrudWidget
 {
-	string back_page_url = "";
-	
-	
-	/**
-	 * Set back page url
-	 */
-	CrudPageModel setBackPage(string url) => this.clone{
-		"back_page_url": url,
-	};
-	
-	
 	/**
 	 * Init table
 	 */
@@ -83,6 +72,11 @@ struct CrudPageModel extends CrudWidget
 			
 			form.proxy("data").commit("setPrimaryKey", keys.toDict());
 		}
+		
+		/* Setup back page */
+		ModelProxy page_model = layout.proxy(layout.call("getPageModelPath"));
+		form.commit("setBackPage", page_model.call("getRouteHref", "index"));
+		form.commit("setShowTopButtons", true);
 	}
 	
 }

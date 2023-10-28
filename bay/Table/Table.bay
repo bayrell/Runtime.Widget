@@ -33,7 +33,7 @@
 
 
 <template name="renderTop">
-	%if (model.show_table_top)
+	%if (model.show_top_buttons)
 	{
 		<div class="web_table__top">
 			%set CrudWidget parent_model = model.getParentWidget(layout);

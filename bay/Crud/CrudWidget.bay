@@ -273,10 +273,6 @@ struct CrudWidget extends BaseModel
 		fields.commit("setFields", static::fields("form"));
 		fields.commit("setPrimaryKeys", static::getPrimaryKeys());
 		
-		/* Setup back page */
-		ModelProxy page_model = layout.proxy(layout.call("getPageModelPath"));
-		page_model.commit("setBackPage", page_model.call("getRouteHref", "index"));
-		
 		/* Add component */
 		layout.commit("addComponent", form.data("component_name"));
 	}

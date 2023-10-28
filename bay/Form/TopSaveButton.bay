@@ -16,32 +16,54 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Crud.SavePage">
+<class name="Runtime.Widget.Form.TopSaveButton">
 
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
 
 
-<template name="renderTop">
-	%set bool show_top_buttons = model.getWidget("form").show_top_buttons;
-	%if (show_top_buttons)
-	{
-		<div class="web_table__top">
-			<Button type="default" href={{ model.back_page_url }}>Back</Button>
-		</div>
-	}
-</template>
+<style>
+.web_form__top_button--save{
+	display: flex;
+	align-items: center;
+}
+.web_form__top_save_button_message{
+	padding-left: 5px;
+}
+</style>
 
 
 <template name="render">
-	%render static::renderTop();
-	%set string component_name = model.getWidget("form").component_name;
-	<{component_name} @model=["widgets", "form"] />
+	<div class="web_form__top_button web_form__top_button--save">
+		<Button type="primary" @event:MouseClickEvent="onSaveClick">Save</Button>
+		<div class="web_form__top_save_button_message" class={{ model.getErrorClass() }}>
+			{{ model.data.error_message }}
+		</div>
+	</div>
 </template>
+
+
+<script>
+
+/**
+ * Save click
+ */
+async void onSaveClick(Message<MouseClickEvent> msg)
+{
+	ModelProxy model = this.modelProxy();
+	
+	/* Set wait message */
+	model.proxy("data").commit("setWaitMessage");
+	
+	/* Send delete form */
+	await model.commitAsync("doSave");
+}
+
+</script>
 
 
 </class>

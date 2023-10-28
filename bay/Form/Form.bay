@@ -19,12 +19,29 @@
 <class name="Runtime.Widget.Form.Form">
 
 <use name="Runtime.ModelProxy" />
+<use name="Runtime.Web.BaseModel" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
+<use name="Runtime.Widget.Form.TopButtonModel" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.FieldInfo" />
+
+
+<template name="renderTop">
+	%if (model.show_top_buttons and model.top_buttons != null)
+	{
+		<div class="web_form__top">
+			%for (int i=0; i<model.top_buttons.count(); i++)
+			{
+				%set TopButtonModel top_button = model.top_buttons.get(i);
+				%set string top_button_name = top_button.component_name;
+				<{top_button_name} @model=[] button={{ top_button }} button_pos={{ i }} />
+			}
+		</div>
+	}
+</template>
 
 
 <template name="renderField" args="FieldInfo field">
@@ -94,9 +111,12 @@
 
 
 <template name="renderButtons">
-	<div class="web_form__buttons">
-		<Button type="primary large" @event:MouseClickEvent="onSaveClick">Save</Button>
-	</div>
+	%if (model.show_form_buttons)
+	{
+		<div class="web_form__buttons">
+			<Button type="primary large" @event:MouseClickEvent="onSaveClick">Save</Button>
+		</div>
+	}
 </template>
 
 
@@ -136,6 +156,7 @@
 
 
 <template name="render">
+	%render static::renderTop();
 	%render static::renderForm();
 </template>
 

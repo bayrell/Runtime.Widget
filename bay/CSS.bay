@@ -84,6 +84,16 @@
 }
 .web_form{
 }
+.web_form__top {
+	display: flex;
+    padding-bottom: 1em;
+}
+.web_form__top_button > %(Button)web_button{
+	border-left-width: 0px;
+}
+.web_form__top_button:first-child > %(Button)web_button{
+	border-left-width: 1px;
+}
 .web_form__content{
 	margin-bottom: 20px;
 }

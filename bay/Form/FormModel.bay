@@ -30,6 +30,8 @@ use Runtime.Widget.FieldList;
 use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Form.Form;
+use Runtime.Widget.Form.TopBackButton;
+use Runtime.Widget.Form.TopButtonModel;
 use Runtime.Widget.Table.TableModel;
 
 
@@ -50,16 +52,30 @@ struct FormModel extends BaseModel
 	FieldList fields = new FieldList;
 	CrudDataStorage data = new CrudDataStorage;
 	bool is_loading = false;
+	bool show_top_buttons = false;
+	bool show_form_buttons = true;
 	Callback get_names = null;
+	string back_page_url = "";
 	string component_name = classof Form;
 	string widget_name = "form";
 	bool can_dictionary_load = true;
+	Collection top_buttons = [
+		new TopButtonModel{ "component_name": classof TopBackButton, "name": "back" },
+	];
 	
 	
 	/**
 	 * Set action
 	 */
 	FormModel setAction(string action) => this.clone({ "action": action });
+	
+	
+	/**
+	 * Set back page url
+	 */
+	FormModel setBackPage(string url) => this.clone{
+		"back_page_url": url,
+	};
 	
 	
 	/**
@@ -71,7 +87,27 @@ struct FormModel extends BaseModel
 	/**
 	 * Set search data
 	 */
-	TableModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
+	FormModel setSearchData(Dict search_data) => this.clone({ "search_data": search_data });
+	
+	
+	/**
+	 * Show top buttons
+	 */
+	FormModel setShowTopButtons(bool value) => this.clone({ "show_top_buttons": value });
+	
+	
+	/**
+	 * Show form buttons
+	 */
+	FormModel setShowFormButtons(bool value) => this.clone({ "show_form_buttons": value });
+	
+	
+	/**
+	 * Add top button
+	 */
+	FormModel addTopButton(TopButtonModel model) => this.clone({
+		"top_buttons": this.top_buttons.pushIm(model)
+	});
 	
 	
 	/**
@@ -214,6 +250,9 @@ struct FormModel extends BaseModel
 		
 		/* Init crud widget */
 		await crud_widget.commitAsync("initWidget", layout);
+		
+		/* Add components */
+		layout.commit("addComponent", classof TopBackButton);
 		
 		/* Set foreign key */
 		var value_id = (int)model.data(["data", "item_pk", primary_key]);

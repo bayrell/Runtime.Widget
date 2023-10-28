@@ -40,7 +40,7 @@ struct TableModel extends BaseModel
 	bool is_loading = false;
 	Callback get_names = null;
 	Callback get_route_name = null;
-	bool show_table_top = true;
+	bool show_top_buttons = true;
 	string page_name = "page";
 	Dict search_data = null;
 	string component_name = classof Table;
@@ -70,7 +70,7 @@ struct TableModel extends BaseModel
 	/**
 	 * Show table top
 	 */
-	TableModel setShowTableTop(bool value) => this.clone({ "show_table_top": value });
+	TableModel setShowTopButtons(bool value) => this.clone({ "show_top_buttons": value });
 	
 	
 	/**

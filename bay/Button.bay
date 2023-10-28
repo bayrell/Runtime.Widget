@@ -36,7 +36,7 @@
 }
 .web_button:hover{
 	background-color: ${ vars["button", "default", "hover_bg"] };
-	border: 1px ${ vars["button", "default", "border"] } solid;
+	border-color: ${ vars["button", "default", "border"] };
 	color: ${ vars["button", "default", "hover_text"] };
 }
 .web_button:active{
@@ -44,42 +44,42 @@
 }
 .web_button.primary{
 	background-color: ${ vars["button", "primary", "background"] };
-	border: 1px ${ vars["button", "primary", "border"] } solid;
+	border-color: ${ vars["button", "primary", "border"] };
 	color: ${ vars["button", "primary", "text"] };
 }
 .web_button.primary:hover{
 	background-color: ${ vars["button", "primary", "hover_bg"] };
-	border: 1px ${ vars["button", "primary", "hover_border"] } solid;
+	border-color: ${ vars["button", "primary", "hover_border"] };
 	color: ${ vars["button", "primary", "hover_text"] };
 }
 .web_button.danger{
 	background-color: ${ vars["button", "danger", "background"] };
-	border: 1px ${ vars["button", "danger", "border"] } solid;
+	border-color: ${ vars["button", "danger", "border"] };
 	color: ${ vars["button", "danger", "text"] };
 }
 .web_button.danger:hover{
 	background-color: ${ vars["button", "danger", "hover_bg"] };
-	border: 1px ${ vars["button", "danger", "hover_border"] } solid;
+	border-color: ${ vars["button", "danger", "hover_border"] };
 	color: ${ vars["button", "danger", "hover_text"] };
 }
 .web_button.success{
 	background-color: ${ vars["button", "success", "background"] };
-	border: 1px ${ vars["button", "success", "border"] } solid;
+	border-color: ${ vars["button", "success", "border"] };
 	color: ${ vars["button", "success", "text"] };
 }
 .web_button.success:hover{
 	background-color: ${ vars["button", "success", "hover_bg"] };
-	border: 1px ${ vars["button", "success", "hover_border"] } solid;
+	border-color: ${ vars["button", "success", "hover_border"] };
 	color: ${ vars["button", "success", "hover_text"] };
 }
 .web_button.green{
 	background-color: ${ vars["button", "green", "background"] };
-	border: 1px ${ vars["button", "green", "border"] } solid;
+	border-color: ${ vars["button", "green", "border"] };
 	color: ${ vars["button", "green", "text"] };
 }
 .web_button.green:hover{
 	background-color: ${ vars["button", "green", "hover_bg"] };
-	border: 1px ${ vars["button", "green", "hover_border"] } solid;
+	border-color: ${ vars["button", "green", "hover_border"] };
 	color: ${ vars["button", "green", "hover_text"] };
 }
 .web_button.small{
