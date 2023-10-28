@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"Crud/CrudDataStorage.bay",
+		"Crud/CrudModelStorage.bay",
 		"Crud/CrudRoute.bay",
 		"Crud/CrudWidget.bay",
 		"Crud/DeletePage.bay",

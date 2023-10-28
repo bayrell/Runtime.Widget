@@ -93,10 +93,19 @@ struct FormModel extends BaseModel
 	
 	
 	/**
+	 * Set data storage
+	 */
+	FormModel setDataStorage(CrudDataStorage storage)
+		=> this.clone({ "data": storage });
+	
+	
+	/**
 	 * Set api result
 	 */
 	static void setApiResult(ModelProxy model, string event, ApiResult res)
 	{
+		if (res == null) return;
+		
 		/* Set validation result */
 		if (res.data != null and res.data.has("field_result"))
 		{
@@ -120,8 +129,6 @@ struct FormModel extends BaseModel
 				model.commit("setAction", "edit");
 			}
 		}
-		
-		return model;
 	}
 	
 	
@@ -159,7 +166,7 @@ struct FormModel extends BaseModel
 	/**
 	 * Add crud widget
 	 */
-	static async void addCrudWidget(
+	static async ModelProxy addCrudWidget(
 		ModelProxy<FormModel> model, ModelProxy<Layout> layout, Dict params
 	)
 	{
@@ -216,6 +223,8 @@ struct FormModel extends BaseModel
 		/* Remove foreign key */
 		widget_form.proxy("fields").commit("removeFieldFromList", foreign_key);
 		widget_table.proxy("fields").commit("removeFieldFromList", foreign_key);
+		
+		return crud_widget;
 	}
 	
 	
@@ -224,8 +233,6 @@ struct FormModel extends BaseModel
 	 */
 	async static void loadWidget(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidget(model, layout);
-		
 		string action = model.data("action");
 		ModelProxy data = model.proxy("data");
 		data.commit("clearItem");
@@ -238,6 +245,8 @@ struct FormModel extends BaseModel
 		{
 			await model.commitAsync("doLoadItem");
 		}
+		
+		await parent::loadWidget(model, layout);
 	}
 	
 	

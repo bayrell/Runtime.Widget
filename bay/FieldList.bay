@@ -120,14 +120,17 @@ struct FieldList extends BaseStruct
 	/**
 	 * Returns primary key
 	 */
-	Dict getPrimaryKey(Dict item)
+	Dict getPrimaryKey(Dict item, int pos = 0)
 	{
+		if (this.primary_keys == null) return pos;
+		
 		Map keys = new Map();
 		for (int i=0; i<this.primary_keys.count(); i++)
 		{
 			string field_name = this.primary_keys.get(i);
 			keys.setValue(field_name, item.get(field_name));
 		}
+		
 		return keys.toDict();
 	}
 	
@@ -249,6 +252,8 @@ struct FieldList extends BaseStruct
 	 */
 	static void setApiResult(ModelProxy model, string event, ApiResult res)
 	{
+		if (res == null) return;
+		
 		if (
 			res.isSuccess() and
 			(

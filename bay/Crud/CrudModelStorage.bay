@@ -1,0 +1,150 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2020 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.ModelProxy;
+use Runtime.Web.ApiResult;
+use Runtime.Widget.Crud.CrudDataStorage;
+
+
+struct CrudModelStorage extends CrudDataStorage
+{
+    Collection data_path = [];
+    
+    
+	/**
+	 * Returns true if ready
+	 */
+	bool isReady() => true;
+	
+	
+    /**
+	 * Call api search
+	 */
+	async static ApiResult callApiDictionary(ModelProxy model, Dict post_data)
+	{
+		return null;
+	}
+    
+    
+    /**
+	 * Call api search
+	 */
+	async static ApiResult callApiSearch(ModelProxy model, Dict post_data)
+	{
+		Collection data_path = model.data("data_path");
+		ModelProxy<Collection> items_proxy = model.fork(data_path);
+		
+		ApiResult res = new ApiResult();
+		return res.success({
+			"data": {
+				"page": 1,
+				"pages": 1,
+				"limit": -1,
+				"items": items_proxy.data(),
+			}
+		});
+	}
+    
+    
+    /**
+	 * Call api item
+	 */
+	async static ApiResult callApiItem(ModelProxy model, Dict post_data)
+	{
+		Dict pk = post_data["pk"];
+		Collection data_path = model.data("data_path");
+		ModelProxy<Collection> items_proxy = model.fork(data_path);
+		
+		int index = pk;
+		Dict item = items_proxy.proxy(index);
+		
+		ApiResult res = new ApiResult();
+		return res.success({
+			"data": {
+				"pk": pk,
+				"item": item.data(),
+			}
+		});
+	}
+    
+    
+    /**
+	 * Call api save
+	 */
+	async static ApiResult callApiSave(ModelProxy model, Dict post_data)
+	{
+		Dict pk = post_data["pk"];
+		Dict item = model.data("item");
+		Collection data_path = model.data("data_path");
+		ModelProxy<Collection> items_proxy = model.fork(data_path);
+		
+		/* Create items if doest not exists */
+		if (items_proxy.data() == null)
+		{
+			ModelProxy<Dict> items_container = items_proxy.parentProxy();
+			string container_name = items_proxy.path.last();
+			items_container.commit("setIm", container_name, []);
+		}
+		
+		/* Append item */
+		if (pk === null)
+		{
+			items_proxy.commit("pushIm", item);
+		}
+		else
+		{
+			int index = pk;
+			items_proxy.commit("setIm", index, item);
+		}
+		
+		ApiResult res = new ApiResult();
+		return res.success();
+	}
+    
+    
+    /**
+	 * Call api delete
+	 */
+	async static ApiResult callApiDelete(ModelProxy model, Dict post_data)
+	{
+		Dict pk = post_data["pk"];
+		Dict item = model.data("item");
+		Collection data_path = model.data("data_path");
+		ModelProxy<Collection> items_proxy = model.fork(data_path);
+		
+		/* Create items if doest not exists */
+		if (items_proxy.data() == null)
+		{
+			ModelProxy<Dict> items_container = items_proxy.parentProxy();
+			string container_name = items_proxy.path.last();
+			items_container.commit("setIm", container_name, []);
+		}
+		
+		/* Append item */
+		if (pk !== null)
+		{
+			int index = pk;
+			items_proxy.commit("removeIm", index);
+		}
+		
+		ApiResult res = new ApiResult();
+		return res.success();
+	}
+}

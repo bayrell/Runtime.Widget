@@ -86,12 +86,19 @@ struct TableModel extends BaseModel
 	
 	
 	/**
+	 * Set data storage
+	 */
+	TableModel setDataStorage(CrudDataStorage storage)
+		=> this.clone({ "data": storage });
+	
+	
+	/**
 	 * Load widget
 	 */
 	async static void loadWidget(ModelProxy model, ModelProxy layout)
 	{
-		await parent::loadWidget(model, layout);
 		await static::doSearch(model);
+		await parent::loadWidget(model, layout);
 	}
 	
 	

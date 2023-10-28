@@ -59,9 +59,11 @@
 	{
 		<div class="web_table__td_row_buttons">
 			<Button type="small"
-				@event:MouseClickEvent="onEditClick" data-item={{ item }}>Edit</Button>
+				@event:MouseClickEvent="onEditClick"
+				data-item={{ item }} data-pos={{ row_number }}>Edit</Button>
 			<Button type="danger small"
-				@event:MouseClickEvent="onDeleteClick" data-item={{ item }}>Delete</Button>
+				@event:MouseClickEvent="onDeleteClick"
+				data-item={{ item }} data-pos={{ row_number }}>Delete</Button>
 		</div>
 	}
 	%else
@@ -188,8 +190,9 @@ async void onEditClick(Message<MouseClickEvent> msg)
 	ModelProxy save_dialog = this.proxy("save_dialog");
 	ModelProxy page_model = this.proxy();
 	
+	int pos = msg.sender.params.get("data-pos");
 	Dict item = msg.sender.params.get("data-item");
-	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item);
+	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item, pos);
 	
 	form.commit("setAction", "edit");
 	form.proxy("data").commit("setPrimaryKey", item_pk);
@@ -211,8 +214,9 @@ async void onDeleteClick(Message<MouseClickEvent> msg)
 	ModelProxy delete_dialog = this.proxy("delete_dialog");
 	ModelProxy page_model = this.proxy();
 	
+	int pos = msg.sender.params.get("data-pos");
 	Dict item = msg.sender.params.get("data-item");
-	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item);
+	Dict item_pk = form.proxy("fields").call("getPrimaryKey", item, pos);
 	
 	form.commit("setAction", "delete");
 	form.proxy("data").commit("setPrimaryKey", item_pk);

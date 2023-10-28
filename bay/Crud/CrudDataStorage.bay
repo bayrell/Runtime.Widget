@@ -209,6 +209,8 @@ struct CrudDataStorage extends BaseStruct
 	 */
 	static void setApiResult(ModelProxy model, string action, ApiResult res)
 	{
+		if (res == null) return;
+		
 		if (action == "search")
 		{
 			if (res.isSuccess())
