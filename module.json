@@ -16,6 +16,7 @@
 		"Dialog/DialogModel.bay",
 		"Form/Form.bay",
 		"Form/FormModel.bay",
+		"Form/FormTopButtons.bay",
 		"Form/TopBackButton.bay",
 		"Form/TopButtonModel.bay",
 		"Form/TopSaveButton.bay",

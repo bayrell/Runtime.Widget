@@ -1,4 +1,4 @@
-/*!
+<!--
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,22 +14,24 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
+-->
 
-namespace Runtime.Widget.Tab;
+<class name="Runtime.Widget.Form.FormTopButtons">
 
-use Runtime.Web.BaseModel;
+<use name="Runtime.ModelProxy" />
+<use name="Runtime.Widget.Form.TopButtonModel" />
 
 
-struct TabModel extends BaseModel
-{
-    string active = "";
-    
-    
-    /**
-     * Set active
-     */
-    TabModel setActive(string active) => this.clone{"active": active};
-    TabModel setTab(string active) => this.clone{"active": active}; 
-    
-}
+<template name="render">
+	<div class="web_form__top">
+		%for (int i=0; i<model.top_buttons.count(); i++)
+		{
+			%set TopButtonModel top_button = model.top_buttons.get(i);
+			%set string top_button_name = top_button.component_name;
+			<{top_button_name} @model=[] button={{ top_button }} button_pos={{ i }} />
+		}
+	</div>
+</template>
+
+
+</class>

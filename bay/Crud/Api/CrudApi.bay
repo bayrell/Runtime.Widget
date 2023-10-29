@@ -83,8 +83,18 @@ class CrudApi extends BaseApi
 		{
 			return this.getItemFields();
 		}
+		if (kind == "search")
+		{
+			return this.getSearchFields();
+		}
 		return [];
 	}
+	
+	
+	/**
+	 * Returns search fields
+	 */
+	Collection getSearchFields() => this.getItemFields();
 	
 	
 	/**
@@ -380,7 +390,7 @@ class CrudApi extends BaseApi
 		await this.searchItems();
 		
 		/* Transform items */
-		Collection items = this.items.toDict( this.getAllowedFields("item") );
+		Collection items = this.items.toDict( this.getAllowedFields("search") );
 		
 		/* Set answer */
 		this.container.success({
@@ -424,7 +434,7 @@ class CrudApi extends BaseApi
 		}
 		
 		/* Transform items */
-		BaseStruct model = this.item.toDict( this.getAllowedFields("item") );		
+		BaseStruct model = this.item.toDict( this.getAllowedFields("search") );
 		Dict item_pk = this.item.getPrimaryKey();
 		
 		/* Set answer */
