@@ -149,9 +149,12 @@
 
 
 <template name="renderResult">
-	<div class="web_form__result" class={{ model.getErrorClass() }} >
-		{{ model.data.error_message }}
-	</div>
+	%if (model.show_form_buttons)
+	{
+		<div class="web_form__result" class={{ model.getErrorClass() }} >
+			{{ model.data.error_message }}
+		</div>
+	}
 </template>
 
 
