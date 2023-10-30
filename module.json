@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget",
 	"assets":
 	[
+		"TopButtonModel.bay",
 		"Crud/CrudDataStorage.bay",
 		"Crud/CrudModelStorage.bay",
 		"Crud/CrudRoute.bay",
@@ -18,7 +19,6 @@
 		"Form/FormModel.bay",
 		"Form/FormTopButtons.bay",
 		"Form/TopBackButton.bay",
-		"Form/TopButtonModel.bay",
 		"Form/TopSaveButton.bay",
 		"Hooks/AppHook.bay",
 		"Tab/TabItem.bay",
@@ -28,6 +28,10 @@
 		"Table/TableModel.bay",
 		"Table/TableDialog.bay",
 		"Table/TableDialogModel.bay",
+		"Table/TopAddButton.bay",
+		"Table/TopAddDialog.bay",
+		"Table/TopRefreshButton.bay",
+		"Table/TopRefreshModel.bay",
 		"Crud/CrudPageModel.bay",
 		"Button.bay",
 		"FieldInfo.bay",
@@ -39,6 +43,7 @@
 		"Select.bay",
 		"SelectLabel.bay",
 		"TextArea.bay",
+		"TopButtons.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./bay",

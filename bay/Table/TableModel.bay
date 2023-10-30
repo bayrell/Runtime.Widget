@@ -28,6 +28,8 @@ use Runtime.Widget.FieldInfo;
 use Runtime.Widget.FieldList;
 use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Table.Table;
+use Runtime.Widget.Table.TopAddButton;
+use Runtime.Widget.TopButtonModel;
 
 
 struct TableModel extends BaseModel
@@ -45,6 +47,10 @@ struct TableModel extends BaseModel
 	Dict search_data = null;
 	string component_name = classof Table;
 	string widget_name = "table";
+	
+	Collection top_buttons = [
+		new TopButtonModel{ "name": "add", "component_name": classof TopAddButton },
+	];
 	
 	
 	/**
@@ -90,6 +96,22 @@ struct TableModel extends BaseModel
 	 */
 	TableModel setDataStorage(CrudDataStorage storage)
 		=> this.clone({ "data": storage });
+	
+	
+	/**
+	 * Add top button
+	 */
+	TableModel addTopButton(TopButtonModel model) => this.clone({
+		"top_buttons": this.top_buttons.pushIm(model)
+	});
+	
+	
+	/**
+	 * Clear top buttons
+	 */
+	TableModel clearTopButtons() => this.clone({
+		"top_buttons": [],
+	});
 	
 	
 	/**

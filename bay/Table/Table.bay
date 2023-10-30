@@ -30,16 +30,13 @@
 <use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.FieldInfo" />
 <use name="Runtime.Widget.Pagination" component="true" />
+<use name="Runtime.Widget.TopButtons" component="true" />
 
 
 <template name="renderTop">
-	%if (model.show_top_buttons)
+	%if (model.show_top_buttons and model.top_buttons != null)
 	{
-		<div class="web_table__top">
-			%set CrudWidget parent_model = model.getParentWidget(layout);
-			<Button type="success middle"
-				href={{ parent_model.getRouteHref("add") }}>[+] Add</Button>
-		</div>
+		<TopButtons @model=[] />
 	}
 </template>
 

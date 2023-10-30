@@ -25,10 +25,12 @@ use Runtime.Web.BaseRoute;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Bus;
 use Runtime.Widget.FieldInfo;
+use Runtime.Widget.TopButtonModel;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.Table.TableDialog;
 use Runtime.Widget.Table.TableModel;
+use Runtime.Widget.Table.TopAddDialog;
 
 
 struct TableDialogModel extends TableModel
@@ -36,6 +38,10 @@ struct TableDialogModel extends TableModel
 	string component_name = classof TableDialog;
 	string foreign_key = "";
 	var foreign_value = "";
+	
+	Collection top_buttons = [
+		new TopButtonModel{ "name": "add", "component_name": classof TopAddDialog },
+	];
 	
 	DialogModel save_dialog = new DialogModel{
 		"auto_hide": false,

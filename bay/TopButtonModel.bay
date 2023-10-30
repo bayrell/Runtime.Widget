@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,22 +14,15 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Widget.Crud.SavePage">
+namespace Runtime.Widget;
 
-<use name="Runtime.ModelProxy" />
-<use name="Runtime.Web.LayoutModel" />
-<use name="Runtime.Web.Message" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
+use Runtime.lib;
+use Runtime.Web.BaseModel;
 
 
-<template name="render">
-	%set string component_name = model.getWidget("form").component_name;
-	<{component_name} @model=["widgets", "form"] />
-</template>
-
-
-</class>
+struct TopButtonModel extends BaseModel
+{
+    string name = "";
+}

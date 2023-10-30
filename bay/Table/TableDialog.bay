@@ -39,16 +39,6 @@
 </style>
 
 
-<template name="renderTop">
-	%if (model.show_top_buttons)
-	{
-		<div class="web_table__top">
-			<Button type="success middle" @event:MouseClickEvent="onAddClick">[+] Add</Button>
-		</div>
-	}
-</template>
-
-
 <template name="renderField" args="int row_number, FieldInfo field, Dict item">
 	
 	%if (field.component != null or field.render_method or field.value_method)

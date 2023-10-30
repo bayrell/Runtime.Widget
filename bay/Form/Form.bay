@@ -24,16 +24,16 @@
 <use name="Runtime.Web.Message" />
 <use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Form.FormTopButtons" />
 <use name="Runtime.Widget.Form.TopButtonModel" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.FieldInfo" />
+<use name="Runtime.Widget.TopButtons" component="true" />
 
 
 <template name="renderTop">
 	%if (model.show_top_buttons and model.top_buttons != null)
 	{
-		<FormTopButtons @model=[] />
+		<TopButtons @model=[] />
 	}
 </template>
 

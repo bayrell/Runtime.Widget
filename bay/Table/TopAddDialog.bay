@@ -16,20 +16,47 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Crud.SavePage">
+<class name="Runtime.Widget.Table.TopAddDialog">
 
 <use name="Runtime.ModelProxy" />
 <use name="Runtime.Web.LayoutModel" />
 <use name="Runtime.Web.Message" />
+<use name="Runtime.Web.Events.ChangeEvent" />
 <use name="Runtime.Web.Events.MouseClickEvent" />
 <use name="Runtime.Widget.Button" component="true" />
-<use name="Runtime.Widget.Form.Form" component="true" />
+<use name="Runtime.Widget.Crud.CrudWidget" />
 
 
 <template name="render">
-	%set string component_name = model.getWidget("form").component_name;
-	<{component_name} @model=["widgets", "form"] />
+	<div class="web_crud__top_button">
+		<Button type="success middle" @event:MouseClickEvent="onAddClick">[+] Add</Button>
+	</div>
 </template>
+
+
+<script>
+
+/**
+ * Add click
+ */
+async void onAddClick(Message<MouseClickEvent> msg)
+{
+	ModelProxy parent_model = this.proxyParentWidget();
+	ModelProxy form = parent_model.proxy(["widgets", "form"]);
+	ModelProxy page_model = this.proxy();
+	ModelProxy save_dialog = this.proxy("save_dialog");
+	
+	form.commit("setAction", "add");
+	form.commit("setDictionaryLoad", true);
+	form.proxy("data").commit("setPrimaryKey", null);
+	form.proxy("data").commit("clearItem");
+	form.commit("clearFieldErrors");
+	save_dialog.commit("setTitle", "Add item");
+	save_dialog.commit("show");
+	await form.commitAsync("doLoadDictionary");
+}
+
+</script>
 
 
 </class>

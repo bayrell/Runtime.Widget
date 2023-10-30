@@ -31,8 +31,8 @@ use Runtime.Widget.Crud.CrudDataStorage;
 use Runtime.Widget.Crud.CrudWidget;
 use Runtime.Widget.Form.Form;
 use Runtime.Widget.Form.TopBackButton;
-use Runtime.Widget.Form.TopButtonModel;
 use Runtime.Widget.Table.TableModel;
+use Runtime.Widget.TopButtonModel;
 
 
 struct FormModel extends BaseModel
