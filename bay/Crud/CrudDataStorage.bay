@@ -234,7 +234,10 @@ struct CrudDataStorage extends BaseStruct
 			}
 		}
 		
-		model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+		if (action == "item" or action == "save" or action == "delete")
+		{
+			model.commit("setError", res.getErrorMessage(), res.getErrorCode());
+		}
 	}
 	
 	
