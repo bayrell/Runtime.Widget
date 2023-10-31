@@ -43,6 +43,7 @@ struct DialogModel extends BaseStruct
 	public string input = "";
 	public string button_result = "";
 	public int error_code = 0;
+	public bool show_content = true;
 	public string width = "";
 	public string error_message = "";
 	public primitive tag = null;

@@ -132,15 +132,18 @@
 
 
 <template>
+	%set string style = static::getStyle(model, render_params);
 	%set string width = static::getParams(model, render_params, "width");
 	
-	<div class='dialog_shadow'
-		class={{ model.is_open ? 'dialog_shadow--open' : 'dialog_shadow--hide' }}></div>
+	<div class="dialog_shadow"
+		class={{ model.is_open ? "dialog_shadow--open" : "dialog_shadow--hide" }}></div>
 	
 	<div class="dialog_box" @ref="dialog_box"
-		class={{ model.is_open ? 'dialog_box--open' : 'dialog_box--hide' }}>
-		<table class='dialog_wrap'><tr><td>
-			<div class='dialog' style={{ ((width != "") ? "max-width:" ~ width ~ ";" : "") }}>
+		class={{ model.is_open ? "dialog_box--open" : "dialog_box--hide" }}>
+		<table class="dialog_wrap"><tr><td>
+			<div class="dialog" class={{ "dialog--" ~ style }}
+				style={{ ((width != "") ? "max-width:" ~ width ~ ";" : "") }}
+			>
 				%render static::renderDialog();
 			</div>
 		</td></tr></table>
@@ -192,10 +195,7 @@
 
 <template name="renderContent">
 	%set string style = static::getStyle(model, render_params);
-	%if (
-		style == DialogModel::STYLE_CONTENT or
-		style == DialogModel::STYLE_YES_NO
-	)
+	%if (model.show_content)
 	{
 		<div class='dialog_content'>
 			{{ render_content }}
@@ -213,13 +213,13 @@
 	{
 		%if (rtl::exists(renderButtons) and rtl::isFn(renderButtons))
 		{
-			<div class='dialog_buttons'>
+			<div class='dialog_buttons' class={{ 'dialog_buttons--' ~ style }}>
 				%render renderButtons();
 			</div>
 		}
 		%else if (rtl::exists(buttons))
 		{
-			<div class='dialog_buttons'>
+			<div class='dialog_buttons' class={{ 'dialog_buttons--' ~ style }}>
 			%for (int i=0; i<buttons.count(); i++)
 			{
 				%set Dict button = buttons[i];
