@@ -64,6 +64,7 @@
 			name={{ field.name }}
 			options={{ options }}
 			value={{ item[field.name] }}
+			@model=[ "data", "items", row_number, field.name ]
 			...component_settings
 		/>
 	}
