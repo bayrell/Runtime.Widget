@@ -47,6 +47,7 @@ class CrudApi extends BaseApi
 	Relation item = null;
 	FieldResult field_result = new FieldResult();
 	Map<QueryResult> dictionary = new Map;
+	Dict update_data = null;
 	
 	
 	/**
@@ -201,6 +202,14 @@ class CrudApi extends BaseApi
 		{
 			CrudRule rule = rules[i];
 			await rule.onSaveInit(this);
+		}
+		
+		/* Validate data */
+		Dict update_data = this.post_data["item"];
+		this.update_data = await this.validateItem(update_data);
+		if (not this.field_result.isSuccess())
+		{
+			this.container.fail( this.field_result.getResult() );
 		}
 	}
 	
@@ -648,7 +657,6 @@ class CrudApi extends BaseApi
 	async void actionSave()
 	{
 		Dict pk = this.post_data["pk"];
-		Dict update_data = this.post_data["item"];
 		
 		/* Init api */
 		await this.initApi("actionSave");
@@ -656,15 +664,6 @@ class CrudApi extends BaseApi
 		
 		/* Before event */
 		await this.onSaveInit();
-		if (this.container.response.error_name != "") return;
-		
-		/* Validate data */
-		update_data = await this.validateItem(update_data);
-		if (not this.field_result.isSuccess())
-		{
-			this.container.fail( this.field_result.getResult() );
-			return;
-		}
 		if (this.container.response.error_name != "") return;
 		
 		/* Find item */
@@ -685,7 +684,7 @@ class CrudApi extends BaseApi
 		}
 		
 		/* Update item */
-		await this.updateItem(this.item, update_data);
+		await this.updateItem(this.item, this.update_data);
 		if (this.container.response.error_name != "") return;
 		
 		/* Transform items */
