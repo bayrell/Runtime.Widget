@@ -415,12 +415,6 @@ struct FormModel extends BaseModel
 		ModelProxy data = model.proxy("data");
 		if (not data.call("isReady")) return;
 		
-		Dict item_pk = model.data("item_pk");
-		Dict item = model.data("item");
-		
-		/* Get data storage */
-		ModelProxy data = model.proxy("data");
-		
 		/* Get post data */
 		Dict search_data = model.data("search_data");
 		Dict post_data = data.call("getSavePostData", search_data);
@@ -434,7 +428,6 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ModelProxy data = model.proxy("data");
 		ApiResult res = await data.callAsync("callApiSave", d["post_data"]);
 		
 		/* Set api result */
@@ -458,9 +451,6 @@ struct FormModel extends BaseModel
 		ModelProxy data = model.proxy("data");
 		if (not data.call("isReady")) return;
 		
-		/* Get data storage */
-		ModelProxy data = model.proxy("data");
-		
 		/* Get post data */
 		Dict search_data = model.data("search_data");
 		Dict post_data = data.call("getItemPostData", search_data);
@@ -474,7 +464,6 @@ struct FormModel extends BaseModel
 		if (not d["success"]) return;
 		
 		/* Send api */
-		ModelProxy data = model.proxy("data");
 		ApiResult res = await data.callAsync("callApiDelete", d["post_data"]);
 		
 		/* Set api result */

@@ -654,13 +654,9 @@ class CrudApi extends BaseApi
 	/**
 	 * Action save
 	 */
-	async void actionSave()
+	async void actionSaveBefore(Dict params)
 	{
 		Dict pk = this.post_data["pk"];
-		
-		/* Init api */
-		await this.initApi("actionSave");
-		if (this.container.response.error_name != "") return;
 		
 		/* Before event */
 		await this.onSaveInit();
@@ -673,7 +669,11 @@ class CrudApi extends BaseApi
 		}
 		else
 		{
-			this.item = await this.createItem();
+			bool create = params["create"] |> default bool false;
+			if (create)
+			{
+				this.item = await this.createItem();
+			}
 		}
 		
 		/* Item not found */
@@ -682,11 +682,39 @@ class CrudApi extends BaseApi
 			this.container.fail( new ApiException("Item not found") );
 			return;
 		}
+	}
+	
+	
+	/**
+	 * Action save
+	 */
+	async void actionSave()
+	{
+		/* Init api */
+		await this.initApi("actionSave");
+		if (this.container.response.error_name != "") return;
+		
+		/* Save before */
+		await static::actionSaveBefore({
+			"create": true,
+		});
+		if (this.container.response.error_name != "") return;
 		
 		/* Update item */
 		await this.updateItem(this.item, this.update_data);
 		if (this.container.response.error_name != "") return;
 		
+		/* Save after */
+		await static::actionSaveAfter();
+		if (this.container.response.error_name != "") return;
+	}
+	
+	
+	/**
+	 * Action save
+	 */
+	async void actionSaveAfter()
+	{
 		/* Transform items */
 		BaseStruct model = this.item.toDict( this.getAllowedFields("item") );
 		Dict item_pk = this.item.getPrimaryKey();
@@ -707,6 +735,27 @@ class CrudApi extends BaseApi
 	
 	
 	/**
+	 * Action delete before
+	 */
+	async void actionDeleteBefore()
+	{
+		Dict pk = this.post_data["pk"];
+		
+		/* Before event */
+		await this.onDeleteInit();
+		if (this.container.response.error_name != "") return;
+		
+		/* Find item */
+		this.item = await this.findItem(pk);
+		if (this.item == null)
+		{
+			this.container.fail( new ApiException("Item not found") );
+			return;
+		}
+	}
+	
+	
+	/**
 	 * Delete item
 	 */
 	async void deleteItem(Relation item)
@@ -721,28 +770,29 @@ class CrudApi extends BaseApi
 	 */
 	async void actionDelete()
 	{
-		Dict pk = this.post_data["pk"];
-		
 		/* Init api */
 		await this.initApi("actionDelete");
 		if (this.container.response.error_name != "") return;
 		
-		/* Before event */
-		await this.onDeleteInit();
+		/* Delete before */
+		await static::actionDeleteBefore();
 		if (this.container.response.error_name != "") return;
-		
-		/* Find item */
-		this.item = await this.findItem(pk);
-		if (this.item == null)
-		{
-			this.container.fail( new ApiException("Item not found") );
-			return;
-		}
 		
 		/* Delete item */
 		await this.deleteItem(this.item);
 		if (this.container.response.error_name != "") return;
 		
+		/* Delete after */
+		await static::actionDeleteAfter();
+		if (this.container.response.error_name != "") return;
+	}
+	
+	
+	/**
+	 * Action delete after
+	 */
+	async void actionDeleteAfter()
+	{
 		/* Transform items */
 		BaseStruct model = this.item.toDict( this.getAllowedFields("item") );
 		Dict item_pk = this.item.getPrimaryKey();

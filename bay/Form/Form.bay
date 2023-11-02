@@ -184,7 +184,7 @@ async void onSaveClick(Message<MouseClickEvent> msg)
 	/* Set wait message */
 	model.proxy("data").commit("setWaitMessage");
 	
-	/* Send delete form */
+	/* Send save form */
 	await model.commitAsync("doSave");
 }
 
