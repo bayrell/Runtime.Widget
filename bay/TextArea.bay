@@ -44,13 +44,33 @@
 	%set string name = (render_params != null) ? render_params.get("name", "") : "";
 	%set string type = (render_params != null) ? render_params.get("type", "input") : "";
 	%set primitive tag = (render_params != null) ? render_params.get("@tag", "") : "";
-	<textarea class='textarea' @tag={ tag } @event:ChangeEvent="onChange"
-		name={ name } type={ type }>{{ value }}</textarea>
+	
+	%set Dict args = {};
+	%if (render_params.get("readonly"))
+	{
+		%set args = args.setIm("readonly", 1);
+	}
+	
+	<textarea class="textarea" @ref="textarea" @tag={ tag } @event:ChangeEvent="onChange"
+		name={ name } type={ type } ...args>{{ value }}</textarea>
 	
 </template>
 
 
 <script>
+
+var textarea;
+
+
+/**
+ * Update elem params
+ */
+public void onUpdateElem()
+{
+	string value = Helper::getValue(this.layout(), this.model_path, this.params);
+	this.textarea.elem.value = value;
+}
+
 
 /**
  * On change
