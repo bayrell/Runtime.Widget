@@ -41,6 +41,7 @@ struct CrudDataStorage extends BaseStruct
 	int page = 0;
 	int pages = 0;
 	int limit = 10;
+	int selected = -1;
 	
 	int error_code = 0;
 	string error_message = "";
@@ -66,6 +67,12 @@ struct CrudDataStorage extends BaseStruct
 			"foreign_key": foreign_key,
 			"foreign_value": foreign_value,
 		});
+	
+	
+	/**
+	 * Select row
+	 */
+	CrudDataStorage setSelected(int selected) => this.clone({ "selected": selected });
 	
 	
 	/**

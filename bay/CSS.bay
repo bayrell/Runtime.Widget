@@ -52,6 +52,11 @@
 .web_table tr.web_table__row_item:hover{
 	background-color: ${ vars["colors", "table_row_hover"] };
 }
+.web_table tr.web_table__row_item--selected,
+.web_table tr.web_table__row_item--selected:hover{
+    background-color: #337ab7;
+    color: #fff;
+}
 .web_table__td_row_buttons > %(Button)web_button,
 .web_table__td_row_buttons > a{
 	display: inline-block;

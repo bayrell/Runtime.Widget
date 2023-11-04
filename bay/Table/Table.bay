@@ -131,14 +131,17 @@
 <template name="renderRow" args="int row_number">
 	%set Collection<string> columns = model.fields.fields_list;
 	%set BaseStruct item = model.data.items[row_number];
-	<tr class="web_table__row_item">
+	<tr class="web_table__row_item" data-row-number={{ row_number }}
+		class={{ model.data.selected == row_number ? "web_table__row_item--selected" : "" }}
+		@event:MouseClickEvent="onRowClick"
+	>
 		%for (int i=0; i<columns.count(); i++)
 		{
 			%set string field_name = columns[i];
 			%set FieldInfo field = model.fields.getField(field_name);
 			%if (field)
 			{
-				<td class={{ "web_table__td--" ~ field.name }}>
+				<td class={{ "web_table__td web_table__td--" ~ field.name }}>
 					%render static::renderField(row_number, field, item);
 				</td>
 			}
@@ -185,6 +188,18 @@
 	%render static::renderTop();
 	%render static::renderTable();
 </template>
+
+
+<script>
+
+/**
+ * Row click
+ */
+async void onRowClick(Message<MouseClickEvent> msg)
+{
+}
+
+</script>
 
 
 </class>
