@@ -628,10 +628,10 @@ class CrudApi extends BaseApi
 			
 			/* Refresh item */
 			Dict pk = item.getPrimaryKey();
-			item = await this.findItem(pk);
+			this.item = await this.findItem(pk);
 			
 			/* Before item */
-			await this.onSaveAfter(item, update_data);
+			await this.onSaveAfter(this.item, update_data);
 		}
 	}
 	

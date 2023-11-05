@@ -24,11 +24,11 @@ use Runtime.Widget.Crud.Api.CrudApi;
 use Runtime.Widget.Crud.Api.CrudRule;
 
 
-struct Required extends CrudRule
+struct ReadOnly extends CrudRule
 {
 	string name = "";
-	bool check_create = true;
-	bool check_update = true;
+	bool can_create = false;
+	bool can_update = false;
 	
 	
 	/**
@@ -38,15 +38,26 @@ struct Required extends CrudRule
 	{
 		Dict pk = api.post_data["pk"];
 		
-		if (pk == null and not this.check_create) return update_data;
-		if (pk != null and not this.check_update) return update_data;
-		
-		var value = update_data[this.name];
-		if (not update_data.has(this.name) or value === "" or value === null)
+		if (pk == null)
 		{
-			api.field_result.addFieldError(this.name, "Field is required");
+			if (not this.can_create)
+			{
+				if (update_data.has(this.name))
+				{
+					update_data = update_data.removeIm(this.name);
+				}
+			}
 		}
-		
+		else
+		{
+			if (not this.can_update)
+			{
+				if (update_data.has(this.name))
+				{
+					update_data = update_data.removeIm(this.name);
+				}
+			}
+		}
 		return update_data;
 	}
 	
