@@ -124,7 +124,14 @@
  */
 async void onClick(Message<MouseClickEvent> msg)
 {
+	msg.cancel();
 	await this.sendEvent(msg.event);
+	
+	if (this.params.has('href'))
+	{
+		string href = this.params.get('href');
+		document.location = href;
+	}
 }
 
 </script>
