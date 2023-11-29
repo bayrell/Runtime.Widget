@@ -58,7 +58,7 @@ static class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
-		new Hook("Runtime.Widget.Hooks.AppHook"),
+		/*new Hook("Runtime.Widget.Hooks.AppHook"),*/
 	];
 	
 }
