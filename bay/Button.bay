@@ -94,23 +94,19 @@
 
 
 <template name="render">
-	%set string href = render_params["href"];
-	%set string button_type = render_params["type"] |> default string "button";
-	%if (href == null)
+	%set string href = this.href;
+	%if (this.href == null)
 	{
-		<button class="web_button" class={{ button_type }}
-			@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
+		<button class="web_button" class={{ this.type }}
+			@tag={{ render_params["@tag"] }} @event:onClick="onClick"
 		>
-			%render render_content;
 		</button>
 	}
 	%else
 	{
 		<a class="nolink web_button__href" href={{ href }}>
-			<button class="web_button" class={{ button_type }}
-				@tag={{ render_params["@tag"] }} @event:MouseClickEvent="onClick"
+			<button class="web_button" class={{ this.type }} @event:onClick="onClick"
 			>
-				%render render_content;
 			</button>
 		</a>
 	}
@@ -118,6 +114,10 @@
 
 
 <script>
+
+props string href = "";
+props string type = "button";
+
 
 /**
  * Mouse click event

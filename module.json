@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget",
 	"assets":
 	[
+		"Button.bay",
 		"WidgetError.bay",
 		"ModuleDescription.bay"
 	],
