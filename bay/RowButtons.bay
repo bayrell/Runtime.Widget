@@ -16,19 +16,29 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Crud.TablePage">
+<class name="Runtime.Widget.RowButtons">
 
-<use name="Runtime.ModelProxy" />
-<use name="Runtime.Web.LayoutModel" />
-<use name="Runtime.Web.Message" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
-<use name="Runtime.Widget.Table.Table" component="true" />
-<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.RowButtonsModel" />
 
+<style>
+	.widget_row_buttons{
+		display: flex;
+		gap: var(--widget-spacer);
+	}
+</style>
 
 <template name="render">
-	%set string component_name = model.getWidget("table").component_name;
-	<{component_name} @model=["widgets", "table"] />
+	<div class="widget_row_buttons">
+		%for (int i=0; i<this.model.buttons.count(); i++)
+		{
+			%set Map button = this.model.buttons.get(i);
+			%set string component = button.getComponent();
+			%set Dict props = button.getProps();
+			<{component} ...props>
+				{{ button.getContent() }}
+			</{component}>
+		}
+	</div>
 </template>
 
 

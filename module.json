@@ -2,7 +2,12 @@
 	"name": "Runtime.Widget",
 	"assets":
 	[
+		"AppHook.bay",
 		"Button.bay",
+		"ButtonModel.bay",
+		"CSS.bay",
+		"RowButtons.bay",
+		"RowButtonsModel.bay",
 		"WidgetError.bay",
 		"ModuleDescription.bay"
 	],

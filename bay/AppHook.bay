@@ -16,16 +16,34 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Dialog;
+namespace Runtime.Widget;
 
-use Runtime.Web.Events.BaseEvent;
-use Runtime.Widget.Dialog.DialogModel;
+use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Widget.CSS;
+use Runtime.Widget.Button;
+use Runtime.Widget.RowButtons;
 
 
-struct DialogEvent extends BaseEvent
+class AppHook extends BaseAppHook
 {
-	public string input = "";
-	public string button_result = "";
-	public primitive tag = null;
-	public DialogModel model = null;
+	/**
+	 * Register hooks
+	 */
+	void register_hooks()
+	{
+        this.register(static::COMPONENTS);
+    }
+    
+    
+    /**
+	 * Components
+	 */
+	void components(Map params)
+    {
+		params["components"].appendItems([
+			classof CSS,
+			classof Button,
+			classof RowButtons,
+		]);
+    }
 }

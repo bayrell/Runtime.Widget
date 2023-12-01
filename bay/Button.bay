@@ -18,120 +18,61 @@
 
 <class name="Runtime.Widget.Button">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.LayoutModel" />
-<use name="Runtime.Web.Events.MouseClickEvent" />
 
 <style>
-.web_button{
-	padding: 0.5em 1em;
-	font-size: 1rem;
-	cursor: pointer;
-	background-color: ${ vars["button", "default", "background"] };
-	border: 1px ${ vars["button", "default", "border"] } solid;
-	color: ${ vars["button", "default", "text"] };
-	/*box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.25);*/
+.button{
+	color: var(--widget-color-text);
+	background-color: var(--widget-color-default);
+	border: var(--widget-border-width) var(--widget-color-border) solid;
+	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	outline: 0;
 	line-height: normal;
+	cursor: pointer;
 }
-.web_button:hover{
-	background-color: ${ vars["button", "default", "hover_bg"] };
-	border-color: ${ vars["button", "default", "border"] };
-	color: ${ vars["button", "default", "hover_text"] };
-}
-.web_button:active{
+.button:active{
 	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
 }
-.web_button.primary{
-	background-color: ${ vars["button", "primary", "background"] };
-	border-color: ${ vars["button", "primary", "border"] };
-	color: ${ vars["button", "primary", "text"] };
+.button-small{
+	padding: var(--widget-button-padding-small-y) var(--widget-button-padding-small-x);
 }
-.web_button.primary:hover{
-	background-color: ${ vars["button", "primary", "hover_bg"] };
-	border-color: ${ vars["button", "primary", "hover_border"] };
-	color: ${ vars["button", "primary", "hover_text"] };
+.button-large{
+	padding: var(--widget-button-large-small-y) var(--widget-button-large-small-x);
 }
-.web_button.danger{
-	background-color: ${ vars["button", "danger", "background"] };
-	border-color: ${ vars["button", "danger", "border"] };
-	color: ${ vars["button", "danger", "text"] };
+.button-primary{
+	color: var(--widget-color-primary-text);
+	background-color: var(--widget-color-primary);
+	border-color: var(--widget-color-primary);
 }
-.web_button.danger:hover{
-	background-color: ${ vars["button", "danger", "hover_bg"] };
-	border-color: ${ vars["button", "danger", "hover_border"] };
-	color: ${ vars["button", "danger", "hover_text"] };
-}
-.web_button.success{
-	background-color: ${ vars["button", "success", "background"] };
-	border-color: ${ vars["button", "success", "border"] };
-	color: ${ vars["button", "success", "text"] };
-}
-.web_button.success:hover{
-	background-color: ${ vars["button", "success", "hover_bg"] };
-	border-color: ${ vars["button", "success", "hover_border"] };
-	color: ${ vars["button", "success", "hover_text"] };
-}
-.web_button.green{
-	background-color: ${ vars["button", "green", "background"] };
-	border-color: ${ vars["button", "green", "border"] };
-	color: ${ vars["button", "green", "text"] };
-}
-.web_button.green:hover{
-	background-color: ${ vars["button", "green", "hover_bg"] };
-	border-color: ${ vars["button", "green", "hover_border"] };
-	color: ${ vars["button", "green", "hover_text"] };
-}
-.web_button.small{
-	padding: 0.35rem 0.7rem;
-	font-size: 0.95rem;
-}
-.web_button.large{
-	padding: 0.75em 1.5em;
-	font-size: 1.2rem;
+.button-danger{
+	color: var(--widget-color-danger-text);
+	background-color: var(--widget-color-danger);
+	border-color: var(--widget-color-danger);
 }
 </style>
 
 
 <template name="render">
-	%set string href = this.href;
-	%if (this.href == null)
-	{
-		<button class="web_button" class={{ this.type }}
-			@tag={{ render_params["@tag"] }} @event:onClick="onClick"
-		>
-		</button>
-	}
-	%else
-	{
-		<a class="nolink web_button__href" href={{ href }}>
-			<button class="web_button" class={{ this.type }} @event:onClick="onClick"
-			>
-			</button>
-		</a>
-	}
+	<button type="button" class="button" class={{ this.getStyles() }} @event:onClick="onClick">
+		%render this.renderSlot("default");
+	</button>
 </template>
 
 
 <script>
 
-props string href = "";
-props string type = "button";
+props Collection<string> styles = [];
+props string content = "";
 
 
 /**
- * Mouse click event
+ * Returns styles
  */
-async void onClick(Message<MouseClickEvent> msg)
+void getStyles()
 {
-	msg.cancel();
-	await this.sendEvent(msg.event);
-	
-	if (this.params.has('href'))
-	{
-		string href = this.params.get('href');
-		document.location = href;
-	}
+	return this.styles
+		.map(string (string s) => "button-" ~ s)
+		.join(" ")
+	;
 }
 
 </script>

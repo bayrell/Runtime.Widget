@@ -18,47 +18,55 @@
 
 namespace Runtime.Widget;
 
-use Runtime.Entity.Hook;
+use Runtime.BaseObject;
+use Runtime.Widget.Button;
 
 
-static class ModuleDescription
+class ButtonModel extends BaseObject
 {
+	Dict props = {};
+	string component = classof Button;
+	string content = "";
+	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Constructor
 	 */
-	public static string getModuleName()
+	void constructor(Map params = null)
 	{
-		return "Runtime.Web.Crud";
+		parent();
+		if (params)
+		{
+			this.props = params.clone();
+			if (params.has("component"))
+			{
+				this.component = params.get("component");
+				this.props.remove("component");
+			}
+			if (params.has("content"))
+			{
+				this.content = params.get("content");
+				this.props.remove("content");
+			}
+		}
 	}
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns component
 	 */
-	public static string getModuleVersion()
-	{
-		return "0.1.0";
-	}
+	string getComponent() => this.component;
 	
 	
 	/**
-	 * Returns required modules
-	 * @return Map<string>
+	 * Returns props
 	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
+	string getProps() => this.props;
 	
 	
 	/**
-	 * Returns enities
+	 * Returns content
 	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+	string getContent() => this.content;
 	
 }

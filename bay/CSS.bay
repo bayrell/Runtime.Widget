@@ -18,133 +18,56 @@
 
 <class name="Runtime.Widget.CSS">
 
-<use name="Runtime.Widget.Button" />
-<use name="Runtime.Widget.Pagination" />
+<use name="Runtime.Widget.Button" component="true" />
 
 
 <style global="true">
-.scroll-lock {
-    overflow: hidden;
+:root {
+	--widget-spacer: 0.5rem;
+	--widget-color-border: #dee2e6;
+	--widget-color-danger-text: #fff;
+	--widget-color-danger: #dc3545;
+	--widget-color-default: #fff;
+	--widget-color-hover: rgba(0, 0, 0, 0.075);
+	--widget-color-link: #337ab7;
+	--widget-color-primary-text: #fff;
+	--widget-color-primary: #0d6efd;
+	--widget-color-selected-text: #fff;
+	--widget-color-selected: #337ab7;
+	--widget-color-text: #000;
+	--widget-color-table-background: transparent;
+	--widget-border-width: 1px;
+	--widget-button-padding-x: 1rem;
+	--widget-button-padding-y: 0.5rem;
+	--widget-button-padding-small-x: 0.7rem;
+	--widget-button-padding-small-y: 0.35rem;
+	--widget-button-padding-large-x: 1.2rem;
+	--widget-button-padding-large-y: 0.7rem;
 }
-.web_table{
-	padding: 0; margin: 0;
-	border-spacing: 0;
-	border: 1px solid #ccc;
+*{box-sizing: border-box;}
+body, html{
+	font-family: 'Ubuntu', sans-serif;
+	font-size: 14px;
+	width: 100%;
+	padding: 0;
+	margin: 0;
 }
-.web_table td, .web_table th{
-	text-align: center;
-	vertical-align: middle;
-	border-bottom: 1px solid #ccc;
-	padding: 10px;
+a { text-decoration: inherit; color: var(--widget-color-link); cursor: pointer; }
+a:hover, a:visited:hover { text-decoration: underline; color: red; }
+a:visited { text-decoration: inherit; color: var(--widget-color-link); }
+a.link { text-decoration: none; color: var(--widget-color-link); cursor: pointer; }
+a.link:hover, a.link:visited:hover { text-decoration: underline; color: red; }
+a.link:visited { text-decoration: none; color: var(--widget-color-link); }
+a.nolink{
+	text-decoration: inherit;
+	color: inherit;
 }
-.web_table tr:last-child td{
-	border-bottom: 0px;
+a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
+	text-decoration: inherit;
+	color: inherit;
 }
-.web_table tr:nth-child(odd){
-	background-color: ${ vars["colors", "table_row_odd"] };
-}
-.web_table tr:nth-child(even){
-	background-color: ${ vars["colors", "table_row_even"] };
-}
-.web_table tr.web_table__row_header{
-	background-color: ${ vars["colors", "table_row_header"] };
-}
-.web_table tr.web_table__row_item:hover{
-	background-color: ${ vars["colors", "table_row_hover"] };
-}
-.web_table tr.web_table__row_item--selected,
-.web_table tr.web_table__row_item--selected:hover{
-    background-color: #337ab7;
-    color: #fff;
-}
-.web_table__td_row_buttons > %(Button)web_button,
-.web_table__td_row_buttons > a{
-	display: inline-block;
-    vertical-align: middle;
-    margin-left: 2px;
-	margin-right: 2px;
-}
-.web_table__td_row_buttons > %(Button)web_button:first-child,
-.web_table__td_row_buttons > a:first-child{
-    margin-left: 0px;
-}
-.web_table__td_row_buttons > %(Button)web_button:last-child,
-.web_table__td_row_buttons > a:last-child{
-    margin-right: 0px;
-}
-.web_table__row_pagination %(Pagination)pagination{
-	padding: 0; margin: 0;
-}
-.web_table__top{
-	padding-bottom: 1em;
-}
-.web_table__top %(Button)web_button{
-	margin-right: 5px;
-}
-.web_table__delete_dialog_content{
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	text-align: center;
-	line-height: 1.5em;
-}
-.web_crud__top {
-	display: flex;
-    padding-bottom: 1em;
-}
-.web_crud__top_button > %(Button)web_button{
-	border-left-width: 0px;
-}
-.web_crud__top_button:first-child > %(Button)web_button{
-	border-left-width: 1px;
-}
-.web_form{
-}
-.web_form__content{
-	margin-bottom: 20px;
-}
-.web_form__row{
-	margin-bottom: 1.2em;
-}
-.web_form__row:last-child{
-	margin-bottom: 0px;
-}
-.web_table__row_buttons %(Button)web_button{
-	margin-left: 5px;
-	margin-right: 5px;
-}
-.web_form__field_result{
-	color: red;
-	font-size: 12px;
-	padding-top: 5px;
-}
-.web_form__row_label{
-	display: block;
-	font-weight: bold;
-	margin-bottom: 0.5em;
-}
-.web_form__buttons{
-	text-align: center;
-}
-.web_form__buttons %(Button)web_button{
-    margin-left: 5px;
-    margin-right: 5px;
-}
-.web_form__result{
-	text-align: center;
-	margin-top: 0.5em;
-}
-.web_form__result--hide, .web_form__field_result--hide{
-	display: none;
-}
-.web_form__result--success{
-	color: ${ vars["button", "success", "background"] };
-}
-.web_form__result--error{
-	color: ${ vars["colors", "error"] };
-}
-.web_form--delete .web_form__content, .web_form__item_not_found{
-	text-align: center;
-	font-size: 1.2rem;
+.cursor{
+	cursor:pointer;
 }
 </style>
 
