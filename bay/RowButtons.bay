@@ -23,23 +23,37 @@
 <style>
 	.widget_row_buttons{
 		display: flex;
-		gap: var(--widget-spacer);
+		gap: var(--widget-space);
 	}
 </style>
 
 <template name="render">
-	<div class="widget_row_buttons">
+	<div class="widget_row_buttons" class={{ this.getStyles() }}>
 		%for (int i=0; i<this.model.buttons.count(); i++)
 		{
 			%set Map button = this.model.buttons.get(i);
 			%set string component = button.getComponent();
 			%set Dict props = button.getProps();
+			%set props = props.concat(this.button_props);
 			<{component} ...props>
 				{{ button.getContent() }}
 			</{component}>
 		}
 	</div>
 </template>
+
+
+<script>
+
+props Dict button_props = {};
+
+/**
+ * Returns styles
+ */
+void getStyles() => this.model.styles.join(" ");
+
+
+</script>
 
 
 </class>

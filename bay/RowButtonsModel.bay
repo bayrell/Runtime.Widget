@@ -18,20 +18,41 @@
 
 namespace Runtime.Widget;
 
-use Runtime.BaseObject;
+use Runtime.Web.BaseModel;
 use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Styles;
 
 
-class RowButtonsModel extends BaseObject
+class RowButtonsModel extends BaseModel
 {
 	Vector buttons = [];
+	Styles styles = new Styles{ "prefix": "widget_row_buttons" };
 	
 	
 	/**
-     * Add button
-     */
-    void addButton(ButtonModel button)
-    {
-        this.buttons.append(button);
-    }
+	 * Constructor
+	 */
+	void constructor(Dict params = null)
+	{
+		parent(params);
+		if (params)
+		{
+			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		}
+	}
+	
+	
+	/**
+	 * Add button
+	 */
+	void addButton(ButtonModel button)
+	{
+		this.buttons.append(button);
+	}
+	
+	
+	/**
+	 * Count buttons
+	 */
+	int count() => this.buttons.count();
 }

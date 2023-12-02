@@ -23,8 +23,10 @@
 
 <style global="true">
 :root {
-	--widget-spacer: 0.5rem;
+	--widget-space: 0.5rem;
 	--widget-color-border: #dee2e6;
+	--widget-color-success: #198754;
+	--widget-color-success-text: #fff;
 	--widget-color-danger-text: #fff;
 	--widget-color-danger: #dc3545;
 	--widget-color-default: #fff;

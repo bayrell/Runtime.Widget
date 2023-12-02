@@ -21,48 +21,55 @@ namespace Runtime.Widget;
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
 use Runtime.Widget.Button;
-use Runtime.Widget.Styles;
 
 
-class ButtonModel extends BaseModel
+class Styles extends BaseModel
 {
-	Styles styles = new Styles{ "prefix": "button" };
-	string component = classof Button;
-	string content = "";
+	string prefix = "";
+	Vector<string> items = [];
 	
 	
 	/**
 	 * Constructor
 	 */
-	void constructor(Map params = null)
+	void constructor(Dict params = null)
 	{
-		parent();
+		parent(params);
 		if (params)
 		{
-			if (params.has("component")) this.component = params.get("component");
-			if (params.has("content")) this.content = params.get("content");
-			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+			if (params.has("prefix")) this.prefix = params.get("prefix");
+			if (params.has("items")) this.addStyles(params.get("items"));
 		}
 	}
 	
 	
 	/**
-	 * Returns component
+	 * Add style
 	 */
-	string getComponent() => this.component;
+	void add(string s)
+	{
+		if (s == "") return;
+		if (s[0] == "@") this.items.append(rs::substr(s, 1));
+		else this.items.append(this.prefix ~ "--" ~ s);
+	}
 	
 	
 	/**
-	 * Returns props
+	 * Add styles
 	 */
-	string getProps() => {
-		"styles": this.styles,
-	};
+	void addStyles(Collection<string> styles)
+	{
+		if (styles.count() == 0) return;
+		for (int i=0; i<styles.count(); i++)
+		{
+			this.add(styles.get(i));
+		}
+	}
 	
 	
 	/**
-	 * Returns content
+	 * Add style
 	 */
-	string getContent() => this.content;
+	string join(string s) => this.items.join(s);
 	
 }
