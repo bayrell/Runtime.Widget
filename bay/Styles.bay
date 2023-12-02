@@ -72,4 +72,21 @@ class Styles extends BaseModel
 	 */
 	string join(string s) => this.items.join(s);
 	
+	
+	/**
+	 * Join styles
+	 */
+	static Vector<string> patchPrefix(string prefix, Vector<string> styles) =>
+		styles
+			.map(
+				string (string s) use (prefix)
+				{
+					if (s == "") return "";
+					if (s[0] == "@") return rs::substr(s, 1);
+					else return prefix ~ "--" ~ s;
+				}
+			)
+			.filter( bool (string s) => s != "" )
+		;
+	
 }

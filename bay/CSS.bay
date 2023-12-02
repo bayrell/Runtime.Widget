@@ -18,11 +18,10 @@
 
 <class name="Runtime.Widget.CSS">
 
-<use name="Runtime.Widget.Button" component="true" />
-
 
 <style global="true">
 :root {
+	--widget-font-size: 14px;
 	--widget-space: 0.5rem;
 	--widget-color-border: #dee2e6;
 	--widget-color-success: #198754;

@@ -57,7 +57,9 @@
 
 
 <template name="render">
-	<button type="button" class="button" class={{ this.getStyles() }} @event:onClick="onClick">
+	<button type="button" class="button" class={{ this.getStyles() }}
+		@event:onClick={{ this.onClick }}
+	>
 		%render this.renderSlot("default");
 	</button>
 </template>
@@ -72,6 +74,15 @@ props Collection<string> styles = [];
  * Returns styles
  */
 void getStyles() => this.styles.join(" ");
+
+
+/**
+ * Click button event
+ */
+void onClick()
+{
+	if (this.model) this.model.onClick();
+}
 
 </script>
 

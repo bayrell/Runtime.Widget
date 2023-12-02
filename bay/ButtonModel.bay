@@ -20,6 +20,7 @@ namespace Runtime.Widget;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
+use Runtime.Web.Events;
 use Runtime.Widget.Button;
 use Runtime.Widget.Styles;
 
@@ -29,6 +30,7 @@ class ButtonModel extends BaseModel
 	Styles styles = new Styles{ "prefix": "button" };
 	string component = classof Button;
 	string content = "";
+	Events events = new Events;
 	
 	
 	/**
@@ -64,5 +66,14 @@ class ButtonModel extends BaseModel
 	 * Returns content
 	 */
 	string getContent() => this.content;
+	
+	
+	/**
+	 * On click
+	 */
+	void onClick()
+	{
+		this.events.emmit("onClick");
+	}
 	
 }

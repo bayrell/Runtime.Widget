@@ -18,24 +18,30 @@
 
 <class name="Runtime.Widget.RowButtons">
 
+<use name="Runtime.Widget.ButtonModel" />
 <use name="Runtime.Widget.RowButtonsModel" />
 
+
 <style>
-	.widget_row_buttons{
-		display: flex;
-		gap: var(--widget-space);
-	}
+.widget_row_buttons{
+	display: flex;
+	gap: var(--widget-space);
+}
+.widget_row_buttons--align-end{
+	justify-content: end;
+}
 </style>
+
 
 <template name="render">
 	<div class="widget_row_buttons" class={{ this.getStyles() }}>
 		%for (int i=0; i<this.model.buttons.count(); i++)
 		{
-			%set Map button = this.model.buttons.get(i);
+			%set ButtonModel button = this.model.buttons.get(i);
 			%set string component = button.getComponent();
 			%set Dict props = button.getProps();
 			%set props = props.concat(this.button_props);
-			<{component} ...props>
+			<{component} @model={{ button }} ...props>
 				{{ button.getContent() }}
 			</{component}>
 		}

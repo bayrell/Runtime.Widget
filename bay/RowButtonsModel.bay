@@ -45,9 +45,10 @@ class RowButtonsModel extends BaseModel
 	/**
 	 * Add button
 	 */
-	void addButton(ButtonModel button)
+	ButtonModel add(ButtonModel button)
 	{
 		this.buttons.append(button);
+		return button
 	}
 	
 	
@@ -55,4 +56,10 @@ class RowButtonsModel extends BaseModel
 	 * Count buttons
 	 */
 	int count() => this.buttons.count();
+	
+	
+	/**
+	 * Returns button by index
+	 */
+	ButtonModel get(int index) => this.buttons.get(index);
 }
