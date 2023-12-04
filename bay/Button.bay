@@ -20,7 +20,7 @@
 
 
 <style>
-.button{
+.widget_button{
 	color: var(--widget-color-text);
 	background-color: var(--widget-color-default);
 	border: var(--widget-border-width) var(--widget-color-border) solid;
@@ -29,26 +29,26 @@
 	line-height: normal;
 	cursor: pointer;
 }
-.button:active{
+.widget_button:active{
 	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
 }
-.button--small{
+.widget_button--small{
 	padding: var(--widget-button-padding-small-y) var(--widget-button-padding-small-x);
 }
-.button--large{
+.widget_button--large{
 	padding: var(--widget-button-large-small-y) var(--widget-button-large-small-x);
 }
-.button--primary{
+.widget_button--primary{
 	color: var(--widget-color-primary-text);
 	background-color: var(--widget-color-primary);
 	border-color: var(--widget-color-primary);
 }
-.button--danger{
+.widget_button--danger{
 	color: var(--widget-color-danger-text);
 	background-color: var(--widget-color-danger);
 	border-color: var(--widget-color-danger);
 }
-.button--success{
+.widget_button--success{
 	color: var(--widget-color-success-text);
 	background-color: var(--widget-color-success);
 	border-color: var(--widget-color-success);
@@ -57,7 +57,7 @@
 
 
 <template name="render">
-	<button type="button" class="button" class={{ this.getStyles() }}
+	<button type="button" class="widget_button" class={{ this.getStyles() }}
 		@event:onClick={{ this.onClick }}
 	>
 		%render this.renderSlot("default");

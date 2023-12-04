@@ -18,19 +18,16 @@
 
 <class name="Runtime.Widget.Input">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.RenderProvider" />
-<use name="Runtime.Widget.Helper" />
-
 
 <style>
-.input{
+.widget_input{
 	width: 100%;
-	padding: 6px 12px;
-	font-size: 1rem;
-	background-color: ${ vars["button", "default", "background"] };
-	border: 1px ${ vars["button", "default", "border"] } solid;
+	font-size: var(--widget-font-size);
+	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	background-color: var(--widget-color-default);
+	border-width: var(--widget-border-width);
+	border-color: var(--widget-color-border);
+	border-style: solid;
 	outline: transparent;
 	line-height: normal;
 	min-height: 32px;
@@ -39,33 +36,12 @@
 
 
 <template>
-
-	%set string value = Helper::getValue(layout, model_path, render_params);
-	%set string name = (render_params != null) ? render_params.get("name", "") : "";
-	%set string type = (render_params != null) ? render_params.get("type", "input") : "";
-	%set primitive tag = (render_params != null) ? render_params.get("@tag", "") : "";
-	<input class='input' @tag={ tag } @event:ChangeEvent="onChange"
-		name={ name } type={ type } value={ value } />
-	
+	<input class="widget_input" />
 </template>
 
 
 <script>
 
-/**
- * On change
- */
-public void onChange(Message<ChangeEvent> msg)
-{
-	if (this.model_path != "")
-	{
-		RenderProvider provider = @.provider(classof RenderProvider);
-		provider.commitComponent( this, msg.event.value );
-	}
-	
-	ChangeEvent event = msg.event.clone({ "field_name": this.params["name"] });
-	this.sendEvent(event);
-}
 
 </script>
 

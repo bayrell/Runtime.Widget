@@ -27,7 +27,7 @@ use Runtime.Widget.Styles;
 
 class ButtonModel extends BaseModel
 {
-	Styles styles = new Styles{ "prefix": "button" };
+	Styles styles = new Styles{ "prefix": "widget_button" };
 	string component = classof Button;
 	string content = "";
 	Events events = new Events;

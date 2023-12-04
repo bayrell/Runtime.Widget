@@ -22,8 +22,15 @@
 <style global="true">
 :root {
 	--widget-font-size: 14px;
+	--widget-font-size-h1: 1.8rem;
+	--widget-font-size-h2: 1.5rem;
+	--widget-font-size-h3: 1.2rem;
+	--widget-font-size-h4: 1rem;
+	--widget-font-size-h5: 1rem;
+	--widget-font-size-h6: 1rem;
 	--widget-space: 0.5rem;
-	--widget-color-border: #dee2e6;
+	/*--widget-color-border: #dee2e6;*/
+	--widget-color-border: #e0e1e6;
 	--widget-color-success: #198754;
 	--widget-color-success-text: #fff;
 	--widget-color-danger-text: #fff;
@@ -38,12 +45,18 @@
 	--widget-color-text: #000;
 	--widget-color-table-background: transparent;
 	--widget-border-width: 1px;
-	--widget-button-padding-x: 1rem;
+	--widget-button-padding-x: 0.9rem;
 	--widget-button-padding-y: 0.5rem;
-	--widget-button-padding-small-x: 0.7rem;
-	--widget-button-padding-small-y: 0.35rem;
-	--widget-button-padding-large-x: 1.2rem;
+	--widget-button-padding-small-x: 0.72rem;
+	--widget-button-padding-small-y: 0.4rem;
+	--widget-button-padding-large-x: 1.25rem;
 	--widget-button-padding-large-y: 0.7rem;
+	--widget-margin-h1: 1.8rem 0px;
+	--widget-margin-h2: 1.5rem 0px;
+	--widget-margin-h3: 1.2rem 0px;
+	--widget-margin-h4: 1rem 0px;
+	--widget-margin-h5: 1rem 0px;
+	--widget-margin-h6: 1rem 0px;
 }
 *{box-sizing: border-box;}
 body, html{
