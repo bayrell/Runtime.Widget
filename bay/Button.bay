@@ -81,7 +81,7 @@ void getStyles() => this.styles.join(" ");
  */
 void onClick()
 {
-	if (this.model) this.model.onClick();
+	if (this.model) this.model.onClick(this.data);
 }
 
 </script>

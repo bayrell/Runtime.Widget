@@ -41,6 +41,7 @@
 			%set string component = button.getComponent();
 			%set Dict props = button.getProps();
 			%set props = props.concat(this.button_props);
+			%set props = props.concat({"data": this.data});
 			<{component} @model={{ button }} ...props>
 				{{ button.getContent() }}
 			</{component}>

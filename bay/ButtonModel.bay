@@ -71,9 +71,9 @@ class ButtonModel extends BaseModel
 	/**
 	 * On click
 	 */
-	void onClick()
+	void onClick(var data = null)
 	{
-		this.events.emmit("onClick");
+		this.events.emmit("onClick", [data]);
 	}
 	
 }
