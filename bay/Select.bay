@@ -19,59 +19,47 @@
 <class name="Runtime.Widget.Select">
 
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.RenderProvider" />
-<use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
 <style>
-.select{
+.widget_select{
 	width: 100%;
-	max-width: 100%;
-	padding: 6px 12px;
-	font-size: 1rem;
-	background-color: ${ vars["button", "default", "background"] };
-	border: 1px ${ vars["button", "default", "border"] } solid;
+	font-size: var(--widget-font-size);
+	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	background-color: var(--widget-color-default);
+	border-width: var(--widget-border-width);
+	border-color: var(--widget-color-border);
+	border-style: solid;
 	outline: transparent;
 	line-height: normal;
+	min-height: 32px;
 }
 </style>
 
 
 <template name="render">
 	
-	%set string name = (render_params != null) ? render_params.get("name", "") : "";
-	%set string value = Helper::getValue(layout, model_path, render_params);
-	
-	<select class='select' @event:ChangeEvent="onChange" name={ name }>
+	<select class="widget_select">
 	
 	%set Dict selected = {};
-	%set bool show_select_value = render_params["show_select_value"] |> default bool true;
-	%if (show_select_value == true)
+	%if (this.show_select_value == true)
 	{
-		%if (value === "" or value === null)
+		%if (this.value === "" or this.value === null)
 		{
 			%set selected = { "selected": "selected" };
 		}
 		<option @key=":select_value" value={{ " " }} ...selected>Выберите значение</option>
 	}
 	
-	%set Collection options = render_params["options"];
-	%if (rtl::exists(options))
+	%for (int i=0; i<this.options.count(); i++)
 	{
-		%for (int i=0; i<options.count(); i++)
+		%set Dict item = this.options.get(i);
+		%set selected = {};
+		%if (item.get("value") == this.value and this.value !== "" and this.value !== null)
 		{
-			%set Dict item = options[i];
-			%set selected = {};
-			%if (item["value"] == value and value !== "" and value !== null)
-			{
-				%set selected = { "selected": "selected" };
-			}
-			<option @key={ item["value"] } value={ "" ~ item["value"] } ...selected>
-				{{ item["label"] }}
-			</option>
+			%set selected = { "selected": "selected" };
 		}
+		<option @key={ item.get("value") } value={ "" ~ item.get("value") } ...selected>
+			{{ item.get("label") }}
+		</option>
 	}
 	
 	</select>
@@ -81,22 +69,10 @@
 
 <script type="frontend">
 
-/**
- * On change
- */
-public void onChange(Message<ChangeEvent> msg)
-{
-	if (this.model_path != "")
-	{
-		RenderProvider provider = @.provider(classof RenderProvider);
-		provider.commitComponent( this, msg.event.value );
-	}
-	
-	ChangeEvent event = msg.event.clone({ "field_name": this.params["name"] });
-	this.sendEvent(event);
-}
+props int value = "";
+props Vector options = [];
+props bool show_select_value = true;
 
 </script>
-
 
 </class>

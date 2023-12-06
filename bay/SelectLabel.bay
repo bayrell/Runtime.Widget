@@ -29,19 +29,21 @@
 
 <template>
 	
-	%set string value = Helper::getValue(layout, model_path, render_params);
-	%set Collection options = render_params["options"];
-	%set Dict item = options
-		? options.findItem( bool (Dict item) use (value) => item["value"] == value )
+	%set Dict item = this.options
+		? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
 		: null
 	;
 	
-	{{ item != null ? item["label"] : "" }}
+	{{ item != null ? item.get("label") : "" }}
 	
 </template>
 
 
 <script>
+
+props int value = "";
+props Vector options = [];
+
 </script>
 
 </class>

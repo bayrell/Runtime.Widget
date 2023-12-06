@@ -18,74 +18,33 @@
 
 <class name="Runtime.Widget.TextArea">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.ChangeEvent" />
-<use name="Runtime.Web.RenderProvider" />
-<use name="Runtime.Widget.Helper" />
-
 
 <style>
-.textarea{
+.widget_textarea{
 	width: 100%;
 	max-width: 100%;
 	min-height: 400px;
-	padding: 6px 12px;
-	font-size: 1rem;
-	background-color: ${ vars["button", "default", "background"] };
-	border: 1px ${ vars["button", "default", "border"] } solid;
+	font-size: var(--widget-font-size);
+	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	background-color: var(--widget-color-default);
+	border-width: var(--widget-border-width);
+	border-color: var(--widget-color-border);
+	border-style: solid;
 	outline: transparent;
+	line-height: normal;
 }
 </style>
 
 
 <template>
-
-	%set string value = Helper::getValue(layout, model_path, render_params);
-	%set string name = (render_params != null) ? render_params.get("name", "") : "";
-	%set string type = (render_params != null) ? render_params.get("type", "input") : "";
-	%set primitive tag = (render_params != null) ? render_params.get("@tag", "") : "";
-	
-	%set Dict args = {};
-	%if (render_params.get("readonly"))
-	{
-		%set args = args.setIm("readonly", 1);
-	}
-	
-	<textarea class="textarea" @ref="textarea" @tag={ tag } @event:ChangeEvent="onChange"
-		name={ name } type={ type } ...args>{{ value }}</textarea>
-	
+	<textarea class="widget_textarea">{{ this.value }}</textarea>
 </template>
 
 
 <script>
 
-var textarea;
-
-
-/**
- * Update elem params
- */
-public void onUpdateElem()
-{
-	string value = Helper::getValue(this.layout(), this.model_path, this.params);
-	this.textarea.elem.value = value;
-}
-
-
-/**
- * On change
- */
-public void onChange(Message<ChangeEvent> msg)
-{
-	if (this.model_path != "")
-	{
-		RenderProvider provider = @.provider(classof RenderProvider);
-		provider.commitComponent( this, msg.event.value );
-	}
-	
-	ChangeEvent event = msg.event.clone({ "field_name": this.params["name"] });
-	this.sendEvent(event);
-}
+props bool readonly = false;
+props string value = "";
 
 </script>
 

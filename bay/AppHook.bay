@@ -19,9 +19,14 @@
 namespace Runtime.Widget;
 
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
-use Runtime.Widget.CSS;
 use Runtime.Widget.Button;
+use Runtime.Widget.CSS;
+use Runtime.Widget.Input;
+use Runtime.Widget.Label;
 use Runtime.Widget.RowButtons;
+use Runtime.Widget.Select;
+use Runtime.Widget.SelectLabel;
+use Runtime.Widget.TextArea;
 
 
 class AppHook extends BaseAppHook
@@ -41,9 +46,14 @@ class AppHook extends BaseAppHook
 	void components(Map params)
     {
 		params["components"].appendItems([
-			classof CSS,
 			classof Button,
+			classof CSS,
+			classof Input,
+			classof Label,
 			classof RowButtons,
+			classof Select,
+			classof SelectLabel,
+			classof TextArea,
 		]);
     }
 }

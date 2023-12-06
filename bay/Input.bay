@@ -42,6 +42,7 @@
 
 <script>
 
+props bool readonly = false;
 props string value = "";
 
 </script>

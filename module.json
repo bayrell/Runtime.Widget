@@ -7,9 +7,13 @@
 		"ButtonModel.bay",
 		"CSS.bay",
 		"Input.bay",
+		"Label.bay",
 		"RowButtons.bay",
 		"RowButtonsModel.bay",
+		"Select.bay",
+		"SelectLabel.bay",
 		"Styles.bay",
+		"TextArea.bay",
 		"WidgetError.bay",
 		"ModuleDescription.bay"
 	],
