@@ -39,6 +39,7 @@
 	
 	<select class="widget_select">
 	
+	%set Vector options = this.getOptions();
 	%set Dict selected = {};
 	%if (this.show_select_value == true)
 	{
@@ -49,17 +50,20 @@
 		<option @key=":select_value" value={{ " " }} ...selected>Выберите значение</option>
 	}
 	
-	%for (int i=0; i<this.options.count(); i++)
+	%if (options != null)
 	{
-		%set Dict item = this.options.get(i);
-		%set selected = {};
-		%if (item.get("value") == this.value and this.value !== "" and this.value !== null)
+		%for (int i=0; i<options.count(); i++)
 		{
-			%set selected = { "selected": "selected" };
+			%set Dict item = options.get(i);
+			%set selected = {};
+			%if (item.get("value") == this.value and this.value !== "" and this.value !== null)
+			{
+				%set selected = { "selected": "selected" };
+			}
+			<option @key={ item.get("value") } value={ "" ~ item.get("value") } ...selected>
+				{{ item.get("label") }}
+			</option>
 		}
-		<option @key={ item.get("value") } value={ "" ~ item.get("value") } ...selected>
-			{{ item.get("label") }}
-		</option>
 	}
 	
 	</select>
@@ -70,8 +74,18 @@
 <script type="frontend">
 
 props int value = "";
-props Vector options = [];
+props Vector options = null;
 props bool show_select_value = true;
+
+
+/**
+ * Returns options
+ */
+Vector getOptions()
+{
+	if (this.model == null) return this.options;
+	return this.model.getOptions();
+}
 
 </script>
 
