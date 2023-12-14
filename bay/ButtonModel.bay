@@ -27,10 +27,11 @@ use Runtime.Widget.Styles;
 
 class ButtonModel extends BaseModel
 {
+	Events events = new Events;
 	Styles styles = new Styles{ "prefix": "widget_button" };
 	string component = classof Button;
 	string content = "";
-	Events events = new Events;
+	var href = null;
 	
 	
 	/**
@@ -44,6 +45,7 @@ class ButtonModel extends BaseModel
 			if (params.has("component")) this.component = params.get("component");
 			if (params.has("content")) this.content = params.get("content");
 			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+			if (params.has("href")) this.href = params.get("href");
 		}
 	}
 	
@@ -58,6 +60,7 @@ class ButtonModel extends BaseModel
 	 * Returns props
 	 */
 	string getProps() => {
+		"href": this.href,
 		"styles": this.styles,
 	};
 	
@@ -75,5 +78,4 @@ class ButtonModel extends BaseModel
 	{
 		this.events.emmit("onClick", [data]);
 	}
-	
 }

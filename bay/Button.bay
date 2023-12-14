@@ -36,7 +36,7 @@
 	padding: var(--widget-button-padding-small-y) var(--widget-button-padding-small-x);
 }
 .widget_button--large{
-	padding: var(--widget-button-large-small-y) var(--widget-button-large-small-x);
+	padding: var(--widget-button-padding-large-y) var(--widget-button-padding-large-x);
 }
 .widget_button--primary{
 	color: var(--widget-color-primary-text);
@@ -57,17 +57,45 @@
 
 
 <template name="render">
-	<button type="button" class="widget_button" class={{ this.getStyles() }}
-		@event:onClick={{ this.onClick }}
-	>
-		%render this.renderSlot("default");
-	</button>
+	%if (this.href == null)
+	{
+		<button type="button" class="widget_button" class={{ this.getStyles() }}
+			@event:onClick={{ this.onClick }}
+		>
+			%render this.renderSlot("default");
+		</button>
+	}
+	%else
+	{
+		<a class="nolink" href={{ this.getHref() }}>
+			<button type="button" class="widget_button" class={{ this.getStyles() }}
+				@event:onClick={{ this.onClick }}
+			>
+				%render this.renderSlot("default");
+			</button>
+		</a>
+	}
 </template>
 
 
 <script>
 
+props var href = null;
 props Collection<string> styles = [];
+
+
+/**
+ * Returns href
+ */
+string getHref()
+{
+	if (this.href == null) return "";
+	if (rtl::isCallable(this.href))
+	{
+		return rtl::apply(this.href, [this.data]);
+	}
+	return this.href;
+}
 
 
 /**
