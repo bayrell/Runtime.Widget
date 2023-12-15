@@ -8,6 +8,8 @@
 		"CSS.bay",
 		"Input.bay",
 		"Label.bay",
+		"RenderList.bay",
+		"RenderListModel.bay",
 		"RowButtons.bay",
 		"RowButtonsModel.bay",
 		"Select.bay",
