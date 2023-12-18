@@ -33,6 +33,13 @@ class RenderListModel extends BaseWidget
      */
     void addRender(string widget_name)
     {
-        this.items.push(widget_name);
+        if (widget_name instanceof BaseWidget)
+        {
+            this.items.push(widget_name.getWidgetName());
+        }
+        else if (rtl::isString(widget_name))
+        {
+            this.items.push(widget_name);
+        }
     }
 }
