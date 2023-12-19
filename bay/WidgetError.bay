@@ -19,6 +19,7 @@
 namespace Runtime.Widget;
 
 use Runtime.BaseObject;
+use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 
 
@@ -100,25 +101,11 @@ class WidgetError extends BaseObject
 	
 	
 	/**
-	 * Import data
+	 * Process frontend data
 	 */
-	void importData(Map import_data)
+	void processFrontendData(Serializer serializer, Map data)
 	{
-		this.code = import_data.get("code");
-		this.message = import_data.get("message");
+		serializer.process(this, "code", data);
+		serializer.process(this, "message", data);
 	}
-	
-	
-	/**
-	 * Export data
-	 */
-	Map exportData()
-	{
-		Map data = {
-			"code": this.code,
-			"message": this.message,
-		};
-		return data;
-	}
-	
 }
