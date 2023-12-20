@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.Button">
 
+<use name="Runtime.Widget.Styles" />
+
 
 <style>
 .widget_button{
@@ -101,7 +103,18 @@ string getHref()
 /**
  * Returns styles
  */
-void getStyles() => this.styles.join(" ");
+void getStyles()
+{
+	if (this.styles instanceof Styles)
+	{
+		return this.styles.join(" ");
+	}
+	
+	return this.styles
+		.map(string (string item) => "widget_button--" ~ item)
+		.join(" ")
+	;
+}
 
 
 /**
