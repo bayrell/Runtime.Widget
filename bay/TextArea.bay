@@ -24,6 +24,7 @@
 	width: 100%;
 	max-width: 100%;
 	min-height: 400px;
+	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	background-color: var(--widget-color-default);

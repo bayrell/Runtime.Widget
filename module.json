@@ -16,7 +16,8 @@
 		"SelectLabel.bay",
 		"Styles.bay",
 		"TextArea.bay",
-		"WidgetError.bay",
+		"WidgetResult.bay",
+		"WidgetResultModel.bay",
 		"ModuleDescription.bay"
 	],
 	"src": "./bay",

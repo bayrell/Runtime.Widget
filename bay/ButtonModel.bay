@@ -39,7 +39,7 @@ class ButtonModel extends BaseModel
 	 */
 	void constructor(Map params = null)
 	{
-		parent();
+		parent(params);
 		if (params)
 		{
 			if (params.has("component")) this.component = params.get("component");
@@ -54,15 +54,6 @@ class ButtonModel extends BaseModel
 	 * Returns component
 	 */
 	string getComponent() => this.component;
-	
-	
-	/**
-	 * Returns props
-	 */
-	string getProps() => {
-		"href": this.href,
-		"styles": this.styles,
-	};
 	
 	
 	/**

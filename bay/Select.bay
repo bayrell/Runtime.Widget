@@ -22,6 +22,7 @@
 <style>
 .widget_select{
 	width: 100%;
+	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	background-color: var(--widget-color-default);

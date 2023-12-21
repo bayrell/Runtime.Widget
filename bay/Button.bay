@@ -24,6 +24,8 @@
 <style>
 .widget_button{
 	color: var(--widget-color-text);
+	font-family: var(--widget-font-family);
+	font-size: var(--widget-font-size);
 	background-color: var(--widget-color-default);
 	border: var(--widget-border-width) var(--widget-color-border) solid;
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
@@ -59,7 +61,8 @@
 
 
 <template name="render">
-	%if (this.href == null)
+	%set string href = this.getHref();
+	%if (href == null)
 	{
 		<button type="button" class="widget_button" class={{ this.getStyles() }}
 			@event:onClick={{ this.onClick }}
@@ -69,7 +72,7 @@
 	}
 	%else
 	{
-		<a class="nolink" href={{ this.getHref() }}>
+		<a class="nolink" href={{ href }}>
 			<button type="button" class="widget_button" class={{ this.getStyles() }}
 				@event:onClick={{ this.onClick }}
 			>
@@ -91,12 +94,12 @@ props Collection<string> styles = [];
  */
 string getHref()
 {
-	if (this.href == null) return "";
-	if (rtl::isCallable(this.href))
+	string href = (this.model != null) ? this.model.href : this.href;
+	if (rtl::isCallable(href))
 	{
-		return rtl::apply(this.href, [this.data]);
+		return rtl::apply(href, [this.data]);
 	}
-	return this.href;
+	return href;
 }
 
 
@@ -105,12 +108,12 @@ string getHref()
  */
 void getStyles()
 {
-	if (this.styles instanceof Styles)
+	Vector styles = (this.model != null) ? this.model.styles : this.styles;
+	if (styles instanceof Styles)
 	{
-		return this.styles.join(" ");
+		return styles.join(" ");
 	}
-	
-	return this.styles
+	return styles
 		.map(string (string item) => "widget_button--" ~ item)
 		.join(" ")
 	;

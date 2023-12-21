@@ -22,7 +22,8 @@
 <style>
 .widget_input{
 	width: 100%;
-	font-size: var(--widget-font-size);
+	font-family: var(--widget-font-family);
+    font-size: var(--widget-font-size);
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	background-color: var(--widget-color-default);
 	border-width: var(--widget-border-width);

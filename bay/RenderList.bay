@@ -18,13 +18,13 @@
 
 <class name="Runtime.Widget.RenderList">
 
-<use name="Runtime.Web.BaseWidget" />
+<use name="Runtime.Web.BaseModel" />
 
 <template>
 	%for (int i=0; i<this.model.items.count(); i++)
 	{
 		%set string widget_name = this.model.items.get(i);
-		%set BaseWidget widget = this.model.parent_widget.getWidget(widget_name);
+		%set BaseModel widget = this.model.parent_widget.getWidget(widget_name);
 		%set string component = widget.component;
 		<{component} @model={{ widget }} />
 	}

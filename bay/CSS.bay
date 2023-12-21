@@ -21,6 +21,7 @@
 
 <style global="true">
 :root {
+	--widget-font-family: 'Ubuntu', sans-serif;
 	--widget-font-size: 14px;
 	--widget-font-size-h1: 1.8rem;
 	--widget-font-size-h2: 1.5rem;
@@ -28,6 +29,7 @@
 	--widget-font-size-h4: 1rem;
 	--widget-font-size-h5: 1rem;
 	--widget-font-size-h6: 1rem;
+	--widget-line-height: 1.2;
 	--widget-space: 0.5rem;
 	/*--widget-color-border: #dee2e6;*/
 	--widget-color-border: #e0e1e6;
@@ -39,7 +41,7 @@
 	--widget-color-hover: rgba(0, 0, 0, 0.075);
 	--widget-color-link: #337ab7;
 	--widget-color-primary-text: #fff;
-	--widget-color-primary: #0d6efd;
+	--widget-color-primary: #337ab7;
 	--widget-color-selected-text: #fff;
 	--widget-color-selected: #337ab7;
 	--widget-color-text: #000;
@@ -60,8 +62,9 @@
 }
 *{box-sizing: border-box;}
 body, html{
-	font-family: 'Ubuntu', sans-serif;
-	font-size: 14px;
+	font-family: var(--widget-font-family);
+	font-size: var(--widget-font-size);
+	line-height: var(--widget-line-height);
 	width: 100%;
 	padding: 0;
 	margin: 0;

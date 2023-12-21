@@ -23,7 +23,7 @@ use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 
 
-class WidgetError extends BaseObject
+class WidgetResultModel extends BaseObject
 {
 	int code = 0;
 	string message = "";

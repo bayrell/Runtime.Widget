@@ -54,6 +54,7 @@ class AppHook extends BaseAppHook
 			classof Select,
 			classof SelectLabel,
 			classof TextArea,
+			classof WidgetResult,
 		]);
     }
 }

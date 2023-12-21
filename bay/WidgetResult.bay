@@ -16,33 +16,31 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.RowButtons">
+<class name="Runtime.Widget.WidgetResult">
 
-<use name="Runtime.Widget.ButtonModel" />
-<use name="Runtime.Widget.RowButtonsModel" />
+<use name="Runtime.Widget.WidgetResultModel" />
 
 
 <style>
-.widget_row_buttons{
-	display: flex;
-	gap: var(--widget-space);
+.widget_result{
+	text-align: center;
+	margin-top: var(--widget-space);
 }
-.widget_row_buttons--align-end{
-	justify-content: end;
+.widget_result--success{
+	color: var(--widget-color-success);
+}
+.widget_result--error{
+	color: var(--widget-color-danger);
+}
+.widget_result--hide{
+	display: none;
 }
 </style>
 
 
-<template name="render">
-	<div class="widget_row_buttons" class={{ this.getStyles() }}>
-		%for (int i=0; i<this.model.buttons.count(); i++)
-		{
-			%set ButtonModel button = this.model.buttons.get(i);
-			%set string component = button.getComponent();
-			<{component} @model={{ button }} data={{ this.data }}>
-				{{ button.getContent() }}
-			</{component}>
-		}
+<template>
+	<div class="widget_result" class={{ this.getErrorClass() }} >
+		{{ this.model.message }}
 	</div>
 </template>
 
@@ -50,12 +48,17 @@
 <script>
 
 /**
- * Returns styles
+ * Returns error class
  */
-void getStyles() => this.model.styles.join(" ");
-
+string getErrorClass()
+{
+	WidgetResultModel result = this.model;
+	if (result.message == "") return "widget_result--hide";
+	if (result.isSuccess()) return "widget_result--success";
+	if (result.isError()) return "widget_result--error";
+	return "";
+}
 
 </script>
-
 
 </class>
