@@ -67,7 +67,14 @@
 		<button type="button" class="widget_button" class={{ this.getStyles() }}
 			@event:onClick={{ this.onClick }}
 		>
-			%render this.renderSlot("default");
+			%if (this.model != null and this.model.content != null)
+			{
+				{{ this.model.content }}
+			}
+			%else
+			{
+				%render this.renderSlot("default");
+			}
 		</button>
 	}
 	%else
@@ -76,7 +83,14 @@
 			<button type="button" class="widget_button" class={{ this.getStyles() }}
 				@event:onClick={{ this.onClick }}
 			>
-				%render this.renderSlot("default");
+				%if (this.model != null and this.model.content != null)
+				{
+					{{ this.model.content }}
+				}
+				%else
+				{
+					%render this.renderSlot("default");
+				}
 			</button>
 		</a>
 	}
