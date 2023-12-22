@@ -37,7 +37,7 @@
 
 
 <template>
-	<input class="widget_input" value={{ this.value }} />
+	<input class="widget_input" value={{ this.value }} @event:onChange={{ this.onChange }} />
 </template>
 
 
@@ -46,6 +46,23 @@
 props bool readonly = false;
 props string value = "";
 
+
+/**
+ * Change event
+ */
+void onChange()
+{
+	if (this.model)
+	{
+		this.model.onChange(this.data);
+		
+		#ifcode JAVASCRIPT then
+		this.$nextTick(()=>{ this.model.onChanged(this.data); });
+		#endif
+	}
+}
+
 </script>
+
 
 </class>

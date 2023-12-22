@@ -38,7 +38,7 @@
 
 <template name="render">
 	
-	<select class="widget_select">
+	<select class="widget_select" @event:onChange={{ this.onChange }}>
 	
 	%set Vector options = this.getOptions();
 	%set Dict selected = {};
@@ -86,6 +86,22 @@ Vector getOptions()
 {
 	if (this.model == null) return this.options;
 	return this.model.getOptions();
+}
+
+
+/**
+ * Change event
+ */
+void onChange()
+{
+	if (this.model)
+	{
+		this.model.onChange(this.data);
+		
+		#ifcode JAVASCRIPT then
+		this.$nextTick(()=>{ this.model.onChanged(this.data); });
+		#endif
+	}
 }
 
 </script>

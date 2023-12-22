@@ -30,6 +30,9 @@
 .widget_row_buttons--align-end{
 	justify-content: end;
 }
+.widget_row_buttons--no-gap{
+	gap: 0;
+}
 </style>
 
 
