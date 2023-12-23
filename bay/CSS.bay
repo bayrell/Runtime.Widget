@@ -86,6 +86,12 @@ a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
 .cursor{
 	cursor:pointer;
 }
+.d-flex{
+	display: flex;
+}
+.w-50{
+	width: 50%;
+}
 </style>
 
 
