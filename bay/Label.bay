@@ -24,7 +24,9 @@
 
 
 <template>
-	{{ this.value }}
+	<span class="widget_label">
+		{{ not rtl::isEmpty(this.value) ? this.value : "" }}
+	</span>
 </template>
 
 
