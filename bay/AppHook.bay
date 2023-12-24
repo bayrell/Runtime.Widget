@@ -27,6 +27,7 @@ use Runtime.Widget.RowButtons;
 use Runtime.Widget.Select;
 use Runtime.Widget.SelectLabel;
 use Runtime.Widget.TextArea;
+use Runtime.Widget.WidgetResult;
 
 
 class AppHook extends BaseAppHook
@@ -45,9 +46,9 @@ class AppHook extends BaseAppHook
 	 */
 	void components(Map params)
     {
-		params["components"].appendItems([
-			classof Button,
+		Vector components = [
 			classof CSS,
+			classof Button,
 			classof Input,
 			classof Label,
 			classof RowButtons,
@@ -55,6 +56,8 @@ class AppHook extends BaseAppHook
 			classof SelectLabel,
 			classof TextArea,
 			classof WidgetResult,
-		]);
+		];
+		components.appendItems(params["components"]);
+		params.set("components", components);
     }
 }

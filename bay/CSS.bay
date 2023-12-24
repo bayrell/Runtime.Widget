@@ -45,7 +45,7 @@
 	--widget-color-selected-text: #fff;
 	--widget-color-selected: #337ab7;
 	--widget-color-text: #000;
-	--widget-color-table-background: transparent;
+	--widget-color-table-background: #fff;
 	--widget-border-width: 1px;
 	--widget-button-padding-x: 0.9rem;
 	--widget-button-padding-y: 0.5rem;
