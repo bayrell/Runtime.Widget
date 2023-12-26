@@ -38,7 +38,11 @@
 
 
 <template>
-	<textarea class="widget_textarea">{{ this.value }}</textarea>
+	%set Map props = this.getProps();
+	<textarea class="widget_textarea" @ref="textarea"
+		@event:onChange={{ this.onChange }}
+		...props
+	>{{ this.value }}</textarea>
 </template>
 
 
@@ -46,6 +50,45 @@
 
 props bool readonly = false;
 props string value = "";
+
+
+/**
+ * Returns textarea props
+ */
+Map getProps()
+{
+	if (this.readonly) return {
+		"readonly": true,
+	};
+	return {};
+}
+
+
+/**
+ * Updated event
+ */
+void onUpdated()
+{
+	var textarea = this.getRef("textarea");
+	textarea.value = this.value;
+}
+
+
+/**
+ * Change event
+ */
+void onChange()
+{
+	if (this.model)
+	{
+		this.model.onChange(this.data);
+		
+		#ifcode JAVASCRIPT then
+		this.$nextTick(()=>{ this.model.onChanged(this.data); });
+		#endif
+	}
+}
+
 
 </script>
 

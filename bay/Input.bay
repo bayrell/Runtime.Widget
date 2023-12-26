@@ -37,7 +37,11 @@
 
 
 <template>
-	<input class="widget_input" value={{ this.value }} @event:onChange={{ this.onChange }} />
+	%set Map props = this.getProps();
+	<input class="widget_input" value={{ this.value }}
+		@event:onChange={{ this.onChange }}
+		...props
+	/>
 </template>
 
 
@@ -45,6 +49,18 @@
 
 props bool readonly = false;
 props string value = "";
+
+
+/**
+ * Returns input props
+ */
+Map getProps()
+{
+	if (this.readonly) return {
+		"readonly": true,
+	};
+	return {};
+}
 
 
 /**
