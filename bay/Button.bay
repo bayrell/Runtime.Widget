@@ -57,6 +57,9 @@
 	background-color: var(--widget-color-success);
 	border-color: var(--widget-color-success);
 }
+.widget_button--last{
+	border-right-width: var(--widget-border-width) !important;
+}
 </style>
 
 

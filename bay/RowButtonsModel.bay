@@ -53,6 +53,14 @@ class RowButtonsModel extends BaseModel
 	
 	
 	/**
+	 * Find button by name
+	 */
+	ButtonModel find(string widget_name) => this.buttons.findItem(
+		bool (ButtonModel button) use (widget_name) => button.widget_name == widget_name
+	);
+	
+	
+	/**
 	 * Count buttons
 	 */
 	int count() => this.buttons.count();

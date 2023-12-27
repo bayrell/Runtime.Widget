@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.RowButtons">
 
+<use name="Runtime.Widget.Button" />
 <use name="Runtime.Widget.ButtonModel" />
 <use name="Runtime.Widget.RowButtonsModel" />
 
@@ -32,6 +33,10 @@
 }
 .widget_row_buttons--no-gap{
 	gap: 0;
+}
+.widget_row_buttons--no-gap %(Button)widget_button
+{
+	border-right-width: 0;
 }
 </style>
 
