@@ -28,14 +28,13 @@
 
 
 <template>
-	
-	%set Dict item = this.options
-		? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-		: null
-	;
-	
-	{{ item != null ? item.get("label") : "" }}
-	
+	<span class="widget_select_label">
+		%set Dict item = this.options
+			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
+			: null
+		;
+		{{ item != null ? item.get("label") : "" }}
+	</span>
 </template>
 
 
