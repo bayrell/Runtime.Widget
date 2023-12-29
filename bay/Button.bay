@@ -140,9 +140,10 @@ void getStyles()
 /**
  * Click button event
  */
-void onClick()
+void onClick(var e)
 {
 	if (this.model) this.model.onClick(this.data);
+	e.stopPropagation();
 }
 
 </script>
