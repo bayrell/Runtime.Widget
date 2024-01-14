@@ -38,7 +38,7 @@
 
 <template name="render">
 	
-	<select class="widget_select" @event:onChange={{ this.onChange }}>
+	<select name={{ this.name }} class="widget_select" @event:onChange={{ this.onChange }}>
 	
 	%set Vector options = this.getOptions();
 	%set Dict selected = {};
@@ -75,6 +75,7 @@
 <script type="frontend">
 
 props int value = "";
+props string name = "";
 props Vector options = null;
 props bool show_select_value = true;
 

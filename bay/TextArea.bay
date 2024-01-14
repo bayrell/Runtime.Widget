@@ -39,7 +39,7 @@
 
 <template>
 	%set Map props = this.getProps();
-	<textarea class="widget_textarea" @ref="textarea"
+	<textarea class="widget_textarea" name={{ this.name }} @ref="textarea"
 		@event:onChange={{ this.onChange }}
 		...props
 	>{{ this.value }}</textarea>
@@ -48,6 +48,7 @@
 
 <script>
 
+props string name = "";
 props bool readonly = false;
 props string value = "";
 

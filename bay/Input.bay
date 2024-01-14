@@ -38,7 +38,8 @@
 
 <template>
 	%set Map props = this.getProps();
-	<input class="widget_input" value={{ this.value }}
+	<input class="widget_input" name={{ this.name }}
+		value={{ this.value }}
 		@event:onChange={{ this.onChange }}
 		...props
 	/>
@@ -48,6 +49,7 @@
 <script>
 
 props bool readonly = false;
+props string name = "";
 props string value = "";
 
 
