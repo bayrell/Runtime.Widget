@@ -18,8 +18,7 @@
 
 <class name="Runtime.Widget.Pagination">
 
-<use name="Runtime.math" />
-<use name="Runtime.Web.Layout" />
+<use name="Runtime.Math" />
 
 
 <style>
@@ -42,9 +41,11 @@
 .pagination a, .pagination a:hover, .pagination span {
 	display: table-cell;
 	vertical-align: middle;
-	background-color: #fff;
-	border: 1px #ccc solid;
-	color: #000;
+	background-color: var(--widget-color-table-background);
+	border-color: var(--widget-color-border);
+	border-width: var(--widget-border-width);
+	border-style: solid;
+	color: var(--widget-color-text);
 	text-align: center;
 	width: 30px;
 	height: 30px;
@@ -55,27 +56,30 @@
 	margin-left: 0px;
 }
 .pagination li.active a, .pagination li.active a:hover {
-	background-color: #337ab7;
-	border: 1px #337ab7 solid;
-	color: #fff;
+	background-color: var(--widget-color-selected);
+	border-color: var(--widget-color-selected);
+	color: var(--widget-color-selected-text);
 }
 </style>
 
 
 <template>
-	%set int page = render_params["page"];
-	%set int pages = render_params["pages"];
-	%set int delta = render_params["delta"] |> default int 5;
-	%set int page_start = math::max(2, page - delta + 1);
-	%set int page_end = math::min(page + delta, pages - 1);
+	%set int page_start = Math::max(2, this.page - this.delta + 1);
+	%set int page_end = Math::min(this.page + this.delta, this.pages - 1);
+	%set Map props = {};
 	
-	%if (pages > 1)
-	{
-		<nav class="pagination">
+	<nav class="pagination">
+		%if (this.pages > 1)
+		{
 			<ul>
 				
-				<li class={{ page == 1 ? "active" : "" }}>
-					<a href={{ static::getPageUrl(layout, 1) }}>
+				%if (this.is_href)
+				{
+					%set _ = props.set("href", this.getPageUrl(1));
+				}
+				
+				<li class={{ this.page == 1 ? "active" : "" }}>
+					<a @event:onClick={{ void () => this.onClick(1) }} ...props>
 						1
 					</a>
 				</li>
@@ -91,44 +95,72 @@
 				{
 					%for (int p=page_start; p<=page_end; p++)
 					{
-						<li class={{ page == p ? "active" : "" }}>
-							<a href={{ static::getPageUrl(layout, p) }}>
+						%if (this.is_href)
+						{
+							%set _ = props.set("href", this.getPageUrl(p));
+						}
+						<li class={{ this.page == p ? "active" : "" }}>
+							<a @event:onClick={{ void () use (p) => this.onClick(p) }}
+								...props
+							>
 								{{ p }}
 							</a>
 						</li>
 					}
 				}
 				
-				%if (page_end < pages - 1)
+				%if (page_end < this.pages - 1)
 				{
 					<li>
 						...
 					</li>
 				}
 				
-				%if (pages > 1)
+				%if (this.pages > 1)
 				{
-					<li class={{ page == pages ? "active" : "" }}>
-						<a href={{ static::getPageUrl(layout, pages) }}>
-							{{ pages }}
+					%if (this.is_href)
+					{
+						%set _ = props.set("href", this.getPageUrl(this.pages));
+					}
+					<li class={{ this.page == this.pages ? "active" : "" }}>
+						<a @event:onClick={{ void () => this.onClick(this.pages) }}
+							...props
+						>
+							{{ this.pages }}
 						</a>
 					</li>
 				}
 			</ul>
-		</nav>
-	}
+		}
+	</nav>
 </template>
 
 
 <script>
 
+props int page = 1;
+props int pages = 1;
+props int delta = 5;
+props bool is_href = true;
+
+
 /**
  * Returns page url
  */
-pure int getPageUrl(Layout layout, int page)
+string getPageUrl(int page)
 {
-	string uri = layout.request_full_uri;
+	string uri = this.layout.request_full_uri;
 	return rs::url_get_add(uri, "page", page);
+}
+
+
+/**
+ * Click event
+ */
+void onClick(int page)
+{
+	if (this.is_href) return;
+	this.emit("page", page);
 }
 
 </script>
