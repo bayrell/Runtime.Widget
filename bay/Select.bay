@@ -92,16 +92,17 @@ Vector getOptions()
 /**
  * Change event
  */
-void onChange()
+void onChange(var e)
 {
-	if (this.model)
-	{
-		this.model.onChange(this.data);
-		
-		#ifcode JAVASCRIPT then
-		this.$nextTick(()=>{ this.model.onChanged(this.data); });
-		#endif
-	}
+	var value = e.target.value;
+	if (this.model) this.model.onChange(value, this.data);
+	
+	#ifcode JAVASCRIPT then
+	this.$nextTick(()=>{
+		if (this.model) this.model.onChanged(value, this.data);
+		this.$emit("valueChanged", value, this.data);
+	});
+	#endif
 }
 
 </script>
