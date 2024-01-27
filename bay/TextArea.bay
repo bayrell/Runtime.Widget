@@ -81,11 +81,11 @@ void onUpdated()
 void onChange(var e)
 {
 	var value = e.target.value;
-	if (this.model) this.model.onChange(value, this.data);
+	if (this.model) this.model.onValueChange(value, this.data);
 	
 	#ifcode JAVASCRIPT then
 	this.$nextTick(()=>{
-		if (this.model) this.model.onChanged(value, this.data);
+		if (this.model) this.model.onValueChanged(value, this.data);
 		this.emit("valueChanged", value, this.data);
 	});
 	#endif

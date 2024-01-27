@@ -71,14 +71,14 @@ Map getProps()
 void onChange(var e)
 {
 	var value = e.target.value;
-	if (this.model) this.model.onChange(value, this.data);
 	
-	#ifcode JAVASCRIPT then
-	this.$nextTick(()=>{
-		if (this.model) this.model.onChanged(value, this.data);
-		this.emit("valueChanged", value, this.data);
-	});
-	#endif
+	/* Send value change */
+	if (this.model) this.model.onValueChange(value, this.data);
+	this.emit("valueChange", value, this.data);
+	
+	/* Send value changed */
+	if (this.model) this.model.onValueChanged(value, this.data);
+	this.emit("valueChanged", value, this.data);
 }
 
 </script>
