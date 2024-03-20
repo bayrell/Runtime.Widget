@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,28 +18,25 @@
 
 namespace Runtime.Widget;
 
-use Runtime.Web.BaseModel;
-use Runtime.Widget.RenderList;
+use Runtime.Web.RenderListModel;
+use Runtime.Widget.Container;
 
 
-class RenderListModel extends BaseModel
+class ContainerModel extends RenderListModel
 {
-    string widget_name = "render_list";
-    string component = classof RenderList;
-    Vector<string> items = [];
-    
-    /**
-     * Add widget to render
-     */
-    void addRender(string widget_name)
-    {
-        if (widget_name instanceof BaseModel)
-        {
-            this.items.push(widget_name.getWidgetName());
-        }
-        else if (rtl::isString(widget_name))
-        {
-            this.items.push(widget_name);
-        }
-    }
+	string component = classof Container;
+	bool wrap = false;
+	
+	
+	/**
+	 * Constructor
+	 */
+	void constructor(Dict params = null)
+	{
+		parent(params);
+		if (params)
+		{
+			if (params.has("wrap")) this.wrap = params.get("wrap");
+		}
+	}
 }

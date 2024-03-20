@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 namespace Runtime.Widget;
 
 use Runtime.BaseObject;
+use Runtime.Serializer;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Events;
 use Runtime.Widget.Button;
@@ -51,12 +52,6 @@ class ButtonModel extends BaseModel
 	
 	
 	/**
-	 * Returns component
-	 */
-	string getComponent() => this.component;
-	
-	
-	/**
 	 * Returns content
 	 */
 	string getContent() => this.content;
@@ -67,6 +62,7 @@ class ButtonModel extends BaseModel
 	 */
 	void onClick(var data = null)
 	{
-		this.events.emmit("onClick", [data]);
+		this.events.emit("onClick", [data]);
 	}
+	
 }

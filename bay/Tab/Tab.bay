@@ -16,33 +16,37 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
-
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
+<class name="Runtime.Widget.Tab.Tab">
 
 
 <style>
+.tabs__item{
+	position: relative;
+	display: none;
+}
+.tabs__item--active{
+	display: block;
+}
 </style>
 
 
 <template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : "" }}
-	</span>
+	%if (this.model.canShow(this.name))
+	{
+		<div class="tabs__item" class={{ this.model.isActive(this.name) ? "tabs__item--active" : "" }}
+			data-tab={{ this.name }}
+		>
+			%render this.renderSlot("default");
+		</div>
+	}
 </template>
 
 
 <script>
 
-props int value = "";
-props Vector options = [];
+props string name = "";
 
 </script>
+
 
 </class>

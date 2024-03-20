@@ -16,33 +16,34 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
+<class name="Runtime.Widget.Container" extends="Runtime.Web.RenderList">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
+<use name="Runtime.Web.BaseModel" />
 
 <style>
+.widget_container__wrap{
+	max-width: 1140px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
 </style>
 
-
 <template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : "" }}
-	</span>
+	<div class="widget_container" @ref="widget" data-name={{ this.model.widget_name }}>
+		%if (this.model.wrap)
+		{
+			<div class="widget_container__wrap">
+				%render this.renderItems();
+			</div>
+		}
+		%else
+		{
+			%render this.renderItems();
+		}
+	</div>
 </template>
-
-
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
 
 </class>

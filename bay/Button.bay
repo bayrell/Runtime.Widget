@@ -1,7 +1,7 @@
 <!--
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@
 	%if (href == null)
 	{
 		<button type="button" class="widget_button" class={{ this.getStyles() }}
-			@event:onClick={{ this.onClick }}
+			@event:onClick={{ this.onClick }} @ref="widget"
 		>
 			%if (this.model != null and this.model.content != null)
 			{
@@ -82,7 +82,7 @@
 	}
 	%else
 	{
-		<a class="nolink" href={{ href }}>
+		<a class="nolink" href={{ href }} @ref="widget">
 			<button type="button" class="widget_button" class={{ this.getStyles() }}
 				@event:onClick={{ this.onClick }}
 			>

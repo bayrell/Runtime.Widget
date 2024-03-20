@@ -16,17 +16,28 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.Dialog;
 
 use Runtime.Web.BaseModel;
 use Runtime.Widget.ButtonModel;
+use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Styles;
+use Runtime.Widget.WidgetResultModel;
+use Runtime.Widget.Dialog.Dialog;
 
 
-class RowButtonsModel extends BaseModel
+class DialogModel extends BaseModel
 {
-	Vector buttons = [];
-	Styles styles = new Styles{ "prefix": "widget_row_buttons" };
+	bool is_open = false;
+	string title = "";
+	string content = "";
+	string width = "";
+	string component = classof Dialog;
+	RowButtonsModel buttons = new RowButtonsModel{
+		"styles": ["@widget_dialog__buttons"]
+	};
+	Styles styles = new Styles{ "prefix": "widget_dialog" };
+	WidgetResultModel result = new WidgetResultModel;
 	
 	
 	/**
@@ -43,31 +54,28 @@ class RowButtonsModel extends BaseModel
 	
 	
 	/**
-	 * Add button
+	 * Set width
 	 */
-	ButtonModel add(ButtonModel button)
+	void setWidth(string value)
 	{
-		this.buttons.append(button);
-		return button
+		this.width = value;
 	}
 	
 	
 	/**
-	 * Find button by name
+	 * Show dialog
 	 */
-	ButtonModel find(string widget_name) => this.buttons.findItem(
-		bool (ButtonModel button) use (widget_name) => button.widget_name == widget_name
-	);
+	void show()
+	{
+		this.is_open = true;
+	}
 	
 	
 	/**
-	 * Count buttons
+	 * Hide dialog
 	 */
-	int count() => this.buttons.count();
-	
-	
-	/**
-	 * Returns button by index
-	 */
-	ButtonModel get(int index) => this.buttons.get(index);
+	void hide()
+	{
+		this.is_open = false;
+	}
 }

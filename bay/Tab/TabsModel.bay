@@ -16,17 +16,16 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.Tab;
 
+use Runtime.lib;
 use Runtime.Web.BaseModel;
-use Runtime.Widget.ButtonModel;
-use Runtime.Widget.Styles;
 
 
-class RowButtonsModel extends BaseModel
+class TabsModel extends BaseModel
 {
-	Vector buttons = [];
-	Styles styles = new Styles{ "prefix": "widget_row_buttons" };
+	string active = "";
+	Vector<Map> tabs = [];
 	
 	
 	/**
@@ -37,37 +36,35 @@ class RowButtonsModel extends BaseModel
 		parent(params);
 		if (params)
 		{
-			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+			if (params.has("active")) this.active = params.get("active");
+			if (params.has("tabs")) this.tabs = params.get("tabs");
 		}
 	}
 	
 	
 	/**
-	 * Add button
+	 * Returns true if active
 	 */
-	ButtonModel add(ButtonModel button)
+	void isActive(string tab_name) => this.active == tab_name;
+	
+	
+	/**
+	 * Set active
+	 */
+	void setActive(string active)
 	{
-		this.buttons.append(button);
-		return button
+		this.active = active;
 	}
 	
 	
 	/**
-	 * Find button by name
+	 * Can show
 	 */
-	ButtonModel find(string widget_name) => this.buttons.findItem(
-		bool (ButtonModel button) use (widget_name) => button.widget_name == widget_name
-	);
-	
-	
-	/**
-	 * Count buttons
-	 */
-	int count() => this.buttons.count();
-	
-	
-	/**
-	 * Returns button by index
-	 */
-	ButtonModel get(int index) => this.buttons.get(index);
+	bool canShow(string tab_name)
+	{
+		Map tab = this.tabs.findItem( lib::equalAttr("name", tab_name) );
+		if (tab == null) return false;
+		if (tab.has("href") and tab.get("name") != tab_name) return false;
+		return true;
+	}
 }

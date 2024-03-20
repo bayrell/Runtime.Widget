@@ -1,7 +1,7 @@
 /*!
  *  Bayrell Runtime Library
  *
- *  (c) Copyright 2016-2023 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,10 +21,11 @@ namespace Runtime.Widget;
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
 use Runtime.Widget.Button;
 use Runtime.Widget.CSS;
+use Runtime.Widget.Container;
 use Runtime.Widget.Input;
 use Runtime.Widget.Label;
 use Runtime.Widget.RowButtons;
-use Runtime.Widget.Select;
+use Runtime.Widget.Section;
 use Runtime.Widget.SelectLabel;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.WidgetResult;
@@ -47,12 +48,13 @@ class AppHook extends BaseAppHook
 	void components(Map params)
     {
 		Vector components = [
-			classof CSS,
 			classof Button,
+			classof CSS,
+			classof Container,
 			classof Input,
 			classof Label,
 			classof RowButtons,
-			classof Select,
+			classof Section,
 			classof SelectLabel,
 			classof TextArea,
 			classof WidgetResult,
