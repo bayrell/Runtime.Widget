@@ -60,15 +60,16 @@
 	--widget-margin-h5: 1rem 0px;
 	--widget-margin-h6: 1rem 0px;
 }
-*{box-sizing: border-box;}
-body, html{
+#core_ui_root{
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
 	line-height: var(--widget-line-height);
+	box-sizing: border-box;
 	width: 100%;
 	padding: 0;
 	margin: 0;
 }
+#core_ui_root *{box-sizing: border-box;}
 a { text-decoration: inherit; color: var(--widget-color-link); cursor: pointer; }
 a:hover, a:visited:hover { text-decoration: underline; color: red; }
 a:visited { text-decoration: inherit; color: var(--widget-color-link); }
@@ -85,12 +86,6 @@ a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
 }
 .cursor{
 	cursor:pointer;
-}
-.d-flex{
-	display: flex;
-}
-.w-50{
-	width: 50%;
 }
 </style>
 

@@ -38,7 +38,7 @@ class AppHook extends BaseAppHook
 	 */
 	void register_hooks()
 	{
-        this.register(static::COMPONENTS);
+        this.register(static::COMPONENTS, 10);
     }
     
     
