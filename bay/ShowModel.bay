@@ -28,16 +28,15 @@ class ShowModel extends BaseModel
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Map params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("condition")) this.condition = params.get("condition");
-			if (params.has("model")) this.model = params.get("model");
-		}
+		
+		if (params == null) return;
+		if (params.has("condition")) this.condition = params.get("condition");
+		if (params.has("model")) this.model = params.get("model");
 	}
 	
 	
@@ -47,7 +46,6 @@ class ShowModel extends BaseModel
 	bool isShow(Dict data)
 	{
 		if (this.condition == null) return false;
-		
 		return rtl::apply(this.condition, [data]);
 	}
 	

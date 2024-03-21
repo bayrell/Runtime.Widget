@@ -28,16 +28,16 @@ class TextModel extends BaseModel
 	string content = "";
 	string kind = "";
 	
+	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("content")) this.content = params.get("content");
-			if (params.has("kind")) this.kind = params.get("kind");
-		}
+		
+		if (params == null) return;
+		if (params.has("content")) this.content = params.get("content");
+		if (params.has("kind")) this.kind = params.get("kind");
 	}
 }

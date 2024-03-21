@@ -19,55 +19,27 @@
 namespace Runtime.Widget;
 
 use Runtime.Web.BaseModel;
+use Runtime.Web.RenderListModel;
 use Runtime.Widget.ButtonModel;
+use Runtime.Widget.RowButtons;
 use Runtime.Widget.Styles;
 
 
-class RowButtonsModel extends BaseModel
+class RowButtonsModel extends RenderListModel
 {
 	Vector buttons = [];
 	Styles styles = new Styles{ "prefix": "widget_row_buttons" };
+	string component = classof RowButtons;
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
-		}
+		
+		if (params == null) return;
+		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 	}
-	
-	
-	/**
-	 * Add button
-	 */
-	ButtonModel add(ButtonModel button)
-	{
-		this.buttons.append(button);
-		return button
-	}
-	
-	
-	/**
-	 * Find button by name
-	 */
-	ButtonModel find(string widget_name) => this.buttons.findItem(
-		bool (ButtonModel button) use (widget_name) => button.widget_name == widget_name
-	);
-	
-	
-	/**
-	 * Count buttons
-	 */
-	int count() => this.buttons.count();
-	
-	
-	/**
-	 * Returns button by index
-	 */
-	ButtonModel get(int index) => this.buttons.get(index);
 }

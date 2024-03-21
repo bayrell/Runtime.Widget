@@ -33,23 +33,37 @@ class DialogModel extends BaseModel
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
-	RowButtonsModel buttons = new RowButtonsModel{
-		"styles": ["@widget_dialog__buttons"]
-	};
+	RowButtonsModel buttons;
 	Styles styles = new Styles{ "prefix": "widget_dialog" };
 	WidgetResultModel result = new WidgetResultModel;
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
-		}
+		
+		if (params == null) return;
+		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+	}
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget()
+	{
+		parent();
+		
+		this.buttons = this.addWidget(
+			classof RowButtonsModel,
+			{
+				"widget_name": "buttons",
+				"styles": ["@widget_dialog__buttons"],
+			}
+		);
 	}
 	
 	

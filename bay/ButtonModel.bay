@@ -36,18 +36,16 @@ class ButtonModel extends BaseModel
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Map params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("component")) this.component = params.get("component");
-			if (params.has("content")) this.content = params.get("content");
-			if (params.has("styles")) this.styles.addStyles(params.get("styles"));
-			if (params.has("href")) this.href = params.get("href");
-		}
+		
+		if (params == null) return;
+		if (params.has("content")) this.content = params.get("content");
+		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		if (params.has("href")) this.href = params.get("href");
 	}
 	
 	
@@ -64,5 +62,4 @@ class ButtonModel extends BaseModel
 	{
 		this.events.emit("onClick", [data]);
 	}
-	
 }

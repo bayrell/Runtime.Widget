@@ -29,16 +29,15 @@ class TabsModel extends BaseModel
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("active")) this.active = params.get("active");
-			if (params.has("tabs")) this.tabs = params.get("tabs");
-		}
+		
+		if (params == null) return;
+		if (params.has("active")) this.active = params.get("active");
+		if (params.has("tabs")) this.tabs = params.get("tabs");
 	}
 	
 	

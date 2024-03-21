@@ -29,14 +29,13 @@ class ContainerModel extends RenderListModel
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("wrap")) this.wrap = params.get("wrap");
-		}
+		
+		if (params == null) return;
+		if (params.has("wrap")) this.wrap = params.get("wrap");
 	}
 }
