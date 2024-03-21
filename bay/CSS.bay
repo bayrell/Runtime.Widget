@@ -23,14 +23,14 @@
 :root {
 	--widget-font-family: 'Ubuntu', sans-serif;
 	--widget-font-size: 14px;
-	--widget-font-size-h1: 1.8rem;
-	--widget-font-size-h2: 1.5rem;
-	--widget-font-size-h3: 1.2rem;
-	--widget-font-size-h4: 1rem;
-	--widget-font-size-h5: 1rem;
-	--widget-font-size-h6: 1rem;
+	--widget-font-size-h1: 1.8em;
+	--widget-font-size-h2: 1.5em;
+	--widget-font-size-h3: 1.2em;
+	--widget-font-size-h4: 1em;
+	--widget-font-size-h5: 1em;
+	--widget-font-size-h6: 1em;
 	--widget-line-height: 1.2;
-	--widget-space: 0.5rem;
+	--widget-space: 0.5em;
 	/*--widget-color-border: #dee2e6;*/
 	--widget-color-border: #e0e1e6;
 	--widget-color-success: #198754;
@@ -47,18 +47,18 @@
 	--widget-color-text: #000;
 	--widget-color-table-background: #fff;
 	--widget-border-width: 1px;
-	--widget-button-padding-x: 0.9rem;
-	--widget-button-padding-y: 0.5rem;
-	--widget-button-padding-small-x: 0.72rem;
-	--widget-button-padding-small-y: 0.4rem;
-	--widget-button-padding-large-x: 1.25rem;
-	--widget-button-padding-large-y: 0.7rem;
-	--widget-margin-h1: 1.8rem 0px;
-	--widget-margin-h2: 1.5rem 0px;
-	--widget-margin-h3: 1.2rem 0px;
-	--widget-margin-h4: 1rem 0px;
-	--widget-margin-h5: 1rem 0px;
-	--widget-margin-h6: 1rem 0px;
+	--widget-button-padding-x: 0.9em;
+	--widget-button-padding-y: 0.5em;
+	--widget-button-padding-small-x: 0.72em;
+	--widget-button-padding-small-y: 0.4em;
+	--widget-button-padding-large-x: 1.25em;
+	--widget-button-padding-large-y: 0.7em;
+	--widget-margin-h1: 1.8em 0px;
+	--widget-margin-h2: 1.5em 0px;
+	--widget-margin-h3: 1.2em 0px;
+	--widget-margin-h4: 1em 0px;
+	--widget-margin-h5: 1em 0px;
+	--widget-margin-h6: 1em 0px;
 }
 #core_ui_root{
 	font-family: var(--widget-font-family);
