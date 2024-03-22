@@ -25,7 +25,18 @@
 
 <template>
 	<span class="widget_label">
-		{{ not rtl::isEmpty(this.value) ? this.value : "" }}
+		%if (rtl::is_instanceof(this.value, classof Collection))
+		{
+			%for (int i=0; i<this.value.count(); i++)
+			{
+				%set string item = this.value.get(i);
+				<div>{{ not rtl::isEmpty(item) ? item : "" }}</div>
+			}
+		}
+		%else
+		{
+			{{ not rtl::isEmpty(this.value) ? this.value : "" }}
+		}
 	</span>
 </template>
 
