@@ -46,6 +46,7 @@ class ButtonModel extends BaseModel
 		if (params.has("content")) this.content = params.get("content");
 		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		if (params.has("href")) this.href = params.get("href");
+		if (params.has("events")) this.events.setup(params.get("events"));
 	}
 	
 	

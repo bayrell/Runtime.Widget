@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_input{
+.widget_input, .widget_input:focus{
 	width: 100%;
 	font-family: var(--widget-font-family);
     font-size: var(--widget-font-size);
@@ -29,6 +29,8 @@
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
 	border-style: solid;
+	border-radius: 0;
+	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
 	min-height: 32px;
@@ -38,7 +40,7 @@
 
 <template>
 	%set Map props = this.getProps();
-	<input class="widget_input" name={{ this.name }}
+	<input type="text" class="widget_input" name={{ this.name }}
 		value={{ this.value }}
 		@event:onChange={{ this.onChange }}
 		...props

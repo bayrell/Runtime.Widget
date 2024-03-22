@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.RowButtons">
+<class name="Runtime.Widget.RowButtons" extends="Runtime.Web.RenderList">
 
 <use name="Runtime.Web.BaseModel" />
 <use name="Runtime.Widget.Button" />
@@ -40,15 +40,6 @@
 	border-right-width: 0;
 }
 </style>
-
-
-<template name="renderItems">
-	%for (int i=0; i<this.model.items.count(); i++)
-	{
-		%set BaseModel widget = this.model.items.get(i);
-		%render this.renderWidget(widget, { "data": this.data });
-	}
-</template>
 
 
 <template>

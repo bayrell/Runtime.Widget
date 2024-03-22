@@ -87,6 +87,10 @@ a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
 .cursor{
 	cursor:pointer;
 }
+.scroll-lock {
+    overflow: hidden;
+	padding-right: 12px;
+}
 </style>
 
 

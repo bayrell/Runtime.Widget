@@ -128,7 +128,7 @@
 		class={{ this.model.styles.join(" ") }}
 	>
 		<div class="widget_dialog__shadow"></div>
-		<div class="widget_dialog__box">
+		<div class="widget_dialog__box" @ref="dialog_box">
 			<table class="widget_dialog__wrap"><tbody><tr><td>
 				<div class="widget_dialog__container" ...props>
 					%render this.renderDialog();
@@ -142,7 +142,6 @@
 
 <script>
 
-
 Map getProps()
 {
 	Vector styles = [];
@@ -153,6 +152,34 @@ Map getProps()
 	return {
 		"style": styles.join(";"),
 	};
+}
+
+
+/**
+ * Updated
+ */
+void onUpdated()
+{
+	var elem = document.documentElement;
+	bool is_scroll_lock = elem.classList.contains("scroll-lock");
+	if (this.model.is_open)
+	{
+		if (not is_scroll_lock)
+		{
+			elem.classList.add('scroll-lock');
+			this.nextTick(void(){
+				var dialog_box = this.getRef("dialog_box");
+				dialog_box.scrollTop = 0;
+			});
+		}
+	}
+	else
+	{
+		if (is_scroll_lock)
+		{
+			elem.classList.remove('scroll-lock');
+		}
+	}
 }
 
 

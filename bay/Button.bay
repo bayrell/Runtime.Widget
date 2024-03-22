@@ -26,11 +26,11 @@
 	color: var(--widget-color-text);
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
+	line-height: var(--widget-line-height);
 	background-color: var(--widget-color-default);
 	border: var(--widget-border-width) var(--widget-color-border) solid;
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	outline: 0;
-	line-height: normal;
 	cursor: pointer;
 }
 .widget_button:active{
