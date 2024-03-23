@@ -29,7 +29,7 @@
 	--widget-font-size-h4: 1em;
 	--widget-font-size-h5: 1em;
 	--widget-font-size-h6: 1em;
-	--widget-line-height: 1.2;
+	--widget-line-height: 1.4em;
 	--widget-space: 0.5em;
 	/*--widget-color-border: #dee2e6;*/
 	--widget-color-border: #e0e1e6;

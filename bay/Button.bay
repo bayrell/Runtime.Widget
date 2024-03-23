@@ -32,12 +32,14 @@
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
 	outline: 0;
 	cursor: pointer;
+	border-radius: 4px;
 }
 .widget_button:active{
 	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
 }
 .widget_button--small{
 	padding: var(--widget-button-padding-small-y) var(--widget-button-padding-small-x);
+	line-height: 1.2em;
 }
 .widget_button--large{
 	padding: var(--widget-button-padding-large-y) var(--widget-button-padding-large-x);

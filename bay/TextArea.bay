@@ -31,7 +31,7 @@
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
 	border-style: solid;
-	border-radius: 0;
+	border-radius: 4px;
 	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
@@ -83,7 +83,10 @@ void onUpdated()
 void onChange(var e)
 {
 	var value = e.target.value;
+	
+	/* Send value change */
 	if (this.model) this.model.onValueChange(value, this.data);
+	this.emit("valueChange", value, this.data);
 }
 
 
