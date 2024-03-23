@@ -44,13 +44,42 @@ class Styles extends BaseModel
 	
 	
 	/**
+	 * Returns style
+	 */
+	string buildStyle(string s)
+	{
+		if (s == "") return;
+		if (s[0] == "@") return rs::substr(s, 1);
+		return this.prefix ~ "--" ~ s;
+	}
+	
+	
+	/**
 	 * Add style
 	 */
 	void add(string s)
 	{
-		if (s == "") return;
-		if (s[0] == "@") this.items.append(rs::substr(s, 1));
-		else this.items.append(this.prefix ~ "--" ~ s);
+		s = this.buildStyle(s);
+		this.items.append(s);
+	}
+	
+	
+	/**
+	 * Remove style
+	 */
+	void remove(string s)
+	{
+		s = this.buildStyle(s);
+		this.items.removeValue(s);
+	}
+	
+	
+	/**
+	 * Clear styles
+	 */
+	void clear()
+	{
+		this.items = [];
 	}
 	
 	
