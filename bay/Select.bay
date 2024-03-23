@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_select{
+.widget_select, .widget_select:focus{
 	width: 100%;
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
@@ -29,9 +29,16 @@
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
 	border-style: solid;
+	border-radius: 0;
+	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
+	color: inherit;
+	max-width: 100%;
 	min-height: 32px;
+}
+.widget_select:hover{
+	color: inherit;
 }
 </style>
 

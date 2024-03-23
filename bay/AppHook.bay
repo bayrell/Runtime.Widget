@@ -26,6 +26,7 @@ use Runtime.Widget.Input;
 use Runtime.Widget.Label;
 use Runtime.Widget.RowButtons;
 use Runtime.Widget.Section;
+use Runtime.Widget.Select;
 use Runtime.Widget.SelectLabel;
 use Runtime.Widget.TextArea;
 use Runtime.Widget.WidgetResult;
@@ -55,6 +56,7 @@ class AppHook extends BaseAppHook
 			classof Label,
 			classof RowButtons,
 			classof Section,
+			classof Select,
 			classof SelectLabel,
 			classof TextArea,
 			classof WidgetResult,
