@@ -18,6 +18,9 @@
 
 <class name="Runtime.Widget.Tab.Tabs">
 
+<use name="Runtime.Web.BaseModel" />
+<use name="Runtime.Widget.Tab.Tab" component="true" />
+
 
 <style>
 .tabs{
@@ -46,9 +49,14 @@
 	-ms-user-select: none;
     top: var(--widget-border-width);
 }
-.tabs__header_item:hover, .tabs__header_item:visited, .tabs__header_item:visited:hover{
+.tabs__header_item:hover,
+.tabs__header_item:visited,
+.tabs__header_item:visited:hover,
+.tabs__header_item:focus{
 	text-decoration: none;
 	color: inherit;
+	box-shadow: none;
+	outline: transparent;
 }
 .tabs__header_item--active{
 	background-color: var(--widget-color-table-background);
@@ -90,13 +98,36 @@
 </template>
 
 
+<template name="renderContent">
+	%if (this.model.render_widgets)
+	{
+		%for (int i=0; i<this.model.tabs.count(); i++)
+		{
+			%set Dict tab = this.model.tabs.get(i);
+			%set string tab_name = tab["name"];
+			%set BaseModel tab_model = tab["model"];
+			%if (tab_model)
+			{
+				<Tab name={{ tab_name }} @model={{ this.model }}>
+					%render this.renderWidget(tab_model);
+				</Tab>
+			}
+		}
+	}
+	%else
+	{
+		%render this.renderSlot("default");
+	}
+</template>
+
+
 <template>
 	<div class="tabs">
 		<div class="tabs__header">
 			%render this.renderHeader();
 		</div>
 		<div class="tabs__content">
-			%render this.renderSlot("default");
+			%render this.renderContent();
 		</div>
 	</div>
 </template>

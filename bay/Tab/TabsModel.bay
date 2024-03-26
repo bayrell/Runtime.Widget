@@ -20,12 +20,27 @@ namespace Runtime.Widget.Tab;
 
 use Runtime.lib;
 use Runtime.Web.BaseModel;
+use Runtime.Widget.Tab.Tabs;
 
 
 class TabsModel extends BaseModel
 {
 	string active = "";
 	Vector<Map> tabs = [];
+	bool render_widgets = false;
+	string component = classof Tabs;
+	
+	
+	/**
+	 * Create model
+	 */
+	void constructor(Dict params = null)
+	{
+		parent(params);
+		
+		/* Add component */
+		this.layout.addComponent(classof Tabs);
+	}
 	
 	
 	/**
@@ -38,6 +53,7 @@ class TabsModel extends BaseModel
 		if (params == null) return;
 		if (params.has("active")) this.active = params.get("active");
 		if (params.has("tabs")) this.tabs = params.get("tabs");
+		if (params.has("render_widgets")) this.render_widgets = params.get("render_widgets");
 	}
 	
 	

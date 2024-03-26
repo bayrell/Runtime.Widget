@@ -51,6 +51,7 @@
 	text-align: center;
 	width: 30px;
 	height: 30px;
+	line-height: 0;
 	font-size: 14px;
 	text-decoration: none;
 }
@@ -79,12 +80,12 @@
 		{
 			<ul>
 				
-				%if (this.is_href)
+				%if (this.pagination_name)
 				{
 					%set _ = props.set("href", this.getPageUrl(1));
 				}
 				
-				<li class={{ this.page == 1 ? "active" : "" }}>
+				<li class={{ this.page == 1 ? "active" : "" }} @key={{ 1 }}>
 					<a @event:onClick={{ void () => this.onClick(1) }} ...props>
 						1
 					</a>
@@ -92,7 +93,7 @@
 				
 				%if (page_start > 2)
 				{
-					<li>
+					<li @key="before">
 						...
 					</li>
 				}
@@ -101,11 +102,11 @@
 				{
 					%for (int p=page_start; p<=page_end; p++)
 					{
-						%if (this.is_href)
+						%if (this.pagination_name)
 						{
 							%set _ = props.set("href", this.getPageUrl(p));
 						}
-						<li class={{ this.page == p ? "active" : "" }}>
+						<li class={{ this.page == p ? "active" : "" }} @key={{ p }}>
 							<a @event:onClick={{ void () use (p) => this.onClick(p) }}
 								...props
 							>
@@ -117,18 +118,18 @@
 				
 				%if (page_end < this.pages - 1)
 				{
-					<li>
+					<li @key="after">
 						...
 					</li>
 				}
 				
 				%if (this.pages > 1)
 				{
-					%if (this.is_href)
+					%if (this.pagination_name)
 					{
 						%set _ = props.set("href", this.getPageUrl(this.pages));
 					}
-					<li class={{ this.page == this.pages ? "active" : "" }}>
+					<li class={{ this.page == this.pages ? "active" : "" }} @key={{ this.pages }}>
 						<a @event:onClick={{ void () => this.onClick(this.pages) }}
 							...props
 						>
@@ -147,8 +148,7 @@
 props int page = 1;
 props int pages = 1;
 props int delta = 5;
-props bool is_href = true;
-props string pagination_name = "page";
+props string pagination_name = "";
 
 
 /**
@@ -166,7 +166,7 @@ string getPageUrl(int page)
  */
 void onClick(int page)
 {
-	if (this.is_href) return;
+	if (this.pagination_name) return;
 	this.emit("page", page);
 }
 
