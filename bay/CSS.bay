@@ -91,6 +91,46 @@ a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
     overflow: hidden;
 	padding-right: 12px;
 }
+.ml-1{ margin-left: var(--widget-space); }
+.ml-2{ margin-left: calc(var(--widget-space) * 2); }
+.ml-3{ margin-left: calc(var(--widget-space) * 3); }
+.ml-4{ margin-left: calc(var(--widget-space) * 4); }
+.ml-5{ margin-left: calc(var(--widget-space) * 5); }
+.mr-1{ margin-right: var(--widget-space); }
+.mr-2{ margin-right: calc(var(--widget-space) * 2); }
+.mr-3{ margin-right: calc(var(--widget-space) * 3); }
+.mr-4{ margin-right: calc(var(--widget-space) * 4); }
+.mr-5{ margin-right: calc(var(--widget-space) * 5); }
+.mt-1{ margin-top: var(--widget-space); }
+.mt-2{ margin-top: calc(var(--widget-space) * 2); }
+.mt-3{ margin-top: calc(var(--widget-space) * 3); }
+.mt-4{ margin-top: calc(var(--widget-space) * 4); }
+.mt-5{ margin-top: calc(var(--widget-space) * 5); }
+.mb-1{ margin-bottom: var(--widget-space); }
+.mb-2{ margin-bottom: calc(var(--widget-space) * 2); }
+.mb-3{ margin-bottom: calc(var(--widget-space) * 3); }
+.mb-4{ margin-bottom: calc(var(--widget-space) * 4); }
+.mb-5{ margin-bottom: calc(var(--widget-space) * 5); }
+.pl-1{ padding-left: var(--widget-space); }
+.pl-2{ padding-left: calc(var(--widget-space) * 2); }
+.pl-3{ padding-left: calc(var(--widget-space) * 3); }
+.pl-4{ padding-left: calc(var(--widget-space) * 4); }
+.pl-5{ padding-left: calc(var(--widget-space) * 5); }
+.pr-1{ padding-right: var(--widget-space); }
+.pr-2{ padding-right: calc(var(--widget-space) * 2); }
+.pr-3{ padding-right: calc(var(--widget-space) * 3); }
+.pr-4{ padding-right: calc(var(--widget-space) * 4); }
+.pr-5{ padding-right: calc(var(--widget-space) * 5); }
+.pt-1{ padding-top: var(--widget-space); }
+.pt-2{ padding-top: calc(var(--widget-space) * 2); }
+.pt-3{ padding-top: calc(var(--widget-space) * 3); }
+.pt-4{ padding-top: calc(var(--widget-space) * 4); }
+.pt-5{ padding-top: calc(var(--widget-space) * 5); }
+.pb-1{ padding-bottom: var(--widget-space); }
+.pb-2{ padding-bottom: calc(var(--widget-space) * 2); }
+.pb-3{ padding-bottom: calc(var(--widget-space) * 3); }
+.pb-4{ padding-bottom: calc(var(--widget-space) * 4); }
+.pb-5{ padding-bottom: calc(var(--widget-space) * 5); }
 </style>
 
 
