@@ -20,7 +20,7 @@
 
 
 <style global="true">
-:root {
+:root{
 	--widget-font-family: 'Ubuntu', sans-serif;
 	--widget-font-size: 14px;
 	--widget-font-size-h1: 1.8em;
@@ -68,14 +68,14 @@
 	width: 100%;
 	padding: 0;
 	margin: 0;
+	*{ box-sizing: border-box; }
+	a{ text-decoration: inherit; color: var(--widget-color-link); cursor: pointer; }
+	a:hover, a:visited:hover{ text-decoration: underline; color: red; }
+	a:visited{ text-decoration: inherit; color: var(--widget-color-link); }
 }
-#core_ui_root *{box-sizing: border-box;}
-a { text-decoration: inherit; color: var(--widget-color-link); cursor: pointer; }
-a:hover, a:visited:hover { text-decoration: underline; color: red; }
-a:visited { text-decoration: inherit; color: var(--widget-color-link); }
-a.link { text-decoration: none; color: var(--widget-color-link); cursor: pointer; }
-a.link:hover, a.link:visited:hover { text-decoration: underline; color: red; }
-a.link:visited { text-decoration: none; color: var(--widget-color-link); }
+a.link{ text-decoration: none; color: var(--widget-color-link); cursor: pointer; }
+a.link:hover, a.link:visited:hover{ text-decoration: underline; color: red; }
+a.link:visited{ text-decoration: none; color: var(--widget-color-link); }
 a.nolink{
 	text-decoration: inherit;
 	color: inherit;
@@ -84,13 +84,21 @@ a.nolink:hover,a.nolink:visited,a.nolink:visited:hover{
 	text-decoration: inherit;
 	color: inherit;
 }
-.cursor{
-	cursor:pointer;
-}
-.scroll-lock {
-    overflow: hidden;
-	padding-right: 12px;
-}
+.cursor{ cursor:pointer; }
+.nowrap{ white-space: nowrap; }
+.bold{ font-weight:bold; }
+.nobold{ font-weight:normal; }
+.underline{ text-decoration: underline; }
+.center{ text-align: center; }
+.left{ text-align: left; }
+.right{ text-align: right; }
+.clear{ clear: both; }
+.float_left{ float:left; }
+.float_right{ float:right; }
+.block{ display: block; }
+.hidden{ display: none; }
+.inline-block{ display: inline-block; }
+.scroll-lock{ overflow: hidden;padding-right: 12px; }
 .ml-1{ margin-left: var(--widget-space); }
 .ml-2{ margin-left: calc(var(--widget-space) * 2); }
 .ml-3{ margin-left: calc(var(--widget-space) * 3); }
