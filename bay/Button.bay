@@ -62,6 +62,9 @@
 .widget_button--last{
 	border-right-width: var(--widget-border-width) !important;
 }
+.widget_button--stretch{
+	width: 100%;
+}
 </style>
 
 
@@ -70,7 +73,7 @@
 	%if (href == null)
 	{
 		<button type="button" class="widget_button" class={{ this.getStyles() }}
-			@event:onClick={{ this.onClick }} @ref="widget"
+			@event:click={{ this.onClick }} @ref="widget"
 		>
 			%if (this.model != null and this.model.content != null)
 			{
@@ -86,7 +89,7 @@
 	{
 		<a class="nolink" href={{ href }} @ref="widget">
 			<button type="button" class="widget_button" class={{ this.getStyles() }}
-				@event:onClick={{ this.onClick }}
+				@event:click={{ this.onClick }}
 			>
 				%if (this.model != null and this.model.content != null)
 				{
