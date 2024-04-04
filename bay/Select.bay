@@ -45,7 +45,7 @@
 
 <template name="render">
 	
-	<select name={{ this.name }} class="widget_select" @event:onChange={{ this.onChange }}>
+	<select name={{ this.name }} class="widget_select" @event:change={{ this.onChange }}>
 	
 	%set Vector options = this.getOptions();
 	%set Dict selected = {};

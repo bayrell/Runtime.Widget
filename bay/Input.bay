@@ -42,7 +42,8 @@
 	%set Map props = this.getProps();
 	<input type={{ this.type }} class="widget_input" name={{ this.name }}
 		value={{ this.value }}
-		@event:onChange={{ this.onChange }}
+		placeholder={{ this.placeholder }}
+		@event:change={{ this.onChange }}
 		...props
 	/>
 </template>
@@ -53,6 +54,7 @@
 props bool readonly = false;
 props string name = "";
 props string value = "";
+props string placeholder = "";
 props string type = "text";
 
 
