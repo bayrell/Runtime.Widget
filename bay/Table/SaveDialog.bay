@@ -16,33 +16,14 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
+<class name="Runtime.Widget.Table.SaveDialog"
+	extends="Runtime.Widget.Dialog.Dialog"
+>
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
-<style>
-</style>
-
-
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
+<template name="renderContent">
+	<div class='widget_dialog__content'>
+		%render this.renderWidget(this.model.form);
+	</div>
 </template>
-
-
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
 
 </class>

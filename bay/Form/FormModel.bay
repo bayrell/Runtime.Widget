@@ -1,0 +1,295 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Form;
+
+use Runtime.BaseObject;
+use Runtime.Serializer;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseModel;
+use Runtime.Web.Events;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.RenderListModel;
+use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Form.Form;
+use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.Styles;
+
+
+class FormModel extends BaseModel
+{
+	string action = "";
+	Events events = new Events;
+	CrudApiStorage storage = null;
+	string component = classof Form;
+	string widget_name = "form";
+	Vector<Map> fields = [];
+	Map<Vector> fields_error = {};
+	RowButtonsModel top_buttons, bottom_buttons;
+	RenderListModel render_list;
+	Styles styles = new Styles{ "prefix": "widget_form" };
+	bool show_result = true;
+	bool is_load_success = true;
+	
+	
+	/**
+	 * Setup widget params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("action")) this.action = params.get("action");
+		if (params.has("events")) this.events.setup(params.get("events"));
+		if (params.has("fields")) this.addFields(params.get("fields"));
+		if (params.has("storage")) this.storage = params.get("storage");
+		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		
+		/* Setup storage */
+		if (this.storage == null)
+		{
+			this.setDataStorage( this.createDataStorage() );
+		}
+	}
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget()
+	{
+		parent();
+		
+		/* Init widgets */
+		this.top_buttons = this.addWidget(
+			classof RowButtonsModel,
+			{
+				"widget_name": "top_buttons",
+				"styles": ["@widget_form__top_buttons"],
+			}
+		);
+		this.bottom_buttons = this.addWidget(
+			classof RowButtonsModel,
+			{
+				"widget_name": "bottom_buttons",
+				"styles": ["@widget_form__bottom_buttons"],
+			}
+		);
+		this.render_list = this.addWidget(classof RenderListModel);
+	}
+	
+	
+	/**
+	 * Set action
+	 */
+	void setAction(string action)
+	{
+		this.action = action;
+	}
+	
+	
+	/**
+	 * Create data storage
+	 */
+	BaseObject createDataStorage() => null;
+	
+	
+	/**
+	 * Set data provider
+	 */
+	void setDataStorage(CrudApiStorage storage)
+	{
+		this.storage = storage;
+	}
+	
+	
+	/**
+	 * Add field
+	 */
+	void addField(Map field)
+	{
+		this.fields.append(field);
+	}
+	
+	
+	/**
+	 * Add fields
+	 */
+	void addFields(Collection fields)
+	{
+		for (int i=0; i<fields.count(); i++)
+		{
+			this.addField(fields.get(i));
+		}
+	}
+	
+	
+	/**
+	 * Remove field
+	 */
+	void removeField(string field_name)
+	{
+		this.fields = this.fields.filter(
+			bool (Map field) use (field_name) => field.get("name") != field_name
+		);
+	}
+	
+	
+	/**
+	 * Returns field result
+	 */
+	Collection getFieldResult(string field_name)
+	{
+		if (this.fields_error.has(field_name)) return this.fields_error.get(field_name);
+		return [];
+	}
+	
+	
+	/**
+	 * Clear form
+	 */
+	void clear()
+	{
+		this.storage.clear();
+		this.fields_error = {};
+		for (int i=0; i<this.fields.count(); i++)
+		{
+			Dict field = this.fields.get(i);
+			string field_name = field.get("name");
+			var default_value = field.get("default", "");
+			this.storage.item.set(field_name, default_value);
+		}
+	}
+	
+	
+	/**
+	 * Field changed event
+	 */
+	void onFieldChange(string field_name, var value)
+	{
+		this.storage.item.set(field_name, value);
+	}
+	
+	
+	/**
+	 * Returns item value
+	 */
+	var getItemValue(Map item, string field_name) => item.get(field_name);
+	
+	
+	/**
+	 * Returns error message
+	 */
+	string getErrorMessage() => this.storage.error.message;
+	
+	
+	/**
+	 * Process frontend data
+	 */
+	void processFrontendData(Serializer serializer, Map data)
+	{
+		serializer.process(this, "action", data);
+		serializer.process(this, "storage", data);
+		serializer.process(this, "is_load_success", data);
+		parent(serializer, data);
+	}
+	
+	
+	/**
+	 * Set api result
+	 */
+	void setApiResult(ApiResult res, string action = "")
+	{
+		if (res == null) return;
+		if (action == "save")
+		{
+			if (res.data.has("fields"))
+			{
+				this.fields_error = res.data.get("fields");
+			}
+		}
+	}
+	
+	
+	/**
+	 * Load table data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		if (this.storage and this.storage.item_pk)
+		{
+			await this.storage.doItem();
+			
+			/* Set load success */
+			this.is_load_success = true;
+			if (this.storage.result.isError())
+			{
+				this.is_load_success = false;
+			}
+		}
+		await parent(container);
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	async void save()
+	{
+		if (not this.storage) return;
+		this.storage.result.setWaitMessage();
+		ApiResult res = await this.storage.doSave();
+		this.setApiResult(res, "save");
+		this.events.emit("save", [res]);
+	}
+	
+	
+	/**
+	 * Delete form
+	 */
+	async void delete()
+	{
+		if (not this.storage) return;
+		this.storage.result.setWaitMessage();
+		ApiResult res = await this.storage.doDelete();
+		this.setApiResult(res, "delete");
+		this.events.emit("delete", [res]);
+	}
+	
+	
+	/**
+	 * Get page title
+	 */
+	string getPageTitle(string action = "")
+	{
+		if (action == "add")
+		{
+			return "Add item";
+		}
+		if (action == "edit")
+		{
+			return "Edit item";
+		}
+		if (action == "delete")
+		{
+			return "Delete item";
+		}
+		return "";
+	}
+}

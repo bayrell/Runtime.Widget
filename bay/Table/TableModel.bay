@@ -1,0 +1,277 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Table;
+
+use Runtime.BaseObject;
+use Runtime.Callback;
+use Runtime.Serializer;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseModel;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.RenderListModel;
+use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.RowButtons;
+use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.Styles;
+use Runtime.Widget.Table.Table;
+
+
+class TableModel extends BaseModel
+{
+	CrudApiStorage storage = null;
+	string component = classof Table;
+	string widget_name = "table";
+	string pagination_name = "page";
+	int limit = 10;
+	int page = 1;
+	int pages = 0;
+	Vector<Map> fields = [];
+	Map pagination = {};
+	RowButtonsModel top_buttons, row_buttons;
+	RenderListModel render_list;
+	Styles styles = new Styles{ "prefix": "widget_table__table" };
+	
+	
+	/**
+	 * Setup widget params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("storage")) this.storage = params.get("storage");
+		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		
+		/* Setup storage */
+		if (this.storage == null)
+		{
+			this.setDataStorage( this.createDataStorage() );
+		}
+	}
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget()
+	{
+		parent();
+		
+		/* Init widgets */
+		this.top_buttons = this.addWidget(
+			classof RowButtonsModel,
+			{
+				"widget_name": "top_buttons",
+				"styles": ["@widget_table__top_buttons"]
+			}
+		)
+		this.row_buttons = this.addWidget(
+			classof RowButtonsModel,
+			{
+				"widget_name": "row_buttons",
+			}
+		);
+		this.render_list = this.addWidget(classof RenderListModel);
+		
+		/* Edit button */
+		this.row_buttons.addWidget(
+			classof ButtonModel,
+			{
+				"content": "Edit",
+				"widget_name": "edit_button",
+				"styles": [
+					"default",
+					"small",
+				]
+			}
+		);
+		
+		/* Delete button */
+		this.row_buttons.addWidget(
+			classof ButtonModel,
+			{
+				"content": "Delete",
+				"widget_name": "delete_button",
+				"styles": [
+					"danger",
+					"small",
+				],
+			}
+		);
+		
+		/* Set page */
+		if (this.pagination_name)
+		{
+			this.storage.setPage(this.layout.request_query.get(this.pagination_name, 1));
+		}
+		else
+		{
+			this.storage.setPage(1);
+		}
+	}
+	
+	
+	/**
+	 * Create data storage
+	 */
+	BaseObject createDataStorage() => null;
+	
+	
+	/**
+	 * Set data provider
+	 */
+	void setDataStorage(CrudApiStorage storage)
+	{
+		this.storage = storage;
+	}
+	
+	
+	/**
+	 * Set foreign key
+	 */
+	void setForeignKey(string foreign_key, var foreign_value)
+	{
+		this.storage.setForeignKey(foreign_key, foreign_value);
+		FormModel form = this.getWidget("form");
+		if (form)
+		{
+			form.storage.setForeignKey(foreign_key, foreign_value);
+		}
+	}
+	
+	
+	/**
+	 * Add field
+	 */
+	Map addField(Map field)
+	{
+		this.fields.append(field);
+		return field;
+	}
+	
+	
+	/**
+	 * Add fields
+	 */
+	void addFields(Collection fields)
+	{
+		for (int i=0; i<fields.count(); i++)
+		{
+			this.addField(fields.get(i));
+		}
+	}
+	
+	
+	/**
+	 * Remove field
+	 */
+	void removeField(string field_name)
+	{
+		this.fields = this.fields.filter(
+			bool (Map field) use (field_name) => field.get("name") != field_name
+		);
+	}
+	
+	
+	/**
+	 * Returns item by row number
+	 */
+	Dict getItemByRowNumber(int row_number) => this.storage.getItemByRowNumber(row_number);
+	
+	
+	/**
+	 * Returns item value
+	 */
+	var getItemValue(Map item, string field_name) => item.get(field_name);
+	
+	
+	/**
+	 * Process frontend data
+	 */
+	void processFrontendData(Serializer serializer, Map data)
+	{
+		serializer.process(this, "limit", data);
+		serializer.process(this, "page", data);
+		serializer.process(this, "pages", data);
+		serializer.process(this, "storage", data);
+		parent(serializer, data);
+	}
+	
+	
+	/**
+	 * Update page
+	 */
+	void updatePage()
+	{
+		this.limit = this.storage.limit;
+		this.page = this.storage.page;
+		this.pages = this.storage.pages;
+	}
+	
+	
+	/**
+	 * Load table data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		if (this.storage)
+		{
+			await this.storage.doSearch();
+			this.updatePage();
+		}
+		await parent(container);
+	}
+	
+	
+	/**
+	 * Refresh table
+	 */
+	async ApiResult refresh()
+	{
+		if (this.storage)
+		{
+			ApiResult res = await this.storage.doSearch();
+			this.updatePage();
+			return res;
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Row click
+	 */
+	async void onRowClick(int row_number)
+	{
+	}
+	
+	
+	/**
+	 * Change page
+	 */
+	async void onChangePage(string page)
+	{
+		this.storage.page = page;
+		await this.storage.doSearch();
+		this.updatePage();
+	}
+}

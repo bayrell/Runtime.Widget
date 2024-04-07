@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,35 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Widget.SelectLabel">
+namespace Runtime.Widget.Crud.Rules;
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
-<style>
-</style>
-
-
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
-</template>
+use Runtime.lib;
+use Runtime.BaseStruct;
+use Runtime.ORM.Cursor;
+use Runtime.ORM.Database;
+use Runtime.ORM.Query;
+use Runtime.Web.ApiResult;
+use Runtime.Widget.Crud.CrudApi;
+use Runtime.Widget.Crud.Rules.CrudRule;
 
 
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
-
-</class>
+struct Filter extends CrudRule
+{
+	string api_name = "";
+	string field_name = "";	
+}

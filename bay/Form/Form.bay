@@ -1,0 +1,123 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Form.Form">
+
+<use name="Runtime.Web.RenderListModel" />
+<use name="Runtime.Widget.Form.FormGroupFields" component="true" />
+<use name="Runtime.Widget.Form.FormModel" />
+<use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.RowButtons" component="true" />
+<use name="Runtime.Widget.WidgetResult" component="true" />
+
+
+<style>
+.widget_form__load_error{
+}
+.widget_form %(RowButtons)widget_form__top_buttons{
+	margin-bottom: calc(var(--widget-space) * 3);
+}
+.widget_form %(RowButtons)widget_form__bottom_buttons{
+	margin-top: var(--widget-space);
+	justify-content: center;
+}
+</style>
+
+
+<template name="renderTopButtons">
+	%if (this.model.top_buttons.count() > 0)
+	{
+		<RowButtons @model={{ this.model.top_buttons }} />
+	}
+</template>
+
+
+<template name="renderBottomButtons">
+	%if (this.model.bottom_buttons.count() > 0)
+	{
+		<RowButtons @model={{ this.model.bottom_buttons }} />
+	}
+</template>
+
+
+<template name="renderContent">
+	<FormGroupFields
+		fields={{ this.model.fields }}
+		@model={{ this.model }}
+	/>
+</template>
+
+
+<template name="renderResult">
+	%if (this.model.storage and this.model.show_result)
+	{
+		<WidgetResult @model={{ this.model.storage.result }} />
+	}
+</template>
+
+
+<template name="renderForm">
+	<form method="POST"
+		enctype="multipart/form-data" onsubmit="return false;"
+	>
+		%render this.renderContent();
+		%render this.renderBottomButtons();
+		%render this.renderResult();
+	</form>
+</template>
+
+
+<template name="renderWidgets">
+	%render this.renderWidget(this.model.getWidget("render_list"));
+</template>
+
+
+<template name="renderLoadError">
+	<div class="widget_form__load_error">
+		{{ this.model.storage.result.message }}
+	</div>
+</template>
+
+
+<template>
+	<div class="widget_form" class={{ this.getStyles() }}>
+		%render this.renderTopButtons();
+		%if (this.model.is_load_success)
+		{
+			%render this.renderForm();
+			%render this.renderWidgets();
+		}
+		%else
+		{
+			%render this.renderLoadError();
+		}
+	</div>
+</template>
+
+
+<script>
+
+/**
+ * Returns styles
+ */
+string getStyles() => this.model.styles.join(" ");
+
+</script>
+
+
+</class>

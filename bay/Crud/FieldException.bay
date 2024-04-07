@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,35 +14,22 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Widget.SelectLabel">
+namespace Runtime.Widget.Crud;
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
-<style>
-</style>
+use Runtime.rtl;
+use Runtime.Exceptions.AbstractException;
 
 
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
-</template>
-
-
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
-
-</class>
+class FieldException extends AbstractException
+{
+	void constructor(Object prev = null)
+	{
+		parent(
+			"Fields error",
+			rtl::ERROR_VALIDATION,
+			prev
+		);
+	}
+}

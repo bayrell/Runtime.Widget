@@ -1,0 +1,780 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.lib;
+use Runtime.BaseStruct;
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.ItemNotFound;
+use Runtime.ORM.Connection;
+use Runtime.ORM.Cursor;
+use Runtime.ORM.Provider;
+use Runtime.ORM.Query;
+use Runtime.ORM.QueryField;
+use Runtime.ORM.QueryFilter;
+use Runtime.ORM.QueryResult;
+use Runtime.ORM.Relation;
+use Runtime.ORM.Annotations.BaseType;
+use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Web.ApiResult;
+use Runtime.Web.BaseApi;
+use Runtime.Widget.Crud.FieldException;
+use Runtime.Widget.Crud.FieldResult;
+use Runtime.Widget.Crud.Rules.CrudRule;
+use Runtime.Widget.Crud.Rules.Filter;
+
+
+class CrudApi extends BaseApi
+{
+	string action = "";
+	ApiResult result = null;
+	Collection allowed_fields = null;
+	Connection connection = null;
+	QueryResult items = null;
+	Relation item = null;
+	int limit = 0;
+	int page = 0;
+	int pages = 0;
+	bool is_create = false;
+	
+	
+	/**
+	 * Constructor
+	 */
+	void constructor()
+	{
+		parent();
+		this.connection = this.getConnection();
+		this.result = new ApiResult;
+	}
+	
+	
+	/**
+	 * Returns api name
+	 */
+	pure string getApiName() => "";
+	
+	
+	/**
+	 * Returns table name
+	 */
+	pure string getTableName() => "";
+	
+	
+	/**
+	 * Returns database Connection
+	 */
+	Connection getConnection()
+	{
+		return Connection::getConnection();
+	}
+	
+	
+	/**
+	 * Returns if search
+	 */
+	bool isSearch()
+	{
+		if (this.action == "actionSearch") return true;
+		if (this.action == "actionSearchOne") return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Returns if save
+	 */
+	bool isSave()
+	{
+		if (this.action == "actionSave") return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Returns if create
+	 */
+	bool isCreate()
+	{
+		if (this.action == "actionSave" and this.is_create) return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Returns if create
+	 */
+	bool isUpdate()
+	{
+		if (this.action == "actionSave" and not this.is_create) return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Returns if delete
+	 */
+	bool isDelete()
+	{
+		if (this.action == "actionDelete") return true;
+		return false;
+	}
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Vector getItemFields() => [];
+	
+	
+	/**
+	 * Returns save fields
+	 */
+	Vector getSaveFields() => [];
+	
+	
+	/**
+	 * Returns query field
+	 */
+	bool getQueryField(string field_name)
+	{
+		string table_name = this.getTableName();
+		Provider provider = @.provider(classof Provider);
+		BaseType field = provider.getFieldType(table_name, field_name);
+		if (not field) return null;
+		return new QueryField(table_name, field_name);
+	}
+	
+	
+	/**
+	 * Returns allowed fields
+	 */
+	Collection getAllowedFields()
+	{
+		if (this.allowed_fields == null)
+		{
+			if (this.post_data.has("fields"))
+			{
+				Collection fields = this.post_data["fields"];
+				Collection item_fields = this.getItemFields();
+				Map item_fields_index = item_fields.transition(
+					list (string field_name, int index) => [index, field_name]
+				);
+				this.allowed_fields = fields.filter(
+					bool (string field_name) use (item_fields_index) =>
+						item_fields_index.has(field_name)
+				);
+			}
+			else
+			{
+				this.allowed_fields = this.getItemFields();
+			}
+		}
+		return this.allowed_fields;
+	}
+	
+	
+	/**
+	 * Allowed field
+	 */
+	bool hasAllowedField(string field_name)
+	{
+		Collection allowed_fields = this.getAllowedFields();
+		return allowed_fields.indexOf(field_name) != -1;
+	}
+	
+	
+	/**
+	 * Returns rules
+	 */
+	Vector<CrudRule> getRules() =>
+	[
+	];
+	
+	
+	/**
+	 * Returns default limit
+	 */
+	int getDefaultLimit() => 10;
+	
+	
+	/**
+	 * Returns max limit
+	 */
+	int getMaxLimit() => 100;
+		
+	
+	/**
+	 * Returns page limit
+	 */
+	list getPageLimit()
+	{
+		int page = (int)(this.post_data["page"] |> default int 1);
+		int limit = (int)(this.post_data["limit"] |> default int -1);
+		int limit_default = this.getDefaultLimit();
+		int limit_max = this.getMaxLimit();
+		
+		if (page <= 1) page = 1;
+		if (limit < 0 and limit_max != -1) limit = limit_default;
+		if (limit > limit_max and limit_max != -1) limit = limit_max;
+		
+		return [page, limit];
+	}
+	
+	
+	/**
+	 * Convert item
+	 */
+	Map convertItem(Collection fields, Relation item)
+	{
+		return item.intersect(fields);
+	}
+	
+	
+	/**
+	 * Add field error
+	 */
+	void addFieldError(string field_name, string error_message)
+	{
+		FieldResult fields = this.result.data.get("fields");
+		fields.addFieldError(field_name, error_message);
+	}
+	
+	
+	/* --------------------------- Init --------------------------- */
+	
+	async void onActionBefore()
+	{
+		this.table_name = this.getTableName();
+		this.annotations = Relation::getAnotations(this.table_name);
+	}
+	
+	
+	/* -------------------------- Search -------------------------- */
+	
+	
+	/**
+	 * Before search
+	 */
+	async void onSearchBefore()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSearchBefore(this);
+		}
+	}
+	
+	
+	/**
+	 * After search
+	 */
+	async void onSearchAfter()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSearchAfter(this);
+		}
+	}
+	
+	
+	/**
+	 * Returns filter
+	 */
+	Vector buildFilter()
+	{
+		Vector<string> filter_fields = this.getRules()
+			.filter( lib::isInstance(classof Filter) )
+		;
+		
+		Vector result = new Vector();
+		Vector filter_post = this.post_data["filter"];
+		if (filter_post == null) return result;
+		if (not (filter_post instanceof Collection)) return result;
+		
+		for (int i=0; i<filter_post.count(); i++)
+		{
+			Vector filter_item = filter_post[i];
+			if (filter_item instanceof Collection and filter_item.count() == 3)
+			{
+				continue;
+			}
+			
+			QueryFilter filter = new QueryFilter(
+				filter_item[0],
+				filter_item[1],
+				filter_item[2]
+			);
+			
+			if (not rtl::isString(filter.key)) continue;
+			if (not rtl::isString(filter.op)) continue;
+			if (not rtl::isString(filter.value) and not rtl::isInt(filter.value)) continue;
+			if (not QueryFilter::validateOp(filter.op)) continue;
+			
+			Filter rule = filter_fields.findItem(
+				lib::equalAttr("api_name", filter.key)
+			);
+			
+			if (not rule) continue;
+			
+			result.append(filter);
+		}
+		
+		return result;
+	}
+	
+	
+	/**
+	 * Build search query
+	 */
+	async void buildSearchQuery(Query q)
+	{
+	}
+	
+	
+	/**
+	 * Search items
+	 */
+	async void searchItems()
+	{
+		list res = this.getPageLimit();
+		this.limit = res[1];
+		this.page = res[0];
+		this.pages = 0;
+		
+		if (this.action == "actionSearchOne")
+		{
+			this.limit = 1;
+		}
+		
+		/* Search before event */
+		await this.onSearchBefore();
+		
+		/* Get table name */
+		string table_name = this.getTableName();
+		
+		/* Get filter */
+		Vector filter = this.buildFilter();
+		
+		/* Build query */
+		Query q = (new Query)
+			.select(table_name)
+			.setFilter(filter)
+			.limit(this.limit)
+			.page(this.page - 1)
+		;
+		
+		/* Add fields */
+		Collection fields = this.getAllowedFields();
+		for (int i=0; i<fields.count(); i++)
+		{
+			string field_name = fields.get(i);
+			QueryField field = this.getQueryField(field_name);
+			if (field) q.addField(field);
+		}
+		
+		/* Setup calc found rows */
+		q.calcFoundRows(false);
+		if (this.action == "actionSearch" and this.limit > 0)
+		{
+			q.calcFoundRows(true);
+		}
+		
+		/* Set from post data */
+		bool found_rows = this.post_data.get("found_rows", true);
+		if (q._calc_found_rows and not found_rows) q.calcFoundRows(false);
+		
+		/* Build search query */
+		await this.buildSearchQuery(q);
+		
+		/* Get cursor */
+		Cursor c = await this.connection.execute(q);
+		
+		/* Fetch all */
+		this.items = await c.fetchAll();
+		this.page = c.getPage() + 1;
+		this.pages = c.getPages();
+		
+		/* Close cursor */
+		await c.close();
+		
+		/* Search after event */
+		await this.onSearchAfter();
+	}
+	
+	
+	@ApiMethod
+	async void actionSearch()
+	{
+		/* Search items */
+		await this.searchItems();
+		
+		/* Transform items */
+		Collection fields = this.getAllowedFields();
+		Collection items = this.items.map(
+			Dict (Relation item) use (fields) => this.convertItem(fields, item)
+		);
+		
+		this.result.success({
+			"data": {
+				"items": Vector::from(items),
+				"page": this.page,
+				"pages": this.pages,
+			}
+		});
+	}
+	
+	
+	@ApiMethod
+	async void actionSearchOne()
+	{
+		/* Search items */
+		await this.searchItems();
+		
+		/* Transform items */
+		Collection fields = this.getAllowedFields();
+		Collection items = this.items.map(
+			Dict (Relation item) use (fields) => this.convertItem(fields, item)
+		);
+		
+		this.result.success({
+			"data": {
+				"items": Vector::from(items),
+			}
+		});
+	}
+	
+	
+	/* ------------------------- Get Item ------------------------- */
+	
+	
+	@ApiMethod
+	async void actionItem()
+	{
+		Map pk = this.post_data["pk"];
+		
+		/* Find item */
+		await this.findItem(pk);
+		if (this.item == null)
+		{
+			throw new ApiError(new ItemNotFound());
+		}
+		
+		/* Search after event */
+		await this.onSearchAfter();
+		
+		/* Set item */
+		this.item = this.items.get(0);
+		
+		/* Convert item */
+		Collection fields = this.getAllowedFields();
+		Map model = this.convertItem(fields, this.item);
+		Map pk = this.item.getPrimaryKey();
+		
+		this.result.success({
+			"data": {
+				"pk": pk,
+				"item": model,
+			}
+		});
+	}
+	
+	
+	/* --------------------------- Save --------------------------- */
+	
+	
+	/**
+	 * Before save
+	 */
+	async void onSaveBefore()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSaveBefore(this);
+		}
+	}
+	
+	
+	/**
+	 * After save
+	 */
+	async void onSaveAfter()
+	{
+		/* Refresh item */
+		await this.refresh();
+		
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSaveAfter(this);
+		}
+	}
+	
+	
+	/**
+	 * Find item by primary key
+	 */
+	async void findItem(Dict pk)
+	{
+		if (pk == null) return;
+		
+		string table_name = this.getTableName();
+		
+		/* Get primary key */
+		Collection filter = Relation::getPrimaryFilter(table_name, pk);
+		
+		/* Build query */
+		Query q = (new Query)
+			.select(table_name)
+			.setFilter(filter)
+		;
+		
+		/* Add fields */
+		Collection fields = this.getAllowedFields();
+		for (int i=0; i<fields.count(); i++)
+		{
+			string field_name = fields.get(i);
+			QueryField field = this.getQueryField(field_name);
+			if (field) q.addField(field);
+		}
+		
+		/* Build search query */
+		await this.buildSearchQuery(q);
+		q.limit(1);
+		
+		/* Find relation */
+		this.item = await this.connection.findRelation(q);
+		this.items = [this.item];
+	}
+	
+	
+	/**
+	 * Create new relation
+	 */
+	async Relation newRelation()
+	{
+		string table_name = this.getTableName();
+		return new Relation(table_name);
+	}
+	
+	
+	/**
+	 * Validate item
+	 */
+	async Map validateItem(Map update_data)
+	{
+		/* Call rules */
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			update_data = await rule.validateItem(this, update_data);
+		}
+		
+		/* Intersect */
+		Vector fields = this.getSaveFields();
+		update_data = update_data.intersect(fields);
+		
+		/* Check fields error */
+		FieldResult fields = this.result.data.get("fields");
+		if (not fields.isSuccess())
+		{
+			throw new ApiError( new FieldException() );
+		}
+		
+		return update_data;
+	}
+	
+	
+	/**
+	 * Save item to database
+	 */
+	async void save()
+	{
+		await this.item.save(this.connection);
+	}
+	
+	
+	/**
+	 * Refresh item from database
+	 */
+	async void refresh()
+	{
+		Map pk = this.item.getPrimaryKey();
+		await this.findItem(pk);
+	}
+	
+	
+	/**
+	 * Update item
+	 */
+	async void updateItem(Map update_data)
+	{
+		/* Create field result */
+		this.result.data.set("fields", new FieldResult);
+		
+		/* Validate item */
+		update_data = await this.validateItem(update_data);
+		
+		/* Update data */
+		this.item.updateData(update_data);
+		
+		/* Save before */
+		await this.onSaveBefore();
+		
+		/* Check fields error */
+		FieldResult fields = this.result.data.get("fields");
+		if (not fields.isSuccess())
+		{
+			throw new ApiError( new FieldException() );
+		}
+		
+		/* Save item */
+		await this.save();
+		
+		/* Save after */
+		await this.onSaveAfter();
+	}
+	
+	
+	@ApiMethod
+	async void actionSave()
+	{
+		Map pk = this.post_data["pk"];
+		Map update_data = this.post_data["item"];
+		
+		/* Find item */
+		if (pk != null)
+		{
+			this.is_create = false;
+			await this.findItem(pk);
+		}
+		else
+		{
+			this.is_create = true;
+			this.item = await this.newRelation();
+		}
+		
+		/* Check if item is exists */
+		if (this.item == null)
+		{
+			throw new ApiError(new ItemNotFound());
+		}
+		
+		/* Update item */
+		await this.updateItem(update_data);
+		
+		/* Convert item */
+		Collection fields = this.getAllowedFields();
+		Map model = this.convertItem(fields, this.item);
+		Map pk = this.item.getPrimaryKey();
+		
+		this.result.success({
+			"data": {
+				"pk": pk,
+				"item": model,
+			}
+		});
+	}
+	
+	
+	/* -------------------------- Delete -------------------------- */
+	
+	
+	/**
+	 * Before delete
+	 */
+	async void onDeleteBefore()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onDeleteBefore(this);
+		}
+	}
+	
+	
+	/**
+	 * After delete
+	 */
+	async void onDeleteAfter()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onDeleteAfter(this);
+		}
+	}
+	
+	
+	/**
+	 * Delete item from database
+	 */
+	async void delete()
+	{
+		await this.item.delete(this.connection);
+	}
+	
+	
+	/**
+	 * Delete item
+	 */
+	async void deleteItem()
+	{
+		/* Delete before */
+		await this.onDeleteBefore();
+		
+		/* Delete item */
+		await this.delete();
+		
+		/* Delete after */
+		await this.onDeleteAfter();
+	}
+	
+	
+	@ApiMethod
+	async void actionDelete()
+	{		
+		Map pk = this.post_data["pk"];
+		
+		/* Find item */
+		await this.findItem(pk);
+		if (this.item == null)
+		{
+			throw new ApiError(new ItemNotFound());
+		}
+		
+		/* Delete item */
+		await this.deleteItem();
+		
+		this.result.success({
+			"data": {
+				"pk": pk,
+			}
+		});
+	}
+}

@@ -16,33 +16,50 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
+<class name="Runtime.Widget.Form.SaveButton">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.WidgetResult" component="true" />
 
 
 <style>
+.save_button{
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+.save_button %(WidgetResult)widget_result{
+	margin-top: 0;
+}
 </style>
 
 
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
+<template name="render">
+	%if (this.model.show_result)
+	{
+		<div class="save_button">
+			<Button @model={{ this.model }} @event:onClick={{ this.onSave }}>Save</Button>
+			<WidgetResult @model={{ this.model.form.storage.result }} />
+		</div>
+	}
+	%else
+	{
+		<Button @model={{ this.model }} @event:onClick={{ this.onSave }}>Save</Button>
+	}
 </template>
 
 
 <script>
 
-props int value = "";
-props Vector options = [];
+/**
+ * Save form
+ */
+async void onSave()
+{
+	await this.model.save();
+}
 
 </script>
+
 
 </class>

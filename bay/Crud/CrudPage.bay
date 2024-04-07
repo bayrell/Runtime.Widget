@@ -16,33 +16,19 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
+<class name="Runtime.Widget.Crud.CrudPage">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
+<use name="Runtime.Web.RenderListModel" />
+<use name="Runtime.Widget.Button" />
+<use name="Runtime.Widget.Crud.CrudPageModel" />
 
 <style>
 </style>
 
-
 <template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
+	<div class="crud_page">
+		%render this.renderWidget(this.model.render_list);
+	</div>
 </template>
-
-
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
 
 </class>

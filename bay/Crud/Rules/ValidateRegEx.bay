@@ -1,4 +1,4 @@
-<!--
+/*!
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,35 +14,39 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
--->
+ */
 
-<class name="Runtime.Widget.SelectLabel">
+namespace Runtime.Widget.Crud.Rules;
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
-<style>
-</style>
+use Runtime.re;
+use Runtime.BaseStruct;
+use Runtime.Widget.Crud.CrudApi;
+use Runtime.Widget.Crud.Rules.ValidationRule;
 
 
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
-</template>
-
-
-<script>
-
-props int value = "";
-props Vector options = [];
-
-</script>
-
-</class>
+struct ValidateRegEx extends ValidationRule
+{
+	string name = "";
+	string match = "";
+	string message = "";
+	
+	
+	/**
+	 * Validate item
+	 */
+	async Dict validateItem(CrudApi api, Dict update_data)
+	{
+		var value = update_data[this.name];
+		bool is_match = re::match(this.match, value);
+		
+		if (not is_match)
+		{
+			api.field_result.addFieldError(
+				this.name,
+				this.message
+			);
+		}
+		
+		return update_data;
+	}
+}

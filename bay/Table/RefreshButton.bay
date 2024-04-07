@@ -16,33 +16,43 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
+<class name="Runtime.Widget.Table.RefreshButton">
 
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.WidgetResult" component="true" />
 
 
 <style>
+.refresh_button{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.refresh_button %(WidgetResult)widget_result{
+    margin-top: 0;
+}
 </style>
 
 
-<template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("value") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("label") : this.value }}
-	</span>
+<template name="render">
+    <div class="refresh_button">
+        <Button @model={{ this.model }} @event:onClick={{ this.onRefresh }}>Refresh</Button>
+        <WidgetResult @model={{ this.model.result }} />
+    </div>
 </template>
 
 
 <script>
 
-props int value = "";
-props Vector options = [];
+/**
+ * Refresh item
+ */
+async void onRefresh()
+{
+    await this.model.refresh();
+}
 
 </script>
+
 
 </class>

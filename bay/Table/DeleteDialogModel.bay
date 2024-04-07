@@ -1,0 +1,144 @@
+/*!
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Table;
+
+use Runtime.BaseObject;
+use Runtime.Callback;
+use Runtime.Serializer;
+use Runtime.Web.BaseModel;
+use Runtime.Widget.Button;
+use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Dialog.DialogModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.DeleteDialog;
+use Runtime.Widget.Table.TableModel;
+
+
+class DeleteDialogModel extends DialogModel
+{
+	string widget_name = "delete_dialog";
+	string component = classof DeleteDialog;
+	FormModel form;
+	TableModel table;
+	
+	
+	/**
+	 * Setup widget params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("parent_widget")) this.table = params.get("parent_widget");
+		if (params.has("table")) this.table = params.get("table");
+		if (params.has("form")) this.form = params.get("form");
+	}
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget()
+	{
+		parent();
+		
+		/* Setup dialog */
+		this.title = "Delete item";
+		this.buttons.styles.add("align-end");
+		
+		/* Setup close buttons */
+		ButtonModel close_button = this.buttons.addWidget(
+			classof ButtonModel,
+			{
+				"content": "Cancel",
+				"widget_name": "cancel_button",
+				"styles": [
+					"gray"
+				],
+				"events": {
+					"onClick": new Callback(this, "onCloseButtonClick"),
+				},
+			}
+		);
+		
+		/* Setup confirm button */
+		ButtonModel confirm_button = this.buttons.addWidget(
+			classof ButtonModel,
+			{
+				"content": "Delete",
+				"widget_name": "confirm_button",
+				"styles": [
+					"danger"
+				],
+				"events": {
+					"onClick": new Callback(this, "onConfirmButtonClick"),
+				},
+			}
+		);
+	}
+	
+	
+	/**
+	 * On click
+	 */
+	async void onClick(Dict data = null)
+	{
+		int row_number = data.get("row_number");
+		
+		/* Clear form */
+		this.form.clear();
+		
+		/* Set item */
+		Dict item = this.table.getItemByRowNumber(row_number);
+		item = Serializer::copy(item);
+		this.form.storage.setItem(item);
+		
+		/* Set title */
+		this.title = this.form.getPageTitle("delete");
+		this.content = "Do you want to delete item ?";
+		this.form.setAction("delete");
+		
+		/* Show dialog */
+		this.show();
+	}
+	
+	
+	/**
+	 * On close button click
+	 */
+	void onCloseButtonClick()
+	{
+		this.hide();
+	}
+	
+	
+	/**
+	 * On confirm button click
+	 */
+	async void onConfirmButtonClick()
+	{
+		await this.form.delete();
+		if (this.form.storage.result.isSuccess())
+		{
+			this.hide();
+			await this.table.refresh();
+		}
+	}
+}
