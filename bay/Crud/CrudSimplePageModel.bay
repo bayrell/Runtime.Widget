@@ -20,12 +20,12 @@ namespace Runtime.Widget.Crud;
 
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
-use Runtime.Web.BaseModel;
+use Runtime.Web.BasePageModel;
 use Runtime.Web.BaseRoute;
 use Runtime.Web.RenderContainer;
 
 
-class CrudSimplePageModel extends BaseModel
+class CrudSimplePageModel extends BasePageModel
 {
 	static const string ACTION_CATALOG = "catalog";
 	static const string ACTION_ITEM = "item";
@@ -223,23 +223,5 @@ class CrudSimplePageModel extends BaseModel
 		serializer.process(this, "page", data);
 		serializer.process(this, "pages", data);
 		parent(serializer, data);
-	}
-	
-	
-	/**
-	 * Build title
-	 */
-	void buildTitle(RenderContainer container)
-	{
-	}
-	
-	
-	/**
-	 * Route After
-	 */
-	async void onRouteAfter(RenderContainer container)
-	{
-		this.buildTitle(container);
-		await parent(container);
 	}
 }

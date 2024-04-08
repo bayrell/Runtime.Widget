@@ -20,13 +20,14 @@ namespace Runtime.Widget.Crud;
 
 use Runtime.lib;
 use Runtime.Serializer;
-use Runtime.Web.BaseModel;
+use Runtime.Web.BasePageModel;
 use Runtime.Web.LayoutModel;
+use Runtime.Web.RenderContainer;
 use Runtime.Web.RenderListModel;
 use Runtime.Widget.Crud.CrudPage;
 
 
-class CrudPageModel extends BaseModel
+class CrudPageModel extends BasePageModel
 {
 	string action = "";
 	string component = classof CrudPage;
