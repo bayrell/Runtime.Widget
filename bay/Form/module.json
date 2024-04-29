@@ -1,0 +1,21 @@
+{
+	"name": "Runtime.Widget.Form",
+	"assets":
+	[
+		"Form.bay",
+		"FormGroupFields.bay",
+		"FormModel.bay",
+		"SaveButton.bay",
+		"SaveButtonModel.bay"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Form",
+		"es6": "./../../es6/Form"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}

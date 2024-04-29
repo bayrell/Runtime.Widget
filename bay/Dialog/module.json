@@ -1,0 +1,18 @@
+{
+	"name": "Runtime.Widget.Dialog",
+	"assets":
+	[
+		"Dialog.bay",
+		"DialogModel.bay"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Dialog",
+		"es6": "./../../es6/Dialog"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}

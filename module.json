@@ -23,35 +23,34 @@
 		"TextArea.bay",
 		"WidgetResult.bay",
 		"WidgetResultModel.bay",
-		"ContextMenu/ContextMenu.bay",
-		"ContextMenu/ContextMenuModel.bay",
-		"Crud/CrudApiStorage.bay",
-		"Crud/CrudPage.bay",
-		"Crud/CrudPageModel.bay",
-		"Crud/CrudSimplePageModel.bay",
-		"Crud/CrudProxyStorage.bay",
-		"Crud/Dictionary.bay",
-		"Crud/FieldException.bay",
-		"Dialog/Dialog.bay",
-		"Dialog/DialogModel.bay",
-		"Form/Form.bay",
-		"Form/FormGroupFields.bay",
-		"Form/FormModel.bay",
-		"Form/SaveButton.bay",
-		"Form/SaveButtonModel.bay",
-		"Tab/Tab.bay",
-		"Tab/Tabs.bay",
-		"Tab/TabsModel.bay",
-		"Table/DeleteDialog.bay",
-		"Table/DeleteDialogModel.bay",
-		"Table/RefreshButton.bay",
-		"Table/RefreshButtonModel.bay",
-		"Table/SaveDialog.bay",
-		"Table/SaveDialogModel.bay",
-		"Table/Table.bay",
-		"Table/TableModel.bay",
-		"Table/TableDialogModel.bay",
 		"ModuleDescription.bay"
+	],
+	"modules":
+	[
+		{
+			"src": "bay/ContextMenu",
+			"type": "module"
+		},
+		{
+			"src": "bay/Crud",
+			"type": "module"
+		},
+		{
+			"src": "bay/Dialog",
+			"type": "module"
+		},
+		{
+			"src": "bay/Form",
+			"type": "module"
+		},
+		{
+			"src": "bay/Tab",
+			"type": "module"
+		},
+		{
+			"src": "bay/Table",
+			"type": "module"
+		}
 	],
 	"src": "./bay",
 	"dest":
@@ -64,5 +63,14 @@
 		"\\.bay$",
 		"\\.php$",
 		"\\.js$"
+	],
+	"exclude":
+	[
+		"ContextMenu/",
+		"Crud/",
+		"Dialog/",
+		"Form/",
+		"Tab/",
+		"Table/"
 	]
 }
