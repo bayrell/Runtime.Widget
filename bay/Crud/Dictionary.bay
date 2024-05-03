@@ -23,6 +23,7 @@ use Runtime.BaseStruct;
 use Runtime.Serializer;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Events;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.WidgetResultModel;
 use Runtime.Widget.Crud.ApiResult;
 use Runtime.Widget.Crud.CrudApiStorage;
@@ -91,9 +92,9 @@ class Dictionary extends BaseModel
 	/**
 	 * Load table data
 	 */
-	async void loadData()
+	async void loadData(RenderContainer container)
 	{
-		await parent();
+		await parent(container);
 		this.storage.setLimit(-1);
 		ApiResult res = await this.storage.doSearch();
 		this.setApiResult(res, "search");
