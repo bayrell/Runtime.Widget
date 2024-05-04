@@ -119,15 +119,6 @@ class Dictionary extends BaseModel
 	 */
 	void onValueChange(string value, var data = null)
 	{
-		this.events.emmit("onValueChange", [value, data]);
-	}
-	
-	
-	/**
-	 * On changed
-	 */
-	void onValueChanged(string value, var data = null)
-	{
-		this.events.emmit("onValueChanged", [value, data]);
+		this.events.emit("onValueChange", [value, data]);
 	}
 }

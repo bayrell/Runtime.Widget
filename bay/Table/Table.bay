@@ -25,6 +25,10 @@
 
 
 <style>
+.widget_table__title{
+	font-size: 18px;
+	margin-bottom: var(--widget-space);
+}
 .widget_table__table{
 	width: auto;
 	border-collapse: collapse;
@@ -174,6 +178,14 @@
 </template>
 
 
+<template name="renderTitle">
+	%if (this.model.title != "")
+	{
+		<div class="widget_table__title">{{ this.model.title }}</div>
+	}
+</template>
+
+
 <template name="renderTopButtons">
 	%if (this.model.top_buttons.count() > 0)
 	{
@@ -199,6 +211,7 @@
 
 <template>
 	<div class="widget_table">
+		%render this.renderTitle();
 		%render this.renderTopButtons();
 		%render this.renderTable();
 		%render this.renderWidgets();

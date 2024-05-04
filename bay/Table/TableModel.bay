@@ -40,6 +40,7 @@ class TableModel extends BaseModel
 	string component = classof Table;
 	string widget_name = "table";
 	string pagination_name = "page";
+	string title = "";
 	int limit = 10;
 	int page = 1;
 	int pages = 0;
@@ -60,6 +61,7 @@ class TableModel extends BaseModel
 		if (params == null) return;
 		if (params.has("storage")) this.storage = params.get("storage");
 		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		if (params.has("title")) this.title = params.get("title");
 		
 		/* Setup storage */
 		if (this.storage == null)
