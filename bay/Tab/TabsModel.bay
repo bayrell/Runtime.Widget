@@ -32,18 +32,6 @@ class TabsModel extends BaseModel
 	
 	
 	/**
-	 * Create model
-	 */
-	void constructor(Dict params = null)
-	{
-		parent(params);
-		
-		/* Add component */
-		this.layout.addComponent(classof Tabs);
-	}
-	
-	
-	/**
 	 * Setup widget params
 	 */
 	void setup(Dict params)

@@ -59,6 +59,7 @@ class TableModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("pagination_name")) this.pagination_name = params.get("pagination_name");
 		if (params.has("storage")) this.storage = params.get("storage");
 		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		if (params.has("title")) this.title = params.get("title");
@@ -66,7 +67,7 @@ class TableModel extends BaseModel
 		/* Setup storage */
 		if (this.storage == null)
 		{
-			this.setDataStorage( this.createDataStorage() );
+			this.setDataStorage( this.createDataStorage(params) );
 		}
 	}
 	
@@ -74,9 +75,9 @@ class TableModel extends BaseModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		/* Init widgets */
 		this.top_buttons = this.addWidget(
@@ -129,6 +130,14 @@ class TableModel extends BaseModel
 		{
 			this.storage.setPage(1);
 		}
+		
+		/* Setup foreign key */
+		if (params.has("foreign_key"))
+		{
+			string foreign_key = params.get("foreign_key").keys().get(0);
+			var foreign_value = params.get("foreign_key").get(foreign_key);
+			this.setForeignKey(foreign_key, foreign_value);
+		}
 	}
 	
 	
@@ -152,7 +161,13 @@ class TableModel extends BaseModel
 	 */
 	void setForeignKey(string foreign_key, var foreign_value)
 	{
-		this.storage.setForeignKey(foreign_key, foreign_value);
+		/* Setup storage */
+		if (this.storage)
+		{
+			this.storage.setForeignKey(foreign_key, foreign_value);
+		}
+		
+		/* Setup form */
 		FormModel form = this.getWidget("form");
 		if (form)
 		{

@@ -32,32 +32,37 @@ use Runtime.Widget.Table.TableModel;
 
 
 class TableDialogModel extends TableModel
-{	
+{
+	FormModel form;
+	
+	
 	/**
-	 * Init table widgets
+	 * Create form
 	 */
-	void initWidget()
-	{
-		parent();
-		
-		/* Create form */
-		FormModel form_model = this.getWidget("form");
-		if (form_model == null)
+	FormModel createForm() => this.addWidget(
+		classof FormModel,
 		{
-			form_model = this.addWidget(
-				classof FormModel,
-				{
-					"widget_name": "form",
-				}
-			);
+			"storage": this.createDataStorage(),
 		}
+	);
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget(Dict params)
+	{
+		/* Create form */
+		this.form = this.createForm();
+		
+		parent(params);
 		
 		/* Create save wiget */
 		this.render_list.addItem(
 			this.addWidget(
 				classof SaveDialogModel,
 				{
-					"form": form_model,
+					"form": this.form,
 					"widget_name": "save_dialog",
 				}
 			)
@@ -68,7 +73,7 @@ class TableDialogModel extends TableModel
 			this.addWidget(
 				classof DeleteDialogModel,
 				{
-					"form": form_model,
+					"form": this.form,
 					"widget_name": "delete_dialog",
 				}
 			)

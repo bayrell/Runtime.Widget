@@ -34,6 +34,7 @@ class SaveDialogModel extends DialogModel
 {
 	string widget_name = "save_dialog";
 	string component = classof SaveDialog;
+	FormModel form;
 	TableModel table;
 	
 	
@@ -54,9 +55,9 @@ class SaveDialogModel extends DialogModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		/* Setup dialog */
 		this.title = "Add item";

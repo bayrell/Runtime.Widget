@@ -50,9 +50,9 @@ struct Unique extends CrudRule
 	 */
 	async void onSaveBefore(CrudApi api)
 	{
-		Query q = new Query
-			|> .select(api::getTableName())
-			|> .addRawField("count(1) as c")
+		Query q = new Query()
+			.select(api::getTableName())
+			.addRawField("count(1) as c")
 		;
 		
 		if (this.keys)
@@ -65,7 +65,7 @@ struct Unique extends CrudRule
 			}
 		}
 		
-		if (api.item != null)
+		if (api.item != null and not api.item.isNew())
 		{
 			Collection filter = Relation::getPrimaryFilter(
 				api::getTableName(), api.item.toMap(), true

@@ -40,17 +40,16 @@ class Dictionary extends BaseModel
 	
 	
 	/**
-	 * Constructor
+	 * Setup widget params
 	 */
-	void constructor(Dict params = null)
+	void setup(Dict params)
 	{
 		parent(params);
-		if (params)
-		{
-			if (params.has("storage")) this.storage = params.get("storage");
-			if (params.has("filter")) this.filter = params.get("filter");
-			if (params.has("transform")) this.transform = params.get("transform");
-		}
+		
+		if (params == null) return;
+		if (params.has("storage")) this.storage = params.get("storage");
+		if (params.has("filter")) this.filter = params.get("filter");
+		if (params.has("transform")) this.transform = params.get("transform");
 	}
 	
 	

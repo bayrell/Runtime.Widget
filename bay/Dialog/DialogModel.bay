@@ -53,9 +53,9 @@ class DialogModel extends BaseModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget()
+	void initWidget(Dict params)
 	{
-		parent();
+		parent(params);
 		
 		this.buttons = this.addWidget(
 			classof RowButtonsModel,
