@@ -95,7 +95,6 @@
 .clear{ clear: both; }
 .float_left{ float:left; }
 .float_right{ float:right; }
-.block{ display: block; }
 .hidden{ display: none; }
 .inline-block{ display: inline-block; }
 .scroll-lock{ overflow: hidden;padding-right: 12px; }

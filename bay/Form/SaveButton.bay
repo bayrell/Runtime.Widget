@@ -38,13 +38,21 @@
 	%if (this.model.show_result)
 	{
 		<div class="save_button">
-			<Button @model={{ this.model }} @event:onClick={{ this.onSave }}>Save</Button>
+			<Button
+				render_list={{ this.render_list }}
+				@model={{ this.model }}
+				@event:onClick={{ this.onSave }}
+			>Save</Button>
 			<WidgetResult @model={{ this.model.form.storage.result }} />
 		</div>
 	}
 	%else
 	{
-		<Button @model={{ this.model }} @event:onClick={{ this.onSave }}>Save</Button>
+		<Button
+			render_list={{ this.render_list }}
+			@model={{ this.model }}
+			@event:onClick={{ this.onSave }}
+		>Save</Button>
 	}
 </template>
 

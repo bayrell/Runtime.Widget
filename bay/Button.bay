@@ -59,9 +59,6 @@
 	background-color: var(--widget-color-success);
 	border-color: var(--widget-color-success);
 }
-.widget_button--last{
-	border-right-width: var(--widget-border-width) !important;
-}
 .widget_button--stretch{
 	width: 100%;
 }
@@ -72,8 +69,12 @@
 	%set string href = this.getHref();
 	%if (href == null)
 	{
-		<button type={{ this.type }} class="widget_button" class={{ this.getStyles() }}
-			@event:click={{ this.onClick }} @ref="widget"
+		<button type={{ this.type }}
+			class="widget_button"
+			class={{ this.getStyles() }}
+			class={{ this.renderListClass() }}
+			@event:click={{ this.onClick }}
+			@ref="widget"
 		>
 			%if (this.model != null and this.model.content != null)
 			{
@@ -88,7 +89,10 @@
 	%else
 	{
 		<a class="nolink" href={{ href }} @ref="widget">
-			<button type={{ this.type }} class="widget_button" class={{ this.getStyles() }}
+			<button type={{ this.type }}
+				class="widget_button"
+				class={{ this.getStyles() }}
+				class={{ this.renderListClass() }}
 				@event:click={{ this.onClick }}
 			>
 				%if (this.model != null and this.model.content != null)

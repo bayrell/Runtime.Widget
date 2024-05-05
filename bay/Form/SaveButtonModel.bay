@@ -41,6 +41,7 @@ class SaveButtonModel extends ButtonModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("show_result")) this.show_result = params.get("show_result");
 		if (params.has("parent_widget")) this.form = params.get("parent_widget");
 		if (params.has("form")) this.form = params.get("form");
 	}

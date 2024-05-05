@@ -66,6 +66,12 @@ class FormModel extends BaseModel
 		{
 			this.setDataStorage( this.createDataStorage() );
 		}
+		
+		/* Setup primary key */
+		if (params.has("primary_key") and this.storage)
+		{
+			this.storage.setPrimaryKey(params.get("primary_key"));
+		}
 	}
 	
 	

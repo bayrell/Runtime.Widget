@@ -152,7 +152,7 @@ class CrudApi extends BaseApi
 	/**
 	 * Returns query field
 	 */
-	bool getQueryField(string field_name)
+	QueryField getQueryField(string field_name)
 	{
 		string table_name = this.getTableName();
 		Provider provider = @.provider(classof Provider);
