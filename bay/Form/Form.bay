@@ -42,7 +42,7 @@
 <template name="renderTopButtons">
 	%if (this.model.top_buttons.count() > 0)
 	{
-		<RowButtons @model={{ this.model.top_buttons }} />
+		%render this.renderWidget(this.model.top_buttons);
 	}
 </template>
 
@@ -50,7 +50,7 @@
 <template name="renderBottomButtons">
 	%if (this.model.bottom_buttons.count() > 0)
 	{
-		<RowButtons @model={{ this.model.bottom_buttons }} />
+		%render this.renderWidget(this.model.bottom_buttons);
 	}
 </template>
 
