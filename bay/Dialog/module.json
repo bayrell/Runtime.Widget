@@ -5,6 +5,12 @@
 		"Dialog.bay",
 		"DialogModel.bay"
 	],
+	"require": [
+		"Runtime.Widget"
+	],
+	"groups": [
+		"widget"
+	],
 	"src": "./",
 	"dest":
 	{

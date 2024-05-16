@@ -60,7 +60,6 @@ class CrudApi extends BaseApi
 	void constructor()
 	{
 		parent();
-		this.connection = this.getConnection();
 		this.result = new ApiResult;
 	}
 	
@@ -80,10 +79,7 @@ class CrudApi extends BaseApi
 	/**
 	 * Returns database Connection
 	 */
-	Connection getConnection()
-	{
-		return Connection::getConnection();
-	}
+	Connection getConnection() => Connection::get();
 	
 	
 	/**
@@ -248,6 +244,12 @@ class CrudApi extends BaseApi
 	
 	
 	/**
+	 * Returns item primary key
+	 */
+	Map getItemPrimaryKey(Relation item) => item.getPrimaryKey();
+	
+	
+	/**
 	 * Add field error
 	 */
 	void addFieldError(string field_name, string error_message)
@@ -261,8 +263,6 @@ class CrudApi extends BaseApi
 	
 	async void onActionBefore()
 	{
-		this.table_name = this.getTableName();
-		this.annotations = Relation::getAnotations(this.table_name);
 	}
 	
 	
@@ -407,7 +407,8 @@ class CrudApi extends BaseApi
 		await this.buildSearchQuery(q);
 		
 		/* Get cursor */
-		Cursor c = await this.connection.execute(q);
+		Connection connection = this.getConnection();
+		Cursor c = await connection.execute(q);
 		
 		/* Fetch all */
 		this.items = await c.fetchAll();
@@ -416,9 +417,6 @@ class CrudApi extends BaseApi
 		
 		/* Close cursor */
 		await c.close();
-		
-		/* Search after event */
-		await this.onSearchAfter();
 	}
 	
 	
@@ -427,6 +425,9 @@ class CrudApi extends BaseApi
 	{
 		/* Search items */
 		await this.searchItems();
+		
+		/* Search after event */
+		await this.onSearchAfter();
 		
 		/* Transform items */
 		Collection fields = this.getAllowedFields();
@@ -449,6 +450,9 @@ class CrudApi extends BaseApi
 	{
 		/* Search items */
 		await this.searchItems();
+		
+		/* Search after event */
+		await this.onSearchAfter();
 		
 		/* Transform items */
 		Collection fields = this.getAllowedFields();
@@ -488,7 +492,7 @@ class CrudApi extends BaseApi
 		/* Convert item */
 		Collection fields = this.getAllowedFields();
 		Map model = this.convertItem(fields, this.item);
-		Map pk = this.item.getPrimaryKey();
+		Map pk = this.getItemPrimaryKey(this.item);
 		
 		this.result.success({
 			"data": {
@@ -565,7 +569,8 @@ class CrudApi extends BaseApi
 		q.limit(1);
 		
 		/* Find relation */
-		this.item = await this.connection.findRelation(q);
+		Connection connection = this.getConnection();
+		this.item = await connection.findRelation(q);
 		this.items = [this.item];
 	}
 	
@@ -613,7 +618,8 @@ class CrudApi extends BaseApi
 	 */
 	async void save()
 	{
-		await this.item.save(this.connection);
+		Connection connection = this.getConnection();
+		await this.item.save(connection);
 	}
 	
 	
@@ -622,7 +628,7 @@ class CrudApi extends BaseApi
 	 */
 	async void refresh()
 	{
-		Map pk = this.item.getPrimaryKey();
+		Map pk = this.getItemPrimaryKey(this.item);
 		await this.findItem(pk);
 	}
 	
@@ -632,12 +638,6 @@ class CrudApi extends BaseApi
 	 */
 	async void updateItem(Map update_data)
 	{
-		/* Create field result */
-		this.result.data.set("fields", new FieldResult);
-		
-		/* Validate item */
-		update_data = await this.validateItem(update_data);
-		
 		/* Update data */
 		this.item.updateData(update_data);
 		
@@ -683,13 +683,19 @@ class CrudApi extends BaseApi
 			throw new ApiError(new ItemNotFound());
 		}
 		
+		/* Create field result */
+		this.result.data.set("fields", new FieldResult);
+		
+		/* Validate item */
+		update_data = await this.validateItem(update_data);
+		
 		/* Update item */
 		await this.updateItem(update_data);
 		
 		/* Convert item */
 		Collection fields = this.getAllowedFields();
 		Map model = this.convertItem(fields, this.item);
-		Map pk = this.item.getPrimaryKey();
+		Map pk = this.getItemPrimaryKey(this.item);
 		
 		this.result.success({
 			"data": {
@@ -736,7 +742,8 @@ class CrudApi extends BaseApi
 	 */
 	async void delete()
 	{
-		await this.item.delete(this.connection);
+		Connection connection = this.getConnection();
+		await this.item.delete(connection);
 	}
 	
 	

@@ -78,8 +78,9 @@ struct Unique extends CrudRule
 			}
 		}
 		
+		Connection connection = api.getConnection();
 		FieldResult field_result = api.result.data.get("fields");
-		Cursor cursor = await api.connection.executeQuery(q);
+		Cursor cursor = await connection.executeQuery(q);
 		int res = await cursor.fetchVar('c');
 		if (res > 0)
 		{

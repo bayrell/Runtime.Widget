@@ -6,6 +6,12 @@
 		"Tabs.bay",
 		"TabsModel.bay"
 	],
+	"require": [
+		"Runtime.Widget"
+	],
+	"groups": [
+		"widget"
+	],
 	"src": "./",
 	"dest":
 	{

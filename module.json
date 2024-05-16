@@ -25,6 +25,12 @@
 		"WidgetResultModel.bay",
 		"ModuleDescription.bay"
 	],
+	"require": [
+		"Runtime"
+	],
+	"groups": [
+		"widget"
+	],
 	"modules":
 	[
 		{

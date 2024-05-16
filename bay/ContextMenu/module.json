@@ -5,6 +5,12 @@
 		"ContextMenu.bay",
 		"ContextMenuModel.bay"
 	],
+	"require": [
+		"Runtime.Widget"
+	],
+	"groups": [
+		"widget"
+	],
 	"src": "./",
 	"dest":
 	{

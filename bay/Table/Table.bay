@@ -50,15 +50,15 @@
 .widget_table %(RowButtons)widget_table__top_buttons{
 	margin-bottom: calc(var(--widget-space) * 3);
 }
-.widget_table--border{
+.widget_table--border .widget_table__table{
 	border-color: var(--widget-color-border);
 	border-width: var(--widget-border-width);
 	border-style: solid;
 }
 .widget_table--border .widget_table__th, .widget_table--border .widget_table__td{
-	border-color: var(--widget-color-border);
-	border-width: var(--widget-border-width);
-	border-style: solid;
+	border-bottom-color: var(--widget-color-border);
+	border-bottom-width: var(--widget-border-width);
+	border-bottom-style: solid;
 }
 </style>
 
@@ -195,7 +195,7 @@
 
 
 <template name="renderTable">
-	<table class="widget_table__table" class={{ this.getStyles() }}>
+	<table class="widget_table__table">
 		<tbody>
 			%render this.renderHeader();
 			%render this.renderBody();
@@ -210,7 +210,7 @@
 
 
 <template>
-	<div class="widget_table">
+	<div class="widget_table" class={{ this.getStyles() }}>
 		%render this.renderTitle();
 		%render this.renderTopButtons();
 		%render this.renderTable();

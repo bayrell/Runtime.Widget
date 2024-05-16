@@ -48,7 +48,7 @@ class TableModel extends BaseModel
 	Map pagination = {};
 	RowButtonsModel top_buttons, row_buttons;
 	RenderListModel render_list;
-	Styles styles = new Styles{ "prefix": "widget_table__table" };
+	Styles styles = new Styles{ "prefix": "widget_table" };
 	
 	
 	/**

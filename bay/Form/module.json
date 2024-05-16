@@ -8,6 +8,12 @@
 		"SaveButton.bay",
 		"SaveButtonModel.bay"
 	],
+	"require": [
+		"Runtime.Widget"
+	],
+	"groups": [
+		"widget"
+	],
 	"src": "./",
 	"dest":
 	{
