@@ -486,9 +486,6 @@ class CrudApi extends BaseApi
 		/* Search after event */
 		await this.onSearchAfter();
 		
-		/* Set item */
-		this.item = this.items.get(0);
-		
 		/* Convert item */
 		Collection fields = this.getAllowedFields();
 		Map model = this.convertItem(fields, this.item);
@@ -571,7 +568,6 @@ class CrudApi extends BaseApi
 		/* Find relation */
 		Connection connection = this.getConnection();
 		this.item = await connection.findRelation(q);
-		this.items = [this.item];
 	}
 	
 	
