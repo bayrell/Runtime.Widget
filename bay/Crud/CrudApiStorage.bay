@@ -19,13 +19,14 @@
 namespace Runtime.Widget.Crud;
 
 use Runtime.BaseObject;
+use Runtime.SerializeInterface;
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 use Runtime.Web.LayoutModel;
 use Runtime.Widget.WidgetResultModel;
 
 
-class CrudApiStorage extends BaseObject
+class CrudApiStorage extends BaseObject implements SerializeInterface
 {
 	string api_name = "";
 	
@@ -277,7 +278,7 @@ class CrudApiStorage extends BaseObject
 	/**
 	 * Process frontend data
 	 */
-	void processFrontendData(Serializer serializer, Map data)
+	void serialize(Serializer serializer, Map data)
 	{
 		serializer.process(this, "item", data);
 		serializer.process(this, "item_pk", data);

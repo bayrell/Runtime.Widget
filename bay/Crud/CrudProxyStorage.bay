@@ -49,7 +49,7 @@ class CrudProxyStorage extends CrudApiStorage
 	/**
 	 * Process frontend data
 	 */
-	void processFrontendData(Serializer serializer, Map data)
+	void serialize(Serializer serializer, Map data)
 	{
 	}
 	
