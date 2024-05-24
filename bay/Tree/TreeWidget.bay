@@ -70,7 +70,7 @@
 <template name="renderItem" args="TreeItem item, Collection<string> path">
 	<div class="tree_widget__item"
 		class={{ item == this.model.selected_item ? "selected" : "" }}
-		@key={{ item.key ~ "." ~ rs::join(".", path) }}
+		@key={{ "item." ~ rs::join(".", path) ~ "-" ~ item.key }}
 		@event:mousemove={{
 			void (var e) use (item) { this.onMouseMoveItem(e, item); }
 		}}
@@ -89,7 +89,8 @@
 <template name="renderItems" args="TreeItem item, Collection<string> path">
 	%if (item.items != null and item.items.count() > 0)
 	{
-		<div class="tree_widget__items">
+		%set string key = (path.count() > 0) ? "item." ~ rs::join(".", path) ~ ".items" : "item";
+		<div class="tree_widget__items" @key={{ key }}>
 			%for (int i=0; i<item.items.count(); i++)
 			{
 				%render this.renderItem(item.items.get(i), path.pushIm(i));

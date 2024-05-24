@@ -97,13 +97,24 @@ class TreeModel extends BaseModel
 		if (not this.canDrag(src, dest, kind)) return;
 		
 		/* Move item */
-		TreeItem item = this.root.getItem(src);
-		if (not item) return;
+		TreeItem src_item = this.root.get(src);
+		TreeItem dest_item = this.root.get(dest);
+		if (not src_item) return;
+		if (not dest_item) return;
+
+		/* Get parent items */
+		TreeItem src_parent_item = this.root.get(src.slice(0, -1));
+		TreeItem dest_parent_item = (kind != "into")
+			? this.root.get(dest.slice(0, -1))
+			: this.root.get(dest)
+		;
 		
-		this.root.removeItem(src);
-		this.root.addItem(item, dest, kind);
+		/* Move item */
+		src_parent_item.removeItem(src_item);
+		if (kind == "into") dest_parent_item.addItem(src_item, null, "before");
+		else dest_parent_item.addItem(src_item, dest_item, kind);
 		
 		/* Send drag & drop event */
-		this.events.emit("drag", [src, dest, kind]);
+		/*this.events.emit("drag", [src, dest, kind]);*/
 	}
 }
