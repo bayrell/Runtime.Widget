@@ -50,7 +50,7 @@
 	background-color: rgba(255, 0, 0, 0.5);
 	pointer-events: none;
 }
-.tree_widget__box--top, .tree_widget__box--bottom{
+.tree_widget__box--before, .tree_widget__box--after{
 	border-top-width: 2px;
 	border-top-color: red;
 }
@@ -70,7 +70,7 @@
 <template name="renderItem" args="TreeItem item, Collection<string> path">
 	<div class="tree_widget__item"
 		class={{ item == this.model.selected_item ? "selected" : "" }}
-		@key={{ item.key }}
+		@key={{ item.key ~ "." ~ rs::join(".", path) }}
 		@event:mousemove={{
 			void (var e) use (item) { this.onMouseMoveItem(e, item); }
 		}}
@@ -92,7 +92,7 @@
 		<div class="tree_widget__items">
 			%for (int i=0; i<item.items.count(); i++)
 			{
-				%render this.renderItem(item.items.get(i), path.pushIm(i + 1));
+				%render this.renderItem(item.items.get(i), path.pushIm(i));
 			}
 		</div>
 	}
@@ -186,6 +186,9 @@ void stopDrag()
 		string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
 		Collection<string> src_elem = src_elem_path ? rs::split(".", src_elem_path) : [];
 		Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
+		fn toInt = int (string s) => (int)s;
+		src_elem = src_elem.map(toInt);
+		dest_elem = dest_elem.map(toInt);
 		this.model.dragElement(src_elem, dest_elem, this.drag_dest_kind);
 	}
 	
@@ -207,7 +210,7 @@ void setDragDestElement(var elem, Dict item, string kind)
 {
 	if (not this.is_drag) return;
 	if (this.checkInside(elem)) return;
-	if (kind == "into" and this.drag_elem == elem) kind = "top";
+	if (kind == "into" and this.drag_elem == elem) kind = "before";
 	if (kind == "into" and item != null and not item.can_drag_inside) return;
 	if (this.drag_dest_elem == elem and this.drag_dest_kind == kind) return;
 	
@@ -225,7 +228,7 @@ void setDragDestElement(var elem, Dict item, string kind)
 /**
  * Returns box styles by element
  */
-Dict getBoxStyles(var elem, string kind="")
+Dict getBoxStyles(var elem, string kind = "")
 {
 	int left, top, width, height;
 	
@@ -234,14 +237,14 @@ Dict getBoxStyles(var elem, string kind="")
 	width = elem.clientWidth - 1;
 	height = elem.clientHeight - 1;
 	
-	if (kind == "top") return rs::join(";", [
+	if (kind == "before") return rs::join(";", [
 		"left: " ~ left ~ "px",
 		"top: " ~ top ~ "px",
 		"width: " ~ width ~ "px",
 		"height: 1px",
 	]);
 	
-	if (kind == "bottom") return rs::join(";", [
+	if (kind == "after") return rs::join(";", [
 		"left: " ~ left ~ "px",
 		"top: " ~ (top + height) ~ "px",
 		"width: " ~ width ~ "px",
@@ -304,7 +307,7 @@ void onMouseMoveItem(var e, Dict item)
 	int bottom = target.offsetTop + target.clientHeight;
 	int center = (top + bottom) / 2;
 	
-	string kind = "top";
+	string kind = "before";
 	if (e.layerY >= center)
 	{
 		kind = "into";
@@ -330,7 +333,7 @@ void onMouseMove(var e)
 	var tree_content = this.getRef("content");
 	if (e.layerY > tree_content.clientHeight)
 	{
-		this.setDragDestElement(tree_content, null, "bottom");
+		this.setDragDestElement(tree_content, null, "after");
 		e.preventDefault();
 		return false;
 	}
