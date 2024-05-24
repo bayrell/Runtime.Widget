@@ -50,11 +50,19 @@
 			"type": "module"
 		},
 		{
+			"src": "bay/Seo",
+			"type": "module"
+		},
+		{
 			"src": "bay/Tab",
 			"type": "module"
 		},
 		{
 			"src": "bay/Table",
+			"type": "module"
+		},
+		{
+			"src": "bay/Tree",
 			"type": "module"
 		}
 	],

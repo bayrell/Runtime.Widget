@@ -1,0 +1,341 @@
+<!--
+ *  Bayrell Runtime Library
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.Tree.TreeWidget">
+
+<use name="Runtime.Math" />
+<use name="Runtime.Widget.Tree.TreeItem" />
+
+
+<style>
+.tree_widget{
+	position: relative;
+	height: 100%;
+}
+.tree_widget__items > .tree_widget__items{
+	padding-left: 20px;
+}
+.tree_widget__item_label{
+	display: inline-block;
+	padding: 5px;
+	cursor: pointer;
+	user-select: none;
+}
+.tree_widget__item.selected > .tree_widget__item_label{
+	background-color: var(--widget-color-primary);
+	color: var(--widget-color-primary-text);
+}
+.tree_widget__box{
+	position: absolute;
+	border-style: solid;
+	border-width: 0;
+	border-color: transparent
+}
+.tree_widget__box--into{
+	background-color: rgba(255, 0, 0, 0.5);
+	pointer-events: none;
+}
+.tree_widget__box--top, .tree_widget__box--bottom{
+	border-top-width: 2px;
+	border-top-color: red;
+}
+</style>
+
+
+<template name="renderBox">
+	%if (this.drag_dest_box != null and this.is_drag)
+	{
+		<div class="tree_widget__box" class={{ "tree_widget__box--" ~ this.drag_dest_kind }}
+			style={{ this.drag_dest_box }}
+		></div>
+	}
+</template>
+
+
+<template name="renderItem" args="TreeItem item, Collection<string> path">
+	<div class="tree_widget__item"
+		class={{ item == this.model.selected_item ? "selected" : "" }}
+		@key={{ item.key }}
+		@event:mousemove={{
+			void (var e) use (item) { this.onMouseMoveItem(e, item); }
+		}}
+	>
+		<span class="tree_widget__item_label"
+			data-path={{ rs::join(".", path) }}
+			@event:mousedown={{
+				void (var e) use (item) { this.onMouseDownItem(e, item); }
+			}}
+		>{{ item.label }}</span>
+	</div>
+	%render this.renderItems(item, path);
+</template>
+
+
+<template name="renderItems" args="TreeItem item, Collection<string> path">
+	%if (item.items != null and item.items.count() > 0)
+	{
+		<div class="tree_widget__items">
+			%for (int i=0; i<item.items.count(); i++)
+			{
+				%render this.renderItem(item.items.get(i), path.pushIm(i + 1));
+			}
+		</div>
+	}
+</template>
+
+
+<template>
+	<div class="tree_widget" @ref="widget"
+		@event:mouseup={{ void (var e){ this.onMouseUp(e); } }}
+		@event:mousemove={{ void (var e){ this.onMouseMove(e); } }}
+	>
+		%render this.renderBox();
+		<div class="tree_widget__content" @ref="content">
+			%render this.renderItems(this.model.root, []);
+		</div>
+	</div>
+</template>
+
+
+<script>
+
+bool is_drag = false;
+var drag_elem = null;
+TreeItem drag_item = null;
+Dict drag_start_point = null;
+string drag_dest_box = null;
+var drag_dest_elem = null;
+var drag_dest_item = null;
+var drag_dest_kind = null;
+
+
+/**
+ * Find span
+ */
+void findSpan(var elem)
+{
+	if (elem.tagName == "SPAN") return elem;
+	return elem.childNodes.item(0);
+}
+
+
+/**
+ * Returns true if elem inside drag_elem
+ */
+void checkInside(var elem)
+{
+	if (not this.drag_elem) return false;
+	if (elem == this.drag_elem) return false;
+	
+	string path = elem.getAttribute("data-path");
+	if (path == null) return false;
+	
+	Collection<string> arr = rs::split(".", path);
+	arr.pop();
+	
+	while (arr.count() != 0)
+	{
+		path = rs::join(".", arr);
+		path = ".tree_widget__item_label[data-path='" ~ path ~ "']";
+		var e = document.querySelector(path);
+		if (e == this.drag_elem) return true;
+		arr.pop();
+	}
+	
+	return false;
+}
+
+
+/**
+ * Start Drag & Drop
+ */
+void startDrag(var e)
+{
+	if (this.is_drag != false) return false;
+	if (this.drag_start_point == null) return false;
+	if (Math.abs(e.layerY - this.drag_start_point.get("y")) > 5) return false;
+	this.is_drag = true;
+	return true;
+}
+
+
+/**
+ * Stop drag & drop
+ */
+void stopDrag()
+{
+	/* Do drag & drop */
+	if (this.drag_dest_box and this.drag_elem and this.drag_dest_elem)
+	{
+		string src_elem_path = this.drag_elem.getAttribute("data-path");
+		string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
+		Collection<string> src_elem = src_elem_path ? rs::split(".", src_elem_path) : [];
+		Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
+		this.model.dragElement(src_elem, dest_elem, this.drag_dest_kind);
+	}
+	
+	this.is_drag = false;
+	this.drag_dest_box = null;
+	this.drag_dest_elem = null;
+	this.drag_dest_item = null;
+	this.drag_dest_kind = null;
+	this.drag_elem = null;
+	this.drag_item = null;
+	this.drag_start_point = null;
+}
+
+
+/**
+ * Set drag & drop dest element
+ */
+void setDragDestElement(var elem, Dict item, string kind)
+{
+	if (not this.is_drag) return;
+	if (this.checkInside(elem)) return;
+	if (kind == "into" and this.drag_elem == elem) kind = "top";
+	if (kind == "into" and item != null and not item.can_drag_inside) return;
+	if (this.drag_dest_elem == elem and this.drag_dest_kind == kind) return;
+	
+	/* Setup box */
+	if (this.drag_elem != elem) this.drag_dest_box = this.getBoxStyles(elem, kind);
+	else this.drag_dest_box = null;
+	
+	/* Setup dest values */
+	this.drag_dest_elem = elem;
+	this.drag_dest_item = item;
+	this.drag_dest_kind = kind;
+}
+
+
+/**
+ * Returns box styles by element
+ */
+Dict getBoxStyles(var elem, string kind="")
+{
+	int left, top, width, height;
+	
+	left = elem.offsetLeft;
+	top = elem.offsetTop;
+	width = elem.clientWidth - 1;
+	height = elem.clientHeight - 1;
+	
+	if (kind == "top") return rs::join(";", [
+		"left: " ~ left ~ "px",
+		"top: " ~ top ~ "px",
+		"width: " ~ width ~ "px",
+		"height: 1px",
+	]);
+	
+	if (kind == "bottom") return rs::join(";", [
+		"left: " ~ left ~ "px",
+		"top: " ~ (top + height) ~ "px",
+		"width: " ~ width ~ "px",
+		"height: 1px",
+	]);
+	
+	if (kind == "into") return rs::join(";", [
+		"left: " ~ left ~ "px",
+		"top: " ~ top ~ "px",
+		"width: " ~ width ~ "px",
+		"height: " ~ height ~ "px",
+	]);
+	
+	return null;
+}
+
+
+/**
+ * Mouse down
+ */
+void onMouseDownItem(var e, TreeItem item)
+{
+	if (e.button != 0) return;
+	
+	this.model.selectItem(item);
+	
+	/* Set start drag item */
+	this.drag_elem = this.findSpan(e.target);
+	this.drag_item = item;
+	this.drag_start_point = {
+		"x": e.layerX,
+		"y": e.layerY,
+	};
+}
+
+
+/**
+ * Mouse tree up
+ */
+void onMouseUp(var e)
+{
+	this.stopDrag();
+}
+
+
+/**
+ * Mouse move item
+ */
+void onMouseMoveItem(var e, Dict item)
+{
+	if (this.drag_elem == null) return;
+	
+	/* Try to start drag & drop */
+	if (not this.is_drag) this.startDrag(e);
+	if (not this.is_drag) return;
+	
+	/* Drag & Drop started */
+	var target = this.findSpan(e.target);
+	int top = target.offsetTop;
+	int bottom = target.offsetTop + target.clientHeight;
+	int center = (top + bottom) / 2;
+	
+	string kind = "top";
+	if (e.layerY >= center)
+	{
+		kind = "into";
+	}
+	
+	this.setDragDestElement(target, item, kind);
+	e.preventDefault();
+}
+
+
+/**
+ * Mouse tree move
+ */
+void onMouseMove(var e)
+{
+	if (this.drag_elem == null) return;
+	
+	/* Try to start drag & drop */
+	if (not this.is_drag) this.startDrag(e);
+	if (not this.is_drag) return;
+	
+	/* Outside of tree contents */
+	var tree_content = this.getRef("content");
+	if (e.layerY > tree_content.clientHeight)
+	{
+		this.setDragDestElement(tree_content, null, "bottom");
+		e.preventDefault();
+		return false;
+	}
+}
+
+</script>
+
+</class>
