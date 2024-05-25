@@ -28,8 +28,6 @@ class TreeItem extends BaseObject implements SerializeInterface
 {
 	string key = "";
 	string label = "";
-	bool can_drag_inside = true;
-	var data = null;
 	Vector<TreeItem> items = [];
 	
 	
@@ -50,7 +48,21 @@ class TreeItem extends BaseObject implements SerializeInterface
 	{
 		serializer.process(this, "key", data);
 		serializer.process(this, "label", data);
-		serializer.process(this, "data", data);
+	}
+	
+	
+	/**
+	 * Returns true if can insert inside
+	 */
+	bool canDragInside() => true;
+	
+	
+	/**
+	 * New instance
+	 */
+	TreeItem newInstance(Dict params = null)
+	{
+		return rtl::newInstance(static::getClassName(), [params]);
 	}
 	
 	

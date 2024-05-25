@@ -87,7 +87,7 @@
 
 
 <template name="renderItems" args="TreeItem item, Collection<string> path">
-	%if (item.items != null and item.items.count() > 0)
+	%if (item != null and item.items != null and item.items.count() > 0)
 	{
 		%set string key = (path.count() > 0) ? "item." ~ rs::join(".", path) ~ ".items" : "item";
 		<div class="tree_widget__items" @key={{ key }}>
@@ -123,6 +123,30 @@ string drag_dest_box = null;
 var drag_dest_elem = null;
 var drag_dest_item = null;
 var drag_dest_kind = null;
+
+
+/**
+ * Returns src elem
+ */
+Collection<string> getSrc()
+{
+	if (not this.drag_elem) return null;
+	string src_elem_path = this.drag_elem.getAttribute("data-path");
+	Collection<string> src_elem = src_elem_path ? rs::split(".", src_elem_path) : [];
+	return src_elem.map(int (string s) => (int)s);
+}
+
+
+/**
+ * Returns dest elem
+ */
+Collection<string> getDest()
+{
+	if (not this.drag_dest_elem) return null;
+	string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
+	Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
+	return dest_elem.map(int (string s) => (int)s);
+}
 
 
 /**
@@ -183,14 +207,7 @@ void stopDrag()
 	/* Do drag & drop */
 	if (this.drag_dest_box and this.drag_elem and this.drag_dest_elem)
 	{
-		string src_elem_path = this.drag_elem.getAttribute("data-path");
-		string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
-		Collection<string> src_elem = src_elem_path ? rs::split(".", src_elem_path) : [];
-		Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
-		fn toInt = int (string s) => (int)s;
-		src_elem = src_elem.map(toInt);
-		dest_elem = dest_elem.map(toInt);
-		this.model.dragElement(src_elem, dest_elem, this.drag_dest_kind);
+		this.model.dragElement(this.getSrc(), this.getDest(), this.drag_dest_kind);
 	}
 	
 	this.is_drag = false;
@@ -212,7 +229,7 @@ void setDragDestElement(var elem, Dict item, string kind)
 	if (not this.is_drag) return;
 	if (this.checkInside(elem)) return;
 	if (kind == "into" and this.drag_elem == elem) kind = "before";
-	if (kind == "into" and item != null and not item.can_drag_inside) return;
+	if (kind == "into" and item != null and not item.canDragInside()) return;
 	if (this.drag_dest_elem == elem and this.drag_dest_kind == kind) return;
 	
 	/* Setup box */
@@ -223,6 +240,16 @@ void setDragDestElement(var elem, Dict item, string kind)
 	this.drag_dest_elem = elem;
 	this.drag_dest_item = item;
 	this.drag_dest_kind = kind;
+	
+	/* Can drag */
+	if (this.drag_dest_box)
+	{
+		bool can_drag = this.model.canDrag(this.getSrc(), this.getDest(), this.drag_dest_kind);
+		if (not can_drag)
+		{
+			this.drag_dest_box = null;
+		}
+	}
 }
 
 
