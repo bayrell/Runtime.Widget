@@ -32,6 +32,7 @@ class TreeModel extends BaseModel
 	string component = classof TreeWidget;
 	string widget_name = "tree";
 	Events events = new Events;
+	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
 	TreeItem root = null;
 	
@@ -69,9 +70,11 @@ class TreeModel extends BaseModel
 	/**
 	 * Select item
 	 */
-	void selectItem(TreeItem item)
+	void selectItem(Collection<int> path)
 	{
-		this.selected_item = item;
+		this.selected_path = path;
+		this.selected_item = this.root.get(path);
+		this.events.emit("selectItem", [this.selected_path, this.selected_item]);
 	}
 	
 	
@@ -100,16 +103,33 @@ class TreeModel extends BaseModel
 		if (not dest_item) return;
 
 		/* Get parent items */
-		TreeItem src_parent_item = this.root.get(src.slice(0, -1));
-		TreeItem dest_parent_item = (kind != "into")
-			? this.root.get(dest.slice(0, -1))
-			: this.root.get(dest)
+		Collection<int> src_parent_path = src.slice(0, -1);
+		Collection<int> dest_parent_path = (kind != "into")
+			? dest.slice(0, -1)
+			: dest
 		;
+		TreeItem src_parent_item = this.root.get(src_parent_path);
+		TreeItem dest_parent_item = this.root.get(dest_parent_path);
 		
 		/* Move item */
 		src_parent_item.removeItem(src_item);
 		if (kind == "into") dest_parent_item.addItem(src_item, null, "before");
 		else dest_parent_item.addItem(src_item, dest_item, kind);
+		
+		/* Update dest path */
+		Vector new_dest_parent_path = dest_parent_path.slice();
+		if (src.count() <= new_dest_parent_path.count())
+		{
+			int pos = src.count() - 1;
+			if (src.get(pos) < new_dest_parent_path.get(pos))
+			{
+				new_dest_parent_path.set(pos, new_dest_parent_path.get(pos) - 1);
+			}
+		}
+		
+		/* Create src new path */
+		int pos = dest_parent_item.find(src_item);
+		Collection<int> new_src_path = new_dest_parent_path.pushIm(pos);
 		
 		/* Send drag & drop event */
 		this.events.emit("dragElement", [{
@@ -118,6 +138,10 @@ class TreeModel extends BaseModel
 			"kind": kind,
 			"src_item": src_item,
 			"src_parent_item": src_parent_item,
+			"new_src_path": new_src_path,
 		}]);
+		
+		/* Select new item */
+		this.selectItem(new_src_path);
 	}
 }

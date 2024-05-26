@@ -67,7 +67,7 @@
 </template>
 
 
-<template name="renderItem" args="TreeItem item, Collection<string> path">
+<template name="renderItem" args="TreeItem item, Collection<int> path">
 	<div class="tree_widget__item"
 		class={{ item == this.model.selected_item ? "selected" : "" }}
 		@key={{ "item." ~ rs::join(".", path) ~ "-" ~ item.key }}
@@ -78,7 +78,7 @@
 		<span class="tree_widget__item_label"
 			data-path={{ rs::join(".", path) }}
 			@event:mousedown={{
-				void (var e) use (item) { this.onMouseDownItem(e, item); }
+				void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
 			}}
 		>{{ item.label }}</span>
 	</div>
@@ -128,7 +128,7 @@ var drag_dest_kind = null;
 /**
  * Returns src elem
  */
-Collection<string> getSrc()
+Collection<int> getSrc()
 {
 	if (not this.drag_elem) return null;
 	string src_elem_path = this.drag_elem.getAttribute("data-path");
@@ -140,7 +140,7 @@ Collection<string> getSrc()
 /**
  * Returns dest elem
  */
-Collection<string> getDest()
+Collection<int> getDest()
 {
 	if (not this.drag_dest_elem) return null;
 	string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
@@ -229,7 +229,7 @@ void setDragDestElement(var elem, Dict item, string kind)
 	if (not this.is_drag) return;
 	if (this.checkInside(elem)) return;
 	if (kind == "into" and this.drag_elem == elem) kind = "before";
-	if (kind == "into" and item != null and not item.canDragInside()) return;
+	if (kind == "into" and item != null and not item.canDragInside()) kind = "after";
 	if (this.drag_dest_elem == elem and this.drag_dest_kind == kind) return;
 	
 	/* Setup box */
@@ -293,11 +293,11 @@ Dict getBoxStyles(var elem, string kind = "")
 /**
  * Mouse down
  */
-void onMouseDownItem(var e, TreeItem item)
+void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 {
 	if (e.button != 0) return;
 	
-	this.model.selectItem(item);
+	this.model.selectItem(path);
 	
 	/* Set start drag item */
 	this.drag_elem = this.findSpan(e.target);
