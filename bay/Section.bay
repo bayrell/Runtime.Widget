@@ -1,4 +1,4 @@
-/*!
+<!--
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,28 +14,47 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
+-->
 
-namespace Runtime.Widget;
-
-use Runtime.Web.RenderListModel;
-use Runtime.Widget.Container;
+<class name="Runtime.Widget.Section">
 
 
-class ContainerModel extends RenderListModel
-{
-	string component = classof Container;
-	bool wrap = false;
-	
-	
-	/**
-	 * Setup widget params
-	 */
-	void setup(Dict params)
-	{
-		parent(params);
-		
-		if (params == null) return;
-		if (params.has("wrap")) this.wrap = params.get("wrap");
-	}
+<style>
+.widget_section{
+	padding-top: 20px;
+	padding-bottom: 20px;
 }
+.widget_section__wrap{
+	max-width: 1140px;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0px 0px;
+	padding-left: 10px;
+	padding-right: 10px;
+}
+</style>
+
+
+<template>
+	<div class="widget_section" class={{ this.class }}>
+		%if (this.wrap)
+		{
+			<div class="widget_section__wrap">
+				%render this.renderSlot("default");
+			</div>
+		}
+		%else
+		{
+			%render this.renderSlot("default");
+		}
+	</div>
+</template>
+
+
+<script>
+props bool wrap = true;
+props string class = "";
+</script>
+
+
+</class>

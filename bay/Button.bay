@@ -73,6 +73,7 @@
 			class="widget_button"
 			class={{ this.getStyles() }}
 			class={{ this.renderListClass() }}
+			class={{ this.class }}
 			@event:click={{ this.onClick }}
 			@ref="widget"
 		>
@@ -88,7 +89,7 @@
 	}
 	%else
 	{
-		<a class="nolink" href={{ href }} @ref="widget">
+		<a class="nolink" class={{ this.class }} href={{ href }} @ref="widget">
 			<button type={{ this.type }}
 				class="widget_button"
 				class={{ this.getStyles() }}
@@ -111,6 +112,7 @@
 
 <script>
 
+props string class = "";
 props string type = "button";
 props var href = null;
 props Collection<string> styles = [];

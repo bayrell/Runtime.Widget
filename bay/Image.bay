@@ -1,4 +1,4 @@
-/*!
+<!--
  *  Bayrell Runtime Library
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,30 +14,29 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
+-->
 
-namespace Runtime.Widget;
+<class name="Runtime.Widget.Image">
 
-use Runtime.Web.BaseModel;
-use Runtime.Widget.Text;
-
-
-class TextModel extends BaseModel
-{
-	string component = classof Text;
-	string content = "";
-	string kind = "";
-	
-	
-	/**
-	 * Setup widget params
-	 */
-	void setup(Dict params)
-	{
-		parent(params);
-		
-		if (params == null) return;
-		if (params.has("content")) this.content = params.get("content");
-		if (params.has("kind")) this.kind = params.get("kind");
-	}
+<style>
+.widget_image img{
+	display: inline-block;
 }
+</style>
+
+
+<template>
+	<div class="widget_image" class={{ this.class }}>
+		<img src={{ this.src }} />
+	</div>
+</template>
+
+
+<script>
+
+props string class = "";
+props string src = "";
+
+</script>
+
+</class>

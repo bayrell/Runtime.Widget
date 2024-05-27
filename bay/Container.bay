@@ -16,34 +16,49 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Container" extends="Runtime.Web.RenderList">
-
-<use name="Runtime.Web.BaseModel" />
+<class name="Runtime.Widget.Container">
 
 <style>
-.widget_container__wrap{
-	max-width: 1140px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 0px 0px;
-	padding-left: 10px;
-	padding-right: 10px;
+.widget_container--inline > *{
+	display: inline-block;
+	vertical-align: top;
+}
+.widget_container--inline.widget_container--middle > *{
+	vertical-align: middle;
+}
+.widget_container--flex{
+	display: flex;
+}
+.widget_container--flex.widget_container--middle{
+	align-items: center;
+}
+.widget_container--flex.widget_container--space-between{
+	justify-content: space-between;
 }
 </style>
 
 <template>
-	<div class="widget_container" @ref="widget" data-name={{ this.model.widget_name }}>
-		%if (this.model.wrap)
-		{
-			<div class="widget_container__wrap">
-				%render this.renderItems();
-			</div>
-		}
-		%else
-		{
-			%render this.renderItems();
-		}
+	<div class="widget_container" class={{ this.getClass() }} class={{ this.class }}>
+		%render this.renderSlot("default");
 	</div>
 </template>
+
+
+<script>
+
+props string class = "";
+props Collection<string> styles = [];
+
+
+/**
+ * Returns class
+ */
+string getClass()
+{
+	Collection<string> styles = this.styles.map(string (string item) => "widget_container--" ~ item);
+	return rs::join(" ", styles);
+}
+
+</script>
 
 </class>
