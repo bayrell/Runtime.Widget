@@ -28,7 +28,7 @@
 	height: 100%;
 }
 .tree_widget__items > .tree_widget__items{
-	padding-left: 20px;
+	padding-left: 10px;
 }
 .tree_widget__item_label{
 	display: inline-block;
