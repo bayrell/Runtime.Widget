@@ -34,7 +34,7 @@
 	outline: transparent;
 	line-height: normal;
 	padding: 2px;
-	min-height: 32px;
+	min-height: 40px;
 	width: 100%;
 }
 .widget_tag__item{
