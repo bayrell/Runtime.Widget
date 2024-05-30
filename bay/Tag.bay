@@ -37,10 +37,6 @@
 	min-height: 32px;
 	width: 100%;
 }
-.widget_tag__item, .widget_tag__span{
-	padding: 3px 5px;
-	margin: 5px;
-}
 .widget_tag__item{
 	display: flex;
 	align-items: stretch;
@@ -49,6 +45,8 @@
 	border-color: var(--widget-color-border);
 	border-style: solid;
 	border-radius: 4px;
+	padding: 3px 5px;
+	margin: 5px;
 }
 .widget_tag__text{
 	overflow-wrap: anywhere;
@@ -64,7 +62,12 @@
 .widget_tag__span{
 	overflow-wrap: anywhere;
 	min-width: 100px;
+	padding: 3px;
+	margin: 5px;
 	outline: 0;
+}
+.widget_tag__span:first-child{
+	padding-left: 0;
 }
 </style>
 

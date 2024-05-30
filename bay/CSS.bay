@@ -47,12 +47,12 @@
 	--widget-color-text: #000;
 	--widget-color-table-background: #fff;
 	--widget-border-width: 1px;
-	--widget-button-padding-x: 0.9em;
-	--widget-button-padding-y: 0.5em;
-	--widget-button-padding-small-x: 0.72em;
-	--widget-button-padding-small-y: 0.4em;
-	--widget-button-padding-large-x: 1.25em;
-	--widget-button-padding-large-y: 0.7em;
+	--widget-button-padding-x: 12.6px;
+	--widget-button-padding-y: 7px;
+	--widget-button-padding-small-x: 10px;
+	--widget-button-padding-small-y: 5.6px;
+	--widget-button-padding-large-x: 17.5px;
+	--widget-button-padding-large-y: 9.8px;
 	--widget-margin-h1: 1.8em 0px;
 	--widget-margin-h2: 1.5em 0px;
 	--widget-margin-h3: 1.2em 0px;
