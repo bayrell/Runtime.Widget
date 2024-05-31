@@ -19,11 +19,11 @@
 namespace Runtime.Widget;
 
 use Runtime.Entity.Hook;
+use Runtime.Web.Annotations.Widget;
 
 
 static class ModuleDescription
 {
-	
 	/**
 	 * Returns module name
 	 * @return string
@@ -59,6 +59,10 @@ static class ModuleDescription
 	pure Collection<Dict> entities() =>
 	[
 		new Hook("Runtime.Widget.AppHook"),
+		new Widget("Runtime.Widget.Button"),
+		new Widget("Runtime.Widget.Container"),
+		new Widget("Runtime.Widget.Image"),
+		new Widget("Runtime.Widget.Text"),
+		new Widget("Runtime.Widget.TextImage"),
 	];
-	
 }

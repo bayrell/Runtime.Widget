@@ -117,5 +117,4 @@ class Styles extends BaseModel
 			)
 			.filter( bool (string s) => s != "" )
 		;
-	
 }
