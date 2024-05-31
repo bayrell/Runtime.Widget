@@ -16,17 +16,18 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Crud.ContextMenu;
+namespace Runtime.Widget.ContextMenu;
 
 use Runtime.Web.BaseModel;
 use Runtime.Web.Events;
-use Runtime.Widget.Crud.ContextMenu.ContextMenu;
+use Runtime.Widget.ContextMenu.ContextMenu;
 
 
 class ContextMenuModel extends BaseModel
 {
 	Events events = new Events;
 	string component = classof ContextMenu;
+	string widget_name = "context_menu";
 	bool is_open = false;
 	string width = "";
 	int x = 0, y = 0;

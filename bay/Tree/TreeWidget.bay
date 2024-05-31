@@ -77,6 +77,9 @@
 	>
 		<span class="tree_widget__item_label"
 			data-path={{ rs::join(".", path) }}
+			@event:contextmenu={{
+				void (var e) use (item, path) { this.onContextMenuItem(e, item, path); }
+			}}
 			@event:mousedown={{
 				void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
 			}}
@@ -287,6 +290,18 @@ Dict getBoxStyles(var elem, string kind = "")
 	]);
 	
 	return null;
+}
+
+
+/**
+ * Mouse context menu item click
+ */
+void onContextMenuItem(var e, TreeItem item, Collection<int> path)
+{
+	this.model.selectItem(path);
+	this.model.events.emit("contextMenuClick", [e]);
+	e.preventDefault();
+	return false;
 }
 
 
