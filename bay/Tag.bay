@@ -74,22 +74,25 @@
 
 <template>
 	<div class="widget_tag">
-		%for (int i=0; i<this.value.count(); i++)
+		%if (this.value)
 		{
-			<div class="widget_tag__item">
-				<div class="widget_tag__text"
-					contenteditable="true"
-					@event:blur={{ void (var e) use (i){
-						this.onTextChange(i, e.target.innerText);
-					} }}
-					@event:keydown={{ void (var e) use (i){
-						this.onTextKeyDown(i, e.target.innerText, e);
-					} }}
-				>{{ this.value.get(i) }}</div>
-				<div class="widget_tag__close"
-					@event:click={{ void () use (i){ this.onCloseClick(i); } }}
-				>x</div>
-			</div>
+			%for (int i=0; i<this.value.count(); i++)
+			{
+				<div class="widget_tag__item">
+					<div class="widget_tag__text"
+						contenteditable="true"
+						@event:blur={{ void (var e) use (i){
+							this.onTextChange(i, e.target.innerText);
+						} }}
+						@event:keydown={{ void (var e) use (i){
+							this.onTextKeyDown(i, e.target.innerText, e);
+						} }}
+					>{{ this.value.get(i) }}</div>
+					<div class="widget_tag__close"
+						@event:click={{ void () use (i){ this.onCloseClick(i); } }}
+					>x</div>
+				</div>
+			}
 		}
 		<span class="widget_tag__span"
 			contenteditable="true"
