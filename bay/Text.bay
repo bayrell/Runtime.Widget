@@ -19,6 +19,13 @@
 <class name="Runtime.Widget.Text">
 
 
+<style>
+.widget_text{
+	min-height: 5px;
+}
+</style>
+
+
 <template>
 	%if (this.kind == "p")
 	{
@@ -62,6 +69,7 @@
 <script>
 props string class = "";
 props string content = "";
+props string kind = "";
 </script>
 
 

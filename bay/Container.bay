@@ -19,6 +19,9 @@
 <class name="Runtime.Widget.Container">
 
 <style>
+.widget_container{
+	min-height: 20px;
+}
 .widget_container--inline > *{
 	display: inline-block;
 	vertical-align: top;
