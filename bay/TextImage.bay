@@ -55,6 +55,21 @@ string getClass()
 	return rs::join(" ", styles);
 }
 
+
+/**
+ * Returns slots info
+ */
+static Collection<Dict> getSlotInfo() =>
+[
+	{
+		"name": "image",
+	},
+	{
+		"name": "text",
+	},
+];
+
+
 </script>
 
 
