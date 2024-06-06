@@ -47,9 +47,22 @@
 props string class = "";
 
 @Param{
+	"label": "Kind",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "Text right", "value": "text_right"},
+			{"label": "Text left", "value": "text_left"},
+			{"label": "Text top", "value": "text_top"},
+			{"label": "Text bottom", "value": "text_bottom"},
+		],
+	}
+}
+props string kind = "text_right";
+
+@Param{
 	"label": "Styles",
 	"name": "Runtime.Widget.Tag",
-	"value": [],
 }
 props Collection<string> styles = [];
 
@@ -60,6 +73,7 @@ props Collection<string> styles = [];
 string getClass()
 {
 	Collection<string> styles = this.styles.map(string (string item) => "widget_text_image--" ~ item);
+	styles.push("widget_text_image--" ~ this.kind);
 	return rs::join(" ", styles);
 }
 
