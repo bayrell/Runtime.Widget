@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.TextImage">
 
+<use name="Runtime.Web.Annotations.Param" />
+
 
 <style>
 .widget_text_image--text_right{
@@ -43,6 +45,12 @@
 <script>
 
 props string class = "";
+
+@Param{
+	"label": "Styles",
+	"name": "Runtime.Widget.Tag",
+	"value": [],
+}
 props Collection<string> styles = [];
 
 
