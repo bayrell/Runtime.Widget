@@ -83,19 +83,29 @@
 </template>
 
 
+<template name="renderItems">
+	<div class="widget_sortable_list__items">
+		<TransitionGroup name="widget_sortable_list__animation">
+		%for (int i=0; i<this.items.count(); i++)
+		{
+			%render this.renderitem(i);
+		}
+		</TransitionGroup>
+	</div>
+</template>
+
+
+<template name="renderButtons">
+	<div class="widget_sortable_list__buttons">
+		<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
+	</div>
+</template>
+
+
 <template>
 	<div class="widget_sortable_list" data-name={{ this.name }}>
-		<div class="widget_sortable_list__items">
-			<TransitionGroup name="widget_sortable_list__animation">
-			%for (int i=0; i<this.items.count(); i++)
-			{
-				%render this.renderitem(i);
-			}
-			</TransitionGroup>
-		</div>
-		<div class="widget_sortable_list__buttons">
-			<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
-		</div>
+		%render this.renderItems();
+		%render this.renderButtons();
 	</div>
 </template>
 
