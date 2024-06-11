@@ -73,7 +73,7 @@ class TreeModel extends BaseModel
 	void selectItem(Collection<int> path)
 	{
 		this.selected_path = path;
-		this.selected_item = this.root.get(path);
+		this.selected_item = path ? this.root.get(path) : null;
 		this.events.emit("selectItem", [this.selected_path, this.selected_item]);
 	}
 	
