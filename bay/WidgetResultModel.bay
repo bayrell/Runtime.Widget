@@ -19,11 +19,12 @@
 namespace Runtime.Widget;
 
 use Runtime.BaseObject;
+use Runtime.SerializeInterface;
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 
 
-class WidgetResultModel extends BaseObject
+class WidgetResultModel extends BaseObject implements SerializeInterface
 {
 	int code = 0;
 	string message = "";

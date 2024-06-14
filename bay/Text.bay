@@ -67,7 +67,6 @@
 
 
 <script>
-props string class = "";
 props string content = "";
 props string kind = "";
 </script>
