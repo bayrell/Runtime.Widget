@@ -21,6 +21,7 @@
 		"Tag.bay",
 		"Text.bay",
 		"TextArea.bay",
+		"TextEditable.bay",
 		"TextImage.bay",
 		"WidgetResult.bay",
 		"WidgetResultModel.bay",

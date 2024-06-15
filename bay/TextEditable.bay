@@ -16,15 +16,16 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Input">
+<class name="Runtime.Widget.TextEditable">
 
 
 <style>
-.widget_input, .widget_input:focus{
+.widget_text_editable, .widget_text_editable:focus{
 	width: 100%;
-	font-family: var(--widget-font-family);
+	max-width: 100%;
+	font-family: monospace;
 	font-size: var(--widget-font-size);
-	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	padding: var(--widget-button-padding-y) var(--widget-button-padding-x); margin: 0;
 	background-color: var(--widget-color-default);
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
@@ -32,41 +33,32 @@
 	border-radius: 4px;
 	box-shadow: none;
 	outline: transparent;
-	line-height: normal;
-	min-height: 32px;
+	line-height: 1.5;
+	text-wrap: wrap;
 }
 </style>
 
 
 <template>
 	%set Map props = this.getProps();
-	<input
-		class="widget_input"
-		type={{ this.type }}
-		name={{ this.name }}
-		value={{ this.value }}
-		placeholder={{ this.placeholder }}
-		@ref="input"
-		@event:change={{ this.onChange }}
-		@event:keydown={{ this.onKeyDown }}
+	<pre class="widget_text_editable" name={{ this.name }} contenteditable="true"
+		@event:input={{ this.onKeyDown }}
+		@ref="text"
 		...props
-	/>
+	></pre>
 </template>
 
 
 <script>
 
-props bool direct_update = false;
-props bool readonly = false;
 props string name = "";
+props bool readonly = false;
 props string value = "";
-props string placeholder = "";
-props string type = "text";
 var change_timer = null;
 
 
 /**
- * Returns input props
+ * Returns textarea props
  */
 Map getProps()
 {
@@ -78,11 +70,33 @@ Map getProps()
 
 
 /**
- * KeyDown event
+ * Mounted event
+ */
+void onMounted()
+{
+	var text = this.getRef("text");
+	text.innerText = this.value;
+}
+
+
+/**
+ * Updated event
+ */
+void onUpdated()
+{
+	var text = this.getRef("text");
+	if (text.innerText != this.value)
+	{
+		text.innerText = this.value;
+	}
+}
+
+
+/**
+ * Key down event
  */
 void onKeyDown(var e)
 {
-	if (not this.direct_update) return;
 	if (this.change_timer != null)
 	{
 		window.clearTimeout(this.change_timer);
@@ -100,14 +114,15 @@ void onKeyDown(var e)
  */
 void onChange(var e)
 {
-	var input = this.getRef("input");
+	var text = this.getRef("text");
+	string value = text.innerText;
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(input.value, this.data);
-	this.emit("valueChange", input.value, this.data);
+	if (this.model) this.model.onValueChange(value, this.data);
+	this.emit("valueChange", value, this.data);
 }
 
-</script>
 
+</script>
 
 </class>
