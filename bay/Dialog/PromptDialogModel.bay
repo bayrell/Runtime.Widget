@@ -19,13 +19,18 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.Callback;
-use Runtime.Exceptions.DialogModelException;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Dialog.DialogModel;
+use Runtime.Widget.Dialog.DialogModelException;
+use Runtime.Widget.Dialog.PromptDialog;
 
 
-class ConfirmDialogModel extends DialogModel
+class PromptDialogModel extends DialogModel
 {
+	string component = classof PromptDialog;
+	string value = "";
+	
+	
 	/**
 	 * Init widget settings
 	 */
@@ -55,7 +60,7 @@ class ConfirmDialogModel extends DialogModel
 				"content": "Ok",
 				"widget_name": "confirm_button",
 				"styles": [
-					"primary"
+					"success"
 				],
 				"events": {
 					"onClick": new Callback(this, "onConfirmButtonClick"),
@@ -65,6 +70,15 @@ class ConfirmDialogModel extends DialogModel
 		
 		/* Buttons style */
 		this.buttons.styles.add("align-end");
+	}
+	
+	
+	/**
+	 * Set value
+	 */
+	void setValue(string value)
+	{
+		this.value = value;
 	}
 	
 	
@@ -84,7 +98,7 @@ class ConfirmDialogModel extends DialogModel
 	{
 		try
 		{
-			this.events.emit("confirm");
+			this.events.emit("confirm", [this.value]);
 		}
 		catch (DialogModelException e)
 		{

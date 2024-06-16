@@ -19,6 +19,7 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.Web.BaseModel;
+use Runtime.Web.Events;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.Styles;
@@ -33,6 +34,7 @@ class DialogModel extends BaseModel
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
+	Events events = new Events;
 	RowButtonsModel buttons;
 	Styles styles = new Styles{ "prefix": "widget_dialog" };
 	WidgetResultModel result = new WidgetResultModel;
@@ -46,7 +48,11 @@ class DialogModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("content")) this.title = params.get("content");
+		if (params.has("events")) this.events.setup(params.get("events"));
 		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		if (params.has("title")) this.title = params.get("title");
+		if (params.has("width")) this.title = params.get("width");
 	}
 	
 	
@@ -68,6 +74,24 @@ class DialogModel extends BaseModel
 	
 	
 	/**
+	 * Set title
+	 */
+	void setTitle(string title)
+	{
+		this.title = title;
+	}
+	
+	
+	/**
+	 * Set content
+	 */
+	void setContent(string content)
+	{
+		this.content = content;
+	}
+	
+	
+	/**
 	 * Set width
 	 */
 	void setWidth(string value)
@@ -82,6 +106,7 @@ class DialogModel extends BaseModel
 	void show()
 	{
 		this.is_open = true;
+		this.result.clear();
 	}
 	
 	

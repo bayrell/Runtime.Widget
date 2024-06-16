@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_text_editable, .widget_text_editable:focus{
+.widget_text_editable{
 	width: 100%;
 	max-width: 100%;
 	font-family: monospace;
@@ -41,7 +41,10 @@
 
 <template>
 	%set Map props = this.getProps();
-	<pre class="widget_text_editable" name={{ this.name }} contenteditable="true"
+	<pre class="widget_text_editable"
+		class={{ this.class }}
+		name={{ this.name }}
+		contenteditable="true"
 		@event:input={{ this.onKeyDown }}
 		@ref="text"
 		...props

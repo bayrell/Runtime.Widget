@@ -18,48 +18,57 @@
 
 <class name="Runtime.Widget.Text">
 
+<use name="Runtime.Web.Annotations.Param" />
+
 
 <style>
 .widget_text{
-	min-height: 5px;
+	padding: 0;
+	margin: 0;
 }
 </style>
 
 
 <template>
-	%if (this.kind == "p")
+	%if (this.tag == "p")
 	{
-		<p class="widget_text" class={{ this.class }}>
+		<p class="widget_text" class={{ this.class }} @key="p">
 			{{ this.content }}
 		</p>
 	}
-	%elseif (this.kind == "h1")
+	%elseif (this.tag == "h1")
 	{
-		<h1 class="widget_text" class={{ this.class }}>
+		<h1 class="widget_text" class={{ this.class }} @key="h1">
 			{{ this.content }}
 		</h1>
 	}
-	%elseif (this.kind == "h2")
+	%elseif (this.tag == "h2")
 	{
-		<h2 class="widget_text" class={{ this.class }}>
+		<h2 class="widget_text" class={{ this.class }} @key="h2">
 			{{ this.content }}
 		</h2>
 	}
-	%elseif (this.kind == "h3")
+	%elseif (this.tag == "h3")
 	{
-		<h3 class="widget_text" class={{ this.class }}>
+		<h3 class="widget_text" class={{ this.class }} @key="h3">
 			{{ this.content }}
 		</h3>
 	}
-	%elseif (this.kind == "h4")
+	%elseif (this.tag == "h4")
 	{
-		<h4 class="widget_text" class={{ this.class }}>
+		<h4 class="widget_text" class={{ this.class }} @key="h4">
 			{{ this.content }}
 		</h4>
 	}
+	%elseif (this.tag == "html")
+	{
+		<div class="widget_text" class={{ this.class }} @key="raw">
+			@raw{{ this.content }}
+		</div>
+	}
 	%else
 	{
-		<div class="widget_text" class={{ this.class }}>
+		<div class="widget_text" class={{ this.class }} @key="text">
 			{{ this.content }}
 		</div>
 	}
@@ -67,8 +76,35 @@
 
 
 <script>
-props string content = "";
-props string kind = "";
+
+/* Text Kind */
+@Param{
+	"label": "Tag",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "Text", "value": "text"},
+			{"label": "HTML", "value": "html"},
+			{"label": "H1", "value": "h1"},
+			{"label": "H2", "value": "h2"},
+			{"label": "H3", "value": "h3"},
+			{"label": "H4", "value": "h4"},
+		],
+	}
+}
+props string tag = "text";
+
+
+/* Content */
+@Param{
+	"label": "Content",
+	"name": "Runtime.Widget.TextEditable",
+	"props": {
+		"direct_update": true,
+	},
+}
+props string content = "Text";
+
 </script>
 
 

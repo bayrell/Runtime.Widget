@@ -21,6 +21,7 @@ namespace Runtime.Widget;
 use Runtime.BaseObject;
 use Runtime.SerializeInterface;
 use Runtime.Serializer;
+use Runtime.Exceptions.AbstractException;
 use Runtime.Web.ApiResult;
 
 
@@ -56,6 +57,16 @@ class WidgetResultModel extends BaseObject implements SerializeInterface
 	{
 		this.code = code;
 		this.message = message;
+	}
+	
+	
+	/**
+	 * Set exception
+	 */
+	void setException(AbstractException e)
+	{
+		this.code = e.getErrorCode();
+		this.message = e.getErrorMessage();
 	}
 	
 	

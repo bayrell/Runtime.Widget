@@ -4,7 +4,10 @@
 	[
 		"Dialog.bay",
 		"DialogModel.bay",
+		"DialogModelException.bay",
 		"ConfirmDialogModel.bay",
+		"PromptDialog.bay",
+		"PromptDialogModel.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [
