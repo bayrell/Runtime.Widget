@@ -79,18 +79,28 @@ string getClass()
 
 
 /**
- * Returns slots info
+ * Default CSS
  */
-static Collection<Dict> getSlotInfo() =>
-[
-	{
-		"name": "image",
-	},
-	{
-		"name": "text",
-	},
-];
+static string getDefaultCSS() => rs::join("\n", [
+	"%(TextImage)widget_text_image{",
+	"  &__image{"
+	"  }",
+	"  &__text{"
+	"  }",
+	"}",
+]);
 
+
+/**
+ * Returns default op_code
+ */
+static void getDefaultOpCode(var op_code, var builder)
+{
+	var slot_image = builder.addSlot(op_code, "image");
+	var slot_text = builder.addSlot(op_code, "text");
+	builder.addTag(slot_image, "Runtime.Widget.Image");
+	builder.addTag(slot_text, "Runtime.Widget.Text");
+}
 
 </script>
 
