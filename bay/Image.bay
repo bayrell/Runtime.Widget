@@ -18,16 +18,35 @@
 
 <class name="Runtime.Widget.Image">
 
+<use name="Runtime.Web.Annotations.Param" />
+
+
 <style>
 .widget_image img{
 	display: inline-block;
+}
+.widget_image__no_image{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	width: 270px;
+	height: 70px;
 }
 </style>
 
 
 <template>
 	<div class="widget_image" class={{ this.class }}>
-		<img src={{ this.src }} />
+		%if (this.src)
+		{
+			<img class="widget_image__image" src={{ this.layout.assets(this.src) }} @key="image" />
+		}
+		%else
+		{
+			<div class="widget_image__no_image" @key="no_image">No image</div>
+		}
 	</div>
 </template>
 
@@ -35,6 +54,11 @@
 <script>
 
 props string class = "";
+
+@Param{
+	"label": "Image",
+	"name": "Runtime.Widget.Input",
+}
 props string src = "";
 
 </script>

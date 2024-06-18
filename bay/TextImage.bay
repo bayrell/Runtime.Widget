@@ -58,7 +58,7 @@ props string class = "";
 		],
 	}
 }
-props string kind = "text_right";
+props string kind = "text_bottom";
 
 @Param{
 	"label": "Styles",
@@ -100,7 +100,7 @@ static void getDefaultTemplate() => {
 			"\t\t<Image />",
 			"\t</slot>",
 			"\t<slot name='text'>",
-			"\t\t<Text />",
+			"\t\t<Text class='[widget_name] center' content='Image text' />",
 			"\t</slot>",
 			"</template>",
 		])
