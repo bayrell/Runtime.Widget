@@ -105,6 +105,12 @@
 
 <template>
 	<div class="tree_widget" @ref="widget"
+		@event:contextmenu={{
+			void (var e) { this.onContextMenuItem(e, null, null); }
+		}}
+		@event:mousedown={{
+			void (var e) { this.onMouseDown(e, null, null); }
+		}}
 		@event:mouseup={{ void (var e){ this.onMouseUp(e); } }}
 		@event:mousemove={{ void (var e){ this.onMouseMove(e); } }}
 	>
@@ -120,7 +126,6 @@
 
 bool is_drag = false;
 var drag_elem = null;
-TreeItem drag_item = null;
 Dict drag_start_point = null;
 string drag_dest_box = null;
 var drag_dest_elem = null;
@@ -219,7 +224,6 @@ void stopDrag()
 	this.drag_dest_item = null;
 	this.drag_dest_kind = null;
 	this.drag_elem = null;
-	this.drag_item = null;
 	this.drag_start_point = null;
 }
 
@@ -298,9 +302,22 @@ Dict getBoxStyles(var elem, string kind = "")
  */
 void onContextMenuItem(var e, TreeItem item, Collection<int> path)
 {
+	/* Select item */
 	this.model.selectItem(path);
+	
+	/* Show context menu */
+	if (this.model.context_menu)
+	{
+		int x = e.clientX;
+		int y = e.clientY;
+		this.model.context_menu.show(x, y);
+	}
+	
+	/* Send message context menu */
 	this.model.events.emit("contextMenuClick", [e]);
+	
 	e.preventDefault();
+	e.stopPropagation();
 	return false;
 }
 
@@ -312,15 +329,37 @@ void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 {
 	if (e.button != 0) return;
 	
+	/* Hide context menu */
+	if (this.model.context_menu)
+	{
+		this.model.context_menu.hide();
+	}
+	
+	/* Select item */
 	this.model.selectItem(path);
 	
 	/* Set start drag item */
 	this.drag_elem = this.findSpan(e.target);
-	this.drag_item = item;
 	this.drag_start_point = {
 		"x": e.layerX,
 		"y": e.layerY,
 	};
+	
+	e.preventDefault();
+	e.stopPropagation();
+	return false;
+}
+
+
+/**
+ * Mouse down
+ */
+void onMouseDown(var e)
+{
+	if (this.model.context_menu)
+	{
+		this.model.context_menu.hide();
+	}
 }
 
 

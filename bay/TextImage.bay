@@ -79,33 +79,33 @@ string getClass()
 
 
 /**
- * Default CSS
- */
-static string getDefaultCSS() => rs::join("\n", [
-	"%(TextImage)widget_text_image{",
-	"  &__image{"
-	"  }",
-	"  &__text{"
-	"  }",
-	"}",
-]);
-
-
-/**
  * Returns default template
  */
-static void getDefaultTemplate() => rs::join("\n", [
-	"<use name='Runtime.Widget.Image' component='true' />",
-	"<use name='Runtime.Widget.Text' component='true' />",
-	"<template>",
-	"\t<slot name='image'>",
-	"\t\t<Image />",
-	"\t</slot>",
-	"\t<slot name='text'>",
-	"\t\t<Text />",
-	"\t</slot>",
-	"</template>",
-]);
+static void getDefaultTemplate() => {
+	"default": Dict () =>
+	{
+		"template": rs::join("\n", [
+			"<use name='Runtime.Widget.Image' component='true' />",
+			"<use name='Runtime.Widget.Text' component='true' />",
+			"<style>",
+			"%(TextImage)widget_text_image{",
+			"  &__image{",
+			"  }",
+			"  &__text{",
+			"  }",
+			"}",
+			"</style>"
+			"<template>",
+			"\t<slot name='image'>",
+			"\t\t<Image />",
+			"\t</slot>",
+			"\t<slot name='text'>",
+			"\t\t<Text />",
+			"\t</slot>",
+			"</template>",
+		])
+	},
+};
 
 </script>
 

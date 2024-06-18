@@ -16,51 +16,63 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Container">
+<class name="Runtime.Widget.Blocks.Logo">
 
 <use name="Runtime.Web.Annotations.Param" />
 
 
 <style>
-.widget_container--flex{
+.widget_logo{
+	display: inline-block;
+}
+.widget_logo__image{
+	display: inline-block;
+}
+.widget_logo__no_image{
 	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 20px;
+	text-transform: uppercase;
+	width: 270px;
+	height: 70px;
+}
+.widget_logo__text{
+	text-align: center;
 }
 </style>
 
 
 <template>
-	<div class="widget_container" class={{ this.getClass() }} class={{ this.class }}>
-		%render this.renderSlot("default");
+	<div class="widget_logo" class={{ this.class }}>
+		<div class="widget_logo__wrap">
+			%if (this.src)
+			{
+				<img class="widget_logo__image" src={{ this.layout.assets(this.src) }} @key="image" />
+			}
+			%else
+			{
+				<div class="widget_logo__no_image" @key="no_image">No image</div>
+			}
+		</div>
+		<div class="widget_logo__text">{{ this.text }}</div>
 	</div>
 </template>
 
 
 <script>
 
-props string class = "";
+@Param{
+	"label": "Image",
+	"name": "Runtime.Widget.Input",
+}
+props string src = "";
 
 @Param{
-	"label": "Flex",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "No", "value": "false"},
-			{"label": "Yes", "value": "true"},
-		],
-	}
+	"label": "Text",
+	"name": "Runtime.Widget.Input",
 }
-props string flex = "false";
-
-
-/**
- * Returns class
- */
-string getClass()
-{
-	Collection<string> styles = [];
-	if (this.flex == "true") styles.push("widget_container--flex");
-	return rs::join(" ", styles);
-}
+props string text = "Image text";
 
 
 /**
@@ -71,10 +83,12 @@ static void getDefaultTemplate() => {
 	{
 		"template": rs::join("\n", [
 			"<style>",
-			"padding-top: 10px;",
-			"padding-bottom: 10px;",
-			"padding-left: 10px;",
-			"padding-right: 10px;",
+			"%(TextImage)widget_logo{",
+			"  &__image{",
+			"  }",
+			"  &__text{",
+			"  }",
+			"}",
 			"</style>"
 		])
 	},

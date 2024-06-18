@@ -36,6 +36,10 @@
 	"modules":
 	[
 		{
+			"src": "bay/Blocks",
+			"type": "module"
+		},
+		{
 			"src": "bay/ContextMenu",
 			"type": "module"
 		},
@@ -82,11 +86,14 @@
 	],
 	"exclude":
 	[
+		"Blocks/",
 		"ContextMenu/",
 		"Crud/",
 		"Dialog/",
 		"Form/",
+		"Seo/",
 		"Tab/",
-		"Table/"
+		"Table/",
+		"Tree/"
 	]
 }

@@ -23,6 +23,7 @@ use Runtime.Reference;
 use Runtime.Serializer;
 use Runtime.Web.BaseModel;
 use Runtime.Web.Events;
+use Runtime.Widget.ContextMenu.ContextMenuModel;
 use Runtime.Widget.Tree.TreeItem;
 use Runtime.Widget.Tree.TreeWidget;
 
@@ -32,6 +33,7 @@ class TreeModel extends BaseModel
 	string component = classof TreeWidget;
 	string widget_name = "tree";
 	Events events = new Events;
+	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
 	TreeItem root = null;
@@ -45,6 +47,7 @@ class TreeModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("context_menu")) this.context_menu = params.get("context_menu");
 	}
 	
 	
@@ -64,6 +67,15 @@ class TreeModel extends BaseModel
 	{
 		serializer.process(this, "root", data);
 		parent(serializer, data);
+	}
+	
+	
+	/**
+	 * Set context menu
+	 */
+	void setContextMenu(ContextMenuModel context_menu)
+	{
+		this.context_menu = context_menu;
 	}
 	
 	
@@ -112,9 +124,9 @@ class TreeModel extends BaseModel
 		TreeItem dest_parent_item = this.root.get(dest_parent_path);
 		
 		/* Move item */
-		src_parent_item.removeItem(src_item);
-		if (kind == "into") dest_parent_item.addItem(src_item, null, "before");
-		else dest_parent_item.addItem(src_item, dest_item, kind);
+		src_parent_item.items.removeItem(src_item);
+		if (kind == "into") dest_parent_item.items.addItem(src_item, null, "before");
+		else dest_parent_item.items.addItem(src_item, dest_item, kind);
 		
 		/* Update dest path */
 		Vector new_dest_parent_path = dest_parent_path.slice();

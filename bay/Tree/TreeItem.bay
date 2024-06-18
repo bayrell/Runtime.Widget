@@ -85,38 +85,4 @@ class TreeItem extends BaseObject implements SerializeInterface
 	int find(TreeItem item) =>
 		item ? this.items.find(lib::equal(item)) : -1
 	;
-	
-	
-	/**
-	 * Add item
-	 */
-	TreeItem addItem(TreeItem item, TreeItem dest = null, string kind = "after")
-	{
-		int pos = -1;
-		if (dest != null)
-		{
-			pos = this.find(dest);
-		}
-		if (pos >= 0)
-		{
-			if (kind == "before") this.items.insert(pos, item);
-			else this.items.insert(pos + 1, item);
-		}
-		else
-		{
-			if (kind == "before") this.items.prepend(item);
-			else this.items.push(item);
-		}
-		return item;
-	}
-	
-	
-	/**
-	 * Remove item
-	 */
-	void removeItem(TreeItem item)
-	{
-		int pos = this.find(item);
-		this.items.remove(pos);
-	}
 }

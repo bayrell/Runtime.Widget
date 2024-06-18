@@ -1,0 +1,25 @@
+{
+	"name": "Runtime.Widget.Blocks",
+	"assets":
+	[
+		"Logo.bay",
+		"Menu.bay",
+		"ModuleDescription.bay"
+	],
+	"require": [
+		"Runtime.Web"
+	],
+	"groups": [
+		"widget"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Blocks",
+		"es6": "./../../es6/Blocks"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}
