@@ -22,7 +22,7 @@
 
 
 <style>
-.widget_image img{
+.widget_image{
 	display: inline-block;
 }
 .widget_image__no_image{
@@ -38,22 +38,24 @@
 
 
 <template>
-	<div class="widget_image" class={{ this.class }}>
-		%if (this.src)
-		{
-			<img class="widget_image__image" src={{ this.layout.assets(this.src) }} @key="image" />
-		}
-		%else
-		{
-			<div class="widget_image__no_image" @key="no_image">No image</div>
-		}
-	</div>
+	%if (this.src)
+	{
+		<img class="widget_image"
+			class={{ this.class }}
+			src={{ this.layout.assets(this.src) }}
+			@key="image"
+		/>
+	}
+	%else
+	{
+		<div class="widget_image" class={{ this.class }} @key="no_image">
+			<div class="widget_image__no_image">No image</div>
+		</div>
+	}
 </template>
 
 
 <script>
-
-props string class = "";
 
 @Param{
 	"label": "Image",

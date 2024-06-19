@@ -97,10 +97,10 @@ static void getDefaultTemplate() => {
 			"</style>"
 			"<template>",
 			"\t<slot name='image'>",
-			"\t\t<Image />",
+			"\t\t<Image class='[&_image]' />",
 			"\t</slot>",
 			"\t<slot name='text'>",
-			"\t\t<Text class='[widget_name] center' content='Image text' />",
+			"\t\t<Text class='[&_text] center' content='Image text' />",
 			"\t</slot>",
 			"</template>",
 		])
