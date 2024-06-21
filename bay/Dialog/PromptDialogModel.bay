@@ -29,6 +29,7 @@ class PromptDialogModel extends DialogModel
 {
 	string component = classof PromptDialog;
 	string value = "";
+	string old_value = "";
 	
 	
 	/**
