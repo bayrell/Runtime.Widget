@@ -201,7 +201,7 @@ void startDrag(var e)
 {
 	if (this.is_drag != false) return false;
 	if (this.drag_start_point == null) return false;
-	if (Math.abs(e.layerY - this.drag_start_point.get("y")) > 5) return false;
+	if (Math::abs(e.layerY - this.drag_start_point.get("y")) > 5) return false;
 	this.is_drag = true;
 	return true;
 }
