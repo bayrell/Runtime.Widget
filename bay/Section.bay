@@ -18,12 +18,10 @@
 
 <class name="Runtime.Widget.Section">
 
+<use name="Runtime.Web.Annotations.Param" />
+
 
 <style>
-.widget_section{
-	padding-top: 20px;
-	padding-bottom: 20px;
-}
 .widget_section__wrap{
 	max-width: 1200px;
 	margin-left: auto;
@@ -36,7 +34,7 @@
 
 
 <template>
-	<div class="widget_section" class={{ this.class }}>
+	<div class="widget_section" class={{ this.class }} style={{ this.getStyles() }}>
 		%if (this.wrap)
 		{
 			<div class="widget_section__wrap">
@@ -52,8 +50,60 @@
 
 
 <script>
+
+@Param{
+	"label": "Wrap",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "No", "value": "false"},
+			{"label": "Yes", "value": "true"},
+		],
+	}
+}
 props bool wrap = true;
-props string class = "";
+
+
+@Param{
+	"label": "Image",
+	"name": "Runtime.Widget.Input",
+}
+props string image = "";
+
+
+/**
+ * Returns styles
+ */
+string getStyles()
+{
+	Dict res = [];
+	if (this.image)
+	{
+		res.push("background-image: url(" ~ this.layout.assets(this.image) ~ ")");
+	}
+	return rs::join(";", res);
+}
+
+
+/**
+ * Returns default template
+ */
+static void getDefaultTemplate() => {
+	"default": Dict () =>
+	{
+		"template": rs::join("\n", [
+			"<style>",
+			"padding-top: 20px;",
+			"padding-bottom: 20px;",
+			"background-position: center top;",
+			"background-repeat: no-repeat;",
+			"background-size: cover;",
+			"</style>"
+		])
+	},
+};
+
+
 </script>
 
 

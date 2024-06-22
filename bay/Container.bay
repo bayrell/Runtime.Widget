@@ -29,15 +29,13 @@
 
 
 <template>
-	<div class="widget_container" class={{ this.getClass() }} class={{ this.class }}>
+	<div class="widget_container" class={{ this.getClass() }} style={{ this.getStyles() }}>
 		%render this.renderSlot("default");
 	</div>
 </template>
 
 
 <script>
-
-props string class = "";
 
 @Param{
 	"label": "Flex",
@@ -52,14 +50,65 @@ props string class = "";
 props string flex = "false";
 
 
+@Param{
+	"label": "Align items",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "baseline", "value": "baseline"},
+			{"label": "center", "value": "center"},
+			{"label": "end", "value": "end"},
+			{"label": "flex-end", "value": "flex-end"},
+			{"label": "flex-start", "value": "flex-start"},
+			{"label": "start", "value": "start"},
+			{"label": "stretch", "value": "stretch"},
+			{"label": "revert", "value": "revert"},
+		],
+	}
+}
+props string align_items = "";
+
+
+@Param{
+	"label": "Justify content",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "left", "value": "left"},
+			{"label": "center", "value": "center"},
+			{"label": "right", "value": "right"},
+			{"label": "space-around", "value": "space-around"},
+			{"label": "space-between", "value": "space-between"},
+			{"label": "start", "value": "start"},
+			{"label": "stretch", "value": "stretch"},
+			{"label": "end", "value": "end"},
+		],
+	}
+}
+props string justify_content = "";
+
+
 /**
  * Returns class
  */
 string getClass()
 {
 	Collection<string> styles = [];
+	if (this.class) styles.push(this.class);
 	if (this.flex == "true") styles.push("widget_container--flex");
 	return rs::join(" ", styles);
+}
+
+
+/**
+ * Returns styles
+ */
+string getStyles()
+{
+	Dict res = [];
+	if (this.align_items) res.push("align-items: " ~ this.align_items);
+	if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
+	return rs::join(";", res);
 }
 
 
@@ -73,8 +122,8 @@ static void getDefaultTemplate() => {
 			"<style>",
 			"padding-top: 10px;",
 			"padding-bottom: 10px;",
-			"padding-left: 10px;",
-			"padding-right: 10px;",
+			"padding-left: 0px;",
+			"padding-right: 0px;",
 			"</style>"
 		])
 	},
