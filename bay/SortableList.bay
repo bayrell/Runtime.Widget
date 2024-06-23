@@ -77,6 +77,20 @@
 </style>
 
 
+<template name="renderValue" args="int pos, string item">
+	<Input value={{ item }}
+		@key={{ item }}
+		@event:valueChange={{
+			void (string value) use (pos)
+			{
+				this.value.set(pos, value);
+				this.onValueChange();
+			}
+		}}
+	/>
+</template>
+
+
 <template name="renderItem" args="int pos">
 	 %set string item = this.value.get(pos);
 	<div class="widget_sortable_list__item"
@@ -89,16 +103,7 @@
 			}}
 		>@raw{{ "&#9776;" }}</div>
 		<div class="widget_sortable_list__item_value">
-			<Input value={{ item }}
-				@key={{ item }}
-				@event:valueChange={{
-					void (string value) use (pos)
-					{
-						this.value.set(pos, value);
-						this.onValueChange();
-					}
-				}}
-			/>
+			%render this.renderValue(pos, item);
 		</div>
 		<div class="widget_sortable_list__item_remove"
 			@event:click={{

@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_textarea, .widget_textarea:focus{
+.widget_textarea{
 	width: 100%;
 	max-width: 100%;
 	min-height: 400px;
@@ -35,6 +35,9 @@
 	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
+}
+.widget_textarea:focus{
+	outline: transparent;
 }
 </style>
 

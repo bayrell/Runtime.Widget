@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_input, .widget_input:focus{
+.widget_input{
 	width: 100%;
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
@@ -34,6 +34,9 @@
 	outline: transparent;
 	line-height: normal;
 	min-height: 32px;
+}
+.widget_input:focus{
+	outline: transparent;
 }
 </style>
 

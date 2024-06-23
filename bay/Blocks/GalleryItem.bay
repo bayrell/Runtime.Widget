@@ -16,63 +16,81 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Blocks.Logo">
+<class name="Runtime.Widget.Blocks.GalleryItem">
 
 <use name="Runtime.Web.Annotations.Param" />
 
 
 <style>
-.widget_logo{
-	display: inline-block;
+.widget_gallery_item__title{
+	text-align: center;
+	padding-bottom: 10px;
 }
-.widget_logo__image{
-	display: inline-block;
+.widget_gallery_item__image{
+	position: relative;
+	background-size: cover;
+	background-position: center center;
+	cursor: pointer;
+	min-width: 200px;
+	min-height: 200px;
 }
-.widget_logo__no_image{
+.widget_gallery_item__no_image{
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	font-size: 20px;
 	text-transform: uppercase;
-	width: 270px;
-	height: 70px;
-}
-.widget_logo__text{
-	text-align: center;
+	min-width: 200px;
+	min-height: 200px;
 }
 </style>
 
 
 <template>
-	<div class="widget_logo" class={{ this.class }}>
-		<div class="widget_logo__wrap">
-			%if (this.src)
-			{
-				<img class="widget_logo__image" src={{ this.layout.assets(this.src) }} @key="image" />
-			}
-			%else
-			{
-				<div class="widget_logo__no_image" @key="no_image">No image</div>
-			}
-		</div>
-		<div class="widget_logo__text">{{ this.text }}</div>
+	<div class="widget_gallery_item" class={{ this.class }} data-image={{ this.big_image }}>
+		<div class="widget_gallery_item__title">{{ this.title }}</div>
+		%if (this.small_image)
+		{
+			<div class="widget_gallery_item__image"
+				style={{ "background-image: url(" ~ this.layout.assets(this.small_image) ~ ")" }}
+				@key="image"
+			>
+			</div>
+		}
+		%else
+		{
+			<div class="widget_gallery_item__image" @key="no_image">
+				<div class="widget_gallery_item__no_image">No image</div>
+			</div>
+		}
 	</div>
 </template>
 
 
 <script>
 
+/* Title */
 @Param{
-	"label": "Image",
+	"label": "Title",
 	"name": "Runtime.Widget.Input",
 }
-props string src = "";
+props string title = "";
 
+
+/* Small image */
 @Param{
-	"label": "Text",
+	"label": "Small image",
 	"name": "Runtime.Widget.Input",
 }
-props string text = "Image text";
+props string small_image = "";
+
+
+/* Big image */
+@Param{
+	"label": "Big image",
+	"name": "Runtime.Widget.Input",
+}
+props string big_image = "";
 
 
 /**
@@ -83,10 +101,10 @@ static void getDefaultTemplate() => {
 	{
 		"template": rs::join("\n", [
 			"<style>",
-			"%(TextImage)widget_logo{",
-			"  &__image{",
+			"%(GalleryItem)widget_gallery_item{",
+			"  &__title{",
 			"  }",
-			"  &__text{",
+			"  &__image{",
 			"  }",
 			"}",
 			"</style>"
@@ -94,6 +112,8 @@ static void getDefaultTemplate() => {
 	},
 };
 
+
 </script>
+
 
 </class>

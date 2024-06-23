@@ -58,6 +58,7 @@ static class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
-		new Widget("Runtime.Widget.Blocks.Logo"),
+		new Widget("Runtime.Widget.Blocks.Form"),
+		new Widget("Runtime.Widget.Blocks.GalleryItem"),
 	];
 }

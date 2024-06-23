@@ -2,12 +2,14 @@
 	"name": "Runtime.Widget.Blocks",
 	"assets":
 	[
-		"Logo.bay",
-		"Menu.bay",
+		"Form.bay",
+		"FormFields.bay",
+		"GalleryItem.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [
-		"Runtime.Web"
+		"Runtime.Web",
+		"Runtime.Widget"
 	],
 	"groups": [
 		"widget"

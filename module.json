@@ -9,6 +9,7 @@
 		"Image.bay",
 		"Input.bay",
 		"Label.bay",
+		"Link.bay",
 		"Pagination.bay",
 		"Container.bay",
 		"RowButtons.bay",

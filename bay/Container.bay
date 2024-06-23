@@ -88,6 +88,19 @@ props string align_items = "";
 props string justify_content = "";
 
 
+@Param{
+	"label": "Flex wrap",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "nowrap", "value": "nowrap"},
+			{"label": "wrap", "value": "wrap"},
+		],
+	}
+}
+props string flex_wrap = "";
+
+
 /**
  * Returns class
  */
@@ -108,6 +121,7 @@ string getStyles()
 	Dict res = [];
 	if (this.align_items) res.push("align-items: " ~ this.align_items);
 	if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
+	if (this.flex_wrap) res.push("flex-wrap: " ~ this.flex_wrap);
 	return rs::join(";", res);
 }
 

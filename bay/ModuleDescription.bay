@@ -62,6 +62,7 @@ static class ModuleDescription
 		new Widget("Runtime.Widget.Button"),
 		new Widget("Runtime.Widget.Container"),
 		new Widget("Runtime.Widget.Image"),
+		new Widget("Runtime.Widget.Link"),
 		new Widget("Runtime.Widget.Section"),
 		new Widget("Runtime.Widget.Text"),
 		new Widget("Runtime.Widget.TextImage"),
