@@ -49,17 +49,7 @@ class AppHook extends BaseAppHook
 	void components(Map params)
     {
 		Vector components = [
-			classof Button,
 			classof CSS,
-			classof Container,
-			classof Input,
-			classof Label,
-			classof RowButtons,
-			classof Section,
-			classof Select,
-			classof SelectLabel,
-			classof TextArea,
-			classof WidgetResult,
 		];
 		components.appendItems(params["components"]);
 		params.set("components", components);

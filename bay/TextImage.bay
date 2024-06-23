@@ -44,8 +44,6 @@
 
 <script>
 
-props string class = "";
-
 @Param{
 	"label": "Kind",
 	"name": "Runtime.Widget.Select",

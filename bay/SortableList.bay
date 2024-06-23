@@ -21,25 +21,36 @@
 <use name="Runtime.lib" />
 <use name="Runtime.Math" />
 <use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Input" component="true" />
 
 
 <style>
-.widget_sortable_list__items{
+.widget_sortable_list{
 	position: relative;
 }
 .widget_sortable_list__item{
 	display: flex;
-	align-items: stretch;
+	align-items: center;
 	justify-content: flex-start;
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
 	border-style: solid;
 	border-radius: 4px;
 	margin: 5px;
+}
+.widget_sortable_list__item_drag,
+.widget_sortable_list__item_remove{
 	cursor: pointer;
+	padding: 0px 5px;
 }
 .widget_sortable_list__item_value{
 	flex: 1;
+	%(Input)widget_input{
+		padding: 0px 10px;
+		border-color: transparent;
+		border-radius: 0;
+		border-width: 0;
+	}
 }
 .widget_sortable_list__buttons{
 	text-align: center;
@@ -67,7 +78,7 @@
 
 
 <template name="renderItem" args="int pos">
-	 %set string item = this.items.get(pos);
+	 %set string item = this.value.get(pos);
 	<div class="widget_sortable_list__item"
 		data-pos={{ pos }}
 		@key={{ item }}
@@ -77,20 +88,33 @@
 				void (var e) use (item){ this.onMouseDown(e, item); }
 			}}
 		>@raw{{ "&#9776;" }}</div>
-		<div class="widget_sortable_list__item_value">{{ item }}</div>
-		<div class="widget_sortable_list__item_remove">@raw{{ "&#10005;" }}</div>
+		<div class="widget_sortable_list__item_value">
+			<Input value={{ item }}
+				@key={{ item }}
+				@event:valueChange={{
+					void (string value) use (pos)
+					{
+						this.value.set(pos, value);
+						this.onValueChange();
+					}
+				}}
+			/>
+		</div>
+		<div class="widget_sortable_list__item_remove"
+			@event:click={{
+				void (var e) use (pos){ this.removeItem(pos); }
+			}}
+		>@raw{{ "&#10005;" }}</div>
 	</div>
 </template>
 
 
 <template name="renderItems">
 	<div class="widget_sortable_list__items">
-		<TransitionGroup name="widget_sortable_list__animation">
-		%for (int i=0; i<this.items.count(); i++)
+		%for (int i=0; i<this.value.count(); i++)
 		{
-			%render this.renderitem(i);
+			%render this.renderItem(i);
 		}
-		</TransitionGroup>
 	</div>
 </template>
 
@@ -103,17 +127,18 @@
 
 
 <template>
-	<div class="widget_sortable_list" data-name={{ this.name }}>
+	<div class="widget_sortable_list">
 		%render this.renderItems();
 		%render this.renderButtons();
+		<div class="widget_sortable_list__shadow" @ref="shadow"></div>
 	</div>
 </template>
 
 
 <script>
 
-props int value = "";
 props string name = "";
+props Collection<string> value = [];
 
 /* Drag & Drop */
 bool is_drag = false;
@@ -138,12 +163,22 @@ void swapItems(int a, int b)
 		a = b;
 		b = c;
 	}
-	var obj_a = this.items.get(a);
-	var obj_b = this.items.get(b);
-	this.items.remove(b);
-	this.items.insert(b, obj_a);
-	this.items.remove(a);
-	this.items.insert(a, obj_b);
+	var obj_a = this.value.get(a);
+	var obj_b = this.value.get(b);
+	this.value.remove(b);
+	this.value.insert(b, obj_a);
+	this.value.remove(a);
+	this.value.insert(a, obj_b);
+}
+
+
+/**
+ * Remove item
+ */
+void removeItem(int pos)
+{
+	this.value.remove(pos);
+	this.onValueChange();
 }
 
 
@@ -186,7 +221,7 @@ void createShadow()
 	this.shadow_elem.classList.add(static::getCssHash(static::getClassName()));
 	this.shadow_elem.style.height = this.drag_elem.offsetHeight ~ "px";
 	this.shadow_elem.style.width = this.drag_elem.offsetWidth ~ "px";
-	document.body.appendChild(this.shadow_elem);
+	this.getRef("shadow").appendChild(this.shadow_elem);
 }
 
 
@@ -274,8 +309,8 @@ void moveDrag(var e)
  */
 void onValueChange()
 {
-	if (this.model) this.model.onValueChange(this.items, this.data);
-	this.emit("valueChange", this.items, this.data);
+	if (this.model) this.model.onValueChange(this.value, this.data);
+	this.emit("valueChange", this.value, this.data);
 }
 
 
@@ -284,7 +319,8 @@ void onValueChange()
  */
 void onAddItemClick()
 {
-	this.items.push("");
+	this.value.push("");
+	this.onValueChange();
 }
 
 

@@ -37,7 +37,7 @@
 	<div class="widget_section" class={{ this.class }} style={{ this.getStyles() }}>
 		%if (this.wrap)
 		{
-			<div class="widget_section__wrap">
+			<div class="widget_section__wrap" style={{ this.getWrapStyles() }}>
 				%render this.renderSlot("default");
 			</div>
 		}
@@ -71,15 +71,88 @@ props bool wrap = true;
 props string image = "";
 
 
+@Param{
+	"label": "Flex",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "No", "value": "false"},
+			{"label": "Yes", "value": "true"},
+		],
+	}
+}
+props string flex = "false";
+
+
+@Param{
+	"label": "Align items",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "baseline", "value": "baseline"},
+			{"label": "center", "value": "center"},
+			{"label": "end", "value": "end"},
+			{"label": "flex-end", "value": "flex-end"},
+			{"label": "flex-start", "value": "flex-start"},
+			{"label": "start", "value": "start"},
+			{"label": "stretch", "value": "stretch"},
+			{"label": "revert", "value": "revert"},
+		],
+	}
+}
+props string align_items = "";
+
+
+@Param{
+	"label": "Justify content",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "left", "value": "left"},
+			{"label": "center", "value": "center"},
+			{"label": "right", "value": "right"},
+			{"label": "space-around", "value": "space-around"},
+			{"label": "space-between", "value": "space-between"},
+			{"label": "start", "value": "start"},
+			{"label": "stretch", "value": "stretch"},
+			{"label": "end", "value": "end"},
+		],
+	}
+}
+props string justify_content = "";
+
+
 /**
  * Returns styles
  */
 string getStyles()
 {
 	Dict res = [];
-	if (this.image)
+	if (not this.wrap)
 	{
-		res.push("background-image: url(" ~ this.layout.assets(this.image) ~ ")");
+		if (this.flex == "true")
+		{
+			res.push("display: flex;");
+			if (this.align_items) res.push("align-items: " ~ this.align_items);
+			if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
+		}
+	}
+	if (this.image) res.push("background-image: url(" ~ this.layout.assets(this.image) ~ ")");
+	return rs::join(";", res);
+}
+
+
+/**
+ * Returns wrap styles
+ */
+string getWrapStyles()
+{
+	Dict res = [];
+	if (this.flex == "true")
+	{
+		res.push("display: flex;");
+		if (this.align_items) res.push("align-items: " ~ this.align_items);
+		if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
 	}
 	return rs::join(";", res);
 }
