@@ -23,6 +23,8 @@
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.TextArea" component="true" />
+<use name="Runtime.Widget.WidgetResult" component="true" />
+<use name="Runtime.Widget.WidgetResultModel" />
 
 
 <style>
@@ -36,6 +38,13 @@
 }
 .widget_form__button{
 	text-align: center;
+}
+.widget_form__field_error{
+	color: var(--widget-color-danger);
+	margin-top: var(--widget-space);
+}
+.widget_form__field_error--hide{
+	display: none;
 }
 </style>
 
@@ -81,6 +90,21 @@
 				}}
 			/>
 		}
+		%set Collection<string> field_error = this.getFieldResult(field_name);
+		%if (field_error.count() == 0)
+		{
+			<div class="widget_form__field_error widget_form__field_error--hide"
+				data-name={{ field_name }} @key="result1"></div>
+		}
+		%else
+		{
+			<div class="widget_form__field_error" data-name={{ field_name }} @key="result2">
+				%for (int i=0; i<field_error.count(); i++)
+				{
+					<div>{{ field_error.get(i) }}</div>
+				}
+			</div>
+		}
 	</div>
 </template>
 
@@ -97,7 +121,12 @@
 
 <template name="renderButton">
 	<div class="widget_form__button">
-		<Button @event:click={{ this.onSubmit }}>{{ this.button_text }}</Button>
+		<Button
+			styles={{ this.button_styles }}
+			@event:click={{ this.onSubmit }}
+		>
+			{{ this.button_text }}
+		</Button>
 	</div>
 </template>
 
@@ -107,6 +136,7 @@
 		%render this.renderTitle();
 		%render this.renderFields();
 		%render this.renderButton();
+		<WidgetResult @model={{ this.result }} />
 	</div>
 </template>
 
@@ -114,17 +144,38 @@
 <script>
 
 Dict data = {};
-ApiResult result = null;
+Dict fields_error = {};
+WidgetResultModel result = new WidgetResultModel;
 
 
 /**
  * Api name
  */
 @Param{
-	"label": "API",
+	"label": "API name",
 	"name": "Runtime.Widget.Input",
 }
-props string api = "";
+props string api_name = "";
+
+
+/**
+ * Api title
+ */
+@Param{
+	"label": "API Title",
+	"name": "Runtime.Widget.Input",
+}
+props string api_title = "";
+
+
+/**
+ * Form name
+ */
+@Param{
+	"label": "Form name",
+	"name": "Runtime.Widget.Input",
+}
+props string form_name = "";
 
 
 /**
@@ -164,10 +215,60 @@ props string button_text = "Push the button";
 
 
 /**
+ * Button styles
+ */
+@Param{
+	"label": "Button text",
+	"name": "Runtime.Widget.Tag",
+}
+props Collection<string> button_styles = [];
+
+
+/**
+ * Returns field result
+ */
+Collection getFieldResult(string field_name)
+{
+	if (this.fields_error.has(field_name)) return this.fields_error.get(field_name);
+	return [];
+}
+
+
+/**
+ * Clear error
+ */
+void clearError()
+{
+	this.result.clear();
+	this.fields_error = {};
+}
+
+
+/**
  * On sumbit
  */
 async void onSubmit()
 {
+	this.result.setWaitMessage();
+	ApiResult res = await this.layout.callApi({
+		"api_name": this.api_name,
+		"method_name": "actionSave",
+		"data":
+		{
+			"form_name": this.form_name,
+			"item": this.data,
+			"title": this.api_title,
+		}
+	});
+	this.result.setApiResult(res);
+	if (res.data.has("fields"))
+	{
+		this.fields_error = res.data.get("fields");
+	}
+	if (res.isSuccess())
+	{
+		this.emit("success", [res]);
+	}
 }
 
 

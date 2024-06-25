@@ -83,10 +83,10 @@ class WidgetResultModel extends BaseObject implements SerializeInterface
 	/**
 	 * Set wait message
 	 */
-	void setWaitMessage()
+	void setWaitMessage(string message = "")
 	{
 		this.code = 0;
-		this.message = "Wait please ...";
+		this.message = (message != "") ? message : "Wait please ...";
 	}
 	
 	

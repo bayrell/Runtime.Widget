@@ -125,10 +125,11 @@
 	<div class="widget_dialog"
 		class={{ this.model.is_open ? "widget_dialog--open" : "widget_dialog--hide" }}
 		class={{ this.model.styles.join(" ") }}
+		@event:click={{ this.onDialogClick }}
 	>
 		<div class="widget_dialog__shadow"></div>
 		<div class="widget_dialog__box" @ref="dialog_box">
-			<table class="widget_dialog__wrap"><tbody><tr><td>
+			<table class="widget_dialog__wrap"><tbody><tr><td class="widget_dialog__td">
 				<div class="widget_dialog__container" ...props>
 					%render this.renderDialog();
 				</div>
@@ -151,6 +152,26 @@ Map getProps()
 	return {
 		"style": styles.join(";"),
 	};
+}
+
+
+/**
+ * On shadow click
+ */
+void onShadowClick()
+{
+}
+
+
+/**
+ * On dialog click
+ */
+void onDialogClick(var e)
+{
+	if (e.target.classList.contains("widget_dialog__td"))
+	{
+		this.onShadowClick();
+	}
 }
 
 

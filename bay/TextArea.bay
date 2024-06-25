@@ -47,6 +47,7 @@
 	<textarea
 		class="widget_textarea"
 		name={{ this.name }}
+		placeholder={{ this.placeholder }}
 		@ref="textarea"
 		@event:change={{ this.onChange }}
 		@event:keydown={{ this.onKeyDown }}
@@ -61,6 +62,7 @@ props bool direct_update = false;
 props bool readonly = false;
 props string name = "";
 props string value = "";
+props string placeholder = "";
 var change_timer = null;
 
 
