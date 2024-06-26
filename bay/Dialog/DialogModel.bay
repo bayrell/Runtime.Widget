@@ -34,6 +34,7 @@ class DialogModel extends BaseModel
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
+	bool modal = true;
 	Events events = new Events;
 	RowButtonsModel buttons;
 	Styles styles = new Styles{ "prefix": "widget_dialog" };
@@ -52,7 +53,8 @@ class DialogModel extends BaseModel
 		if (params.has("events")) this.events.setup(params.get("events"));
 		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
 		if (params.has("title")) this.title = params.get("title");
-		if (params.has("width")) this.title = params.get("width");
+		if (params.has("width")) this.width = params.get("width");
+		if (params.has("modal")) this.modal = params.get("modal");
 	}
 	
 	

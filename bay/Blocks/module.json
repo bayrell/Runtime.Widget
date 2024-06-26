@@ -4,12 +4,15 @@
 	[
 		"Form.bay",
 		"FormFields.bay",
-		"GalleryItem.bay",
+		"Gallery.bay",
+		"GalleryDialog.bay",
+		"GalleryDialogModel.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [
 		"Runtime.Web",
-		"Runtime.Widget"
+		"Runtime.Widget",
+		"Runtime.Widget.Dialog"
 	],
 	"groups": [
 		"widget"

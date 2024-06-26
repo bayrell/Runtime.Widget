@@ -118,10 +118,15 @@
 </template>
 
 
-<template name="render">
-	
+<template name="renderDialogContainer">
 	%set Map props = this.getProps();
-	
+	<div class="widget_dialog__container" ...props>
+		%render this.renderDialog();
+	</div>
+</template>
+
+
+<template name="render">
 	<div class="widget_dialog"
 		class={{ this.model.is_open ? "widget_dialog--open" : "widget_dialog--hide" }}
 		class={{ this.model.styles.join(" ") }}
@@ -130,13 +135,10 @@
 		<div class="widget_dialog__shadow"></div>
 		<div class="widget_dialog__box" @ref="dialog_box">
 			<table class="widget_dialog__wrap"><tbody><tr><td class="widget_dialog__td">
-				<div class="widget_dialog__container" ...props>
-					%render this.renderDialog();
-				</div>
+				%render this.renderDialogContainer();
 			</td></tr></tbody></table>
 		</div>
 	</div>
-	
 </template>
 
 
@@ -160,6 +162,10 @@ Map getProps()
  */
 void onShadowClick()
 {
+	if (not this.modal)
+	{
+		this.model.hide();
+	}
 }
 
 
