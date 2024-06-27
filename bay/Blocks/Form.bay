@@ -67,11 +67,11 @@
 			<Input
 				name={{ field_name }}
 				placeholder={{ field_label }}
-				value={{ this.data.get(field_name) }}
+				value={{ this.form_data.get(field_name) }}
 				@event:valueChange={{
 					void (string value) use (field_name)
 					{
-						this.data.set(field_name, value);
+						this.form_data.set(field_name, value);
 					}
 				}}
 			/>
@@ -81,11 +81,11 @@
 			<TextArea
 				name={{ field_name }}
 				placeholder={{ field_label }}
-				value={{ this.data.get(field_name) }}
+				value={{ this.form_data.get(field_name) }}
 				@event:valueChange={{
 					void (string value) use (field_name)
 					{
-						this.data.set(field_name, value);
+						this.form_data.set(field_name, value);
 					}
 				}}
 			/>
@@ -143,7 +143,7 @@
 
 <script>
 
-Dict data = {};
+Dict form_data = {};
 Dict fields_error = {};
 WidgetResultModel result = new WidgetResultModel;
 
@@ -256,7 +256,7 @@ async void onSubmit()
 		"data":
 		{
 			"form_name": this.form_name,
-			"item": this.data,
+			"item": this.form_data,
 			"title": this.api_title,
 		}
 	});

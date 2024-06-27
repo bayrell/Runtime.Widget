@@ -21,7 +21,7 @@ namespace Runtime.Widget.Seo;
 use Runtime.BaseObject;
 use Runtime.Serializer;
 use Runtime.Web.BaseModel;
-use Runtime.Web.SeoWidget;
+use Runtime.Widget.Seo.SeoWidget;
 
 
 class SeoModel extends BaseModel

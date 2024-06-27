@@ -15,8 +15,8 @@
 	"src": "./",
 	"dest":
 	{
-		"php": "./../../php/Form",
-		"es6": "./../../es6/Form"
+		"php": "./../../php/Seo",
+		"es6": "./../../es6/Seo"
 	},
 	"allow":
 	[

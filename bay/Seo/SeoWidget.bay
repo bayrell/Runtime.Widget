@@ -27,10 +27,7 @@
 	}
 	
 	<!-- Locale -->
-	%if (this.layout.lang)
-	{
-		<meta property="og:locale" content={{ this.layout.getLocale() }} />
-	}
+	<meta property="og:locale" content={{ this.layout.getLocale() }} />
 	
 	<!-- Title and description -->
 	<meta property="og:title" content={{ this.layout.getFullTitle() }} />

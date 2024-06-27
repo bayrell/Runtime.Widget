@@ -20,8 +20,8 @@ namespace Runtime.Widget.Seo;
 
 use Runtime.Web.BaseModel;
 use Runtime.Web.RenderContainer;
-use Runtime.Web.SeoModel;
 use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Widget.Seo.SeoModel;
 
 
 class Seo extends BaseAppHook
@@ -31,19 +31,19 @@ class Seo extends BaseAppHook
 	 */
 	void register_hooks()
 	{
-		this.register(static::INIT_LAYOUT);
+		this.register(static::CREATE_LAYOUT);
 		this.register(static::RENDER_HEAD);
-		this.register(static::ROUTE_AFTER);
+		this.register(static::ROUTE_BEFORE);
 	}
 	
 	
 	/**
-	 * Init layout
+	 * Create layout
 	 */
-	async void init_layout(Map params)
+	async void create_layout(Map params)
 	{
-		BaseModel layout = params.get("layout");
-		layout.addWidget(classof SeoModel);
+		RenderContainer container = params.get("container");
+		container.layout.addWidget(classof SeoModel);
 	}
 	
 	
@@ -59,19 +59,21 @@ class Seo extends BaseAppHook
 	
 	
 	/**
-	 * Route after
+	 * Route before
 	 */
-	void route_after(Map params)
+	void route_before(Map params)
 	{
 		RenderContainer container = params.get("container");
 		
 		/* If page model exists */
 		if (container.route == null) return;
-		if (not rtl::exists(container.route.component)) return;
 		if (container.route.data == null) return;
-		if (container.route.model) return;
 		
+		/* Setup route data */
 		SeoModel seo = container.layout.getWidget("seo");
-		seo.description = container.route.data.get("description");
+		Dict route_data = container.route.data;
+		if (route_data.has("title")) container.layout.setPageTitle(route_data.get("title"));
+		if (route_data.has("description")) seo.description = route_data.get("description");
+		if (route_data.has("robots")) seo.robots = route_data.get("robots");
 	}
 }
