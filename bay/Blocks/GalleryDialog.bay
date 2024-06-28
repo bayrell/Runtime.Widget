@@ -23,7 +23,6 @@
 
 <style>
 .widget_dialog__container--photo{
-	position: relative;
 	max-width: 1000px;
     background: transparent;
     border: 0px transparent solid;
@@ -86,8 +85,9 @@
 	border-left: 35px solid #FFF;
 }
 .widget_dialog__image{
+	position: relative;
+	display: inline-block;
 	img{
-		width: 1000px;
 		max-width: 100%;
     	user-select: none;
 	}
@@ -115,15 +115,28 @@
 .widget_dialog__clear{
 	clear: both;
 }
+.widget_dialog__container--photo_contain{
+	text-align: center;
+	.widget_dialog__image{
+		img{
+			max-width: 100%;
+			max-height: calc(100vh - 50px);
+			user-select: none;
+		}
+	}
+}
 </style>
 
 
 <template name="renderDialogContainer">
-	<div class="widget_dialog__container--photo">
-		<Button class="widget_dialog__close"
-			@event:click={{ void(){ this.model.hide(); } }}
-		>x</Button>
+	<div class="widget_dialog__container--photo"
+		class={{ this.model.big_image_contain ? "widget_dialog__container--photo_contain" : "" }}
+		@event:click={{ this.onContainerClick }}
+	>
 		<div class="widget_dialog__image">
+			<Button class="widget_dialog__close"
+				@event:click={{ void(){ this.model.hide(); } }}
+			>x</Button>
 			<img src={{ this.model.getCurrentImage() }} unselectable="on" />
 		</div>
 		<div class="widget_dialog__clear"></div>
@@ -135,5 +148,27 @@
 		></div>
 	</div>
 </template>
+
+
+<script>
+
+/**
+ * On container click
+ */
+void onContainerClick(var e)
+{
+	if (
+		e.target.classList.contains("widget_dialog__arrow") or
+		e.target.classList.contains("widget_dialog__clear") or
+		e.target.classList.contains("widget_dialog__close") or
+		e.target.tagName == "IMG"
+	)
+	{
+		return;
+	}
+	this.onShadowClick();
+}
+
+</script>
 
 </class>

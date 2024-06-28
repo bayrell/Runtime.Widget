@@ -26,6 +26,7 @@ class GalleryDialogModel extends DialogModel
 {
 	string component = classof GalleryDialog;
 	Collection<Dict> items = [];
+	bool big_image_contain = false;
 	int current = 0;
 	
 	

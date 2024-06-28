@@ -59,6 +59,7 @@
 
 /* Items */
 props string items = "";
+props bool big_image_contain = false;
 
 
 /* Component */
@@ -73,6 +74,15 @@ props string component = "";
 GalleryDialogModel dialog = new GalleryDialogModel{
 	"modal": false,
 };
+
+
+/**
+ * On mounted
+ */
+void onMounted()
+{
+	this.dialog.big_image_contain = this.big_image_contain;
+}
 
 
 /**
