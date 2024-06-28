@@ -89,7 +89,10 @@
 	}
 	%else
 	{
-		<a class="nolink" class={{ this.class }} href={{ href }} @ref="widget">
+		<a class="nolink" class={{ this.class }}
+			href={{ href }} target={{ this.target }}
+			@ref="widget"
+		>
 			<button type={{ this.type }}
 				class="widget_button"
 				class={{ this.getStyles() }}
@@ -114,6 +117,7 @@
 
 props string class = "";
 props string type = "button";
+props string target = "_self";
 props var href = null;
 props Collection<string> styles = [];
 
@@ -155,6 +159,7 @@ void getStyles()
 void onClick(var e)
 {
 	if (this.model) this.model.onClick(this.data);
+	this.emit("click", [e]);
 	e.stopPropagation();
 }
 

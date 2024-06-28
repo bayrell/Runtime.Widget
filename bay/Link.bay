@@ -22,7 +22,7 @@
 
 
 <template>
-	<a class={{ this.class }} href={{ this.href }}>{{ this.text }}</a>
+	<a class={{ this.class }} href={{ this.href }} target={{ this.target }}>{{ this.text }}</a>
 </template>
 
 
@@ -42,6 +42,20 @@ props string href = "";
 	"name": "Runtime.Widget.Input",
 }
 props string text = "";
+
+
+/* Target */
+@Param{
+	"label": "target",
+	"name": "Runtime.Widget.Select",
+	"props": {
+		"options": [
+			{"label": "_self", "value": "_self"},
+			{"label": "_blank", "value": "_blank"},
+		],
+	}
+}
+props string target = "_self";
 
 </script>
 
