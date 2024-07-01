@@ -159,7 +159,6 @@ void getStyles()
 void onClick(var e)
 {
 	if (this.model) this.model.onClick(this.data);
-	this.emit("click", [e]);
 	e.stopPropagation();
 }
 
