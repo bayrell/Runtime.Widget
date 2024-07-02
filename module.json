@@ -18,7 +18,6 @@
 		"Select.bay",
 		"SelectLabel.bay",
 		"SortableList.bay",
-		"Styles.bay",
 		"Tag.bay",
 		"Text.bay",
 		"TextArea.bay",
@@ -29,7 +28,8 @@
 		"ModuleDescription.bay"
 	],
 	"require": [
-		"Runtime"
+		"Runtime",
+		"Runtime.Web"
 	],
 	"groups": [
 		"widget"
@@ -37,15 +37,7 @@
 	"modules":
 	[
 		{
-			"src": "bay/Blocks",
-			"type": "module"
-		},
-		{
 			"src": "bay/ContextMenu",
-			"type": "module"
-		},
-		{
-			"src": "bay/Crud",
 			"type": "module"
 		},
 		{
@@ -54,6 +46,10 @@
 		},
 		{
 			"src": "bay/Form",
+			"type": "module"
+		},
+		{
+			"src": "bay/Gallery",
 			"type": "module"
 		},
 		{

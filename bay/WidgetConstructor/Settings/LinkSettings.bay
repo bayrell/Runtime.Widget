@@ -16,48 +16,42 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use BayLang.Constructor.Annotations.WidgetSettingsInterface;
 
 
-static class ModuleDescription
+class LinkSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns params
 	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
+	Collection<Param> getParams() =>
 	[
-		new Hook("Runtime.Widget.AppHook"),
+		new Param
+		{
+			"name": "href",
+			"label": "Href",
+			"name": "Runtime.Widget.Input",
+		},
+		new Param
+		{
+			"name": "text",
+			"label": "Text",
+			"name": "Runtime.Widget.Input",
+		},
+		new Param
+		{
+			"name": "target",
+			"label": "Target",
+			"component": "Runtime.Widget.Select",
+			"default": "_self",
+			"props": {
+				"options": [
+					{"key": "_self", "value": "self"},
+					{"key": "_blank", "value": "blank"},
+				],
+			}
+		},
 	];
 }

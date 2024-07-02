@@ -23,12 +23,15 @@ use Runtime.SerializeInterface;
 use Runtime.Serializer;
 use Runtime.Exceptions.AbstractException;
 use Runtime.Web.ApiResult;
+use Runtime.Widget.WidgetResult;
 
 
-class WidgetResultModel extends BaseObject implements SerializeInterface
+class WidgetResultModel extends BaseModel
 {
 	int code = 0;
 	string message = "";
+	string widget_name = "result";
+	string component = classof WidgetResult;
 	
 	
 	/**

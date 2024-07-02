@@ -16,48 +16,51 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.Form;
 
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Form.FormStorageInterface;
 
 
-static class ModuleDescription
+class FormSubmitStorage implements FormStorageInterface
 {
+	FormModel form = null;
+	
+	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Constructor
 	 */
-	public static string getModuleName()
+	void constructor(FormModel form)
 	{
-		return "Runtime.Widget";
+		this.form = form;
 	}
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Load form
 	 */
-	public static string getModuleVersion()
+	async ApiResult load()
 	{
-		return "0.12.1";
+		return null;
 	}
 	
 	
 	/**
-	 * Returns required modules
-	 * @return Map<string>
+	 * Submit form
 	 */
-	pure Map<string> requiredModules() => 
+	async ApiResult submit()
 	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+		Dict post_data =
+		{
+			"pk": this.form.pk,
+			"item": this.form.getPostData(),
+		};
+		post_data = this.form.mergeData(post_data, "submit");
+		ApiResult res = await this.form.layout.callApi({
+			"api_name": this.form.getApiName(),
+			"method_name": "actionSave",
+			"data": post_data
+		});
+		return res;
+	}
 }

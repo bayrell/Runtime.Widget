@@ -16,48 +16,19 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
-
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+namespace Runtime.Widget.Form;
 
 
-static class ModuleDescription
+interface FormStorageInterface
 {
 	/**
-	 * Returns module name
-	 * @return string
+	 * Load form
 	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
+	async void load();
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Submit form
 	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+	async void submit();
 }

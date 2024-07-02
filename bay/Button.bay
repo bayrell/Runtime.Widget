@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.Button">
 
-<use name="Runtime.Widget.Styles" />
-
 
 <style>
 .widget_button{
@@ -65,9 +63,8 @@
 </style>
 
 
-<template name="render">
-	%set string href = this.getHref();
-	%if (href == null)
+<template>
+	%if (this.href == null)
 	{
 		<button type={{ this.type }}
 			class="widget_button"
@@ -77,20 +74,13 @@
 			@event:click={{ this.onClick }}
 			@ref="widget"
 		>
-			%if (this.model != null and this.model.content != null)
-			{
-				{{ this.model.content }}
-			}
-			%else
-			{
-				%render this.renderSlot("default");
-			}
+			%render this.renderSlot("default");
 		</button>
 	}
 	%else
 	{
 		<a class="nolink" class={{ this.class }}
-			href={{ href }} target={{ this.target }}
+			href={{ this.href }} target={{ this.target }}
 			@ref="widget"
 		>
 			<button type={{ this.type }}
@@ -99,14 +89,7 @@
 				class={{ this.renderListClass() }}
 				@event:click={{ this.onClick }}
 			>
-				%if (this.model != null and this.model.content != null)
-				{
-					{{ this.model.content }}
-				}
-				%else
-				{
-					%render this.renderSlot("default");
-				}
+				%render this.renderSlot("default");
 			</button>
 		</a>
 	}
@@ -123,43 +106,19 @@ props Collection<string> styles = [];
 
 
 /**
- * Returns href
- */
-string getHref()
-{
-	string href = (this.model != null) ? this.model.href : this.href;
-	if (rtl::isCallable(href))
-	{
-		return rtl::apply(href, [this.data]);
-	}
-	return href;
-}
-
-
-/**
  * Returns styles
  */
 void getStyles()
 {
-	Vector styles = (this.model != null) ? this.model.styles : this.styles;
-	if (styles instanceof Styles)
-	{
-		return styles.join(" ");
-	}
-	return styles
-		.map(string (string item) => "widget_button--" ~ item)
+	return this.styles
+		.map(
+			string (string item) =>
+				rs::charAt(item, 0) != "@"
+					? "widget_button--" ~ item
+					: rs::substr(s, item)
+		)
 		.join(" ")
 	;
-}
-
-
-/**
- * Click button event
- */
-void onClick(var e)
-{
-	if (this.model) this.model.onClick(this.data);
-	e.stopPropagation();
 }
 
 </script>

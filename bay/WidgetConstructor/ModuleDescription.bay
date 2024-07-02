@@ -16,10 +16,11 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.WidgetConstructor;
 
 use Runtime.Entity.Hook;
 use Runtime.Web.Annotations.Widget;
+use BayLang.Constructor.Annotations.WidgetManagerAnnotation;
 
 
 static class ModuleDescription
@@ -30,7 +31,7 @@ static class ModuleDescription
 	 */
 	public static string getModuleName()
 	{
-		return "Runtime.Widget";
+		return "Runtime.Widget.WidgetConstructor";
 	}
 	
 	
@@ -58,6 +59,6 @@ static class ModuleDescription
 	 */
 	pure Collection<Dict> entities() =>
 	[
-		new Hook("Runtime.Widget.AppHook"),
+		new WidgetManagerAnnotation(classof WidgetManager),
 	];
 }

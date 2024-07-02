@@ -1,0 +1,71 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.WidgetConstructor.Settings;
+
+use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+
+
+class TextSettings implements WidgetSettingsInterface
+{
+	/**
+	 * Returns params
+	 */
+	Collection<Param> getParams() =>
+	[
+		new Param
+		{
+			"name": "tag",
+			"label": "Tag",
+			"component": "Runtime.Widget.Select",
+			"default": "text",
+			"props": {
+				"options": [
+					{"key": "text", "value": "Text"},
+					{"key": "h1", "value": "H1"},
+					{"key": "h2", "value": "H2"},
+					{"key": "h3", "value": "H3"},
+					{"key": "h4", "value": "H4"},
+				],
+			}
+		},
+		new Param
+		{
+			"name": "raw",
+			"label": "Raw",
+			"component": "Runtime.Widget.Select",
+			"default": "false",
+			"props": {
+				"options": [
+					{"key": "false", "value": "No"},
+					{"key": "true", "value": "Yes"},
+				],
+			}
+		},
+		new Param
+		{
+			"name": "content",
+			"label": "Content",
+			"name": "Runtime.Widget.TextEditable",
+			"default": "Text",
+			"props": {
+				"direct_update": true,
+			},
+		},
+	];
+}

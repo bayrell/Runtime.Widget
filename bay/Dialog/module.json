@@ -2,13 +2,14 @@
 	"name": "Runtime.Widget.Dialog",
 	"assets":
 	[
+		"BaseDialogModel.bay",
+		"ConfirmDialogModel.bay",
 		"Dialog.bay",
+		"DialogMessage.bay",
 		"DialogModel.bay",
 		"DialogModelException.bay",
-		"ConfirmDialogModel.bay",
 		"PromptDialog.bay",
-		"PromptDialogModel.bay",
-		"ModuleDescription.bay"
+		"PromptDialogModel.bay"
 	],
 	"require": [
 		"Runtime.Widget"

@@ -98,15 +98,12 @@
 
 
 <template name="renderButtons">
-	%if (this.model.buttons != null)
-	{
-		<RowButtons @model={{ this.model.buttons }} />
-	}
+	%render this.renderWidget(this.model.buttons);
 </template>
 
 
 <template name="renderResult">
-	<WidgetResult @model={{ this.model.result }} />
+	%render this.renderWidget(this.model.result);
 </template>
 
 

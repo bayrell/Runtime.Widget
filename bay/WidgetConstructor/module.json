@@ -1,0 +1,23 @@
+{
+	"name": "Runtime.Widget.WidgetConstructor",
+	"assets":
+	[
+		"FormFields.bay"
+	],
+	"require": [
+		"Runtime.Widget"
+	],
+	"groups": [
+		"constructor"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/WidgetConstructor",
+		"es6": "./../../es6/WidgetConstructor"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}

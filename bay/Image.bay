@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.Image">
 
-<use name="Runtime.Web.Annotations.Param" />
-
 
 <style>
 .widget_image{
@@ -57,10 +55,6 @@
 
 <script>
 
-@Param{
-	"label": "Image",
-	"name": "Runtime.Widget.Input",
-}
 props string src = "";
 
 </script>

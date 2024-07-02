@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.WidgetResult">
 
-<use name="Runtime.Widget.WidgetResultModel" />
-
 
 <style>
 .widget_result{
@@ -52,10 +50,9 @@
  */
 string getErrorClass()
 {
-	WidgetResultModel result = this.model;
-	if (result.message == "") return "widget_result--hide";
-	if (result.isSuccess()) return "widget_result--success";
-	if (result.isError()) return "widget_result--error";
+	if (this.model.message == "") return "widget_result--hide";
+	if (this.model.isSuccess()) return "widget_result--success";
+	if (this.model.isError()) return "widget_result--error";
 	return "";
 }
 

@@ -35,7 +35,7 @@ class PromptDialogModel extends DialogModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget(Dict params)
+	void init(Dict params)
 	{
 		parent(params);
 		
@@ -99,7 +99,10 @@ class PromptDialogModel extends DialogModel
 	{
 		try
 		{
-			this.events.emit("confirm", [this.value]);
+			this.emit(new DialogMessage{
+				"name": "confirm",
+				"value": this.value
+			});
 		}
 		catch (DialogModelException e)
 		{

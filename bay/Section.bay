@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.Section">
 
-<use name="Runtime.Web.Annotations.Param" />
-
 
 <style>
 .widget_section__wrap{
@@ -51,87 +49,11 @@
 
 <script>
 
-@Param{
-	"label": "Wrap",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "No", "value": "false"},
-			{"label": "Yes", "value": "true"},
-		],
-	}
-}
-props bool wrap = true;
-
-
-@Param{
-	"label": "Image",
-	"name": "Runtime.Widget.Input",
-}
+props string wrap = "true";
 props string image = "";
-
-
-@Param{
-	"label": "Flex",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "No", "value": "false"},
-			{"label": "Yes", "value": "true"},
-		],
-	}
-}
 props string flex = "false";
-
-
-@Param{
-	"label": "Align items",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "baseline", "value": "baseline"},
-			{"label": "center", "value": "center"},
-			{"label": "end", "value": "end"},
-			{"label": "flex-end", "value": "flex-end"},
-			{"label": "flex-start", "value": "flex-start"},
-			{"label": "start", "value": "start"},
-			{"label": "stretch", "value": "stretch"},
-			{"label": "revert", "value": "revert"},
-		],
-	}
-}
 props string align_items = "";
-
-
-@Param{
-	"label": "Justify content",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "left", "value": "left"},
-			{"label": "center", "value": "center"},
-			{"label": "right", "value": "right"},
-			{"label": "space-around", "value": "space-around"},
-			{"label": "space-between", "value": "space-between"},
-			{"label": "start", "value": "start"},
-			{"label": "stretch", "value": "stretch"},
-			{"label": "end", "value": "end"},
-		],
-	}
-}
 props string justify_content = "";
-
-
-@Param{
-	"label": "Flex wrap",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "nowrap", "value": "nowrap"},
-			{"label": "wrap", "value": "wrap"},
-		],
-	}
-}
 props string flex_wrap = "";
 
 
@@ -171,26 +93,6 @@ string getWrapStyles()
 	}
 	return rs::join(";", res);
 }
-
-
-/**
- * Returns default template
- */
-static void getDefaultTemplate() => {
-	"default": Dict () =>
-	{
-		"template": rs::join("\n", [
-			"<style>",
-			"padding-top: 20px;",
-			"padding-bottom: 20px;",
-			"background-position: center top;",
-			"background-repeat: no-repeat;",
-			"background-size: cover;",
-			"</style>"
-		])
-	},
-};
-
 
 </script>
 

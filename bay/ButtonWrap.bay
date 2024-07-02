@@ -1,4 +1,4 @@
-/*!
+<!--
  *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,50 +14,30 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+-->
+
+<class name="Runtime.Widget.ButtonWrap">
+
+<use name="Runtime.Widget.Button" component="true" />
+
+
+<template>
+    %set props = this.model.getProps(this.data);
+	<Button @event:click={{ this.onClick }} ...props>{{ this.model.content }}</Button>
+</template>
+
+
+<script>
+
+/**
+ * Click button event
  */
-
-namespace Runtime.Widget;
-
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
-
-
-static class ModuleDescription
+void onClick(var e)
 {
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+	this.model.onClick(this.data);
+	e.stopPropagation();
 }
+
+</script>
+
+</class>

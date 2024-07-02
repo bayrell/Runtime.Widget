@@ -16,48 +16,11 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use BayLang.Constructor.Annotations.WidgetSettingsInterface;
 
 
-static class ModuleDescription
+class TextImageSettings implements WidgetSettingsInterface
 {
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
 }

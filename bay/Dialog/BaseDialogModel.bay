@@ -16,48 +16,54 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
-
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+namespace Runtime.Widget.Dialog;
 
 
-static class ModuleDescription
+class BaseDialogModel extends BaseModel
 {
+	bool is_open = false;
+	bool modal = true;
+	string component = "";
+	
+	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Setup widget params
 	 */
-	public static string getModuleName()
+	void setup(Dict params)
 	{
-		return "Runtime.Widget";
+		parent(params);
 	}
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Init widget settings
 	 */
-	public static string getModuleVersion()
+	void init(Dict params)
 	{
-		return "0.12.1";
+		parent(params);
 	}
 	
 	
 	/**
-	 * Returns required modules
-	 * @return Map<string>
+	 * Show dialog
 	 */
-	pure Map<string> requiredModules() => 
+	void show()
 	{
-	};
+		this.is_open = true;
+		this.emit(new DialogMessage{
+			"name": "show",
+		});
+	}
 	
 	
 	/**
-	 * Returns enities
+	 * Hide dialog
 	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+	void hide()
+	{
+		this.is_open = false;
+		this.emit(new DialogMessage{
+			"name": "hide",
+		});
+	}
 }

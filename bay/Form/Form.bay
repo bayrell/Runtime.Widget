@@ -16,34 +16,112 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Form.Form">
+<class name="Runtime.Widget.Blocks.Form">
 
-<use name="Runtime.Web.RenderListModel" />
-<use name="Runtime.Widget.Form.FormGroupFields" component="true" />
-<use name="Runtime.Widget.Form.FormModel" />
+<use name="Runtime.Web.ApiResult" />
+<use name="Runtime.Web.Annotations.Param" />
+<use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
-<use name="Runtime.Widget.RowButtons" component="true" />
+<use name="Runtime.Widget.TextArea" component="true" />
 <use name="Runtime.Widget.WidgetResult" component="true" />
+<use name="Runtime.Widget.WidgetResultModel" />
 
 
 <style>
-.widget_form__load_error{
+.widget_form{
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
 }
-.widget_form %(RowButtons)widget_form__top_buttons{
-	margin-bottom: calc(var(--widget-space) * 3);
+.widget_form__field_row{
+	margin-bottom: 10px;
 }
-.widget_form %(RowButtons)widget_form__bottom_buttons{
+.widget_form__button{
+	text-align: center;
+}
+.widget_form__field_error{
+	color: var(--widget-color-danger);
 	margin-top: var(--widget-space);
-	justify-content: center;
+}
+.widget_form__field_error--hide{
+	display: none;
 }
 </style>
 
 
-<template name="renderTopButtons">
-	%if (this.model.top_buttons.count() > 0)
+<template name="renderTitle">
+</template>
+
+
+<template name="renderField" args="Dict field">
+	%set string field_name = field.get("name");
+	%set string field_model = field.get("model", null);
+	%set string field_component = field.get("component");
+	%set string field_props = field.get("props", {});
+	%set value = this.model.getItemValue(field_name);
+	%if (field_component != null)
 	{
-		%render this.renderWidget(this.model.top_buttons);
+		<{field_component}
+			value={{ value }}
+			name={{ field_name }}
+			@model={{ field_model }}
+			@event:onValueChange={{
+				void (string value) use (field_name) =>
+					this.model.onFieldChange(field_name, value)
+			}}
+			data={{{
+				"field_name": field_name,
+			}}}
+			...field_props
+		/>
 	}
+	%else
+	{
+		%render this.renderWidget(field_model, {
+			"data": {
+				"value": value,
+			}
+		});
+	}
+</template>
+
+
+<template name="renderFieldResult" args="Dict field">
+	%set string field_name = field.get("name");
+	%set Collection<string> field_error = this.getFieldResult(field_name);
+	%if (field_error.count() == 0)
+	{
+		<div class="widget_form__field_error widget_form__field_error--hide"
+			data-name={{ field_name }} @key="result1"></div>
+	}
+	%else
+	{
+		<div class="widget_form__field_error" data-name={{ field_name }} @key="result2">
+			%for (int i=0; i<field_error.count(); i++)
+			{
+				<div>{{ field_error.get(i) }}</div>
+			}
+		</div>
+	}
+</template>
+
+
+<template name="renderFieldRow" args="Dict field">
+	%set string field_name = field.get("name");
+	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
+		%render this.renderField(field);
+		%render this.renderFieldResult(field);
+	</div>
+</template>
+
+
+<template name="renderFields">
+	<div class="widget_form__fields">
+	%for (int i=0; i<this.fields.count(); i++)
+	{
+		%render this.renderFieldRow(this.fields.get(i));
+	}
+	</div>
 </template>
 
 
@@ -55,69 +133,14 @@
 </template>
 
 
-<template name="renderContent">
-	<FormGroupFields
-		fields={{ this.model.fields }}
-		@model={{ this.model }}
-	/>
-</template>
-
-
-<template name="renderResult">
-	%if (this.model.storage and this.model.show_result)
-	{
-		<WidgetResult @model={{ this.model.storage.result }} />
-	}
-</template>
-
-
-<template name="renderForm">
-	<form method="POST"
-		enctype="multipart/form-data" onsubmit="return false;"
-	>
-		%render this.renderContent();
-		%render this.renderBottomButtons();
-		%render this.renderResult();
-	</form>
-</template>
-
-
-<template name="renderWidgets">
-	%render this.renderWidget(this.model.getWidget("render_list"));
-</template>
-
-
-<template name="renderLoadError">
-	<div class="widget_form__load_error">
-		{{ this.model.storage.result.message }}
-	</div>
-</template>
-
-
 <template>
-	<div class="widget_form" class={{ this.getStyles() }}>
-		%render this.renderTopButtons();
-		%if (this.model.is_load_success)
-		{
-			%render this.renderForm();
-			%render this.renderWidgets();
-		}
-		%else
-		{
-			%render this.renderLoadError();
-		}
+	<div class="widget_form" class={{ this.class }}>
+		%render this.renderTitle();
+		%render this.renderFields();
+		%render this.renderBottomButtons();
+		%render this.renderWidget(this.model.result);
 	</div>
 </template>
-
-
-<script>
-
-/**
- * Returns styles
- */
-string getStyles() => this.model.styles.join(" ");
-
-</script>
 
 
 </class>

@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.Container">
 
-<use name="Runtime.Web.Annotations.Param" />
-
 
 <style>
 .widget_container--flex{
@@ -37,67 +35,9 @@
 
 <script>
 
-@Param{
-	"label": "Flex",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "No", "value": "false"},
-			{"label": "Yes", "value": "true"},
-		],
-	}
-}
 props string flex = "false";
-
-
-@Param{
-	"label": "Align items",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "baseline", "value": "baseline"},
-			{"label": "center", "value": "center"},
-			{"label": "end", "value": "end"},
-			{"label": "flex-end", "value": "flex-end"},
-			{"label": "flex-start", "value": "flex-start"},
-			{"label": "start", "value": "start"},
-			{"label": "stretch", "value": "stretch"},
-			{"label": "revert", "value": "revert"},
-		],
-	}
-}
 props string align_items = "";
-
-
-@Param{
-	"label": "Justify content",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "left", "value": "left"},
-			{"label": "center", "value": "center"},
-			{"label": "right", "value": "right"},
-			{"label": "space-around", "value": "space-around"},
-			{"label": "space-between", "value": "space-between"},
-			{"label": "start", "value": "start"},
-			{"label": "stretch", "value": "stretch"},
-			{"label": "end", "value": "end"},
-		],
-	}
-}
 props string justify_content = "";
-
-
-@Param{
-	"label": "Flex wrap",
-	"name": "Runtime.Widget.Select",
-	"props": {
-		"options": [
-			{"label": "nowrap", "value": "nowrap"},
-			{"label": "wrap", "value": "wrap"},
-		],
-	}
-}
 props string flex_wrap = "";
 
 

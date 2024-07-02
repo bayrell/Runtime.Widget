@@ -64,12 +64,12 @@
 		{
 			%set Dict item = options.get(i);
 			%set selected = {};
-			%if (item.get("value") == this.value and this.value !== "" and this.value !== null)
+			%if (item.get("key") == this.value and this.value !== "" and this.value !== null)
 			{
 				%set selected = { "selected": "selected" };
 			}
-			<option @key={ item.get("value") } value={ "" ~ item.get("value") } ...selected>
-				{{ item.get("label") }}
+			<option @key={ item.get("key") } value={ "" ~ item.get("key") } ...selected>
+				{{ item.get("value") }}
 			</option>
 		}
 	}

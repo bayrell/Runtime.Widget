@@ -16,48 +16,40 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use BayLang.Constructor.Annotations.Param;
+use BayLang.Constructor.Annotations.WidgetSettingsInterface;
 
 
-static class ModuleDescription
+class FormSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns params
 	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
+	Collection<Param> getParams() =>
 	[
-		new Hook("Runtime.Widget.AppHook"),
+		new Param
+		{
+			"name": "api_name",
+			"label": "API name",
+			"component": "Runtime.Widget.Input",
+			"model": true,
+		},
+		new Param
+		{
+			"name": "fields",
+			"label": "Fields",
+			"component": "Runtime.Widget.Blocks.FormFields",
+			"model": true,
+			"default":
+			[
+				{
+					"name": "name",
+					"label": "Username",
+					"component": "Runtime.Widget.Input",
+				},
+			],
+		},
 	];
 }

@@ -26,6 +26,21 @@ use Runtime.Widget.Dialog.DialogModel;
 
 class ConfirmDialogModel extends DialogModel
 {
+	string content = "";
+	
+	
+	/**
+	 * Setup widget params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("content")) this.content = params.get("content");
+	}
+	
+	
 	/**
 	 * Init widget settings
 	 */
@@ -62,9 +77,6 @@ class ConfirmDialogModel extends DialogModel
 				},
 			}
 		);
-		
-		/* Buttons style */
-		this.buttons.styles.add("align-end");
 	}
 	
 	
@@ -84,7 +96,9 @@ class ConfirmDialogModel extends DialogModel
 	{
 		try
 		{
-			this.events.emit("confirm");
+			this.emit(new DialogMessage{
+				"name": "confirm"
+			});
 		}
 		catch (DialogModelException e)
 		{

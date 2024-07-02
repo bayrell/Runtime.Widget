@@ -16,48 +16,13 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget;
+namespace Runtime.Widget.Form;
 
-use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use Runtime.Web.Messages.BaseMessage;
 
 
-static class ModuleDescription
+class FormMessage extends BaseMessage
 {
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleName()
-	{
-		return "Runtime.Widget";
-	}
-	
-	
-	/**
-	 * Returns module name
-	 * @return string
-	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
-	
-	
-	/**
-	 * Returns required modules
-	 * @return Map<string>
-	 */
-	pure Map<string> requiredModules() => 
-	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+	string name = "";
+	ApiResult result = null;
 }
