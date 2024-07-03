@@ -68,10 +68,9 @@
 	{
 		<button type={{ this.type }}
 			class="widget_button"
-			class={{ this.getStyles() }}
+			class={{ static::getStyles(this.styles) }}
 			class={{ this.renderListClass() }}
 			class={{ this.class }}
-			@event:click={{ this.onClick }}
 			@ref="widget"
 		>
 			%render this.renderSlot("default");
@@ -85,9 +84,8 @@
 		>
 			<button type={{ this.type }}
 				class="widget_button"
-				class={{ this.getStyles() }}
+				class={{ static::getStyles(this.styles) }}
 				class={{ this.renderListClass() }}
-				@event:click={{ this.onClick }}
 			>
 				%render this.renderSlot("default");
 			</button>
@@ -103,23 +101,6 @@ props string type = "button";
 props string target = "_self";
 props var href = null;
 props Collection<string> styles = [];
-
-
-/**
- * Returns styles
- */
-void getStyles()
-{
-	return this.styles
-		.map(
-			string (string item) =>
-				rs::charAt(item, 0) != "@"
-					? "widget_button--" ~ item
-					: rs::substr(s, item)
-		)
-		.join(" ")
-	;
-}
 
 </script>
 

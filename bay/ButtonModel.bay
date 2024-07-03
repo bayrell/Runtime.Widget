@@ -77,7 +77,7 @@ class ButtonModel extends BaseModel
 		/* Add href */
 		if (this.href)
 		{
-			if (rtl::isCallable(this.href)) result.set("href", rtl::apply(href, [data]));
+			if (rtl::isCallable(this.href)) result.set("href", rtl::apply(this.href, [data]));
 			else result.set("href", this.href);
 		}
 		

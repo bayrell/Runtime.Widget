@@ -19,7 +19,7 @@
 namespace Runtime.Widget.WidgetConstructor;
 
 use Runtime.Entity.Hook;
-use Runtime.Web.Annotations.Widget;
+use Runtime.Widget.WidgetConstructor.WidgetManager;
 use BayLang.Constructor.Annotations.WidgetManagerAnnotation;
 
 

@@ -18,11 +18,10 @@
 
 namespace Runtime.Widget.Dialog;
 
-use Runtime.Web.Messages.BaseMessage;
+use Runtime.Web.Messages.Message;
 
 
-class DialogMessage extends BaseMessage
+class DialogMessage extends Message
 {
-	string name = "";
 	string value = "";
 }

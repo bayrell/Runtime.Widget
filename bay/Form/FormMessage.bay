@@ -18,11 +18,11 @@
 
 namespace Runtime.Widget.Form;
 
-use Runtime.Web.Messages.BaseMessage;
+use Runtime.Web.ApiResult;
+use Runtime.Web.Messages.Message;
 
 
-class FormMessage extends BaseMessage
+class FormMessage extends Message
 {
-	string name = "";
 	ApiResult result = null;
 }

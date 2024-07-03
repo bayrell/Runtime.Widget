@@ -54,7 +54,7 @@ class TreeModel extends BaseModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget(Dict params)
+	void init(Dict params)
 	{
 		parent(params);
 	}

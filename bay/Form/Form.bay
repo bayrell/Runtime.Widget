@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Blocks.Form">
+<class name="Runtime.Widget.Form.Form">
 
 <use name="Runtime.Web.ApiResult" />
 <use name="Runtime.Web.Annotations.Param" />
@@ -58,7 +58,7 @@
 	%set string field_model = field.get("model", null);
 	%set string field_component = field.get("component");
 	%set string field_props = field.get("props", {});
-	%set value = this.model.getItemValue(field_name);
+	%set var value = this.model.getItemValue(field_name);
 	%if (field_component != null)
 	{
 		<{field_component}

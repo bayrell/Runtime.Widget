@@ -18,6 +18,11 @@
 
 namespace Runtime.Widget.Dialog;
 
+use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.WidgetResultModel;
+use Runtime.Widget.Dialog.BaseDialogModel;
+use Runtime.Widget.Dialog.Dialog;
+
 
 class DialogModel extends BaseDialogModel
 {
@@ -25,6 +30,7 @@ class DialogModel extends BaseDialogModel
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
+	Collection<string> styles = [];
 	RowButtonsModel buttons;
 	WidgetResultModel result;
 	
@@ -38,6 +44,7 @@ class DialogModel extends BaseDialogModel
 		
 		if (params == null) return;
 		if (params.has("content")) this.content = params.get("content");
+		if (params.has("styles")) this.styles = params.get("styles");
 		if (params.has("title")) this.title = params.get("title");
 		if (params.has("width")) this.width = params.get("width");
 	}

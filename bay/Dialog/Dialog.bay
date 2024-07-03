@@ -126,7 +126,7 @@
 <template name="render">
 	<div class="widget_dialog"
 		class={{ this.model.is_open ? "widget_dialog--open" : "widget_dialog--hide" }}
-		class={{ this.model.styles.join(" ") }}
+		class={{ static::getStyles(this.model.styles) }}
 		@event:click={{ this.onDialogClick }}
 	>
 		<div class="widget_dialog__shadow"></div>

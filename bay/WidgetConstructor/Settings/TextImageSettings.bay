@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
+use BayLang.Constructor.Annotations.Param;
 use BayLang.Constructor.Annotations.WidgetSettingsInterface;
 
 

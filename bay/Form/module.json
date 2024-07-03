@@ -3,12 +3,12 @@
 	"assets":
 	[
 		"Form.bay",
-		"FormDeleteStorage.bay",
 		"FormMessage.bay",
 		"FormModel.bay",
-		"FormSaveStorage.bay",
 		"FormStorageInterface.bay",
-		"FormSubmitStorage.bay"
+		"FormSaveStorage.bay",
+		"FormSubmitStorage.bay",
+		"FormDeleteStorage.bay"
 	],
 	"require": [
 		"Runtime.Widget"

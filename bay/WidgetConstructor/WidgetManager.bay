@@ -23,6 +23,8 @@ use Runtime.Widget.WidgetConstructor.Settings.ContainerSettings;
 use Runtime.Widget.WidgetConstructor.Settings.FormSettings;
 use Runtime.Widget.WidgetConstructor.Settings.GallerySettings;
 use Runtime.Widget.WidgetConstructor.Settings.ImageSettings;
+use Runtime.Widget.WidgetConstructor.Settings.LinkSettings;
+use Runtime.Widget.WidgetConstructor.Settings.SectionSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextImageSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextSettings;
 use BayLang.Constructor.Annotations.WidgetSettingsInterface;
@@ -33,7 +35,7 @@ class WidgetManager
 	/**
 	 * Returns list of widget settings
 	 */
-	Container<WidgetSettingsInterface> getWidgetSettings()
+	Collection<WidgetSettingsInterface> getWidgetSettings()
 	{
 		return
 		[

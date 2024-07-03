@@ -28,7 +28,7 @@ use Runtime.Widget.Styles;
 class RowButtonsModel extends RenderListModel
 {
 	Vector buttons = [];
-	Styles styles = new Styles{ "prefix": "widget_row_buttons" };
+	Collection<string> styles = [];
 	string component = classof RowButtons;
 	
 	
@@ -40,6 +40,6 @@ class RowButtonsModel extends RenderListModel
 		parent(params);
 		
 		if (params == null) return;
-		if (params.has("styles")) this.styles.addStyles(params.get("styles"));
+		if (params.has("styles")) this.styles = params.get("styles");
 	}
 }

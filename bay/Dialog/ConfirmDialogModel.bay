@@ -19,9 +19,10 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.Callback;
-use Runtime.Exceptions.DialogModelException;
 use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Dialog.DialogMessage;
 use Runtime.Widget.Dialog.DialogModel;
+use Runtime.Widget.Dialog.DialogModelException;
 
 
 class ConfirmDialogModel extends DialogModel
@@ -44,7 +45,7 @@ class ConfirmDialogModel extends DialogModel
 	/**
 	 * Init widget settings
 	 */
-	void initWidget(Dict params)
+	void init(Dict params)
 	{
 		parent(params);
 		

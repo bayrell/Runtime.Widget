@@ -55,21 +55,10 @@
 
 
 <template>
-	<div class="widget_row_buttons" class={{ this.getStyles() }} @ref="widget">
+	<div class="widget_row_buttons" class={{ static::getStyles(this.model.styles) }} @ref="widget">
 		%render this.renderItems();
 	</div>
 </template>
-
-
-<script>
-
-/**
- * Returns styles
- */
-void getStyles() => this.model.styles.join(" ");
-
-
-</script>
 
 
 </class>

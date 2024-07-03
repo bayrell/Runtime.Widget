@@ -32,10 +32,10 @@
 
 
 <template>
-	<div class="widget_section" class={{ this.class }} style={{ this.getStyles() }}>
+	<div class="widget_section" class={{ this.class }} style={{ this.getStyle() }}>
 		%if (this.wrap)
 		{
-			<div class="widget_section__wrap" style={{ this.getWrapStyles() }}>
+			<div class="widget_section__wrap" style={{ this.getWrapStyle() }}>
 				%render this.renderSlot("default");
 			</div>
 		}
@@ -60,7 +60,7 @@ props string flex_wrap = "";
 /**
  * Returns styles
  */
-string getStyles()
+string getStyle()
 {
 	Dict res = [];
 	if (not this.wrap)
@@ -79,9 +79,9 @@ string getStyles()
 
 
 /**
- * Returns wrap styles
+ * Returns wrap style
  */
-string getWrapStyles()
+string getWrapStyle()
 {
 	Dict res = [];
 	if (this.flex == "true")

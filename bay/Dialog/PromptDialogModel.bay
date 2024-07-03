@@ -20,6 +20,7 @@ namespace Runtime.Widget.Dialog;
 
 use Runtime.Callback;
 use Runtime.Widget.ButtonModel;
+use Runtime.Widget.Dialog.DialogMessage;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Dialog.DialogModelException;
 use Runtime.Widget.Dialog.PromptDialog;
