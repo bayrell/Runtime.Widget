@@ -25,6 +25,7 @@ use Runtime.Web.BaseModel;
 use Runtime.Web.Events;
 use Runtime.Widget.ContextMenu.ContextMenuModel;
 use Runtime.Widget.Tree.TreeItem;
+use Runtime.Widget.Tree.TreeMessage;
 use Runtime.Widget.Tree.TreeWidget;
 
 
@@ -32,7 +33,6 @@ class TreeModel extends BaseModel
 {
 	string component = classof TreeWidget;
 	string widget_name = "tree";
-	Events events = new Events;
 	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
@@ -84,9 +84,19 @@ class TreeModel extends BaseModel
 	 */
 	void selectItem(Collection<int> path)
 	{
+		TreeItem item = path ? this.root.get(path) : null;
+		if (this.selected_item == item) return;
+		
 		this.selected_path = path;
-		this.selected_item = path ? this.root.get(path) : null;
-		this.events.emit("selectItem", [this.selected_path, this.selected_item]);
+		this.selected_item = item;
+		this.emit(
+			new TreeMessage
+			{
+				"name": "selectItem",
+				"path": this.selected_path,
+				"item": this.selected_item
+			}
+		);
 	}
 	
 	
@@ -96,7 +106,13 @@ class TreeModel extends BaseModel
 	bool canDrag(Collection<string> src, Collection<string> dest, string kind)
 	{
 		Reference result = new Reference(true);
-		this.events.emit("canDrag", [src, dest, kind, result]);
+		this.emit(new TreeMessage{
+			"name": "canDrag",
+			"src": src,
+			"dest": dest,
+			"kind": kind,
+			"result": result,
+		});
 		return result.value();
 	}
 	
@@ -144,7 +160,7 @@ class TreeModel extends BaseModel
 		Collection<int> new_src_path = new_dest_parent_path.pushIm(pos);
 		
 		/* Send drag & drop event */
-		this.events.emit("dragElement", [{
+		this.emit("dragElement", [{
 			"dest_item": dest_item,
 			"dest_parent_item": dest_parent_item,
 			"kind": kind,

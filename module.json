@@ -68,6 +68,10 @@
 		{
 			"src": "bay/Tree",
 			"type": "module"
+		},
+		{
+			"src": "bay/WidgetConstructor",
+			"type": "module"
 		}
 	],
 	"src": "./bay",

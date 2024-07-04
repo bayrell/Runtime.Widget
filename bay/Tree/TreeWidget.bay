@@ -314,7 +314,7 @@ void onContextMenuItem(var e, TreeItem item, Collection<int> path)
 	}
 	
 	/* Send message context menu */
-	this.model.events.emit("contextMenuClick", [e]);
+	this.model.emitMessage("contextMenuClick", e);
 	
 	e.preventDefault();
 	e.stopPropagation();

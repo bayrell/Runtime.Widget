@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.WidgetConstructor;
 
+use Runtime.BaseObject;
 use Runtime.Widget.WidgetConstructor.Settings.ButtonSettings;
 use Runtime.Widget.WidgetConstructor.Settings.ContainerSettings;
 use Runtime.Widget.WidgetConstructor.Settings.FormSettings;
@@ -30,7 +31,7 @@ use Runtime.Widget.WidgetConstructor.Settings.TextSettings;
 use BayLang.Constructor.Annotations.WidgetSettingsInterface;
 
 
-class WidgetManager
+class WidgetManager extends BaseObject
 {
 	/**
 	 * Returns list of widget settings

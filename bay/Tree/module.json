@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"TreeItem.bay",
+		"TreeMessage.bay",
 		"TreeModel.bay",
 		"TreeWidget.bay"
 	],
