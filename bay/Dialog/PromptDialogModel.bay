@@ -50,7 +50,7 @@ class PromptDialogModel extends DialogModel
 					"gray"
 				],
 				"events": {
-					"onClick": new Callback(this, "onCloseButtonClick"),
+					"click": new Callback(this, "onCloseButtonClick"),
 				},
 			}
 		);
@@ -65,7 +65,7 @@ class PromptDialogModel extends DialogModel
 					"success"
 				],
 				"events": {
-					"onClick": new Callback(this, "onConfirmButtonClick"),
+					"click": new Callback(this, "onConfirmButtonClick"),
 				},
 			}
 		);

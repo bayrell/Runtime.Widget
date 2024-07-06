@@ -59,7 +59,7 @@ class ConfirmDialogModel extends DialogModel
 					"gray"
 				],
 				"events": {
-					"onClick": new Callback(this, "onCloseButtonClick"),
+					"click": new Callback(this, "onCloseButtonClick"),
 				},
 			}
 		);
@@ -74,7 +74,7 @@ class ConfirmDialogModel extends DialogModel
 					"primary"
 				],
 				"events": {
-					"onClick": new Callback(this, "onConfirmButtonClick"),
+					"click": new Callback(this, "onConfirmButtonClick"),
 				},
 			}
 		);

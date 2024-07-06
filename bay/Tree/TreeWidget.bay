@@ -20,6 +20,7 @@
 
 <use name="Runtime.Math" />
 <use name="Runtime.Widget.Tree.TreeItem" />
+<use name="Runtime.Widget.Tree.TreeMessage" />
 
 
 <style>
@@ -337,6 +338,16 @@ void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 	
 	/* Select item */
 	this.model.selectItem(path);
+	
+	/* Send event */
+	this.model.emit(
+		new TreeMessage
+		{
+			"name": "selectItem",
+			"path": this.model.selected_path,
+			"item": this.model.selected_item
+		}
+	);
 	
 	/* Set start drag item */
 	this.drag_elem = this.findSpan(e.target);

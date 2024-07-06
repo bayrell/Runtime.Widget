@@ -210,7 +210,7 @@
 
 
 <template>
-	<div class="widget_table" class={{ this.getStyles() }}>
+	<div class="widget_table" class={{ static::getStyles("widget_table", this.styles) }}
 		%render this.renderTitle();
 		%render this.renderTopButtons();
 		%render this.renderTable();
@@ -234,12 +234,6 @@ bool isRowSelected(int row_number) => this.row_selected == row_number;
  * Returns selected item
  */
 Dict getSelectedItem() => this.model.storage.getItemByRowNumber(this.row_selected);
-
-
-/**
- * Returns styles
- */
-string getStyles() => this.model.styles.join(" ");
 
 
 /**

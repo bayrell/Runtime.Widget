@@ -18,10 +18,25 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Annotations.Param;
-use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Annotations.Param;
+use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 
 
 class TextImageSettings implements WidgetSettingsInterface
 {
+    /**
+	 * Returns widgets list
+	 */
+	Collection<string> getWidgets() =>
+	[
+		"Runtime.Widget.Section",
+	];
+    
+    
+    /**
+	 * Returns params
+	 */
+	Collection<Param> getParams() =>
+	[
+    ];
 }

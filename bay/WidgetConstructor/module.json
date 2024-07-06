@@ -2,14 +2,25 @@
 	"name": "Runtime.Widget.WidgetConstructor",
 	"assets":
 	[
+		"Settings/ButtonSettings.bay",
+		"Settings/ContainerSettings.bay",
+		"Settings/FormSettings.bay",
+		"Settings/GallerySettings.bay",
+		"Settings/ImageSettings.bay",
+		"Settings/LinkSettings.bay",
+		"Settings/SectionSettings.bay",
+		"Settings/TextImageSettings.bay",
+		"Settings/TextSettings.bay",
 		"WidgetManager.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [
+		"BayLang",
+		"BayLang.Constructor",
 		"Runtime.Widget"
 	],
 	"groups": [
-		"constructor"
+		"baylang"
 	],
 	"src": "./",
 	"dest":

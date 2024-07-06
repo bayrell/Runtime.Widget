@@ -28,10 +28,11 @@ use Runtime.Widget.WidgetConstructor.Settings.LinkSettings;
 use Runtime.Widget.WidgetConstructor.Settings.SectionSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextImageSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextSettings;
-use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Annotations.WidgetManagerInterface;
+use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 
 
-class WidgetManager extends BaseObject
+class WidgetManager extends BaseObject implements WidgetManagerInterface
 {
 	/**
 	 * Returns list of widget settings

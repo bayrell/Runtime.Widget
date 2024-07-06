@@ -18,12 +18,23 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Annotations.Param;
-use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Annotations.Param;
+use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 
 
 class ButtonSettings implements WidgetSettingsInterface
 {
+	/**
+	 * Returns widgets list
+	 */
+	Collection<string> getWidgets() =>
+	[
+		"Runtime.Widget.Button",
+		"Runtime.Widget.ButtonModel",
+		"Runtime.Widget.ButtonWrap",
+	];
+	
+	
 	/**
 	 * Returns params
 	 */

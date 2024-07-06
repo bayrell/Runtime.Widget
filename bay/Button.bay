@@ -68,7 +68,7 @@
 	{
 		<button type={{ this.type }}
 			class="widget_button"
-			class={{ static::getStyles(this.styles) }}
+			class={{ static::getStyles("widget_button", this.styles) }}
 			class={{ this.renderListClass() }}
 			class={{ this.class }}
 			@ref="widget"

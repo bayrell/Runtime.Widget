@@ -18,12 +18,21 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Annotations.Param;
-use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Annotations.Param;
+use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 
 
 class LinkSettings implements WidgetSettingsInterface
 {
+	/**
+	 * Returns widgets list
+	 */
+	Collection<string> getWidgets() =>
+	[
+		"Runtime.Widget.Link",
+	];
+	
+	
 	/**
 	 * Returns params
 	 */
@@ -33,13 +42,13 @@ class LinkSettings implements WidgetSettingsInterface
 		{
 			"name": "href",
 			"label": "Href",
-			"name": "Runtime.Widget.Input",
+			"component": "Runtime.Widget.Input",
 		},
 		new Param
 		{
 			"name": "text",
 			"label": "Text",
-			"name": "Runtime.Widget.Input",
+			"component": "Runtime.Widget.Input",
 		},
 		new Param
 		{

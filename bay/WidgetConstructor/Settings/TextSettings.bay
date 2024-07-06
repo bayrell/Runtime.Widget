@@ -18,12 +18,21 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Annotations.Param;
-use BayLang.Constructor.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Annotations.Param;
+use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 
 
 class TextSettings implements WidgetSettingsInterface
 {
+	/**
+	 * Returns widgets list
+	 */
+	Collection<string> getWidgets() =>
+	[
+		"Runtime.Widget.Text",
+	];
+	
+	
 	/**
 	 * Returns params
 	 */
@@ -62,7 +71,7 @@ class TextSettings implements WidgetSettingsInterface
 		{
 			"name": "content",
 			"label": "Content",
-			"name": "Runtime.Widget.TextEditable",
+			"component": "Runtime.Widget.TextEditable",
 			"default": "Text",
 			"props": {
 				"direct_update": true,

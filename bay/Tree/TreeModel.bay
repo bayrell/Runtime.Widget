@@ -89,14 +89,6 @@ class TreeModel extends BaseModel
 		
 		this.selected_path = path;
 		this.selected_item = item;
-		this.emit(
-			new TreeMessage
-			{
-				"name": "selectItem",
-				"path": this.selected_path,
-				"item": this.selected_item
-			}
-		);
 	}
 	
 	
