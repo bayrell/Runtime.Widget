@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"ContextMenu.bay",
+		"ContextMenuMessage.bay",
 		"ContextMenuModel.bay"
 	],
 	"require": [

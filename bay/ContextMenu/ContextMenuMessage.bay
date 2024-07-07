@@ -16,32 +16,12 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.ContextMenu;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use Runtime.Web.Messages.Message;
 
 
-class GallerySettings implements WidgetSettingsInterface
+class ContextMenuMessage extends Message
 {
-	/**
-	 * Returns widgets list
-	 */
-	string getName() => "Runtime.Widget.Gallery.Gallery";
-	
-	
-	/**
-	 * Returns params
-	 */
-	Collection<Param> getParams() =>
-	[
-	];
-	
-	
-	/**
-	 * Returns default template
-	 */
-	Dict<fn> getDefaultTemplate() =>
-	{
-	};
+	Dict item = null;
 }

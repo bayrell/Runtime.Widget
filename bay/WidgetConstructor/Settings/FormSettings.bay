@@ -27,11 +27,7 @@ class FormSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Form.Form",
-		"Runtime.Widget.Form.FormModel",
-	];
+	string getName() => "Runtime.Widget.Form.FormModel";
 	
 	
 	/**
@@ -62,4 +58,12 @@ class FormSettings implements WidgetSettingsInterface
 			],
 		},
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+	};
 }

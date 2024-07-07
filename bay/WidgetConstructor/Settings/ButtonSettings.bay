@@ -27,13 +27,8 @@ class ButtonSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Button",
-		"Runtime.Widget.ButtonModel",
-		"Runtime.Widget.ButtonWrap",
-	];
-	
+	string getName() => "Runtime.Widget.Button";
+		
 	
 	/**
 	 * Returns params
@@ -61,4 +56,12 @@ class ButtonSettings implements WidgetSettingsInterface
 			}
 		},
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+	};
 }

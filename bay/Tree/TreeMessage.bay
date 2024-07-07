@@ -25,10 +25,15 @@ use Runtime.Widget.Tree.TreeItem;
 
 class TreeMessage extends Message
 {
-    string kind;
-    Collection<string> dest;
-    Collection<string> path;
-    Collection<string> src;
-    Reference result;
-    TreeItem item;
+	string kind;
+	Collection<int> dest;
+	Collection<int> new_src_path;
+	Collection<int> path;
+	Collection<int> src;
+	Reference result;
+	TreeItem dest_item;
+	TreeItem dest_parent_item;
+	TreeItem item;
+	TreeItem src_item;
+	TreeItem src_parent_item;
 }

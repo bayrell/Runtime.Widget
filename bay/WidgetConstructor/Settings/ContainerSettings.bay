@@ -27,10 +27,7 @@ class ContainerSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Container",
-	];
+	string getName() => "Runtime.Widget.Container";
 	
 	
 	/**
@@ -95,4 +92,23 @@ class ContainerSettings implements WidgetSettingsInterface
 			}
 		}
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+		"default": Dict () =>
+		{
+			"template": rs::join("\n", [
+				"<style>",
+				"padding-top: 10px;",
+				"padding-bottom: 10px;",
+				"padding-left: 0px;",
+				"padding-right: 0px;",
+				"</style>"
+			])
+		},
+	};
 }

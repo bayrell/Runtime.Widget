@@ -27,10 +27,7 @@ class LinkSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Link",
-	];
+	string getName() => "Runtime.Widget.Link";
 	
 	
 	/**
@@ -64,4 +61,12 @@ class LinkSettings implements WidgetSettingsInterface
 			}
 		},
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+	};
 }

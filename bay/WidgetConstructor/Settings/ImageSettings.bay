@@ -27,10 +27,7 @@ class ImageSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Image",
-	];
+	string getName() => "Runtime.Widget.Image";
 	
 	
 	/**
@@ -56,4 +53,12 @@ class ImageSettings implements WidgetSettingsInterface
 			],
 		},
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+	};
 }

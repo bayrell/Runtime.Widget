@@ -27,10 +27,7 @@ class TextImageSettings implements WidgetSettingsInterface
     /**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Section",
-	];
+	string getName() => "Runtime.Widget.TextImage";
     
     
     /**
@@ -39,4 +36,35 @@ class TextImageSettings implements WidgetSettingsInterface
 	Collection<Param> getParams() =>
 	[
     ];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+		"default": Dict () =>
+		{
+			"template": rs::join("\n", [
+				"<use name='Runtime.Widget.Image' component='true' />",
+				"<use name='Runtime.Widget.Text' component='true' />",
+				"<style>",
+				"%(TextImage)widget_text_image{",
+				"  &__image{",
+				"  }",
+				"  &__text{",
+				"  }",
+				"}",
+				"</style>"
+				"<template>",
+				"\t<slot name='image'>",
+				"\t\t<Image class='[&_image]' />",
+				"\t</slot>",
+				"\t<slot name='text'>",
+				"\t\t<Text class='[&_text] center' content='Image text' />",
+				"\t</slot>",
+				"</template>",
+			])
+		},
+	};
 }

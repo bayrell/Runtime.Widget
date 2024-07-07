@@ -27,10 +27,7 @@ class TextSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	Collection<string> getWidgets() =>
-	[
-		"Runtime.Widget.Text",
-	];
+	string getName() => "Runtime.Widget.Text";
 	
 	
 	/**
@@ -78,4 +75,12 @@ class TextSettings implements WidgetSettingsInterface
 			},
 		},
 	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
+	{
+	};
 }

@@ -152,16 +152,14 @@ class TreeModel extends BaseModel
 		Collection<int> new_src_path = new_dest_parent_path.pushIm(pos);
 		
 		/* Send drag & drop event */
-		this.emit("dragElement", [{
+		this.emit(new TreeMessage{
+			"name": "dragElement",
 			"dest_item": dest_item,
 			"dest_parent_item": dest_parent_item,
 			"kind": kind,
 			"src_item": src_item,
 			"src_parent_item": src_parent_item,
 			"new_src_path": new_src_path,
-		}]);
-		
-		/* Select new item */
-		this.selectItem(new_src_path);
+		});
 	}
 }
