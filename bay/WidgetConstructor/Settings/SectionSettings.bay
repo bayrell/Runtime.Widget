@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class SectionSettings implements WidgetSettingsInterface
@@ -33,9 +33,10 @@ class SectionSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
-		new Param{
+		new Parameter
+		{
 			"name": "wrap",
 			"label": "Wrap",
 			"component": "Runtime.Widget.Select",
@@ -46,13 +47,13 @@ class SectionSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param
+		new Parameter
 		{
 			"name": "image",
 			"label": "Image",
 			"component": "Runtime.Widget.Input",
 		},
-		new Param
+		new Parameter
 		{
 			"name": "image_absolute",
 			"label": "Absolute image path",
@@ -63,7 +64,8 @@ class SectionSettings implements WidgetSettingsInterface
 				{"key": "true", "value": "Yes"},
 			],
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "flex",
 			"label": "Flex",
 			"component": "Runtime.Widget.Select",
@@ -74,7 +76,8 @@ class SectionSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "align_items",
 			"label": "Align items",
 			"component": "Runtime.Widget.Select",
@@ -91,7 +94,8 @@ class SectionSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "justify_content",
 			"label": "Justify content",
 			"component": "Runtime.Widget.Select",
@@ -108,7 +112,8 @@ class SectionSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "flex_wrap",
 			"label": "Flex wrap",
 			"component": "Runtime.Widget.Select",

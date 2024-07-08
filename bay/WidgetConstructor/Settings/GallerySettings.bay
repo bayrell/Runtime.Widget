@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class GallerySettings implements WidgetSettingsInterface
@@ -33,7 +33,7 @@ class GallerySettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
 	];
 	

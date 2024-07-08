@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class TextSettings implements WidgetSettingsInterface
@@ -33,9 +33,9 @@ class TextSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
-		new Param
+		new Parameter
 		{
 			"name": "tag",
 			"label": "Tag",
@@ -51,7 +51,7 @@ class TextSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param
+		new Parameter
 		{
 			"name": "raw",
 			"label": "Raw",
@@ -64,7 +64,7 @@ class TextSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param
+		new Parameter
 		{
 			"name": "content",
 			"label": "Content",

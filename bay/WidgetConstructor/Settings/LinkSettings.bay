@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class LinkSettings implements WidgetSettingsInterface
@@ -33,21 +33,21 @@ class LinkSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
-		new Param
+		new Parameter
 		{
 			"name": "href",
 			"label": "Href",
 			"component": "Runtime.Widget.Input",
 		},
-		new Param
+		new Parameter
 		{
 			"name": "text",
 			"label": "Text",
 			"component": "Runtime.Widget.Input",
 		},
-		new Param
+		new Parameter
 		{
 			"name": "target",
 			"label": "Target",

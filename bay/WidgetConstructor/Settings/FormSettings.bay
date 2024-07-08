@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class FormSettings implements WidgetSettingsInterface
@@ -33,16 +33,16 @@ class FormSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
-		new Param
+		new Parameter
 		{
 			"name": "api_name",
 			"label": "API name",
 			"component": "Runtime.Widget.Input",
 			"model": true,
 		},
-		new Param
+		new Parameter
 		{
 			"name": "fields",
 			"label": "Fields",

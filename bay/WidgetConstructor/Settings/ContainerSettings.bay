@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.Param;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.Frontend.Editor.Parameter;
 
 
 class ContainerSettings implements WidgetSettingsInterface
@@ -33,9 +33,10 @@ class ContainerSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Param> getParams() =>
+	Collection<Parameter> getParams() =>
 	[
-		new Param{
+		new Parameter
+		{
 			"name": "flex",
 			"label": "Flex",
 			"component": "Runtime.Widget.Select",
@@ -46,7 +47,8 @@ class ContainerSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "align_items",
 			"label": "Align items",
 			"component": "Runtime.Widget.Select",
@@ -63,7 +65,8 @@ class ContainerSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "justify_content",
 			"label": "Justify content",
 			"component": "Runtime.Widget.Select",
@@ -80,7 +83,8 @@ class ContainerSettings implements WidgetSettingsInterface
 				],
 			}
 		},
-		new Param{
+		new Parameter
+		{
 			"name": "flex_wrap",
 			"label": "Flex wrap",
 			"component": "Runtime.Widget.Select",
