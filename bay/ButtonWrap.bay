@@ -23,7 +23,12 @@
 
 <template>
     %set Dict props = this.model.getProps(this.data);
-	<Button @event:click={{ this.onClick }} ...props>{{ this.model.content }}</Button>
+	<Button
+		class={{ this.class }}
+		render_list={{ this.render_list }}
+		@event:click={{ this.onClick }}
+		...props
+	>{{ this.model.content }}</Button>
 </template>
 
 

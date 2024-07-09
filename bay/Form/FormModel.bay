@@ -64,9 +64,12 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Returns data
+	 * Set data storage
 	 */
-	Dict getPostData() => this.data;
+	void setDataStorage(FormStorageInterface storage)
+	{
+		this.storage = storage;
+	}
 	
 	
 	/**
@@ -79,7 +82,7 @@ class FormModel extends BaseModel
 		if (params == null) return;
 		
 		/* Setup params */
-		if (params.has("api_name")) this.addFields(params.get("api_name"));
+		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("fields")) this.addFields(params.get("fields"));
 		if (params.has("storage")) this.storage = params.get("storage");
 		
@@ -104,6 +107,22 @@ class FormModel extends BaseModel
 	{
 		parent(params);
 		
+		/* Load result */
+		this.load = this.addWidget(
+			classof WidgetResultModel,
+			{
+				"widget_name": "load",
+			}
+		);
+		
+		/* Result */
+		this.result = this.addWidget(
+			classof WidgetResultModel,
+			{
+				"widget_name": "result",
+			}
+		);
+		
 		/* Buttons */
 		this.bottom_buttons = this.addWidget(
 			classof RowButtonsModel,
@@ -121,6 +140,7 @@ class FormModel extends BaseModel
 	void addField(Map field)
 	{
 		this.fields.append(field);
+		this.layout.addComponent(field.get("component"));
 	}
 	
 	
@@ -215,6 +235,12 @@ class FormModel extends BaseModel
 			this.result.setApiResult(res);
 		}
 	}
+	
+	
+	/**
+	 * Returns data
+	 */
+	Dict getPostData() => this.data;
 	
 	
 	/**

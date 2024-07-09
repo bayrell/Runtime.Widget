@@ -56,7 +56,7 @@ class FormSubmitStorage implements FormStorageInterface
 			"pk": this.form.pk,
 			"item": this.form.getPostData(),
 		};
-		post_data = this.form.mergeData(post_data, "submit");
+		post_data = this.form.mergePostData(post_data, "submit");
 		ApiResult res = await this.form.layout.callApi({
 			"api_name": this.form.getApiName(),
 			"method_name": "actionSave",

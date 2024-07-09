@@ -22,6 +22,7 @@
 <use name="Runtime.Web.Annotations.Param" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.RowButtons" component="true" />
 <use name="Runtime.Widget.TextArea" component="true" />
 <use name="Runtime.Widget.WidgetResult" component="true" />
 <use name="Runtime.Widget.WidgetResultModel" />
@@ -32,24 +33,28 @@
 	max-width: 600px;
 	margin-left: auto;
 	margin-right: auto;
-}
-.widget_form__field_row{
-	margin-bottom: 10px;
-}
-.widget_form__button{
-	text-align: center;
-}
-.widget_form__field_error{
-	color: var(--widget-color-danger);
-	margin-top: var(--widget-space);
-}
-.widget_form__field_error--hide{
-	display: none;
+	.widget_form__field_row{
+		margin-bottom: 10px;
+	}
+	.widget_form__field_label{
+		padding-bottom: 5px;
+	}
+	.widget_form__field_error{
+		color: var(--widget-color-danger);
+		margin-top: var(--widget-space);
+	}
+	.widget_form__field_error--hide{
+		display: none;
+	}
+	%(RowButtons)widget_form__bottom_buttons{
+		justify-content: center;
+	}
 }
 </style>
 
 
 <template name="renderTitle">
+	%render this.renderSlot("title");
 </template>
 
 
@@ -88,7 +93,7 @@
 
 <template name="renderFieldResult" args="Dict field">
 	%set string field_name = field.get("name");
-	%set Collection<string> field_error = this.getFieldResult(field_name);
+	%set Collection<string> field_error = this.model.getFieldResult(field_name);
 	%if (field_error.count() == 0)
 	{
 		<div class="widget_form__field_error widget_form__field_error--hide"
@@ -109,6 +114,12 @@
 <template name="renderFieldRow" args="Dict field">
 	%set string field_name = field.get("name");
 	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
+		%if (field.has("label"))
+		{
+			<div class="widget_form__field_label">
+				{{ field.get("label") }}
+			</div>
+		}
 		%render this.renderField(field);
 		%render this.renderFieldResult(field);
 	</div>
@@ -117,9 +128,9 @@
 
 <template name="renderFields">
 	<div class="widget_form__fields">
-	%for (int i=0; i<this.fields.count(); i++)
+	%for (int i=0; i<this.model.fields.count(); i++)
 	{
-		%render this.renderFieldRow(this.fields.get(i));
+		%render this.renderFieldRow(this.model.fields.get(i));
 	}
 	</div>
 </template>

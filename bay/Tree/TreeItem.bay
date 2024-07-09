@@ -34,10 +34,9 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Constructor
 	 */
-	public void constructor(Dict params = null)
+	public void constructor()
 	{
 		parent();
-		this._assign_values(params);
 	}
 	
 	
@@ -55,15 +54,6 @@ class TreeItem extends BaseObject implements SerializeInterface
 	 * Returns true if can insert inside
 	 */
 	bool canDragInside() => true;
-	
-	
-	/**
-	 * New instance
-	 */
-	TreeItem newInstance(Dict params = null)
-	{
-		return rtl::newInstance(static::getClassName(), [params]);
-	}
 	
 	
 	/**
