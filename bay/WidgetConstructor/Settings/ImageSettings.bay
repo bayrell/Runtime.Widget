@@ -20,6 +20,7 @@ namespace Runtime.Widget.WidgetConstructor.Settings;
 
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
+use BayLang.Constructor.Frontend.Editor.ParameterComponent;
 
 
 class ImageSettings implements WidgetSettingsInterface
@@ -35,13 +36,13 @@ class ImageSettings implements WidgetSettingsInterface
 	 */
 	Collection<Parameter> getParams() =>
 	[
-		new Parameter
+		new ParameterComponent
 		{
 			"name": "image",
 			"label": "Image",
 			"component": "Runtime.Widget.Input",
 		},
-		new Parameter
+		new ParameterComponent
 		{
 			"name": "image_absolute",
 			"label": "Absolute image path",

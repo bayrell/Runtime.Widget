@@ -23,12 +23,12 @@ use BayLang.Constructor.Frontend.Editor.Parameter;
 use BayLang.Constructor.Frontend.Editor.ParameterComponent;
 
 
-class LinkSettings implements WidgetSettingsInterface
+class FormModelSettings implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widgets list
 	 */
-	string getName() => "Runtime.Widget.Link";
+	string getName() => "Runtime.Widget.Form.FormModel";
 	
 	
 	/**
@@ -38,29 +38,28 @@ class LinkSettings implements WidgetSettingsInterface
 	[
 		new ParameterComponent
 		{
-			"name": "href",
-			"label": "Href",
+			"name": "api_name",
+			"label": "API name",
 			"component": "Runtime.Widget.Input",
+			"model": true,
 		},
+        /*
 		new ParameterComponent
 		{
-			"name": "text",
-			"label": "Text",
-			"component": "Runtime.Widget.Input",
+			"name": "fields",
+			"label": "Fields",
+			"component": "Runtime.Widget.Blocks.FormFields",
+			"model": true,
+			"default":
+			[
+				{
+					"name": "name",
+					"label": "Username",
+					"component": "Runtime.Widget.Input",
+				},
+			],
 		},
-		new ParameterComponent
-		{
-			"name": "target",
-			"label": "Target",
-			"component": "Runtime.Widget.Select",
-			"default": "_self",
-			"props": {
-				"options": [
-					{"key": "_self", "value": "self"},
-					{"key": "_blank", "value": "blank"},
-				],
-			}
-		},
+        */
 	];
 	
 	

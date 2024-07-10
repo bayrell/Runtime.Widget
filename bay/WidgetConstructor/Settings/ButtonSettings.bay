@@ -20,6 +20,7 @@ namespace Runtime.Widget.WidgetConstructor.Settings;
 
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
+use BayLang.Constructor.Frontend.Editor.ParameterComponent;
 
 
 class ButtonSettings implements WidgetSettingsInterface
@@ -35,14 +36,14 @@ class ButtonSettings implements WidgetSettingsInterface
 	 */
 	Collection<Parameter> getParams() =>
 	[
-		new Parameter
+		new ParameterComponent
 		{
 			"name": "type",
 			"label": "Type",
 			"component": "Runtime.Widget.Input",
 			"default": "button",
 		},
-		new Parameter
+		new ParameterComponent
 		{
 			"name": "target",
 			"label": "Target",
