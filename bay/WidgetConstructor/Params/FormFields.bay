@@ -75,19 +75,15 @@
 		</div>
 	</div>
 	<div class="widget_sortable_list__item_value_row">
-		<div class="widget_sortable_list__item_value_label">Type</div>
+		<div class="widget_sortable_list__item_value_label">Component</div>
 		<div class="widget_sortable_list__item_value_item">
-			<Select
-				value={{ item.get("type") }}
-				options=[
-					{"label": "input", "value": "input"},
-					{"label": "textarea", "value": "textarea"},
-				]
+			<Input
+				value={{ item.get("component") }}
 				@event:valueChange={{
 					void (string value) use (pos)
 					{
 						Dict item = this.value.get(pos);
-						item.set("type", value);
+						item.set("component", value);
 						this.onValueChange();
 					}
 				}}

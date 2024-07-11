@@ -22,6 +22,7 @@
 <use name="Runtime.Math" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
+<use name="Runtime.Widget.Select" component="true" />
 
 
 <style>

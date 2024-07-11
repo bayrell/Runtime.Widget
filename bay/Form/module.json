@@ -7,6 +7,7 @@
 		"FormModel.bay",
 		"FormStorageInterface.bay",
 		"FormSaveStorage.bay",
+		"FormSubmitModel.bay",
 		"FormSubmitStorage.bay",
 		"FormDeleteStorage.bay"
 	],

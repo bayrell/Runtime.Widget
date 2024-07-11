@@ -19,8 +19,10 @@
 namespace Runtime.Widget.WidgetConstructor;
 
 use Runtime.BaseObject;
+use Runtime.Web.BaseLayoutModel;
 use Runtime.Widget.WidgetConstructor.Settings.ButtonSettings;
 use Runtime.Widget.WidgetConstructor.Settings.ContainerSettings;
+use Runtime.Widget.WidgetConstructor.Settings.FormModelSettings;
 use Runtime.Widget.WidgetConstructor.Settings.FormSettings;
 use Runtime.Widget.WidgetConstructor.Settings.GallerySettings;
 use Runtime.Widget.WidgetConstructor.Settings.ImageSettings;
@@ -43,6 +45,7 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 		[
 			new ButtonSettings(),
 			new ContainerSettings(),
+			new FormModelSettings(),
 			new FormSettings(),
 			new GallerySettings(),
 			new ImageSettings(),
@@ -57,9 +60,24 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 	/**
 	 * Allow param class name
 	 */
-	void allowParamClassName(string class_name)
+	bool allowParamClassName(string class_name)
 	{
+		if (class_name == "Runtime.Widget.Input") return true;
+		if (class_name == "Runtime.Widget.Select") return true;
+		if (class_name == "Runtime.Widget.SortableList") return true;
+		if (class_name == "Runtime.Widget.Tag") return true;
+		if (class_name == "Runtime.Widget.TextArea") return true;
+		if (class_name == "Runtime.Widget.TextEditable") return true;
 		if (class_name == "Runtime.Widget.WidgetConstructor.Params.FormFields") return true;
 		return false;
+	}
+	
+	
+	/**
+	 * Add components
+	 */
+	void addComponents(BaseLayoutModel layout)
+	{
+		layout.addComponent("Runtime.Widget.WidgetConstructor.Params.FormFields");
 	}
 }

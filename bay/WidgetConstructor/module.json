@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget.WidgetConstructor",
 	"assets":
 	[
+		"Params/FormFields.bay",
 		"Settings/ButtonSettings.bay",
 		"Settings/ContainerSettings.bay",
 		"Settings/FormModelSettings.bay",

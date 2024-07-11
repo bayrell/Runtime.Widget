@@ -20,7 +20,7 @@ namespace Runtime.Widget.WidgetConstructor.Settings;
 
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.ParameterModel;
 
 
 class FormModelSettings implements WidgetSettingsInterface
@@ -28,7 +28,7 @@ class FormModelSettings implements WidgetSettingsInterface
 	/**
 	 * Returns widgets list
 	 */
-	string getName() => "Runtime.Widget.Form.FormModel";
+	string getName() => "Runtime.Widget.Form.FormSubmitModel";
 	
 	
 	/**
@@ -36,20 +36,23 @@ class FormModelSettings implements WidgetSettingsInterface
 	 */
 	Collection<Parameter> getParams() =>
 	[
-		new ParameterComponent
+		new ParameterModel
 		{
 			"name": "api_name",
 			"label": "API name",
 			"component": "Runtime.Widget.Input",
-			"model": true,
 		},
-        /*
-		new ParameterComponent
+		new ParameterModel
+		{
+			"name": "submit_button_text",
+			"label": "Button text",
+			"component": "Runtime.Widget.Input",
+		},
+		new ParameterModel
 		{
 			"name": "fields",
 			"label": "Fields",
-			"component": "Runtime.Widget.Blocks.FormFields",
-			"model": true,
+			"component": "Runtime.Widget.WidgetConstructor.Params.FormFields",
 			"default":
 			[
 				{
@@ -59,7 +62,6 @@ class FormModelSettings implements WidgetSettingsInterface
 				},
 			],
 		},
-        */
 	];
 	
 	

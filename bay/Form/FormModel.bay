@@ -84,7 +84,12 @@ class FormModel extends BaseModel
 		/* Setup params */
 		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("fields")) this.addFields(params.get("fields"));
-		if (params.has("storage")) this.storage = params.get("storage");
+		if (params.has("storage"))
+		{
+			var storage = params.get("storage");
+			if (rtl::isString(storage)) this.storage = rtl::newInstance(storage, [this]);
+			else this.storage = storage;
+		}
 		
 		/* Setup storage */
 		if (this.storage == null)
