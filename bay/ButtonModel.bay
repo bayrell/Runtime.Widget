@@ -35,9 +35,9 @@ class ButtonModel extends BaseModel
 	
 	
 	/**
-	 * Setup widget params
+	 * Init widget params
 	 */
-	void setup(Dict params)
+	void initParams(Dict params)
 	{
 		parent(params);
 		

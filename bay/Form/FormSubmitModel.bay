@@ -26,9 +26,9 @@ use Runtime.Widget.Form.FormModel;
 class FormSubmitModel extends FormModel
 {
 	/**
-	 * Init widget
+	 * Init widget settings
 	 */
-	void init(Dict params)
+	void initWidget(Dict params)
 	{
 		parent(params);
 		

@@ -36,7 +36,7 @@ class PromptDialogModel extends DialogModel
 	/**
 	 * Init widget settings
 	 */
-	void init(Dict params)
+	void initWidget(Dict params)
 	{
 		parent(params);
 		

@@ -50,7 +50,7 @@ class TableDialogModel extends TableModel
 	/**
 	 * Init widget settings
 	 */
-	void init(Dict params)
+	void initWidget(Dict params)
 	{
 		/* Create form */
 		this.form = this.createForm();

@@ -73,9 +73,9 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Setup widget
+	 * Init widget params
 	 */
-	void setup(Dict params)
+	void initParams(Dict params)
 	{
 		parent(params);
 		
@@ -83,7 +83,11 @@ class FormModel extends BaseModel
 		
 		/* Setup params */
 		if (params.has("api_name")) this.api_name = params.get("api_name");
-		if (params.has("fields")) this.addFields(params.get("fields"));
+		if (params.has("fields"))
+		{
+			this.fields = [];
+			this.addFields(params.get("fields"));
+		}
 		if (params.has("storage"))
 		{
 			var storage = params.get("storage");
@@ -106,9 +110,9 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Init widget
+	 * Init widget settings
 	 */
-	void init(Dict params)
+	void initWidget(Dict params)
 	{
 		parent(params);
 		

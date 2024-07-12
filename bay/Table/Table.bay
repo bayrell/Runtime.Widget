@@ -210,7 +210,7 @@
 
 
 <template>
-	<div class="widget_table" class={{ static::getStyles("widget_table", this.styles) }}
+	<div class="widget_table" class={{ static::getStyles("widget_table", this.styles) }}>
 		%render this.renderTitle();
 		%render this.renderTopButtons();
 		%render this.renderTable();

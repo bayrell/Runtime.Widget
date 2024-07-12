@@ -39,9 +39,9 @@ class SaveDialogModel extends DialogModel
 	
 	
 	/**
-	 * Setup widget params
+	 * Init widget params
 	 */
-	void setup(Dict params)
+	void initParams(Dict params)
 	{
 		parent(params);
 		
@@ -55,7 +55,7 @@ class SaveDialogModel extends DialogModel
 	/**
 	 * Init widget settings
 	 */
-	void init(Dict params)
+	void initWidget(Dict params)
 	{
 		parent(params);
 		

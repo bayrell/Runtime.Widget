@@ -35,9 +35,9 @@ class RefreshButtonModel extends ButtonModel
 	
 	
 	/**
-	 * Setup widget params
+	 * Init widget params
 	 */
-	void setup(Dict params)
+	void initParams(Dict params)
 	{
 		parent(params);
 		

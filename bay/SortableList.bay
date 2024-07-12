@@ -224,7 +224,12 @@ void createShadow()
 	this.shadow_elem = document.createElement("div");
 	this.shadow_elem.innerHTML = this.drag_elem.outerHTML;
 	this.shadow_elem.classList.add("widget_sortable_list__shadow_elem");
-	this.shadow_elem.classList.add(static::getCssHash(static::getClassName()));
+	string arr = rs::split(" ", static::getCssHash(static::getClassName()));
+	arr = arr.filter(lib::equalNot(""));
+	for (int i=0; i<arr.count(); i++)
+	{
+		this.shadow_elem.classList.add(arr.get(i));
+	}
 	this.shadow_elem.style.height = this.drag_elem.offsetHeight ~ "px";
 	this.shadow_elem.style.width = this.drag_elem.offsetWidth ~ "px";
 	this.getRef("shadow").appendChild(this.shadow_elem);

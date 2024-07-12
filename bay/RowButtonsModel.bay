@@ -33,9 +33,9 @@ class RowButtonsModel extends RenderListModel
 	
 	
 	/**
-	 * Setup widget params
+	 * Init widget params
 	 */
-	void setup(Dict params)
+	void initParams(Dict params)
 	{
 		parent(params);
 		
