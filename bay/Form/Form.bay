@@ -128,18 +128,29 @@
 
 <template name="renderFields">
 	<div class="widget_form__fields">
-	%for (int i=0; i<this.model.fields.count(); i++)
-	{
-		%render this.renderFieldRow(this.model.fields.get(i));
-	}
+		%if (this.model)
+		{
+			%for (int i=0; i<this.model.fields.count(); i++)
+			{
+				%render this.renderFieldRow(this.model.fields.get(i));
+			}
+		}
 	</div>
 </template>
 
 
 <template name="renderBottomButtons">
-	%if (this.model.bottom_buttons.count() > 0)
+	%if (this.model and this.model.bottom_buttons.count() > 0)
 	{
 		%render this.renderWidget(this.model.bottom_buttons);
+	}
+</template>
+
+
+<template name="renderResult">
+	%if (this.model)
+	{
+		%render this.renderWidget(this.model.result);
 	}
 </template>
 
@@ -149,7 +160,7 @@
 		%render this.renderTitle();
 		%render this.renderFields();
 		%render this.renderBottomButtons();
-		%render this.renderWidget(this.model.result);
+		%render this.renderResult();
 	</div>
 </template>
 

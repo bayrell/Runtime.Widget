@@ -70,5 +70,28 @@ class FormModelSettings implements WidgetSettingsInterface
 	 */
 	Dict<fn> getDefaultTemplate() =>
 	{
+		"default": Dict () =>
+		{
+			"model": rs::join("\n", [
+				"this.form = this.addWidget('Runtime.Widget.Form.FormSubmitModel', {",
+				"\t'api_name': 'test',",
+				"\t'widget_name': 'form',",
+				"\t'storage': 'Runtime.Widget.Form.FormSubmitStorage',",
+				"\t'submit_button_text': 'Отправить заявку',",
+				"\t'fields': [",
+				"\t\t{",
+				"\t\t\t'name': 'name',",
+				"\t\t\t'label': 'Name',",
+				"\t\t\t'component': 'Runtime.Widget.Input',",
+				"\t\t},",
+				"\t\t{",
+				"\t\t\t'name': 'email',",
+				"\t\t\t'label': 'E-mail',",
+				"\t\t\t'component': 'Runtime.Widget.Input',",
+				"\t\t},",
+				"\t],",
+				"});",
+			])
+		}
 	};
 }

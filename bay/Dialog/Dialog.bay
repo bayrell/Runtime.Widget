@@ -159,7 +159,7 @@ Map getProps()
  */
 void onShadowClick()
 {
-	if (not this.modal)
+	if (not this.model.modal)
 	{
 		this.model.hide();
 	}
