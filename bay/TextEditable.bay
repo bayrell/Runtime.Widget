@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.TextEditable">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_text_editable{
@@ -126,8 +128,11 @@ void onChange(var e)
 	string value = text.innerText;
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(value, this.data);
-	this.emit("valueChange", value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 

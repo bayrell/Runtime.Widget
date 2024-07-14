@@ -91,14 +91,15 @@ class ConfirmDialogModel extends DialogModel
 	
 	
 	/**
-	 * Add confirm button click
+	 * Confirm button click
 	 */
 	void onConfirmButtonClick()
 	{
 		try
 		{
 			this.emit(new DialogMessage{
-				"name": "confirm"
+				"dialog": this,
+				"name": "confirm",
 			});
 		}
 		catch (DialogModelException e)

@@ -5,6 +5,7 @@
 		"Form.bay",
 		"FormMessage.bay",
 		"FormModel.bay",
+		"FormRow.bay",
 		"FormStorageInterface.bay",
 		"FormSaveStorage.bay",
 		"FormSubmitModel.bay",

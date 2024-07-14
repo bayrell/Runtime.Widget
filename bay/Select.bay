@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.Select">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_select, .widget_select:focus{
@@ -49,7 +51,7 @@
 	
 	%set Vector options = this.getOptions();
 	%set Dict selected = {};
-	%if (this.show_select_value == true)
+	%if (this.show_select_value === true or this.show_select_value == "true")
 	{
 		%if (this.value === "" or this.value === null)
 		{
@@ -84,7 +86,7 @@
 props int value = "";
 props string name = "";
 props Vector options = null;
-props bool show_select_value = true;
+props var show_select_value = true;
 
 
 /**
@@ -102,11 +104,12 @@ Vector getOptions()
  */
 void onChange(var e)
 {
-	var value = e.target.value;
-	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(value, this.data);
-	this.emit("valueChange", value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": e.target.value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 </script>

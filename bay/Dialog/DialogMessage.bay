@@ -19,9 +19,11 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.Web.Messages.Message;
+use Runtime.Widget.Dialog.DialogModel;
 
 
 class DialogMessage extends Message
 {
 	string value = "";
+	DialogModel dialog = null;
 }

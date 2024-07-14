@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.TextArea">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_textarea{
@@ -26,7 +28,7 @@
 	min-height: 400px;
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
-	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	padding: var(--widget-input-padding-y) var(--widget-input-padding-x);
 	background-color: var(--widget-color-default);
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
@@ -114,8 +116,11 @@ void onChange()
 	var textarea = this.getRef("textarea");
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(textarea.value, this.data);
-	this.emit("valueChange", textarea.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": textarea.value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 

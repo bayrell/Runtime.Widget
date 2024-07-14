@@ -18,13 +18,15 @@
 
 <class name="Runtime.Widget.Input">
 
+<use name="Runtime.Widget.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_input{
 	width: 100%;
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
-	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	padding: var(--widget-input-padding-y) var(--widget-input-padding-x);
 	background-color: var(--widget-color-default);
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
@@ -106,8 +108,11 @@ void onChange(var e)
 	var input = this.getRef("input");
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(input.value, this.data);
-	this.emit("valueChange", input.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": input.value,
+		"old_value": this.value,
+		"data": this.data,
+	});
 }
 
 </script>

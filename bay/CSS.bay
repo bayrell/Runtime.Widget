@@ -53,6 +53,8 @@
 	--widget-button-padding-small-y: 5.6px;
 	--widget-button-padding-large-x: 17.5px;
 	--widget-button-padding-large-y: 9.8px;
+	--widget-input-padding-x: 10px;
+	--widget-input-padding-y: 10px;
 	--widget-margin-h1: 1.8em 0px;
 	--widget-margin-h2: 1.5em 0px;
 	--widget-margin-h3: 1.2em 0px;

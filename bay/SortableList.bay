@@ -20,6 +20,7 @@
 
 <use name="Runtime.lib" />
 <use name="Runtime.Math" />
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.Select" component="true" />
@@ -145,6 +146,7 @@
 
 props string name = "";
 props Collection<string> value = [];
+Collection old_value = [];
 
 /* Drag & Drop */
 bool is_drag = false;
@@ -183,6 +185,7 @@ void swapItems(int a, int b)
  */
 void removeItem(int pos)
 {
+	this.old_value = this.value.slice();
 	this.value.remove(pos);
 	this.onValueChange();
 }
@@ -304,6 +307,7 @@ void moveDrag(var e)
 	
 	/* Swap items with animation */
 	this.is_transition = true;
+	this.old_value = this.value.slice();
 	this.swapItems(this.drag_item_pos, pos);
 	this.drag_item_pos = pos;
 	
@@ -320,8 +324,11 @@ void moveDrag(var e)
  */
 void onValueChange()
 {
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": this.old_value,
+		"data": this.data,
+	});
 }
 
 
@@ -330,6 +337,7 @@ void onValueChange()
  */
 void onAddItemClick()
 {
+	this.old_value = this.value.slice();
 	this.value.push("");
 	this.onValueChange();
 }
