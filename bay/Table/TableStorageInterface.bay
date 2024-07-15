@@ -16,28 +16,22 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Form;
+namespace Runtime.Widget.Table;
 
 use Runtime.Web.ApiResult;
-use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableModel;
 
 
-interface FormStorageInterface
+interface TableStorageInterface
 {
-	/**
-	 * Set form
+    /**
+	 * Set table
 	 */
-	void setForm(FormModel form);
-	
-	
-	/**
+	void setTable(TableModel table);
+    
+    
+    /**
 	 * Load form
 	 */
 	async ApiResult load();
-	
-	
-	/**
-	 * Submit form
-	 */
-	async ApiResult submit();
 }

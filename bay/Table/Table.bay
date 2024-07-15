@@ -103,14 +103,17 @@
 				data={{{
 					"field_name": field_name,
 					"row_number": row_number,
+					"table": this.model,
 				}}} ...props />
 		}
 		%else if (field_model != null)
 		{
 			%render this.renderWidget(field_model, {
+				"value": this.model.getItemValue(item, field_name),
 				"data": {
 					"field_name": field_name,
 					"row_number": row_number,
+					"table": this.model,
 				}
 			});
 		}
@@ -143,15 +146,15 @@
 
 <template name="renderPagination">
 	%set Collection fields = this.model.fields;
-	%if (fields and this.model.storage.pages > 1)
+	%if (fields and this.model.pages > 1)
 	{
-		%set Map props = this.model.pagination;
+		%set Map props = this.model.pagination_props;
+		%set string pagination_class_name = this.model.pagination_class_name;
 		<tr>
 			<td colspan={{ fields.count() }}>
-				<Pagination
-					page={{ this.model.storage.page }}
-					pages={{ this.model.storage.pages }}
-					pagination_name={{ this.model.pagination_name }}
+				<{pagination_class_name}
+					page={{ this.model.page }}
+					pages={{ this.model.pages }}
 					@event:page={{ this.onChangePage }}
 					...props
 				/>
@@ -162,9 +165,9 @@
 
 
 <template name="renderBody">
-	%if (this.model.storage)
+	%if (this.model)
 	{
-		%set Collection items = this.model.storage.getItems();
+		%set Collection items = this.model.getItems();
 		%if (items)
 		{
 			%for (int i=0; i<items.count(); i++)
@@ -174,22 +177,6 @@
 			}
 		}
 		%render this.renderPagination();
-	}
-</template>
-
-
-<template name="renderTitle">
-	%if (this.model.title != "")
-	{
-		<div class="widget_table__title">{{ this.model.title }}</div>
-	}
-</template>
-
-
-<template name="renderTopButtons">
-	%if (this.model.top_buttons.count() > 0)
-	{
-		%render this.renderWidget(this.model.top_buttons);
 	}
 </template>
 
@@ -204,17 +191,9 @@
 </template>
 
 
-<template name="renderWidgets">
-	%render this.renderWidget(this.model.getWidget("render_list"));
-</template>
-
-
 <template>
-	<div class="widget_table" class={{ static::getStyles("widget_table", this.styles) }}>
-		%render this.renderTitle();
-		%render this.renderTopButtons();
+	<div class="widget_table" class={{ static::getStyles("widget_table", this.model.styles) }}>
 		%render this.renderTable();
-		%render this.renderWidgets();
 	</div>
 </template>
 
@@ -233,7 +212,7 @@ bool isRowSelected(int row_number) => this.row_selected == row_number;
 /**
  * Returns selected item
  */
-Dict getSelectedItem() => this.model.storage.getItemByRowNumber(this.row_selected);
+Dict getSelectedItem() => this.model.getItemByRowNumber(this.row_selected);
 
 
 /**
@@ -241,7 +220,7 @@ Dict getSelectedItem() => this.model.storage.getItemByRowNumber(this.row_selecte
  */
 void onRowClick(int row_number)
 {
-	this.model.onRowClick(row_number);
+	/*this.model.onRowClick(row_number);*/
 }
 
 
@@ -250,7 +229,7 @@ void onRowClick(int row_number)
  */
 void onChangePage(string page)
 {
-	this.model.onChangePage(page);
+	/*this.model.onChangePage(page);*/
 }
 
 </script>

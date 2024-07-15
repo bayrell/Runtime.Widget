@@ -122,5 +122,6 @@ class WidgetResultModel extends BaseModel
 	{
 		serializer.process(this, "code", data);
 		serializer.process(this, "message", data);
+		parent(serializer, data);
 	}
 }

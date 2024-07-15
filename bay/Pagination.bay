@@ -80,7 +80,7 @@
 		{
 			<ul>
 				
-				%if (this.pagination_name)
+				%if (this.name)
 				{
 					%set _ = props.set("href", this.getPageUrl(1));
 				}
@@ -102,7 +102,7 @@
 				{
 					%for (int p=page_start; p<=page_end; p++)
 					{
-						%if (this.pagination_name)
+						%if (this.name)
 						{
 							%set _ = props.set("href", this.getPageUrl(p));
 						}
@@ -125,7 +125,7 @@
 				
 				%if (this.pages > 1)
 				{
-					%if (this.pagination_name)
+					%if (this.name)
 					{
 						%set _ = props.set("href", this.getPageUrl(this.pages));
 					}
@@ -148,7 +148,7 @@
 props int page = 1;
 props int pages = 1;
 props int delta = 5;
-props string pagination_name = "";
+props string name = "";
 
 
 /**
@@ -157,7 +157,7 @@ props string pagination_name = "";
 string getPageUrl(int page)
 {
 	string uri = this.layout.request_full_uri;
-	return rs::url_get_add(uri, this.pagination_name, page);
+	return rs::url_get_add(uri, this.name, page);
 }
 
 
@@ -166,7 +166,7 @@ string getPageUrl(int page)
  */
 void onClick(int page)
 {
-	if (this.pagination_name) return;
+	if (this.name) return;
 	this.emit("page", page);
 }
 

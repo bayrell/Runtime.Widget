@@ -2,6 +2,11 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
+		"Table.bay",
+		"TableModel.bay",
+		"TableRowButtonsModel.bay",
+		"TableStorage.bay",
+		"TableStorageInterface.bay"
 	],
 	"require": [
 		"Runtime.Widget"

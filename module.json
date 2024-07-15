@@ -13,6 +13,8 @@
 		"Link.bay",
 		"Pagination.bay",
 		"Container.bay",
+		"RenderList.bay",
+		"RenderListModel.bay",
 		"RowButtons.bay",
 		"RowButtonsModel.bay",
 		"Section.bay",

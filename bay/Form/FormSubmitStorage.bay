@@ -18,50 +18,20 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.BaseObject;
 use Runtime.Web.ApiResult;
 use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Form.FormSaveStorage;
 use Runtime.Widget.Form.FormStorageInterface;
 
 
-class FormSubmitStorage implements FormStorageInterface
+class FormSubmitStorage extends FormSaveStorage
 {
-	FormModel form = null;
-	
-	
-	/**
-	 * Constructor
-	 */
-	void constructor(FormModel form)
-	{
-		this.form = form;
-	}
-	
-	
 	/**
 	 * Load form
 	 */
 	async ApiResult load()
 	{
 		return null;
-	}
-	
-	
-	/**
-	 * Submit form
-	 */
-	async ApiResult submit()
-	{
-		Dict post_data =
-		{
-			"pk": this.form.pk,
-			"item": this.form.getPostData(),
-		};
-		post_data = this.form.mergePostData(post_data, "submit");
-		ApiResult res = await this.form.layout.callApi({
-			"api_name": this.form.getApiName(),
-			"method_name": "actionSave",
-			"data": post_data
-		});
-		return res;
 	}
 }

@@ -20,8 +20,10 @@ namespace Runtime.Widget.Form;
 
 use Runtime.BaseObject;
 use Runtime.Serializer;
+use Runtime.Entity.Factory;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseModel;
+use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Form.Form;
 use Runtime.Widget.Form.FormMessage;
@@ -32,7 +34,6 @@ use Runtime.Widget.WidgetResultModel;
 
 class FormModel extends BaseModel
 {
-	string api_name = "";
 	string component = classof Form;
 	string widget_name = "form";
 	
@@ -49,12 +50,6 @@ class FormModel extends BaseModel
 	/* Form result */
 	WidgetResultModel load = null;
 	WidgetResultModel result = null;
-	
-	
-	/**
-	 * Returns api name
-	 */
-	string getApiName() => "";
 	
 	
 	/**
@@ -82,23 +77,29 @@ class FormModel extends BaseModel
 		if (params == null) return;
 		
 		/* Setup params */
-		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("fields"))
 		{
 			this.fields = [];
 			this.addFields(params.get("fields"));
 		}
+		
+		/* Setup storage */
 		if (params.has("storage"))
 		{
 			var storage = params.get("storage");
-			if (rtl::isString(storage)) this.storage = rtl::newInstance(storage, [this]);
+			if (storage instanceof Factory) this.storage = storage.factory();
+			else if (rtl::isString(storage)) this.storage = rtl::newInstance(storage, [this]);
 			else this.storage = storage;
 		}
-		
-		/* Setup storage */
 		if (this.storage == null)
 		{
 			this.storage = this.createDataStorage(params);
+		}
+		
+		/* Setup storage form */
+		if (this.storage != null)
+		{
+			this.storage.setForm(this);
 		}
 		
 		/* Setup primary key */
@@ -148,8 +149,24 @@ class FormModel extends BaseModel
 	 */
 	void addField(Map field)
 	{
+		/* Create model */
+		if (field.has("model"))
+		{
+			var model = field.get("model");
+			if (model instanceof ModelFactory)
+			{
+				model.factory(this);
+			}
+		}
+		
+		/* Add field */
 		this.fields.append(field);
-		this.layout.addComponent(field.get("component"));
+		
+		/* Add component */
+		if (field.has("component"))
+		{
+			this.layout.addComponent(field.get("component"));
+		}
 	}
 	
 	
@@ -266,12 +283,10 @@ class FormModel extends BaseModel
 	 */
 	async void loadData(RenderContainer container)
 	{
+		await parent(container);
+		
 		ApiResult res = await this.storage.load();
 		this.setApiResult(res, "load");
-		this.emit(new FormMessage{
-			"name": "load",
-			"result": res,
-		});
 	}
 	
 	

@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.RowButtons" extends="Runtime.Web.RenderList">
+<class name="Runtime.Widget.RowButtons" extends="Runtime.Widget.RenderList">
 
 <use name="Runtime.Web.BaseModel" />
 <use name="Runtime.Widget.Button" />

@@ -1,4 +1,4 @@
-/*!
+<!--
  *  BayLang Technology
  *
  *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
@@ -14,30 +14,33 @@
  *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
- */
+-->
 
-namespace Runtime.Widget.Form;
+<class name="Runtime.Widget.RenderList">
 
-use Runtime.Web.ApiResult;
-use Runtime.Widget.Form.FormModel;
+<use name="Runtime.Web.BaseModel" />
 
 
-interface FormStorageInterface
-{
-	/**
-	 * Set form
-	 */
-	void setForm(FormModel form);
-	
-	
-	/**
-	 * Load form
-	 */
-	async ApiResult load();
-	
-	
-	/**
-	 * Submit form
-	 */
-	async ApiResult submit();
-}
+<template name="renderItems">
+	%set int items_count = this.model.items.count();
+	%for (int i=0; i<items_count; i++)
+	{
+		%set BaseModel widget = this.model.items.get(i);
+		%render this.renderWidget(widget, { "data": this.data, "render_list": {
+			"position": i,
+			"count": items_count,
+			"first": i == 0,
+			"last": i == (items_count - 1),
+		} });
+	}
+</template>
+
+
+<template>
+	<div class="widget_render_list" @ref="widget">
+		%render this.renderItems();
+	</div>
+</template>
+
+
+</class>

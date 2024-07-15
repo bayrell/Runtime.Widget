@@ -16,18 +16,18 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Form;
+namespace Runtime.Widget.Table;
 
 use Runtime.BaseObject;
 use Runtime.Web.ApiResult;
-use Runtime.Widget.Form.FormModel;
-use Runtime.Widget.Form.FormStorageInterface;
+use Runtime.Widget.Table.TableModel;
+use Runtime.Widget.Table.TableStorageInterface;
 
 
-class FormSaveStorage extends BaseObject implements FormStorageInterface
+class TableStorage extends BaseObject implements TableStorageInterface
 {
 	string api_name = "";
-	FormModel form = null;
+	TableModel table = null;
 	
 	
 	/**
@@ -37,11 +37,11 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 	
 	
 	/**
-	 * Set form
+	 * Set table
 	 */
-	void setForm(FormModel form)
+	void setTable(TableModel table)
 	{
-		this.form = form;
+		this.table = table;
 	}
 	
 	
@@ -62,32 +62,13 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 	{
 		Dict post_data =
 		{
-			"pk": this.form.pk,
+			"page": this.table.page,
+			"limit": this.table.limit,
 		};
-		post_data = this.form.mergePostData(post_data, "load");
-		ApiResult res = await this.form.layout.callApi({
+		post_data = this.table.mergePostData(post_data, "load");
+		ApiResult res = await this.table.layout.callApi({
 			"api_name": this.getApiName(),
-			"method_name": "actionItem",
-			"data": post_data
-		});
-		return res;
-	}
-	
-	
-	/**
-	 * Submit form
-	 */
-	async ApiResult submit()
-	{
-		Dict post_data =
-		{
-			"pk": this.form.pk,
-			"item": this.form.getPostData(),
-		};
-		post_data = this.form.mergePostData(post_data, "submit");
-		ApiResult res = await this.form.layout.callApi({
-			"api_name": this.getApiName(),
-			"method_name": "actionSave",
+			"method_name": "actionSearch",
 			"data": post_data
 		});
 		return res;

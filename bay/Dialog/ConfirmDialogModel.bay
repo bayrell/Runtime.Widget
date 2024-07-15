@@ -98,7 +98,6 @@ class ConfirmDialogModel extends DialogModel
 		try
 		{
 			this.emit(new DialogMessage{
-				"dialog": this,
 				"name": "confirm",
 			});
 		}

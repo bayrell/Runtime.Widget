@@ -25,5 +25,4 @@ use Runtime.Widget.Dialog.DialogModel;
 class DialogMessage extends Message
 {
 	string value = "";
-	DialogModel dialog = null;
 }

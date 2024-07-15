@@ -101,7 +101,6 @@ class PromptDialogModel extends DialogModel
 		try
 		{
 			this.emit(new DialogMessage{
-				"dialog": this,
 				"name": "confirm",
 				"value": this.value,
 			});

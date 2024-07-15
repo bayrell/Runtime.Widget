@@ -76,6 +76,7 @@
 			}}
 			data={{{
 				"field_name": field_name,
+				"form": this.model,
 			}}}
 			...field_props
 		/>
@@ -83,7 +84,11 @@
 	%else
 	{
 		%render this.renderWidget(field_model, {
+			"value": value,
+			"name": field_name,
 			"data": {
+				"field_name": field_name,
+				"form": this.model,
 				"value": value,
 			}
 		});
