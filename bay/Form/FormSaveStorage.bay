@@ -82,7 +82,7 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 		Dict post_data =
 		{
 			"pk": this.form.pk,
-			"item": this.form.getPostData(),
+			"item": this.form.getPostItem(),
 		};
 		post_data = this.form.mergePostData(post_data, "submit");
 		ApiResult res = await this.form.layout.callApi({

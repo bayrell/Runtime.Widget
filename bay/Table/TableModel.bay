@@ -31,6 +31,7 @@ use Runtime.Widget.Table.Table;
 use Runtime.Widget.Table.TableStorageInterface;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Pagination;
+use Runtime.Widget.RenderListModel;
 use Runtime.Widget.RowButtonsModel;
 use Runtime.Widget.WidgetResultModel;
 
@@ -50,6 +51,7 @@ class TableModel extends BaseModel
 	Collection<Dict> fields = [];
 	Collection<Dict> items = [];
 	Collection<string> styles = [];
+	RenderListModel render_list = null;
 	WidgetResultModel result = null;
 	
 	
@@ -79,7 +81,7 @@ class TableModel extends BaseModel
 		if (params.has("limit")) this.limit = params.get("limit");
 		if (params.has("page")) this.page = params.get("page");
 		if (params.has("styles")) this.styles = params.get("styles");
-
+		
 		/* Setup pagination */
 		if (params.has("pagination_class_name"))
 		{
@@ -107,7 +109,7 @@ class TableModel extends BaseModel
 			this.storage = this.createDataStorage(params);
 		}
 		
-		/* Setup storage form */
+		/* Setup storage table */
 		if (this.storage != null)
 		{
 			this.storage.setTable(this);
@@ -121,6 +123,14 @@ class TableModel extends BaseModel
 	void initWidget(Dict params)
 	{
 		parent(params);
+		
+		/* Render list */
+		this.render_list = this.addWidget(
+			classof RenderListModel,
+			{
+				"widget_name": "render_list",
+			}
+		);
 		
 		/* Result */
 		this.result = this.addWidget(
@@ -143,11 +153,7 @@ class TableModel extends BaseModel
 		/* Create model */
 		if (field.has("model"))
 		{
-			var model = field.get("model");
-			if (model instanceof ModelFactory)
-			{
-				model.factory(this);
-			}
+			field.set("model", this.createModel(field.get("model")));
 		}
 		
 		/* Add field */
@@ -223,7 +229,7 @@ class TableModel extends BaseModel
 		if (res == null) return;
 		
 		/* Load */
-		if (action == "search" or action == "load" or action == "refresh")
+		if (action == "search" or action == "load" or action == "reload")
 		{
 			if (res.data.has("items")) this.items = res.data.get("items");
 			if (res.data.has("page")) this.page = res.data.get("page");
@@ -265,12 +271,12 @@ class TableModel extends BaseModel
 	
 	
 	/**
-	 * Refresh table
+	 * Reload table data
 	 */
-	async ApiResult refresh()
+	async ApiResult reload()
 	{
 		ApiResult res = await this.storage.load();
-		this.setApiResult(res, "refresh");
+		this.setApiResult(res, "reload");
 		return res;
 	}
 	

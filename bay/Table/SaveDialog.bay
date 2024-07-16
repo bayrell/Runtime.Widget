@@ -21,9 +21,18 @@
 >
 
 <template name="renderContent">
-	<div class='widget_dialog__content'>
-		%render this.renderWidget(this.model.form);
-	</div>
+	%if (this.model.action == "add")
+	{
+		<div class='widget_dialog__content' @key="add_form">
+			%render this.renderWidget(this.model.add_form);
+		</div>
+	}
+	%if (this.model.action == "edit")
+	{
+		<div class='widget_dialog__content' @key="edit_form">
+			%render this.renderWidget(this.model.edit_form);
+		</div>
+	}
 </template>
 
 </class>

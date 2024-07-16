@@ -35,9 +35,9 @@ class FormDeleteStorage extends FormSaveStorage
 		{
 			"pk": this.form.pk,
 		};
-		post_data = this.form.mergeData(post_data, "submit");
+		post_data = this.form.mergePostData(post_data, "submit");
 		ApiResult res = await this.form.layout.callApi({
-			"api_name": this.form.getApiName(),
+			"api_name": this.getApiName(),
 			"method_name": "actionDelete",
 			"data": post_data
 		});

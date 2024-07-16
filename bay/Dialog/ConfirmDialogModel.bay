@@ -50,34 +50,28 @@ class ConfirmDialogModel extends DialogModel
 		parent(params);
 		
 		/* Setup close buttons */
-		this.buttons.addWidget(
-			classof ButtonModel,
-			{
-				"content": "Cancel",
-				"widget_name": "cancel_button",
-				"styles": [
-					"gray"
-				],
-				"events": {
-					"click": new Callback(this, "onCloseButtonClick"),
-				},
-			}
-		);
+		this.buttons.addButton({
+			"content": "Cancel",
+			"widget_name": "cancel_button",
+			"styles": [
+				"gray"
+			],
+			"events": {
+				"click": new Callback(this, "onCloseButtonClick"),
+			},
+		});
 		
 		/* Setup confirm button */
-		this.buttons.addWidget(
-			classof ButtonModel,
-			{
-				"content": "Ok",
-				"widget_name": "confirm_button",
-				"styles": [
-					"primary"
-				],
-				"events": {
-					"click": new Callback(this, "onConfirmButtonClick"),
-				},
-			}
-		);
+		this.buttons.addButton({
+			"content": "Ok",
+			"widget_name": "confirm_button",
+			"styles": [
+				"primary"
+			],
+			"events": {
+				"click": new Callback(this, "onConfirmButtonClick"),
+			},
+		});
 	}
 	
 	
@@ -91,12 +85,23 @@ class ConfirmDialogModel extends DialogModel
 	
 	
 	/**
+	 * Confirm
+	 */
+	async bool confirm()
+	{
+		return true;
+	}
+	
+	
+	/**
 	 * Confirm button click
 	 */
-	void onConfirmButtonClick()
+	async void onConfirmButtonClick()
 	{
 		try
 		{
+			bool confirm = await this.confirm();
+			if (not confirm) return;
 			this.emit(new DialogMessage{
 				"name": "confirm",
 			});

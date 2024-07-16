@@ -56,6 +56,7 @@
 
 <template>
 	<div class="widget_row_buttons"
+		class={{ this.class }}
 		class={{ static::getStyles("widget_row_buttons", this.model.styles) }}
 	>
 		%render this.renderItems();

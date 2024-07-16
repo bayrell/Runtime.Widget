@@ -20,23 +20,8 @@
 	extends="Runtime.Widget.Dialog.Dialog"
 >
 
-<use name="Runtime.Widget.WidgetResult" component="true" />
-
-
-<style>
-.widget_delete__content{
-	margin-bottom: calc(var(--widget-space) * 3);
-}
-</style>
-
 <template name="renderContent">
-	<div class='widget_dialog__content'>
-		<div class="widget_delete__content">{{ this.model.content }}</div>
-		%if (this.model.form.storage)
-		{
-			<WidgetResult @model={{ this.model.form.storage.result }} />
-		}
-	</div>
+	%render this.renderWidget(this.model.form.result);
 </template>
 
 </class>

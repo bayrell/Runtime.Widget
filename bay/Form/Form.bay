@@ -71,8 +71,8 @@
 			name={{ field_name }}
 			@model={{ field_model }}
 			@event:onValueChange={{
-				void (string value) use (field_name) =>
-					this.model.onFieldChange(field_name, value)
+				void (var message) use (field_name) =>
+					this.model.onFieldChange(field_name, message.value)
 			}}
 			data={{{
 				"field_name": field_name,
@@ -153,7 +153,7 @@
 
 
 <template name="renderResult">
-	%if (this.model)
+	%if (this.model and this.model.show_result)
 	{
 		%render this.renderWidget(this.model.result);
 	}

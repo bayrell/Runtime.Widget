@@ -43,13 +43,15 @@ class FormModel extends BaseModel
 	
 	/* Data */
 	Dict pk = null;
-	Dict data = {};
+	Dict item = {};
+	Collection<string> primary_key = [];
 	FormStorageInterface storage = null;
 	RowButtonsModel bottom_buttons;
 	
 	/* Form result */
 	WidgetResultModel load = null;
 	WidgetResultModel result = null;
+	bool show_result = true;
 	
 	
 	/**
@@ -103,10 +105,8 @@ class FormModel extends BaseModel
 		}
 		
 		/* Setup primary key */
-		if (params.has("primary_key"))
-		{
-			this.pk = params.get("primary_key");
-		}
+		if (params.has("pk")) this.pk = params.get("pk");
+		if (params.has("primary_key")) this.primary_key = params.get("primary_key");
 	}
 	
 	
@@ -155,7 +155,8 @@ class FormModel extends BaseModel
 			var model = field.get("model");
 			if (model instanceof ModelFactory)
 			{
-				model.factory(this);
+				BaseModel instance = model.factory(this);
+				field.set("model", instance);
 			}
 		}
 		
@@ -208,22 +209,57 @@ class FormModel extends BaseModel
 	 */
 	void clear()
 	{
-		this.data = {};
+		this.pk = null;
+		this.item = {};
 		this.fields_error = {};
 		for (int i=0; i<this.fields.count(); i++)
 		{
 			Dict field = this.fields.get(i);
 			string field_name = field.get("name");
 			var default_value = field.get("default", "");
-			this.data.set(field_name, default_value);
+			this.item.set(field_name, default_value);
 		}
+		this.result.clear();
+	}
+	
+	
+	/**
+	 * Field changed event
+	 */
+	void onFieldChange(string field_name, var value)
+	{
+		this.item.set(field_name, value);
 	}
 	
 	
 	/**
 	 * Returns item value
 	 */
-	var getItemValue(string field_name) => this.data.get(field_name);
+	var getItemValue(string field_name) => this.item.get(field_name);
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Dict item) => item.intersect(this.primary_key);
+	
+	
+	/**
+	 * Set item
+	 */
+	void setItem(Dict item)
+	{
+		if (item == null)
+		{
+			this.pk = null;
+			this.item = {};
+		}
+		else
+		{
+			this.pk = this.getPrimaryKey(item);
+			this.item = item;
+		}
+	}
 	
 	
 	/**
@@ -232,7 +268,7 @@ class FormModel extends BaseModel
 	void serialize(Serializer serializer, Map data)
 	{
 		serializer.process(this, "pk", data);
-		serializer.process(this, "data", data);
+		serializer.process(this, "item", data);
 		serializer.process(this, "load", data);
 		parent(serializer, data);
 	}
@@ -264,9 +300,9 @@ class FormModel extends BaseModel
 	
 	
 	/**
-	 * Returns data
+	 * Returns post item
 	 */
-	Dict getPostData() => this.data;
+	Dict getPostItem() => this.item;
 	
 	
 	/**
@@ -293,7 +329,7 @@ class FormModel extends BaseModel
 	/**
 	 * Submit form
 	 */
-	async void submit()
+	async ApiResult submit()
 	{
 		this.result.setWaitMessage();
 		ApiResult res = await this.storage.submit();
@@ -302,5 +338,6 @@ class FormModel extends BaseModel
 			"name": "submit",
 			"result": res,
 		});
+		return res;
 	}
 }

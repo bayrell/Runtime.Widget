@@ -18,7 +18,7 @@
 
 <class name="Runtime.Widget.Input">
 
-<use name="Runtime.Widget.Messages.ValueChangeMessage" />
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
 
 
 <style>

@@ -21,8 +21,10 @@ namespace Runtime.Widget.Table;
 use Runtime.Callback;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Web.RenderListModel;
+use Runtime.Web.Messages.ClickMessage;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Crud.CrudApiStorage;
+use Runtime.Widget.Form.FormMessage;
 use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.RowButtons;
 use Runtime.Widget.RowButtonsModel;
@@ -34,17 +36,45 @@ use Runtime.Widget.Table.TableModel;
 class TableDialogModel extends TableModel
 {
 	FormModel form;
+	SaveDialogModel save_dialog;
+	DeleteDialogModel delete_dialog;
+	fn get_title = null;
 	
 	
 	/**
-	 * Create form
+	 * Init widget params
 	 */
-	FormModel createForm() => this.addWidget(
-		classof FormModel,
+	void initParams(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("get_title")) this.get_title = params.get("get_title");
+		
+		/* Form */
+		if (params.has("add_form"))
 		{
-			"storage": this.createDataStorage(),
+			this.add_form = this.createModel(params.get("add_form"));
 		}
-	);
+		if (params.has("edit_form"))
+		{
+			this.edit_form = this.createModel(params.get("edit_form"));
+		}
+		if (params.has("delete_form"))
+		{
+			this.delete_form = this.createModel(params.get("delete_form"));
+		}
+		
+		/* Setup dialog */
+		if (params.has("save_dialog"))
+		{
+			this.save_dialog = this.createModel(params.get("save_dialog"));
+		}
+		if (params.has("delete_dialog"))
+		{
+			this.delete_dialog = this.createModel(params.get("delete_dialog"));
+		}
+	}
 	
 	
 	/**
@@ -52,54 +82,80 @@ class TableDialogModel extends TableModel
 	 */
 	void initWidget(Dict params)
 	{
-		/* Create form */
-		this.form = this.createForm();
-		
 		parent(params);
 		
+		/* Add events */
+		this.add_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		this.edit_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		this.delete_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		
 		/* Create save wiget */
-		this.render_list.addItem(
-			this.addWidget(
-				classof SaveDialogModel,
-				{
-					"form": this.form,
-					"widget_name": "save_dialog",
-				}
-			)
-		);
-		
-		/* Create delete widget */
-		this.render_list.addItem(
-			this.addWidget(
-				classof DeleteDialogModel,
-				{
-					"form": this.form,
-					"widget_name": "delete_dialog",
-				}
-			)
-		);
-		
-		/* Add button */
-		this.top_buttons.addWidget(
-			classof ButtonModel,
+		this.save_dialog = this.addWidget(
+			classof SaveDialogModel,
 			{
-				"content": "Add",
-				"widget_name": "add_button",
-				"styles": [
-					"success",
-				],
-				"events": {
-					"onClick": new Callback(this.getWidget("save_dialog"), "onClick"),
-				},
+				"add_form": this.add_form,
+				"edit_form": this.edit_form,
+				"table": this,
+				"widget_name": "save_dialog",
 			}
 		);
 		
-		/* Setup row buttons */
-		this.row_buttons.getWidget("edit_button").events
-			.add("onClick", new Callback(this.getWidget("save_dialog"), "onClick"))
-		;
-		this.row_buttons.getWidget("delete_button").events
-			.add("onClick", new Callback(this.getWidget("delete_dialog"), "onClick"))
-		;
+		/* Create delete widget */
+		this.delete_dialog = this.addWidget(
+			classof DeleteDialogModel,
+			{
+				"form": this.delete_form,
+				"table": this,
+				"widget_name": "delete_dialog",
+			}
+		);
+		
+		/* Add dialogs */
+		this.render_list.addItem(this.save_dialog);
+		this.render_list.addItem(this.delete_dialog);
+	}
+	
+	
+	/**
+	 * Returns title
+	 */
+	string getTitle(Dict params)
+	{
+		if (this.get_title)
+		{
+			return rtl::apply(this.get_title, [params]);
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * On form submit
+	 */
+	void onFormSubmit(FormMessage message)
+	{
+		if (message.result.isSuccess())
+		{
+			this.reload();
+		}
+	}
+	
+	
+	/**
+	 * Row button click
+	 */
+	void onRowButtonClick(ClickMessage message)
+	{
+		Dict data = message.data;
+		string button_name = message.widget.widget_name;
+		
+		if (button_name == "edit_button")
+		{
+			this.save_dialog.showEdit(data.get("item"));
+		}
+		else if (button_name == "delete_button")
+		{
+			this.delete_dialog.showDelete(data.get("item"));
+		}
 	}
 }
