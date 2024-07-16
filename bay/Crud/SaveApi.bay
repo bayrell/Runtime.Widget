@@ -1,0 +1,137 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.ItemNotFound;
+use Runtime.Exceptions.RuntimeException;
+use Runtime.Web.BaseApi;
+use Runtime.Widget.Crud.CrudRule;
+use Runtime.Widget.Crud.FieldResult;
+
+
+class SaveApi extends BaseApi
+{
+	var item = null;
+	Dict pk = null;
+	Dict data = {};
+	FieldResult fields = null;
+	Collection<CrudRule> rules = [];
+	
+	
+	/**
+	 * Init api
+	 */
+	void init()
+	{
+		this.fields = new FieldResult;
+		this.rules = this.getRules();
+		this.result.data.set("fields", this.fields);
+	}
+	
+	
+	/**
+	 * Returns rules
+	 */
+	Vector<CrudRule> getRules() =>
+	[
+	];
+	
+	
+	/**
+	 * New item
+	 */
+	async void newItem()
+	{
+		this.item = null;
+	}
+	
+	
+	/**
+	 * Find item
+	 */
+	async void findItem(Dict pk)
+	{
+		this.item = null;
+	}
+	
+	
+	/**
+	 * Load item
+	 */
+	async void loadItem()
+	{
+		Dict pk = this.post_data.get("pk");
+		if (pk != null and pk instanceof Dict)
+		{
+			this.pk = pk;
+			this.findItem(pk);
+		}
+		else
+		{
+			this.newItem();
+		}
+		
+		/* Check if item is exists */
+		if (this.item == null)
+		{
+			throw new ApiError(new ItemNotFound());
+		}
+	}
+	
+	
+	/**
+	 * Validate item
+	 */
+	async Dict validateItem(Dict data)
+	{
+		/* Call rules */
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			data = await rule.validateItem(this, data);
+		}
+		
+		return data;
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData()
+	{
+		Dict item = this.post_data.get("item");
+		if (item == null)
+		{
+			throw new ApiError(new RuntimeException("Post data 'item' not found"));
+		}
+		if (not(item instanceof Dict))
+		{
+			throw new ApiError(new RuntimeException("Post data 'item' not found"));
+		}
+		
+		/* Get data */
+		this.data = await this.validateItem(item);
+		
+		/* Check fields error */
+		this.fields.checkError();
+	}
+}

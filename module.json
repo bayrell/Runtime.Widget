@@ -44,6 +44,10 @@
 			"type": "module"
 		},
 		{
+			"src": "bay/Crud",
+			"type": "module"
+		},
+		{
 			"src": "bay/Dialog",
 			"type": "module"
 		},
