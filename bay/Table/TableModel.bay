@@ -48,6 +48,7 @@ class TableModel extends BaseModel
 	int limit = 10;
 	int page = 1;
 	int pages = 0;
+	Dict foreign_key = null;
 	Collection<Dict> fields = [];
 	Collection<Dict> items = [];
 	Collection<string> styles = [];
@@ -78,6 +79,7 @@ class TableModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
 		if (params.has("limit")) this.limit = params.get("limit");
 		if (params.has("page")) this.page = params.get("page");
 		if (params.has("styles")) this.styles = params.get("styles");
@@ -244,6 +246,10 @@ class TableModel extends BaseModel
 	 */
 	Dict mergePostData(Dict post_data, string action)
 	{
+		if (this.foreign_key)
+		{
+			post_data.set("foreign_key", this.foreign_key);
+		}
 		return post_data;
 	}
 	
