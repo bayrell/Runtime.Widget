@@ -54,11 +54,11 @@ class RowButtonsModel extends RenderListModel
 	/**
 	 * Add button
 	 */
-	ButtonModel addButton(Map button)
+	ButtonModel addButton(Map button, string dest = "", string kind = "after")
 	{
 		/* Add button */
 		ButtonModel model = this.addWidget(classof ButtonModel, button);
-		this.items.append(model);
+		this.addItem(model, dest, kind);
 		
 		/* Add listener */
 		model.addListener("click", new Callback(this, "onButtonClick"));
