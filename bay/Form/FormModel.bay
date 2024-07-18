@@ -38,6 +38,7 @@ class FormModel extends BaseModel
 	string widget_name = "form";
 	
 	/* Fields */
+	Dict foreign_key = null;
 	Vector<Map> fields = [];
 	Dict<Vector> fields_error = {};
 	
@@ -77,6 +78,7 @@ class FormModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
 		
 		/* Setup params */
 		if (params.has("fields"))
@@ -310,6 +312,10 @@ class FormModel extends BaseModel
 	 */
 	Dict mergePostData(Dict post_data, string action)
 	{
+		if (this.foreign_key)
+		{
+			post_data.set("foreign_key", this.foreign_key);
+		}
 		return post_data;
 	}
 	

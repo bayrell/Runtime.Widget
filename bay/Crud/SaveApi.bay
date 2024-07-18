@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.Crud;
 
+use Runtime.BaseObject;
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.ItemNotFound;
 use Runtime.Exceptions.RuntimeException;
@@ -28,7 +29,7 @@ use Runtime.Widget.Crud.FieldResult;
 
 class SaveApi extends BaseApi
 {
-	var item = null;
+	BaseObject item = null;
 	Dict pk = null;
 	Dict data = {};
 	FieldResult fields = null;
@@ -57,19 +58,13 @@ class SaveApi extends BaseApi
 	/**
 	 * New item
 	 */
-	async void newItem()
-	{
-		this.item = null;
-	}
+	async BaseObject newItem() => null;
 	
 	
 	/**
 	 * Find item
 	 */
-	async void findItem(Dict pk)
-	{
-		this.item = null;
-	}
+	async BaseObject findItem(Dict pk) => null;
 	
 	
 	/**
@@ -81,11 +76,11 @@ class SaveApi extends BaseApi
 		if (pk != null and pk instanceof Dict)
 		{
 			this.pk = pk;
-			this.findItem(pk);
+			this.item = this.findItem(pk);
 		}
 		else
 		{
-			this.newItem();
+			this.item = this.newItem();
 		}
 		
 		/* Check if item is exists */

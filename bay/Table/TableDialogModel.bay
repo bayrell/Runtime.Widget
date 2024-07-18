@@ -35,7 +35,9 @@ use Runtime.Widget.Table.TableModel;
 
 class TableDialogModel extends TableModel
 {
-	FormModel form;
+	FormModel add_form;
+	FormModel edit_form;
+	FormModel delete_form;
 	SaveDialogModel save_dialog;
 	DeleteDialogModel delete_dialog;
 	fn get_title = null;
@@ -85,34 +87,55 @@ class TableDialogModel extends TableModel
 		parent(params);
 		
 		/* Add events */
-		this.add_form.addListener("submit", new Callback(this, "onFormSubmit"));
-		this.edit_form.addListener("submit", new Callback(this, "onFormSubmit"));
-		this.delete_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		if (this.add_form)
+		{
+			this.add_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		}
+		if (this.edit_form)
+		{
+			this.edit_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		}
+		if (this.delete_form)
+		{
+			this.delete_form.addListener("submit", new Callback(this, "onFormSubmit"));
+		}
 		
 		/* Create save wiget */
-		this.save_dialog = this.addWidget(
-			classof SaveDialogModel,
-			{
-				"add_form": this.add_form,
-				"edit_form": this.edit_form,
-				"table": this,
-				"widget_name": "save_dialog",
-			}
-		);
+		if (this.add_form or this.edit_form)
+		{
+			this.save_dialog = this.addWidget(
+				classof SaveDialogModel,
+				{
+					"add_form": this.add_form,
+					"edit_form": this.edit_form,
+					"table": this,
+					"widget_name": "save_dialog",
+				}
+			);
+		}
 		
 		/* Create delete widget */
-		this.delete_dialog = this.addWidget(
-			classof DeleteDialogModel,
-			{
-				"form": this.delete_form,
-				"table": this,
-				"widget_name": "delete_dialog",
-			}
-		);
+		if (this.delete_form)
+		{
+			this.delete_dialog = this.addWidget(
+				classof DeleteDialogModel,
+				{
+					"form": this.delete_form,
+					"table": this,
+					"widget_name": "delete_dialog",
+				}
+			);
+		}
 		
 		/* Add dialogs */
-		this.render_list.addItem(this.save_dialog);
-		this.render_list.addItem(this.delete_dialog);
+		if (this.save_dialog)
+		{
+			this.render_list.addItem(this.save_dialog);
+		}
+		if (this.delete_dialog)
+		{
+			this.render_list.addItem(this.delete_dialog);
+		}
 	}
 	
 	
