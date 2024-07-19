@@ -200,6 +200,7 @@ void checkInside(var elem)
  */
 void startDrag(var e)
 {
+	if (not this.model.dnd) return false;
 	if (this.is_drag != false) return false;
 	if (this.drag_start_point == null) return false;
 	if (Math::abs(e.layerY - this.drag_start_point.get("y")) > 5) return false;
@@ -360,11 +361,14 @@ void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 	);
 	
 	/* Set start drag item */
-	this.drag_elem = this.findSpan(e.target);
-	this.drag_start_point = {
-		"x": e.layerX,
-		"y": e.layerY,
-	};
+	if (this.model.dnd)
+	{
+		this.drag_elem = this.findSpan(e.target);
+		this.drag_start_point = {
+			"x": e.layerX,
+			"y": e.layerY,
+		};
+	}
 	
 	e.preventDefault();
 	e.stopPropagation();

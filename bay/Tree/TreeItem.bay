@@ -34,9 +34,10 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Constructor
 	 */
-	public void constructor()
+	public void constructor(Dict params = null)
 	{
 		parent();
+		this._assign_values(params);
 	}
 	
 	
@@ -47,6 +48,7 @@ class TreeItem extends BaseObject implements SerializeInterface
 	{
 		serializer.process(this, "key", data);
 		serializer.process(this, "label", data);
+		serializer.process(this, "items", data);
 	}
 	
 	

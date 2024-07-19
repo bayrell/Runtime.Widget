@@ -33,6 +33,8 @@ class TreeModel extends BaseModel
 {
 	string component = classof TreeWidget;
 	string widget_name = "tree";
+	bool dnd = false;
+	bool icons = true;
 	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
@@ -48,6 +50,8 @@ class TreeModel extends BaseModel
 		
 		if (params == null) return;
 		if (params.has("context_menu")) this.context_menu = params.get("context_menu");
+		if (params.has("dnd")) this.dnd = params.get("dnd");
+		if (params.has("icons")) this.icons = params.get("icons");
 	}
 	
 	
