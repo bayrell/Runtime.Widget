@@ -35,6 +35,7 @@ class TreeModel extends BaseModel
 	string widget_name = "tree";
 	bool dnd = false;
 	bool icons = true;
+	bool is_open = false;
 	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
@@ -93,6 +94,7 @@ class TreeModel extends BaseModel
 		
 		this.selected_path = path;
 		this.selected_item = item;
+		this.selected_item.onSelect();
 	}
 	
 	

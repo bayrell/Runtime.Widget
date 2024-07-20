@@ -31,6 +31,9 @@
 .tree_widget__items > .tree_widget__items{
 	padding-left: 10px;
 }
+.tree_widget__items.hide{
+	display: none;
+}
 .tree_widget__item_label{
 	display: inline-block;
 	padding: 5px;
@@ -68,23 +71,26 @@
 </template>
 
 
+<template name="renderItemLabel" args="TreeItem item, Collection<int> path">
+	<span class="tree_widget__item_label">{{ item.label }}</span>
+</template>
+
+
 <template name="renderItem" args="TreeItem item, Collection<int> path">
-	<div class="tree_widget__item"
+	<div class="tree_widget__item" data-path={{ rs::join(".", path) }}
 		class={{ item == this.model.selected_item ? "selected" : "" }}
 		@key={{ "item." ~ rs::join(".", path) ~ "-" ~ item.key }}
+		@event:contextmenu={{
+			void (var e) use (item, path) { this.onContextMenuItem(e, item, path); }
+		}}
+		@event:mousedown={{
+			void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
+		}}
 		@event:mousemove={{
 			void (var e) use (item) { this.onMouseMoveItem(e, item); }
 		}}
 	>
-		<span class="tree_widget__item_label"
-			data-path={{ rs::join(".", path) }}
-			@event:contextmenu={{
-				void (var e) use (item, path) { this.onContextMenuItem(e, item, path); }
-			}}
-			@event:mousedown={{
-				void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
-			}}
-		>{{ item.label }}</span>
+		%render this.renderItemLabel(item, path);
 	</div>
 	%render this.renderItems(item, path);
 </template>
@@ -94,7 +100,10 @@
 	%if (item != null and item.items != null and item.items.count() > 0)
 	{
 		%set string key = (path.count() > 0) ? "item." ~ rs::join(".", path) ~ ".items" : "item";
-		<div class="tree_widget__items" @key={{ key }}>
+		<div class="tree_widget__items"
+			class={{ not item.open ? "hide" : "" }}
+			@key={{ key }}
+		>
 			%for (int i=0; i<item.items.count(); i++)
 			{
 				%render this.renderItem(item.items.get(i), path.pushIm(i));
@@ -159,16 +168,6 @@ Collection<int> getDest()
 
 
 /**
- * Find span
- */
-void findSpan(var elem)
-{
-	if (elem.tagName == "SPAN") return elem;
-	return elem.childNodes.item(0);
-}
-
-
-/**
  * Returns true if elem inside drag_elem
  */
 void checkInside(var elem)
@@ -185,7 +184,7 @@ void checkInside(var elem)
 	while (arr.count() != 0)
 	{
 		path = rs::join(".", arr);
-		path = ".tree_widget__item_label[data-path='" ~ path ~ "']";
+		path = ".tree_widget__item[data-path='" ~ path ~ "']";
 		var e = document.querySelector(path);
 		if (e == this.drag_elem) return true;
 		arr.pop();
@@ -327,6 +326,7 @@ void onContextMenuItem(var e, TreeItem item, Collection<int> path)
 	
 	/* Send message context menu */
 	this.model.emitMessage("contextMenuClick", e);
+	this.model.selected_item.onContextMenu();
 	
 	e.preventDefault();
 	e.stopPropagation();
@@ -363,12 +363,16 @@ void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 	/* Set start drag item */
 	if (this.model.dnd)
 	{
-		this.drag_elem = this.findSpan(e.target);
+		this.drag_elem = e.currentTarget;
 		this.drag_start_point = {
 			"x": e.layerX,
 			"y": e.layerY,
 		};
 	}
+	
+	/* Send message click */
+	this.model.emitMessage("clickItem", e);
+	this.model.selected_item.onClick();
 	
 	e.preventDefault();
 	e.stopPropagation();
@@ -409,7 +413,7 @@ void onMouseMoveItem(var e, Dict item)
 	if (not this.is_drag) return;
 	
 	/* Drag & Drop started */
-	var target = this.findSpan(e.target);
+	var target = e.currentTarget;
 	int top = target.offsetTop;
 	int bottom = target.offsetTop + target.clientHeight;
 	int center = (top + bottom) / 2;

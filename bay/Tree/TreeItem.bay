@@ -28,6 +28,7 @@ class TreeItem extends BaseObject implements SerializeInterface
 {
 	string key = "";
 	string label = "";
+	bool open = true;
 	Vector<TreeItem> items = [];
 	
 	
@@ -78,4 +79,28 @@ class TreeItem extends BaseObject implements SerializeInterface
 	int find(TreeItem item) =>
 		item ? this.items.find(lib::equal(item)) : -1
 	;
+	
+	
+	/**
+	 * Context menu click
+	 */
+	void onContextMenu()
+	{
+	}
+	
+	
+	/**
+	 * Click
+	 */
+	void onClick()
+	{
+	}
+	
+	
+	/**
+	 * Select item
+	 */
+	void onSelect()
+	{
+	}
 }
