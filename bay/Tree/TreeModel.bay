@@ -33,9 +33,11 @@ class TreeModel extends BaseModel
 {
 	string component = classof TreeWidget;
 	string widget_name = "tree";
+	bool autoselect = true;
 	bool dnd = false;
 	bool icons = true;
 	bool is_open = false;
+	bool render_context_menu = true;
 	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
@@ -50,7 +52,7 @@ class TreeModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
-		if (params.has("context_menu")) this.context_menu = params.get("context_menu");
+		if (params.has("autoselect")) this.autoselect = params.get("autoselect");
 		if (params.has("dnd")) this.dnd = params.get("dnd");
 		if (params.has("icons")) this.icons = params.get("icons");
 	}
@@ -62,6 +64,12 @@ class TreeModel extends BaseModel
 	void initWidget(Dict params)
 	{
 		parent(params);
+		
+		/* Setup context menu */
+		if (params.has("context_menu"))
+		{
+			this.setContextMenu(params.get("context_menu"));
+		}
 	}
 	
 	
@@ -80,7 +88,22 @@ class TreeModel extends BaseModel
 	 */
 	void setContextMenu(ContextMenuModel context_menu)
 	{
-		this.context_menu = context_menu;
+		this.render_context_menu = true;
+		if (context_menu instanceof Dict)
+		{
+			this.context_menu = this.addWidget(
+				classof ContextMenuModel,
+				context_menu
+			);
+		}
+		else
+		{
+			this.context_menu = this.createModel(context_menu);
+			if (context_menu instanceof BaseModel)
+			{
+				this.render_context_menu = false;
+			}
+		}
 	}
 	
 	
@@ -94,7 +117,10 @@ class TreeModel extends BaseModel
 		
 		this.selected_path = path;
 		this.selected_item = item;
-		this.selected_item.onSelect();
+		if (this.selected_item)
+		{
+			this.selected_item.onSelect();
+		}
 	}
 	
 	

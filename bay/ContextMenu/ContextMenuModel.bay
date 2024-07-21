@@ -35,6 +35,18 @@ class ContextMenuModel extends BaseModel
 	
 	
 	/**
+	 * Init widget params
+	 */
+	void initParams(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("items")) this.items = params.get("items");
+	}
+	
+	
+	/**
 	 * Set width
 	 */
 	void setWidth(string value)
@@ -94,7 +106,7 @@ class ContextMenuModel extends BaseModel
 	void onClickItem(Dict item)
 	{
 		this.emit(new ContextMenuMessage{
-			"name": "click",
+			"name": "clickItem",
 			"item": item,
 		});
 	}

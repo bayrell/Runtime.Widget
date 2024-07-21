@@ -22,6 +22,7 @@ use Runtime.lib;
 use Runtime.BaseObject;
 use Runtime.SerializeInterface;
 use Runtime.Serializer;
+use Runtime.Widget.Tree.TreeModel;
 
 
 class TreeItem extends BaseObject implements SerializeInterface
@@ -84,7 +85,7 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Context menu click
 	 */
-	void onContextMenu()
+	void onContextMenu(TreeModel model)
 	{
 	}
 	
@@ -92,7 +93,7 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Click
 	 */
-	void onClick()
+	void onClick(TreeModel model)
 	{
 	}
 	
@@ -100,7 +101,7 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Select item
 	 */
-	void onSelect()
+	void onSelect(TreeModel model)
 	{
 	}
 }

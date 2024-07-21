@@ -72,7 +72,16 @@
 
 
 <template name="renderItemLabel" args="TreeItem item, Collection<int> path">
-	<span class="tree_widget__item_label">{{ item.label }}</span>
+	<span class="tree_widget__item_label"
+		@event:mousedown={{
+			void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
+		}}
+	>{{ item.label }}</span>
+</template>
+
+
+<template name="renderItemContent" args="TreeItem item, Collection<int> path">
+	%render this.renderItemLabel(item, path);
 </template>
 
 
@@ -83,14 +92,11 @@
 		@event:contextmenu={{
 			void (var e) use (item, path) { this.onContextMenuItem(e, item, path); }
 		}}
-		@event:mousedown={{
-			void (var e) use (item, path) { this.onMouseDownItem(e, item, path); }
-		}}
 		@event:mousemove={{
 			void (var e) use (item) { this.onMouseMoveItem(e, item); }
 		}}
 	>
-		%render this.renderItemLabel(item, path);
+		%render this.renderItemContent(item, path);
 	</div>
 	%render this.renderItems(item, path);
 </template>
@@ -129,6 +135,10 @@
 			%render this.renderItems(this.model.root, []);
 		</div>
 	</div>
+	%if (this.model.context_menu and this.model.render_context_menu)
+	{
+		%render this.renderWidget(this.model.context_menu);
+	}
 </template>
 
 
@@ -164,6 +174,16 @@ Collection<int> getDest()
 	string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
 	Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
 	return dest_elem.map(int (string s) => (int)s);
+}
+
+
+/**
+ * Find drag elem
+ */
+var findDragElem(var elem)
+{
+	if (elem.classList.contains("tree_widget__item_label")) return elem.parentElement;
+	return elem;
 }
 
 
@@ -299,34 +319,67 @@ Dict getBoxStyles(var elem, string kind = "")
 
 
 /**
+ * Show context menu
+ */
+void showContextMenu(var e)
+{
+	int x, y;
+	if (this.model.render_context_menu)
+	{
+		x = e.layerX;
+		y = e.layerY;
+	}
+	else
+	{
+		x = e.clientX;
+		y = e.clientY;
+	}
+	this.model.context_menu.show(x, y);
+}
+
+
+/**
  * Mouse context menu item click
  */
 void onContextMenuItem(var e, TreeItem item, Collection<int> path)
 {
-	/* Select item */
-	this.model.selectItem(path);
-	
-	/* Send event */
+	/* Send message context menu */
 	this.model.emit(
 		new TreeMessage
 		{
-			"name": "selectItem",
-			"path": this.model.selected_path,
-			"item": this.model.selected_item
+			"name": "contextMenu",
+			"path": path,
+			"item": item,
+			"event": e,
 		}
 	);
+	if (item)
+	{
+		item.onContextMenu(this.model);
+	}
+	
+	/* Select item */
+	if (this.model.autoselect)
+	{
+		this.model.selectItem(path);
+		
+		/* Send event */
+		this.model.emit(
+			new TreeMessage
+			{
+				"kind": "context_menu",
+				"name": "selectItem",
+				"path": this.model.selected_path,
+				"item": this.model.selected_item
+			}
+		);
+	}
 	
 	/* Show context menu */
 	if (this.model.context_menu)
 	{
-		int x = e.clientX;
-		int y = e.clientY;
-		this.model.context_menu.show(x, y);
+		this.showContextMenu(e);
 	}
-	
-	/* Send message context menu */
-	this.model.emitMessage("contextMenuClick", e);
-	this.model.selected_item.onContextMenu();
 	
 	e.preventDefault();
 	e.stopPropagation();
@@ -348,31 +401,36 @@ void onMouseDownItem(var e, TreeItem item, Collection<int> path)
 	}
 	
 	/* Select item */
-	this.model.selectItem(path);
+	if (this.model.autoselect)
+	{
+		this.model.selectItem(path);
+	}
 	
 	/* Send event */
 	this.model.emit(
 		new TreeMessage
 		{
+			"kind": "click",
 			"name": "selectItem",
 			"path": this.model.selected_path,
-			"item": this.model.selected_item
+			"item": this.model.selected_item,
+			"event": e,
 		}
 	);
+	if (item)
+	{
+		item.onClick(this.model);
+	}
 	
 	/* Set start drag item */
 	if (this.model.dnd)
 	{
-		this.drag_elem = e.currentTarget;
+		this.drag_elem = this.findDragElem(e.currentTarget);
 		this.drag_start_point = {
 			"x": e.layerX,
 			"y": e.layerY,
 		};
 	}
-	
-	/* Send message click */
-	this.model.emitMessage("clickItem", e);
-	this.model.selected_item.onClick();
 	
 	e.preventDefault();
 	e.stopPropagation();

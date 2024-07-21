@@ -44,10 +44,10 @@
 
 <template name="renderItem" args="Dict item">
 	<div class="widget_context_menu__item"
-		@event:onClick={{
+		@event:click={{
 			void () use (item) {
 				this.model.onClickItem(item);
-				this.emit("onClickItem", [item]);
+				this.emit("clickItem", [item]);
 			}
 		}}
 	>
