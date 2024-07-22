@@ -26,10 +26,12 @@ use Runtime.Widget.Dialog.Dialog;
 
 class DialogModel extends BaseDialogModel
 {
+	string action = "";
 	string title = "";
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
+	Dict params = {};
 	Collection<string> styles = [];
 	RowButtonsModel buttons;
 	WidgetResultModel result;

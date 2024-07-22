@@ -25,6 +25,7 @@
 	position: absolute;
 	background-color: var(--widget-color-default);
 	border: var(--widget-border-width) var(--widget-color-border) solid;
+	border-bottom-width: 0;
 	/*display: none;*/
 }
 .widget_context_menu--open{
@@ -36,14 +37,16 @@
 	cursor: pointer;
 	user-select: none;
 }
-.widget_context_menu__item:last-child{
-	border-bottom-width: 0;
+.widget_context_menu__item.hidden{
+	display: none;
 }
 </style>
 
 
 <template name="renderItem" args="Dict item">
 	<div class="widget_context_menu__item"
+		class={{ item.get("hidden") == true ? "hidden" : "" }}
+		@key={{ item.get("key") }}
 		@event:click={{
 			void () use (item) {
 				this.model.onClickItem(item);

@@ -33,7 +33,7 @@
 	<div class='widget_dialog__input'>
 		<Input
 			value={{ this.model.value }}
-			@event:valueChange={{ void (string value){ this.model.setValue(value); } }}
+			@event:valueChange={{ void (var message){ this.model.setValue(message.value); } }}
 		/>
 	</div>
 </template>

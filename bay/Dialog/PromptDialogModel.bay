@@ -41,34 +41,28 @@ class PromptDialogModel extends DialogModel
 		parent(params);
 		
 		/* Setup close buttons */
-		this.buttons.addWidget(
-			classof ButtonModel,
-			{
-				"content": "Cancel",
-				"widget_name": "cancel_button",
-				"styles": [
-					"gray"
-				],
-				"events": {
-					"click": new Callback(this, "onCloseButtonClick"),
-				},
-			}
-		);
+		this.buttons.addButton({
+			"content": "Cancel",
+			"widget_name": "cancel_button",
+			"styles": [
+				"gray"
+			],
+			"events": {
+				"click": new Callback(this, "onCloseButtonClick"),
+			},
+		});
 		
 		/* Setup confirm button */
-		this.buttons.addWidget(
-			classof ButtonModel,
-			{
-				"content": "Ok",
-				"widget_name": "confirm_button",
-				"styles": [
-					"success"
-				],
-				"events": {
-					"click": new Callback(this, "onConfirmButtonClick"),
-				},
-			}
-		);
+		this.buttons.addButton({
+			"content": "Ok",
+			"widget_name": "confirm_button",
+			"styles": [
+				"success"
+			],
+			"events": {
+				"click": new Callback(this, "onConfirmButtonClick"),
+			},
+		});
 		
 		/* Buttons style */
 		this.buttons.styles.add("align-end");
