@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.TextEditable">
 
+<use name="Runtime.Reference" />
 <use name="Runtime.Web.Messages.ValueChangeMessage" />
 
 
@@ -34,8 +35,13 @@
 	border-style: solid;
 	border-radius: 4px;
 	box-shadow: none;
+	overflow: auto;
 	outline: transparent;
 	line-height: 1.5;
+	tab-size: 4;
+	white-space: pre;
+}
+.widget_text_editable.wrap{
 	overflow-wrap: break-word;
 	text-wrap: wrap;
 }
@@ -48,23 +54,43 @@
 
 <template>
 	%set Map props = this.getProps();
-	<pre class="widget_text_editable"
+	<div class="widget_text_editable"
 		class={{ this.class }}
 		name={{ this.name }}
 		contenteditable="plaintext-only"
-		@event:input={{ this.onKeyDown }}
+		@event:keydown={{ this.onKeyDown }}
+		@event:input={{ this.onInput }}
 		@ref="text"
 		...props
-	></pre>
+	></div>
 </template>
 
 
 <script>
 
-props string name = "";
+props Reference reference = null;
 props bool readonly = false;
+props int timeout = 500;
+props string name = "";
 props string value = "";
 var change_timer = null;
+var old_value = null;
+
+
+/**
+ * Returns value
+ */
+string getValue() => this.getRef("text").innerText;
+
+
+/**
+ * Set value
+ */
+void setValue(string content)
+{
+	var text = this.getRef("text");
+	text.innerText = this.value;
+}
 
 
 /**
@@ -84,8 +110,8 @@ Map getProps()
  */
 void onMounted()
 {
-	var text = this.getRef("text");
-	text.innerText = this.value;
+	this.reference.setValue(this);
+	this.setValue(this.value);
 }
 
 
@@ -94,11 +120,9 @@ void onMounted()
  */
 void onUpdated()
 {
-	var text = this.getRef("text");
-	if (text.innerText != this.value)
-	{
-		text.innerText = this.value;
-	}
+	if (this.old_value == this.value) return;
+	if (this.change_timer) return;
+	this.setValue(this.value);
 }
 
 
@@ -107,15 +131,31 @@ void onUpdated()
  */
 void onKeyDown(var e)
 {
+	if (e.key == "Tab")
+	{
+		e.preventDefault();
+		e.stopPropagation();
+		var selection = this.getRef("text").ownerDocument.defaultView.getSelection();
+		var range = selection.getRangeAt(0);
+		var node = document.createTextNode("\t");
+		range.insertNode(node);
+		range.setStartAfter(node);
+		range.setEndAfter(node);
+	}
+}
+
+
+/**
+ * Input event
+ */
+void onInput(var e)
+{
 	if (this.change_timer != null)
 	{
 		window.clearTimeout(this.change_timer);
 		this.change_timer = null;
 	}
-	this.change_timer = window.setTimeout(void ()
-	{
-		this.onChange();
-	}, 300);
+	this.change_timer = window.setTimeout(void (){ this.onChange(); }, this.timeout);
 }
 
 
@@ -124,15 +164,18 @@ void onKeyDown(var e)
  */
 void onChange(var e)
 {
-	var text = this.getRef("text");
-	string value = text.innerText;
+	string value = this.getValue();
 	
 	/* Send value change */
 	this.emit("valueChange", new ValueChangeMessage{
 		"value": value,
-		"old_value": this.value,
+		"old_value": this.old_value,
 		"data": this.data,
 	});
+	
+	/* Set old value */
+	this.old_value = value;
+	this.change_timer = null;
 }
 
 
