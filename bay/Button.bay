@@ -73,7 +73,14 @@
 			class={{ this.class }}
 			@ref="widget"
 		>
-			%render this.renderSlot("default");
+			%if (this.content)
+			{
+				%render this.content;
+			}
+			%else
+			{
+				%render this.renderSlot("default");
+			}
 		</button>
 	}
 	%else
@@ -87,7 +94,14 @@
 				class={{ static::getStyles("widget_button", this.styles) }}
 				class={{ this.renderListClass() }}
 			>
-				%render this.renderSlot("default");
+				%if (this.content)
+				{
+					%render this.content;
+				}
+				%else
+				{
+					%render this.renderSlot("default");
+				}
 			</button>
 		</a>
 	}
@@ -99,6 +113,7 @@
 props string class = "";
 props string type = "button";
 props string target = "_self";
+props string content = "";
 props var href = null;
 props Collection<string> styles = [];
 

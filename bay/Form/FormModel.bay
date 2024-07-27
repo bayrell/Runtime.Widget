@@ -286,6 +286,10 @@ class FormModel extends BaseModel
 		/* Load */
 		if (action == "load")
 		{
+			if (res.data.has("item"))
+			{
+				this.item = res.data.get("item");
+			}
 			this.load.setApiResult(res);
 		}
 		
@@ -327,8 +331,12 @@ class FormModel extends BaseModel
 	{
 		await parent(container);
 		
-		ApiResult res = await this.storage.load();
-		this.setApiResult(res, "load");
+		/* Load item */
+		if (this.pk)
+		{
+			ApiResult res = await this.storage.load();
+			this.setApiResult(res, "load");
+		}
 	}
 	
 	

@@ -32,21 +32,28 @@ class FormSubmitModel extends FormModel
 	{
 		parent(params);
 		
-		/* Add submit Button */
-		ButtonModel submit_button = this.bottom_buttons.addWidget(
-			classof ButtonModel,
-			{
-				"widget_name": "submit",
-				"content": "Submit",
-				"styles": ["danger", "large"],
-				"events": {
-					"click": new Callback(this, "submit"),
-				},
-			}
-		);
-		if (params.has("submit_button_text"))
+		string content = "Submit";
+		string styles = ["danger", "large"];
+		
+		/* Submit button params */
+		if (params.has("submit_button"))
 		{
-			submit_button.content = params.get("submit_button_text");
+			Dict submit_button = params.get("submit_button");
+			if (submit_button.has("text"))
+			{
+				content = submit_button.get("text");
+				styles = submit_button.get("styles");
+			}
 		}
+		
+		/* Add submit Button */
+		ButtonModel submit_button = this.bottom_buttons.addButton({
+			"widget_name": "submit",
+			"content": content,
+			"styles": styles,
+			"events": {
+				"click": new Callback(this, "submit"),
+			},
+		});
 	}
 }

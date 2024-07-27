@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.Form.Form">
 
+<use name="Runtime.Callback" />
 <use name="Runtime.Web.ApiResult" />
 <use name="Runtime.Web.Annotations.Param" />
 <use name="Runtime.Widget.Button" component="true" />
@@ -30,14 +31,14 @@
 
 <style>
 .widget_form{
-	max-width: 600px;
-	margin-left: auto;
-	margin-right: auto;
 	.widget_form__field_row{
 		margin-bottom: 10px;
 	}
 	.widget_form__field_label{
+		display: flex;
+		align-items: center;
 		padding-bottom: 5px;
+		gap: 5px;
 	}
 	.widget_form__field_error{
 		color: var(--widget-color-danger);
@@ -49,6 +50,11 @@
 	%(RowButtons)widget_form__bottom_buttons{
 		justify-content: center;
 	}
+}
+.widget_form.fixed{
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
 }
 </style>
 
@@ -69,6 +75,7 @@
 		<{field_component}
 			value={{ value }}
 			name={{ field_name }}
+			@ref={{ "field_" ~ field_name }}
 			@model={{ field_model }}
 			@event:onValueChange={{
 				void (var message) use (field_name) =>
@@ -84,8 +91,9 @@
 	%else
 	{
 		%render this.renderWidget(field_model, {
-			"value": value,
 			"name": field_name,
+			"value": value,
+			"ref": "field_" ~ field_name,
 			"data": {
 				"field_name": field_name,
 				"form": this.model,
@@ -116,13 +124,47 @@
 </template>
 
 
+<template name="renderFieldLabel" args="Dict field">
+	<span>{{ field.get("label") }}</span>
+</template>
+
+
+<template name="renderFieldButtons" args="Dict field">
+	%if (field.has("buttons"))
+	{
+		%set Collection<Dict> buttons = field.get("buttons");
+		<div class="widget_form__field_buttons">
+			%for (int i=0; i<buttons.count(); i++)
+			{
+				%set Dict settings = buttons.get(i);
+				%set Dict props = settings.get("props");
+				%set string content = settings.get("content");
+				<Button
+					@event:click={{
+						void (var e) use (field, settings)
+						{
+							string event_name = settings.get("event");
+							var component = this.getRef("field_" ~ field.get("name"));
+							fn callback = new Callback(component, event_name);
+							callback.apply();
+						}
+					}}
+					...props
+				/>
+			}
+		</div>
+	}
+</template>
+
+
 <template name="renderFieldRow" args="Dict field">
 	%set string field_name = field.get("name");
 	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
 		%if (field.has("label"))
 		{
 			<div class="widget_form__field_label">
-				{{ field.get("label") }}
+				%render this.renderFieldLabel(field);
+				%render this.renderFieldButtons(field);
 			</div>
 		}
 		%render this.renderField(field);

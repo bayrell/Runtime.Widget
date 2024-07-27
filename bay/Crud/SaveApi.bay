@@ -70,7 +70,7 @@ class SaveApi extends BaseApi
 	/**
 	 * Load item
 	 */
-	async void loadItem()
+	async void loadItem(bool create_instance = true)
 	{
 		Dict pk = this.post_data.get("pk");
 		if (pk != null and pk instanceof Dict)
@@ -80,7 +80,10 @@ class SaveApi extends BaseApi
 		}
 		else
 		{
-			this.item = this.newItem();
+			if (create_instance)
+			{
+				this.item = this.newItem();
+			}
 		}
 		
 		/* Check if item is exists */

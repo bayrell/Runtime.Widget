@@ -83,9 +83,9 @@
 	<Input value={{ item }}
 		@key={{ item }}
 		@event:valueChange={{
-			void (string value) use (pos)
+			void (ValueChangeMessage message) use (pos)
 			{
-				this.value.set(pos, value);
+				this.value.set(pos, message.value);
 				this.onValueChange();
 			}
 		}}
@@ -127,9 +127,12 @@
 
 
 <template name="renderButtons">
-	<div class="widget_sortable_list__buttons">
-		<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
-	</div>
+	%if (this.show_buttons)
+	{
+		<div class="widget_sortable_list__buttons">
+			<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
+		</div>
+	}
 </template>
 
 
@@ -144,6 +147,7 @@
 
 <script>
 
+props bool show_buttons = "";
 props string name = "";
 props Collection<string> value = [];
 Collection old_value = [];

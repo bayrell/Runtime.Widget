@@ -50,6 +50,7 @@
 		class="widget_textarea"
 		name={{ this.name }}
 		placeholder={{ this.placeholder }}
+		style={{ this.getStyle() }}
 		@ref="textarea"
 		@event:change={{ this.onChange }}
 		@event:keydown={{ this.onKeyDown }}
@@ -62,6 +63,7 @@
 
 props bool direct_update = false;
 props bool readonly = false;
+props string height = "";
 props string name = "";
 props string value = "";
 props string placeholder = "";
@@ -77,6 +79,17 @@ Map getProps()
 		"readonly": true,
 	};
 	return {};
+}
+
+
+/**
+ * Returns style
+ */
+string getStyle()
+{
+	Collection content = [];
+	if (this.height) content.push("min-height: " ~ this.height);
+	return rs::join(";", content);
 }
 
 
