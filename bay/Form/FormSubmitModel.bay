@@ -39,11 +39,8 @@ class FormSubmitModel extends FormModel
 		if (params.has("submit_button"))
 		{
 			Dict submit_button = params.get("submit_button");
-			if (submit_button.has("text"))
-			{
-				content = submit_button.get("text");
-				styles = submit_button.get("styles");
-			}
+			if (submit_button.has("text")) content = submit_button.get("text");
+			if (submit_button.has("styles")) styles = submit_button.get("styles");
 		}
 		
 		/* Add submit Button */

@@ -48,10 +48,10 @@
 			<Input
 				value={{ item.get("name") }}
 				@event:valueChange={{
-					void (string value) use (pos)
+					void (var message) use (pos)
 					{
 						Dict item = this.value.get(pos);
-						item.set("name", value);
+						item.set("name", message.value);
 						this.onValueChange();
 					}
 				}}
@@ -64,10 +64,10 @@
 			<Input
 				value={{ item.get("label") }}
 				@event:valueChange={{
-					void (string value) use (pos)
+					void (var message) use (pos)
 					{
 						Dict item = this.value.get(pos);
-						item.set("label", value);
+						item.set("label", message.value);
 						this.onValueChange();
 					}
 				}}
@@ -80,10 +80,10 @@
 			<Input
 				value={{ item.get("component") }}
 				@event:valueChange={{
-					void (string value) use (pos)
+					void (var message) use (pos)
 					{
 						Dict item = this.value.get(pos);
-						item.set("component", value);
+						item.set("component", message.value);
 						this.onValueChange();
 					}
 				}}

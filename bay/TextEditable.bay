@@ -110,7 +110,7 @@ Map getProps()
  */
 void onMounted()
 {
-	this.reference.setValue(this);
+	if (this.reference) this.reference.setValue(this);
 	this.setValue(this.value);
 }
 

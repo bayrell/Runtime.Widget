@@ -18,8 +18,11 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
+use Runtime.Web.BaseModel;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
+use BayLang.Constructor.Frontend.Editor.ParameterDictModel;
+use BayLang.Constructor.Frontend.Editor.ParameterFactoryModel;
 use BayLang.Constructor.Frontend.Editor.ParameterModel;
 
 
@@ -36,17 +39,25 @@ class FormModelSettings implements WidgetSettingsInterface
 	 */
 	Collection<Parameter> getParams() =>
 	[
-		new ParameterModel
+		new ParameterFactoryModel
 		{
-			"name": "api_name",
+			"name": "storage",
+			"path": "api_name",
 			"label": "API name",
 			"component": "Runtime.Widget.Input",
 		},
-		new ParameterModel
+		new ParameterDictModel
 		{
 			"name": "submit_button_text",
+			"path": ["submit_button", "text"],
 			"label": "Button text",
 			"component": "Runtime.Widget.Input",
+			"onChange": void (var iframeWindow, BaseModel widget, Parameter param)
+			{
+				var value = param.value;
+				var submit_button = widget.bottom_buttons.getWidget("submit");
+				submit_button.content = value;
+			},
 		},
 		new ParameterModel
 		{
@@ -72,12 +83,23 @@ class FormModelSettings implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
+			"modules":
+			[
+				"Runtime.Entity.Factory",
+			],
 			"model": rs::join("\n", [
 				"this.form = this.addWidget('Runtime.Widget.Form.FormSubmitModel', {",
-				"\t'api_name': 'test',",
 				"\t'widget_name': 'form',",
-				"\t'storage': 'Runtime.Widget.Form.FormSubmitStorage',",
-				"\t'submit_button_text': 'Отправить заявку',",
+				"\t'storage': new Factory(",
+				"\t\t'Runtime.Widget.Form.FormSubmitStorage',",
+				"\t\t{",
+				"\t\t\t'api_name': 'test'",
+				"\t\t}",
+				"\t),",
+				"\t'submit_button':",
+				"\t{",
+				"\t\t'text': 'Отправить заявку',",
+				"\t},",
 				"\t'fields': [",
 				"\t\t{",
 				"\t\t\t'name': 'name',",
