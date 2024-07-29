@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.Tag">
 
+<use name="Runtime.Web.Messages.ValueChangeMessage" />
+
 
 <style>
 .widget_tag{
@@ -115,11 +117,15 @@ props Collection<string> value = [];
  */
 void onTextChange(int i, string value)
 {
+	var old_value = this.value.slice();
 	this.value.set(i, value);
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 }
 
 
@@ -131,11 +137,15 @@ void onTextKeyDown(int i, string value, var e)
 	if (e.keyCode != 13) return;
 	
 	/* Set value */
+	var old_value = this.value.slice();
 	this.value.set(i, value);
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 	
 	e.preventDefault();
 	return false;
@@ -147,11 +157,15 @@ void onTextKeyDown(int i, string value, var e)
  */
 void onCloseClick(int i)
 {
+	var old_value = this.value.slice();
 	this.value.remove(i);
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 }
 
 
@@ -164,12 +178,16 @@ void onSpanBlur(var e)
 	if (span.innerText == "") return;
 	
 	/* Add value */
+	var old_value = this.value.slice();
 	this.value.push(span.innerText);
 	span.innerText = "";
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 }
 
 
@@ -184,12 +202,16 @@ void onSpanKeyDown(var e)
 	if (span.innerText == "") return;
 	
 	/* Add value */
+	var old_value = this.value.slice();
 	this.value.push(span.innerText);
 	span.innerText = "";
 	
 	/* Send value change */
-	if (this.model) this.model.onValueChange(this.value, this.data);
-	this.emit("valueChange", this.value, this.data);
+	this.emit("valueChange", new ValueChangeMessage{
+		"value": this.value,
+		"old_value": old_value,
+		"data": this.data,
+	});
 	
 	e.preventDefault();
 	return false;
