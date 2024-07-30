@@ -37,6 +37,17 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 	
 	
 	/**
+	 * Returns method name
+	 */
+	string getMethodName(string name)
+	{
+		if (name == "load") return "actionItem";
+		if (name == "submit") return "actionSave";
+		return "";
+	}
+	
+	
+	/**
 	 * Set form
 	 */
 	void setForm(FormModel form)
@@ -67,7 +78,7 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 		post_data = this.form.mergePostData(post_data, "load");
 		ApiResult res = await this.form.layout.callApi({
 			"api_name": this.getApiName(),
-			"method_name": "actionItem",
+			"method_name": this.getMethodName("load"),
 			"data": post_data
 		});
 		return res;
@@ -87,7 +98,7 @@ class FormSaveStorage extends BaseObject implements FormStorageInterface
 		post_data = this.form.mergePostData(post_data, "submit");
 		ApiResult res = await this.form.layout.callApi({
 			"api_name": this.getApiName(),
-			"method_name": "actionSave",
+			"method_name": this.getMethodName("submit"),
 			"data": post_data
 		});
 		return res;
