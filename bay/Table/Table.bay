@@ -80,9 +80,12 @@
 	%set TableModel model = this.model;
 	%set var storage = model.storage;
 	%set string field_name = field.get("name");
+	%set string field_calculate = field.get("calculate", null);
 	%set string field_component = field.get("component", null);
 	%set string field_model = field.get("model", null);
-	%set var value = this.model.getItemValue(item, field_name);
+	%set var value = "";
+	%if (field_calculate) { %set value = rtl::apply(field_calculate, [item, row_number, field, this.model]); }
+	%else { %set value = this.model.getItemValue(item, field_name); }
 	<td class={{ "widget_table__td widget_table__td--" ~ field_name }} @key={{ field_name }}>
 		%if (field_name == "row_number")
 		{

@@ -67,9 +67,12 @@
 <template name="renderField" args="Dict field">
 	%set string field_name = field.get("name");
 	%set string field_model = field.get("model", null);
+	%set string field_calculate = field.get("calculate", null);
 	%set string field_component = field.get("component");
 	%set string field_props = field.get("props", {});
-	%set var value = this.model.getItemValue(field_name);
+	%set var value = "";
+	%if (field_calculate) { %set value = rtl::apply(field_calculate, [this.model.item, field, this.model]); }
+	%else { %set value = this.model.getItemValue(field_name); }
 	%if (field_component != null)
 	{
 		<{field_component}
