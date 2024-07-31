@@ -146,6 +146,7 @@ class TreeModel extends BaseModel
 	 */
 	void dragElement(Collection<string> src, Collection<string> dest, string kind)
 	{
+		if (dest.count() == 0) dest = [this.root.items.count() - 1];
 		if (not this.canDrag(src, dest, kind)) return;
 		
 		/* Move item */
