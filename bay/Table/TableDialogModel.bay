@@ -91,7 +91,7 @@ class TableDialogModel extends TableModel
 		{
 			this.add_form.addListener("submit", new Callback(this, "onFormSubmit"));
 		}
-		if (this.edit_form)
+		if (this.edit_form and this.add_form != this.edit_form)
 		{
 			this.edit_form.addListener("submit", new Callback(this, "onFormSubmit"));
 		}
