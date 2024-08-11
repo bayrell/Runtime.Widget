@@ -21,6 +21,8 @@
 		"Section.bay",
 		"Select.bay",
 		"SelectLabel.bay",
+		"SelectModel.bay",
+		"SelectWrap.bay",
 		"SortableList.bay",
 		"Tag.bay",
 		"Text.bay",

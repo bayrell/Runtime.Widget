@@ -16,32 +16,22 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SelectLabel">
-
-<use name="Runtime.Core.Message" />
-<use name="Runtime.Web.Events.User.ChangeEvent" />
-<use name="Runtime.Widget.Helper" />
-
-
-<style>
-</style>
+<class name="Runtime.Widget.SelectWrap">
 
 
 <template>
-	<span class="widget_select_label">
-		%set Dict item = this.options
-			? this.options.findItem( bool (Dict item) => item.get("key") == this.value )
-			: null
-		;
-		{{ item != null ? item.get("value") : this.value }}
-	</span>
+    %set Dict props = this.model.getProps(this.data);
+	<{this.component}
+		class={{ this.class }}
+		render_list={{ this.render_list }}
+		...props
+	/>
 </template>
 
 
 <script>
 
-props int value = "";
-props Vector options = [];
+props string component = "Runtime.Widget.Select";
 
 </script>
 

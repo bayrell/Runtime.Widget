@@ -87,22 +87,27 @@
 			data={{{
 				"field_name": field_name,
 				"form": this.model,
+				"value": value,
 			}}}
 			...field_props
 		/>
 	}
 	%else
 	{
-		%render this.renderWidget(field_model, {
+		%render this.renderWidget(field_model, field_props.concat({
 			"name": field_name,
 			"value": value,
 			"ref": "field_" ~ field_name,
+			"onValueChange": void (var message) use (field_name)
+			{
+				this.model.onFieldChange(field_name, message.value)
+			},
 			"data": {
 				"field_name": field_name,
 				"form": this.model,
 				"value": value,
 			}
-		});
+		}));
 	}
 </template>
 

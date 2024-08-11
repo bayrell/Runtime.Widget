@@ -101,10 +101,7 @@ class TableModel extends BaseModel
 		/* Setup storage */
 		if (params.has("storage"))
 		{
-			var storage = params.get("storage");
-			if (storage instanceof Factory) this.storage = storage.factory();
-			else if (rtl::isString(storage)) this.storage = rtl::newInstance(storage, [this]);
-			else this.storage = storage;
+			this.storage = this.createModel(params.get("storage"));
 		}
 		if (this.storage == null)
 		{

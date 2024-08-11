@@ -92,8 +92,8 @@ class SearchRelationApi extends SearchApi
 		Query q = new Query()
 			.select()
 			.from(table_name)
-			.page(page)
 			.limit(limit)
+			.page(page)
 		;
 		
 		/* Get provider */

@@ -151,7 +151,7 @@
 		<tr>
 			<td colspan={{ fields.count() }}>
 				<{pagination_class_name}
-					page={{ this.model.page }}
+					page={{ this.model.page + 1 }}
 					pages={{ this.model.pages }}
 					@event:page={{ this.onChangePage }}
 					...props
