@@ -190,4 +190,84 @@ class SaveApi extends BaseApi
 			this.setItemValue(key, value);
 		}
 	}
+	
+	
+	/**
+	 * Save item
+	 */
+	async void saveItem()
+	{
+	}
+	
+	
+	/**
+	 * Remove item
+	 */
+	async void removeItem()
+	{
+	}
+	
+	
+	/**
+	 * Build result
+	 */
+	async void buildResult()
+	{
+		if (not this.item) return;
+		
+		/* Success */
+		this.success();
+	}
+	
+	
+	/**
+	 * Action item
+	 */
+	async void actionItem()
+	{
+		/* Load data */
+		await this.loadItem();
+		await this.loadData();
+		
+		/* Build result */
+		await this.buildResult();
+		
+		/* Success */
+		this.success();
+	}
+	
+	
+	/**
+	 * Action save
+	 */
+	async void actionSave()
+	{
+		/* Load data */
+		await this.loadItem();
+		await this.loadData();
+		
+		/* Save item */
+		await this.processData();
+		await this.saveItem();
+		
+		/* Build result */
+		await this.buildResult();
+		
+		/* Success */
+		this.success();
+	}
+	
+	
+	/**
+	 * Action delete
+	 */
+	async void actionDelete()
+	{
+		/* Remove item */
+		await this.loadItem();
+		await this.removeItem();
+		
+		/* Build result */
+		await this.buildResult();
+	}
 }

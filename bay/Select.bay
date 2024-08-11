@@ -26,7 +26,7 @@
 	width: 100%;
 	font-family: var(--widget-font-family);
 	font-size: var(--widget-font-size);
-	padding: var(--widget-button-padding-y) var(--widget-button-padding-x);
+	padding: var(--widget-input-padding-y) var(--widget-input-padding-x);
 	background-color: var(--widget-color-default);
 	border-width: var(--widget-border-width);
 	border-color: var(--widget-color-border);
@@ -83,7 +83,7 @@
 
 <script type="frontend">
 
-props int value = "";
+props string value = "";
 props string name = "";
 props Vector options = null;
 props var show_select_value = true;

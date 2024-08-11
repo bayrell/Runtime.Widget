@@ -60,4 +60,14 @@ class SearchApi extends BaseApi
 	async void buildResult()
 	{
 	}
+	
+	
+	/**
+	 * Action search
+	 */
+	async void actionSearch()
+	{
+		await this.searchItems();
+		await this.buildResult();
+	}
 }

@@ -46,7 +46,7 @@ class TableModel extends BaseModel
 	};
 	TableStorageInterface storage = null;
 	int limit = 10;
-	int page = 1;
+	int page = 0;
 	int pages = 0;
 	Dict foreign_key = null;
 	Collection<Dict> fields = [];
