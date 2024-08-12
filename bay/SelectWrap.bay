@@ -22,6 +22,8 @@
 <template>
     %set Dict props = this.model.getProps(this.data);
 	<{this.component}
+		name={{ this.name }}
+		value={{ this.value }}
 		class={{ this.class }}
 		render_list={{ this.render_list }}
 		...props
@@ -31,6 +33,8 @@
 
 <script>
 
+props string name = "";
+props string value = "";
 props string component = "Runtime.Widget.Select";
 
 </script>

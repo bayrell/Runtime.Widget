@@ -319,6 +319,16 @@ class FormModel extends BaseModel
 		if (this.foreign_key)
 		{
 			post_data.set("foreign_key", this.foreign_key);
+			if (post_data.has("item"))
+			{
+				Dict item = post_data.get("item");
+				Collection<string> keys = this.foreign_key.keys();
+				for (int i=0; i<keys.count(); i++)
+				{
+					string key = keys.get(i);
+					item.set(key, this.foreign_key.get(key));
+				}
+			}
 		}
 		return post_data;
 	}

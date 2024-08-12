@@ -21,15 +21,14 @@ namespace Runtime.Widget.Crud.Rules;
 use Runtime.re;
 use Runtime.BaseStruct;
 use Runtime.Widget.Crud.SaveApi;
-use Runtime.Widget.Crud.FieldResult;
 use Runtime.Widget.Crud.Rules.CrudRule;
 
 
-struct Required extends CrudRule
+struct ReadOnly extends CrudRule
 {
 	string name = "";
-	bool check_create = true;
-	bool check_update = true;
+	bool can_create = false;
+	bool can_update = false;
 	
 	
 	/**
@@ -37,15 +36,10 @@ struct Required extends CrudRule
 	 */
 	async Dict validateItem(SaveApi api, Dict data)
 	{
-		if (api.pk == null and not this.check_create) return data;
-		if (api.pk != null and not this.check_update) return data;
-		
-		var value = data[this.name];
-		if (not data.has(this.name) or value === "" or value === null)
-		{
-			api.fields.addFieldError(this.name, "Field is required");
-		}
-		
+		Dict pk = api.pk;
+		if (api.pk == null and this.can_create) return data;
+		if (api.pk != null and this.can_update) return data;
+		data = data.removeIm(this.name);
 		return data;
 	}
 }

@@ -25,11 +25,9 @@ use Runtime.Widget.Crud.FieldResult;
 use Runtime.Widget.Crud.Rules.CrudRule;
 
 
-struct Required extends CrudRule
+struct LowerCase extends CrudRule
 {
 	string name = "";
-	bool check_create = true;
-	bool check_update = true;
 	
 	
 	/**
@@ -37,15 +35,9 @@ struct Required extends CrudRule
 	 */
 	async Dict validateItem(SaveApi api, Dict data)
 	{
-		if (api.pk == null and not this.check_create) return data;
-		if (api.pk != null and not this.check_update) return data;
-		
-		var value = data[this.name];
-		if (not data.has(this.name) or value === "" or value === null)
-		{
-			api.fields.addFieldError(this.name, "Field is required");
-		}
-		
+		var value = data.get(this.name);
+		value = rs::lower(value);
+		data.set(this.name, value);
 		return data;
 	}
 }

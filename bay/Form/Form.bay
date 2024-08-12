@@ -71,8 +71,21 @@
 	%set string field_component = field.get("component");
 	%set string field_props = field.get("props", {});
 	%set var value = "";
-	%if (field_calculate) { %set value = rtl::apply(field_calculate, [this.model.item, field, this.model]); }
-	%else { %set value = this.model.getItemValue(field_name); }
+	%set Dict data =
+	{
+		"item": this.model.item,
+		"field_name": field_name,
+		"form": this.model,
+	};
+	%if (field_calculate)
+	{
+		%set value = rtl::apply(field_calculate, [data]);
+	}
+	%else
+	{
+		%set value = this.model.getItemValue(field_name);
+	}
+	%set _ = data.set("value", value);
 	%if (field_component != null)
 	{
 		<{field_component}
@@ -84,11 +97,7 @@
 				void (var message) use (field_name) =>
 					this.model.onFieldChange(field_name, message.value)
 			}}
-			data={{{
-				"field_name": field_name,
-				"form": this.model,
-				"value": value,
-			}}}
+			data={{ data }}
 			...field_props
 		/>
 	}
@@ -97,16 +106,12 @@
 		%render this.renderWidget(field_model, field_props.concat({
 			"name": field_name,
 			"value": value,
+			"data": data,
 			"ref": "field_" ~ field_name,
 			"onValueChange": void (var message) use (field_name)
 			{
 				this.model.onFieldChange(field_name, message.value)
 			},
-			"data": {
-				"field_name": field_name,
-				"form": this.model,
-				"value": value,
-			}
 		}));
 	}
 </template>

@@ -23,7 +23,7 @@ use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.ItemNotFound;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Web.BaseApi;
-use Runtime.Widget.Crud.CrudRule;
+use Runtime.Widget.Crud.Rules.CrudRule;
 use Runtime.Widget.Crud.FieldResult;
 
 
@@ -149,7 +149,9 @@ class SaveApi extends BaseApi
 			data = await rule.validateItem(this, data);
 		}
 		
-		return data;
+		/* Filter data */
+		Dict new_data = data.intersect(this.getSaveFields());
+		return new_data;
 	}
 	
 	
@@ -227,7 +229,6 @@ class SaveApi extends BaseApi
 	{
 		/* Load data */
 		await this.loadItem();
-		await this.loadData();
 		
 		/* Build result */
 		await this.buildResult();

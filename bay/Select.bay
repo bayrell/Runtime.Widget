@@ -83,8 +83,8 @@
 
 <script type="frontend">
 
-props string value = "";
 props string name = "";
+props string value = "";
 props Vector options = null;
 props var show_select_value = true;
 

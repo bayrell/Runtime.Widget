@@ -20,6 +20,7 @@ namespace Runtime.Widget.Crud.Rules;
 
 use Runtime.BaseStruct;
 use Runtime.Web.BaseApi;
+use Runtime.Widget.Crud.SaveApi;
 
 
 struct CrudRule extends BaseStruct
@@ -27,5 +28,21 @@ struct CrudRule extends BaseStruct
 	/**
 	 * Validate item
 	 */
-	async Map validateItem(BaseApi api, Map data) => data;
+	async Map validateItem(SaveApi api, Map data) => data;
+	
+	
+	/**
+	 * Before save item
+	 */
+	async void onSaveBefore(SaveApi api)
+	{
+	}
+	
+	
+	/**
+	 * After save item
+	 */
+	async void onSaveAfter(SaveApi api)
+	{
+	}
 }
