@@ -130,33 +130,12 @@ class SaveRelationApi extends SaveApi
 	
 	
 	/**
-	 * Before save
+	 * Save
 	 */
-	async void onSaveBefore()
+	async void save()
 	{
-		Collection<CrudRule> rules = this.getRules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			CrudRule rule = rules[i];
-			await rule.onSaveBefore(this);
-		}
-		
-		/* Check fields error */
-		this.fields.checkError();
-	}
-	
-	
-	/**
-	 * After save
-	 */
-	async void onSaveAfter()
-	{
-		Collection<CrudRule> rules = this.getRules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			CrudRule rule = rules[i];
-			await rule.onSaveAfter(this);
-		}
+		Connection connection = this.getConnection();
+		await this.item.save(connection);
 	}
 	
 	
@@ -169,8 +148,10 @@ class SaveRelationApi extends SaveApi
 		await this.onSaveBefore();
 		
 		/* Save item */
+		await this.save();
+		
+		/* Refresh item */
 		Connection connection = this.getConnection();
-		await this.item.save(connection);
 		await this.item.refresh(connection);
 		
 		/* After save */
@@ -179,12 +160,28 @@ class SaveRelationApi extends SaveApi
 	
 	
 	/**
+	 * Remove
+	 */
+	async void remove()
+	{
+		Connection connection = this.getConnection();
+		await this.item.delete(connection);
+	}
+	
+	
+	/**
 	 * Remove item
 	 */
 	async void removeItem()
 	{
-		Connection connection = this.getConnection();
-		await this.item.delete(connection);
+		/* Before delete */
+		await this.onDeleteBefore();
+		
+		/* Remove */
+		await this.remove();
+		
+		/* Before delete */
+		await this.onDeleteAfter();
 	}
 	
 	

@@ -18,6 +18,7 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.lib;
 use Runtime.BaseObject;
 use Runtime.Serializer;
 use Runtime.Entity.Factory;
@@ -183,6 +184,14 @@ class FormModel extends BaseModel
 			this.addField(fields.get(i));
 		}
 	}
+	
+	
+	/**
+	 * Get field
+	 */
+	void getField(string field_name) =>
+		this.fields.findItem(lib::equalAttr("name", field_name))
+	;
 	
 	
 	/**

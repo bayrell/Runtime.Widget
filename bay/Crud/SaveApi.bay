@@ -195,9 +195,95 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Before save
+	 */
+	async void onSaveBefore()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSaveBefore(this);
+		}
+		
+		/* Check fields error */
+		this.fields.checkError();
+	}
+	
+	
+	/**
+	 * After save
+	 */
+	async void onSaveAfter()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onSaveAfter(this);
+		}
+	}
+	
+	
+	/**
+	 * Save
+	 */
+	async void save()
+	{
+	}
+	
+	
+	/**
 	 * Save item
 	 */
 	async void saveItem()
+	{
+		/* Before save */
+		await this.onSaveBefore();
+		
+		/* Save item */
+		await this.save();
+		
+		/* After save */
+		await this.onSaveAfter();
+	}
+	
+	
+	/**
+	 * Before delete
+	 */
+	async void onDeleteBefore()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onDeleteBefore(this);
+		}
+		
+		/* Check fields error */
+		this.fields.checkError();
+	}
+	
+	
+	/**
+	 * After delete
+	 */
+	async void onDeleteAfter()
+	{
+		Collection<CrudRule> rules = this.getRules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			CrudRule rule = rules[i];
+			await rule.onDeleteAfter(this);
+		}
+	}
+	
+	
+	/**
+	 * Remove
+	 */
+	async void remove()
 	{
 	}
 	
@@ -207,6 +293,14 @@ class SaveApi extends BaseApi
 	 */
 	async void removeItem()
 	{
+		/* Before delete */
+		await this.onDeleteBefore();
+		
+		/* Remove */
+		await this.remove();
+		
+		/* Before delete */
+		await this.onDeleteAfter();
 	}
 	
 	

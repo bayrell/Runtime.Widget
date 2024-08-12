@@ -45,4 +45,20 @@ struct CrudRule extends BaseStruct
 	async void onSaveAfter(SaveApi api)
 	{
 	}
+	
+	
+	/**
+	 * Before delete item
+	 */
+	async void onDeleteBefore(SaveApi api)
+	{
+	}
+	
+	
+	/**
+	 * After delete item
+	 */
+	async void onDeleteAfter(SaveApi api)
+	{
+	}
 }
