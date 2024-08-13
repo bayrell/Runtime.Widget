@@ -30,6 +30,7 @@ class RefreshButtonModel extends ButtonModel
 {
 	string widget_name = "refresh_button";
 	string component = classof RefreshButton;
+	Collection<string> styles = ["primary"];
 	WidgetResultModel result = new WidgetResultModel;
 	TableModel table = null;
 	
@@ -42,22 +43,19 @@ class RefreshButtonModel extends ButtonModel
 		parent(params);
 		
 		if (params == null) return;
-		if (params.has("parent_widget")) this.table = params.get("parent_widget");
 		if (params.has("table")) this.table = params.get("table");
-		
-		this.styles.add("primary");
 	}
 	
 	
 	/**
 	 * Refresh
 	 */
-	async void refresh()
+	async void onClick(Dict data = null)
 	{
 		this.result.message = "Refresh";
 		this.result.code = 0;
 		
-		ApiResult res = await this.table.refresh();
+		ApiResult res = await this.table.reload();
 		this.result.setApiResult(res);
 	}
 }

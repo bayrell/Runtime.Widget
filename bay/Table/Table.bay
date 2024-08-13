@@ -211,19 +211,10 @@
 
 <script>
 
-int row_selected = -1;
-
-
 /**
  * Returns true if row selected
  */
-bool isRowSelected(int row_number) => this.row_selected == row_number;
-
-
-/**
- * Returns selected item
- */
-Dict getSelectedItem() => this.model.getItemByRowNumber(this.row_selected);
+bool isRowSelected(int row_number) => this.model.row_selected == row_number;
 
 
 /**
@@ -231,7 +222,7 @@ Dict getSelectedItem() => this.model.getItemByRowNumber(this.row_selected);
  */
 void onRowClick(int row_number)
 {
-	/*this.model.onRowClick(row_number);*/
+	this.model.onRowClick(row_number);
 }
 
 

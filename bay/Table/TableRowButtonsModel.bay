@@ -36,8 +36,8 @@ class TableRowButtonsModel extends RowButtonsModel
 		
 		bool show_edit = true;
 		bool show_delete = true;
-		if (params.has("edit")) show_edit = params.has("edit");
-		if (params.has("delete")) show_delete = params.has("delete");
+		if (params.has("edit")) show_edit = params.get("edit");
+		if (params.has("delete")) show_delete = params.get("delete");
 		
 		/* Edit button */
 		if (show_edit)

@@ -27,6 +27,7 @@ use Runtime.Web.BaseModel;
 use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Web.Messages.ClickMessage;
+use Runtime.Web.Messages.Message;
 use Runtime.Widget.Table.Table;
 use Runtime.Widget.Table.TableStorageInterface;
 use Runtime.Widget.ButtonModel;
@@ -48,6 +49,7 @@ class TableModel extends BaseModel
 	int limit = 10;
 	int page = 0;
 	int pages = 0;
+	int row_selected = -1;
 	Dict foreign_key = null;
 	Collection<Dict> fields = [];
 	Collection<Dict> items = [];
@@ -204,7 +206,13 @@ class TableModel extends BaseModel
 	/**
 	 * Returns item value
 	 */
-	var getItemValue(Dict item, string field_name) => item.get(field_name);
+	Dict getItemValue(Dict item, string field_name) => item.get(field_name);
+	
+	
+	/**
+	 * Returns selected item
+	 */
+	Dict getSelectedItem() => this.getItemByRowNumber(this.row_selected);
 	
 	
 	/**
@@ -281,6 +289,21 @@ class TableModel extends BaseModel
 		ApiResult res = await this.storage.load();
 		this.setApiResult(res, "reload");
 		return res;
+	}
+	
+	
+	/**
+	 * Row click
+	 */
+	void onRowClick(int row_number)
+	{
+		this.emit(new Message{
+			"name": "row_click",
+			"data":
+			{
+				"row_number": row_number,
+			}
+		});
 	}
 	
 	

@@ -31,7 +31,7 @@ class DialogModel extends BaseDialogModel
 	string content = "";
 	string width = "";
 	string component = classof Dialog;
-	Dict params = {};
+	Dict data = {};
 	Collection<string> styles = [];
 	RowButtonsModel buttons;
 	WidgetResultModel result;
@@ -70,6 +70,16 @@ class DialogModel extends BaseDialogModel
 		
 		/* Add result */
 		this.result = this.addWidget(classof WidgetResultModel);
+	}
+	
+	
+	/**
+	 * Show dialog
+	 */
+	void show()
+	{
+		this.result.clear();
+		parent();
 	}
 	
 	

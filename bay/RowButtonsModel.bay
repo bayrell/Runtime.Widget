@@ -56,8 +56,12 @@ class RowButtonsModel extends RenderListModel
 	 */
 	ButtonModel addButton(Map button, string dest = "", string kind = "after")
 	{
+		/* Create button model */
+		ButtonModel model = null;
+		if (button instanceof Dict) model = this.addWidget(classof ButtonModel, button);
+		else model = this.createModel(button);
+		
 		/* Add button */
-		ButtonModel model = this.addWidget(classof ButtonModel, button);
 		this.addItem(model, dest, kind);
 		
 		/* Add listener */
