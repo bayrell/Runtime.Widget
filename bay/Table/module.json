@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
+		"AddButtonModel.bay",
 		"DeleteDialog.bay",
 		"DeleteDialogModel.bay",
 		"RefreshButton.bay",
