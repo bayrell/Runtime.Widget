@@ -32,8 +32,6 @@ class TableRowButtonsModel extends RowButtonsModel
 	 */
 	void initWidget(Dict params)
 	{
-		parent(params);
-		
 		bool show_edit = true;
 		bool show_delete = true;
 		if (params.has("edit")) show_edit = params.get("edit");
@@ -64,6 +62,8 @@ class TableRowButtonsModel extends RowButtonsModel
 				],
 			});
 		}
+		
+		parent(params);
 	}
 	
 	

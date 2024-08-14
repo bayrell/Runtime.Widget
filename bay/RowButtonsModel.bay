@@ -41,6 +41,15 @@ class RowButtonsModel extends RenderListModel
 		
 		if (params == null) return;
 		if (params.has("styles")) this.styles = params.get("styles");
+	}
+	
+	
+	/**
+	 * Init widget settings
+	 */
+	void initWidget(Dict params)
+	{
+		parent(params);
 		
 		/* Setup buttons */
 		if (params.has("buttons"))
@@ -54,12 +63,25 @@ class RowButtonsModel extends RenderListModel
 	/**
 	 * Add button
 	 */
-	ButtonModel addButton(Map button, string dest = "", string kind = "after")
+	ButtonModel addButton(Map button)
 	{
 		/* Create button model */
 		ButtonModel model = null;
-		if (button instanceof Dict) model = this.addWidget(classof ButtonModel, button);
+		if (button instanceof Dict)
+		{
+			if (button.has("factory")) model = this.createModel(button.get("factory"));
+			else model = this.addWidget(button.get("component", classof ButtonModel), button);
+		}
 		else model = this.createModel(button);
+		
+		/* Settings */
+		string dest = "";
+		string kind = "after";
+		if (button instanceof Dict)
+		{
+			dest = button.get("dest", "");
+			kind = button.get("kind", "after");
+		}
 		
 		/* Add button */
 		this.addItem(model, dest, kind);
