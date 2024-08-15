@@ -65,22 +65,29 @@
 .tabs__content{
 	margin-top: calc(2 * var(--widget-space));
 }
+.tabs__item{
+	position: relative;
+	display: none;
+}
+.tabs__item--active{
+	display: block;
+}
 </style>
 
 
 <template name="renderHeader">
-	%for (int i=0; i<this.model.tabs.count(); i++)
+	%for (int i=0; i<this.model.items.count(); i++)
 	{
-		%set Dict tab = this.model.tabs.get(i);
-		%set string tab_name = tab["name"];
+		%set Dict tab = this.model.items.get(i);
+		%set string tab_key = tab["key"];
 		%set string tab_label = tab["label"];
 		%set string tab_href = tab["href"];
-		%set bool is_active = this.model.isActive(tab_name);
+		%set bool is_active = this.model.isActive(tab_key);
 		
 		%if (tab_href == null)
 		{
 			<div class="tabs__header_item" class={{ is_active ? "tabs__header_item--active" : "" }}
-				data-name={{ tab_name }}
+				data-tab={{ tab_key }}
 				@event:onClick={{ this.onClick }}
 			>
 				{{ tab_label }}
@@ -89,7 +96,7 @@
 		%else
 		{
 			<a class="tabs__header_item" class={{ is_active ? "tabs__header_item--active" : "" }}
-				data-name={{ tab_name }} href={{ tab_href }}
+				data-tab={{ tab_key }} href={{ tab_href }}
 			>
 				{{ tab_label }}
 			</a>
@@ -99,34 +106,33 @@
 
 
 <template name="renderContent">
-	%if (this.model.render_widgets)
+	%if (this.model.render)
 	{
-		%for (int i=0; i<this.model.tabs.count(); i++)
+		%for (int i=0; i<this.model.items.count(); i++)
 		{
-			%set Dict tab = this.model.tabs.get(i);
-			%set string tab_name = tab["name"];
-			%set BaseModel tab_model = tab["model"];
-			%if (tab_model)
+			%set Dict tab = this.model.items.get(i);
+			%set string tab_key = tab.get("key");
+			%if (this.model.canShow(tab_key))
 			{
-				<Tab name={{ tab_name }} @model={{ this.model }}>
-					%render this.renderWidget(tab_model);
-				</Tab>
+				<div class="tabs__item"
+					class={{ this.model.isActive(tab_key) ? "tabs__item--active" : "" }}
+					data-tab={{ tab_key }}
+				>
+					%render this.renderSlot(tab_key);
+				</div>
 			}
 		}
-	}
-	%else
-	{
-		%render this.renderSlot("default");
 	}
 </template>
 
 
 <template>
-	<div class="tabs">
+	<div class="tabs" class={{ this.class }}>
 		<div class="tabs__header">
 			%render this.renderHeader();
 		</div>
 		<div class="tabs__content">
+			%render this.renderSlot("default");
 			%render this.renderContent();
 		</div>
 	</div>
@@ -137,9 +143,9 @@
 
 void onClick(var e)
 {
-	string tab_name = e.target.getAttribute("data-name");
-	this.model.setActive(tab_name);
-	this.emit("select", tab_name);
+	string tab_key = e.target.getAttribute("data-tab");
+	this.model.setActive(tab_key);
+	this.emit("select", tab_key);
 }
 
 </script>

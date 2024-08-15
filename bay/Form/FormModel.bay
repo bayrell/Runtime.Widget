@@ -40,6 +40,7 @@ class FormModel extends BaseModel
 	
 	/* Fields */
 	Dict foreign_key = null;
+	Dict post_data = null;
 	Vector<Map> fields = [];
 	Dict<Vector> fields_error = {};
 	
@@ -80,6 +81,8 @@ class FormModel extends BaseModel
 		
 		if (params == null) return;
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
+		if (params.has("post_data")) this.post_data = params.get("post_data");
+		if (params.has("show_result")) this.show_result = params.get("show_result");
 		
 		/* Setup params */
 		if (params.has("fields"))
@@ -339,6 +342,10 @@ class FormModel extends BaseModel
 				}
 			}
 		}
+		if (this.post_data)
+		{
+			post_data = post_data.concat(this.post_data);
+		}
 		return post_data;
 	}
 	
@@ -351,7 +358,7 @@ class FormModel extends BaseModel
 		await parent(container);
 		
 		/* Load item */
-		if (this.pk)
+		if (this.pk and this.storage)
 		{
 			ApiResult res = await this.storage.load();
 			this.setApiResult(res, "load");
@@ -364,6 +371,8 @@ class FormModel extends BaseModel
 	 */
 	async ApiResult submit()
 	{
+		if (not this.storage) return null;
+		
 		this.result.setWaitMessage();
 		ApiResult res = await this.storage.submit();
 		this.setApiResult(res, "submit");

@@ -31,10 +31,10 @@
 
 
 <template>
-	%if (this.model.canShow(this.name))
+	%if (this.model.canShow(this.key))
 	{
-		<div class="tabs__item" class={{ this.model.isActive(this.name) ? "tabs__item--active" : "" }}
-			data-tab={{ this.name }}
+		<div class="tabs__item" class={{ this.model.isActive(this.key) ? "tabs__item--active" : "" }}
+			data-tab={{ this.key }}
 		>
 			%render this.renderSlot("default");
 		</div>
@@ -44,7 +44,7 @@
 
 <script>
 
-props string name = "";
+props string key = "";
 
 </script>
 

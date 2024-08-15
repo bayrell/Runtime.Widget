@@ -51,6 +51,7 @@ class TableModel extends BaseModel
 	int pages = 0;
 	int row_selected = -1;
 	Dict foreign_key = null;
+	Dict post_data = null;
 	Collection<Dict> fields = [];
 	Collection<Dict> items = [];
 	Collection<string> styles = [];
@@ -82,6 +83,7 @@ class TableModel extends BaseModel
 		
 		if (params == null) return;
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
+		if (params.has("post_data")) this.post_data = params.get("post_data");
 		if (params.has("limit")) this.limit = params.get("limit");
 		if (params.has("page")) this.page = params.get("page");
 		if (params.has("styles")) this.styles = params.get("styles");
@@ -255,6 +257,10 @@ class TableModel extends BaseModel
 		{
 			post_data.set("foreign_key", this.foreign_key);
 		}
+		if (this.post_data)
+		{
+			post_data = post_data.concat(this.post_data);
+		}
 		return post_data;
 	}
 	
@@ -276,6 +282,7 @@ class TableModel extends BaseModel
 	{
 		await parent(container);
 		
+		if (not this.storage) return null;
 		ApiResult res = await this.storage.load();
 		this.setApiResult(res, "load");
 	}
@@ -286,6 +293,8 @@ class TableModel extends BaseModel
 	 */
 	async ApiResult reload()
 	{
+		if (not this.storage) return null;
+		
 		ApiResult res = await this.storage.load();
 		this.setApiResult(res, "reload");
 		return res;

@@ -22,7 +22,7 @@
 <style>
 .widget_result{
 	text-align: center;
-	margin-top: var(--widget-space);
+	/*margin-top: var(--widget-space);*/
 }
 .widget_result--success{
 	color: var(--widget-color-success);

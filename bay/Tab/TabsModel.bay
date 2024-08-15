@@ -26,8 +26,8 @@ use Runtime.Widget.Tab.Tabs;
 class TabsModel extends BaseModel
 {
 	string active = "";
-	Vector<Map> tabs = [];
-	bool render_widgets = false;
+	Vector<Map> items = [];
+	bool render = true;
 	string component = classof Tabs;
 	
 	
@@ -40,15 +40,15 @@ class TabsModel extends BaseModel
 		
 		if (params == null) return;
 		if (params.has("active")) this.active = params.get("active");
-		if (params.has("tabs")) this.tabs = params.get("tabs");
-		if (params.has("render_widgets")) this.render_widgets = params.get("render_widgets");
+		if (params.has("items")) this.items = params.get("items");
+		if (params.has("render")) this.render = params.get("render");
 	}
 	
 	
 	/**
 	 * Returns true if active
 	 */
-	void isActive(string tab_name) => this.active == tab_name;
+	void isActive(string tab_key) => this.active == tab_key;
 	
 	
 	/**
@@ -63,11 +63,11 @@ class TabsModel extends BaseModel
 	/**
 	 * Can show
 	 */
-	bool canShow(string tab_name)
+	bool canShow(string tab_key)
 	{
-		Map tab = this.tabs.findItem( lib::equalAttr("name", tab_name) );
+		Map tab = this.items.findItem(lib::equalAttr("key", tab_key));
 		if (tab == null) return false;
-		if (tab.has("href") and tab.get("name") != tab_name) return false;
+		if (tab.has("href") and tab.get("key") != tab_key) return false;
 		return true;
 	}
 }

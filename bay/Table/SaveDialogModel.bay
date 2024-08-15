@@ -127,7 +127,7 @@ class SaveDialogModel extends ConfirmDialogModel
 		{
 			return false;
 		}
-		if (res.isSuccess()) return true;
+		if (res and res.isSuccess()) return true;
 		return false;
 	}
 }
