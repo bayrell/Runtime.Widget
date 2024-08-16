@@ -88,9 +88,9 @@ class SaveDialogModel extends ConfirmDialogModel
 	/**
 	 * Show edit
 	 */
-	void showEdit(Dict item)
+	void showEdit(Dict data)
 	{
-		item = Serializer::copy(item);
+		Dict item = Serializer::copy(data.get("item"));
 		this.action = "edit";
 		this.title = this.table.getTitle({
 			"action": "edit",
@@ -98,6 +98,7 @@ class SaveDialogModel extends ConfirmDialogModel
 		});
 		this.edit_form.clear();
 		this.edit_form.setItem(item);
+		this.edit_form.setRowNumber(data.get("row_number"));
 		
 		/* Change confirm button */
 		ButtonModel confirm_button = this.buttons.getWidget("confirm_button");

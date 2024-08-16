@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.SelectWrap">
 
+<use name="Runtime.Widget.Select" component="true" />
+
 
 <template>
     %set Dict props = this.model.getProps(this.data);

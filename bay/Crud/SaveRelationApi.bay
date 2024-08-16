@@ -151,8 +151,7 @@ class SaveRelationApi extends SaveApi
 		await this.save();
 		
 		/* Refresh item */
-		Connection connection = this.getConnection();
-		await this.item.refresh(connection);
+		this.item = await this.findItem(this.item.getPrimaryKey());
 		
 		/* After save */
 		await this.onSaveAfter();

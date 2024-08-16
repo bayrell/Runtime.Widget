@@ -45,6 +45,7 @@ class FormModel extends BaseModel
 	Dict<Vector> fields_error = {};
 	
 	/* Data */
+	int row_number = -1;
 	Dict pk = null;
 	Dict item = {};
 	Collection<string> primary_key = [];
@@ -224,8 +225,19 @@ class FormModel extends BaseModel
 	void clear()
 	{
 		this.pk = null;
-		this.item = {};
 		this.fields_error = {};
+		this.row_number = -1;
+		this.clearItem();
+		this.result.clear();
+	}
+	
+	
+	/**
+	 * Clear form
+	 */
+	void clearItem()
+	{
+		this.item = {};
 		for (int i=0; i<this.fields.count(); i++)
 		{
 			Dict field = this.fields.get(i);
@@ -233,7 +245,6 @@ class FormModel extends BaseModel
 			var default_value = field.get("default", "");
 			this.item.set(field_name, default_value);
 		}
-		this.result.clear();
 	}
 	
 	
@@ -277,6 +288,15 @@ class FormModel extends BaseModel
 	
 	
 	/**
+	 * Set row number
+	 */
+	void setRowNumber(int row_number)
+	{
+		this.row_number = row_number;
+	}
+	
+	
+	/**
 	 * Process frontend data
 	 */
 	void serialize(Serializer serializer, Map data)
@@ -308,6 +328,10 @@ class FormModel extends BaseModel
 		/* Submit */
 		if (action == "submit")
 		{
+			if (res.data.has("item"))
+			{
+				this.item = res.data.get("item");
+			}
 			if (res.data.has("fields"))
 			{
 				this.fields_error = res.data.get("fields");

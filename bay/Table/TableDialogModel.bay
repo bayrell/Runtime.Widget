@@ -171,14 +171,13 @@ class TableDialogModel extends TableModel
 	{
 		Dict data = message.data;
 		string button_name = message.widget.widget_name;
-		
 		if (button_name == "edit_button")
 		{
-			this.save_dialog.showEdit(data.get("item"));
+			this.save_dialog.showEdit(data);
 		}
 		else if (button_name == "delete_button")
 		{
-			this.delete_dialog.showDelete(data.get("item"));
+			this.delete_dialog.showDelete(data);
 		}
 	}
 }

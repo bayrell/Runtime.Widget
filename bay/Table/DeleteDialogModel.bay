@@ -69,14 +69,16 @@ class DeleteDialogModel extends ConfirmDialogModel
 	/**
 	 * Show delete
 	 */
-	void showDelete(Dict item)
+	void showDelete(Dict data)
 	{
+		Dict item = Serializer::copy(data.get("item"));
 		this.title = this.table.getTitle({
 			"action": "delete",
 			"item": item,
 		});
 		this.form.clear();
 		this.form.setItem(item);
+		this.form.setRowNumber(data.get("row_number"));
 		this.show();
 	}
 	

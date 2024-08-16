@@ -7,9 +7,11 @@
 		"FormModel.bay",
 		"FormRow.bay",
 		"FormStorageInterface.bay",
+		"FormSaveProxyStorage.bay",
 		"FormSaveStorage.bay",
 		"FormSubmitModel.bay",
 		"FormSubmitStorage.bay",
+		"FormDeleteProxyStorage.bay",
 		"FormDeleteStorage.bay"
 	],
 	"require": [
