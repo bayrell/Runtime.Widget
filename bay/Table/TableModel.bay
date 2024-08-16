@@ -281,10 +281,7 @@ class TableModel extends BaseModel
 	async void loadData(RenderContainer container)
 	{
 		await parent(container);
-		
-		if (not this.storage) return null;
-		ApiResult res = await this.storage.load();
-		this.setApiResult(res, "load");
+		await this.reload();
 	}
 	
 	

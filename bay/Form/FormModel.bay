@@ -356,13 +356,21 @@ class FormModel extends BaseModel
 	async void loadData(RenderContainer container)
 	{
 		await parent(container);
+		await this.loadForm();
+	}
+	
+	
+	/**
+	 * Load form
+	 */
+	async void loadForm()
+	{
+		if (not this.pk) return;
+		if (not this.storage) return;
 		
-		/* Load item */
-		if (this.pk and this.storage)
-		{
-			ApiResult res = await this.storage.load();
-			this.setApiResult(res, "load");
-		}
+		/* Load data */
+		ApiResult res = await this.storage.load();
+		this.setApiResult(res, "load");
 	}
 	
 	
@@ -376,7 +384,7 @@ class FormModel extends BaseModel
 		this.result.setWaitMessage();
 		ApiResult res = await this.storage.submit();
 		this.setApiResult(res, "submit");
-		this.emit(new FormMessage{
+		await this.emitAsync(new FormMessage{
 			"name": "submit",
 			"result": res,
 		});
