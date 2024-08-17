@@ -100,17 +100,23 @@ class ConfirmDialogModel extends DialogModel
 	{
 		try
 		{
+			/* Confirm */
 			bool confirm = await this.confirm();
 			if (not confirm) return;
-			await this.emitAsync(new DialogMessage{
+			
+			/* Send message */
+			DialogMessage message = new DialogMessage{
 				"name": "confirm",
-			});
+			};
+			await this.emitAsync(message);
+			
+			/* Hide dialog */
+			if (message.hide) this.hide();
 		}
 		catch (DialogModelException e)
 		{
 			this.result.setException(e);
 			return;
 		}
-		this.hide();
 	}
 }

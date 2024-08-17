@@ -19,7 +19,9 @@
 namespace Runtime.Widget.Table;
 
 use Runtime.Callback;
+use Runtime.Serializer;
 use Runtime.Exceptions.RuntimeException;
+use Runtime.Web.ApiResult;
 use Runtime.Web.RenderListModel;
 use Runtime.Web.Messages.ClickMessage;
 use Runtime.Widget.ButtonModel;
@@ -28,6 +30,8 @@ use Runtime.Widget.Form.FormMessage;
 use Runtime.Widget.Form.FormModel;
 use Runtime.Widget.RowButtons;
 use Runtime.Widget.RowButtonsModel;
+use Runtime.Widget.Dialog.DialogMessage;
+use Runtime.Widget.Dialog.DialogModelException;
 use Runtime.Widget.Table.DeleteDialogModel;
 use Runtime.Widget.Table.SaveDialogModel;
 use Runtime.Widget.Table.TableModel;
@@ -112,6 +116,9 @@ class TableDialogModel extends TableModel
 					"widget_name": "save_dialog",
 				}
 			);
+			this.save_dialog.addListener(
+				"confirm", new Callback(this, "onConfirmSaveClick"), -999
+			);
 		}
 		
 		/* Create delete widget */
@@ -124,6 +131,9 @@ class TableDialogModel extends TableModel
 					"table": this,
 					"widget_name": "delete_dialog",
 				}
+			);
+			this.delete_dialog.addListener(
+				"confirm", new Callback(this, "onConfirmDeleteClick"), -999
 			);
 		}
 		
@@ -173,11 +183,114 @@ class TableDialogModel extends TableModel
 		string button_name = message.widget.widget_name;
 		if (button_name == "edit_button")
 		{
-			this.save_dialog.showEdit(data);
+			this.showEdit(data);
 		}
 		else if (button_name == "delete_button")
 		{
-			this.delete_dialog.showDelete(data);
+			this.showDelete(data);
+		}
+	}
+	
+	
+	/**
+	 * Show add
+	 */
+	void showAdd()
+	{
+		this.add_form.clear();
+		
+		/* Change confirm button */
+		ButtonModel confirm_button = this.save_dialog.buttons.getWidget("confirm_button");
+		confirm_button.content = "Add";
+		confirm_button.styles = ["success"];
+		
+		/* Show dialog */
+		this.save_dialog.action = "add";
+		this.save_dialog.title = this.getTitle({
+			"action": "add",
+		});
+		this.save_dialog.show();
+	}
+	
+	
+	/**
+	 * Show edit
+	 */
+	void showEdit(Dict data)
+	{
+		Dict item = Serializer::copy(data.get("item"));
+		this.edit_form.clear();
+		this.edit_form.setItem(item);
+		this.edit_form.setRowNumber(data.get("row_number"));
+		
+		/* Change confirm button */
+		ButtonModel confirm_button = this.save_dialog.buttons.getWidget("confirm_button");
+		confirm_button.content = "Save";
+		confirm_button.styles = ["success"];
+		
+		/* Show dialog */
+		this.save_dialog.action = "edit";
+		this.save_dialog.title = this.getTitle({
+			"action": "edit",
+			"item": item,
+		});
+		this.save_dialog.show();
+	}
+	
+	
+	/**
+	 * Show delete
+	 */
+	void showDelete(Dict data)
+	{
+		Dict item = Serializer::copy(data.get("item"));
+		this.delete_form.clear();
+		this.delete_form.setItem(item);
+		this.delete_form.setRowNumber(data.get("row_number"));
+		
+		/* Show dialog */
+		this.delete_dialog.title = this.getTitle({
+			"action": "delete",
+			"item": item,
+		});
+		this.delete_dialog.show();
+	}
+	
+	
+	/**
+	 * Confirm event
+	 */
+	async void onConfirmSaveClick(DialogMessage message)
+	{
+		ApiResult res;
+		if (this.save_dialog.action == "add")
+		{
+			res = await this.add_form.submit();
+		}
+		else if (this.save_dialog.action == "edit")
+		{
+			res = await this.edit_form.submit();
+		}
+		
+		/* Error message */
+		if (not res.isSuccess())
+		{
+			throw new DialogModelException(res.message);
+		}
+	}
+	
+	
+	/**
+	 * Confirm event
+	 */
+	async void onConfirmDeleteClick(DialogMessage message)
+	{
+		ApiResult res = await this.delete_form.submit();
+		
+		/* Error message */
+		if (not res.isSuccess())
+		{
+			throw new DialogModelException(res.message);
 		}
 	}
 }

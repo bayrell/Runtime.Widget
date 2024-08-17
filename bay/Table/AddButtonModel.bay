@@ -51,6 +51,6 @@ class AddButtonModel extends ButtonModel
 	 */
 	async void onClick(Dict data = null)
 	{
-		this.table.save_dialog.showAdd();
+		this.table.showAdd();
 	}
 }

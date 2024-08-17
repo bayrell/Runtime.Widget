@@ -64,32 +64,4 @@ class DeleteDialogModel extends ConfirmDialogModel
 		confirm_button.content = "Delete";
 		confirm_button.styles = ["danger"];
 	}
-	
-	
-	/**
-	 * Show delete
-	 */
-	void showDelete(Dict data)
-	{
-		Dict item = Serializer::copy(data.get("item"));
-		this.title = this.table.getTitle({
-			"action": "delete",
-			"item": item,
-		});
-		this.form.clear();
-		this.form.setItem(item);
-		this.form.setRowNumber(data.get("row_number"));
-		this.show();
-	}
-	
-	
-	/**
-	 * Confirm
-	 */
-	async bool confirm()
-	{
-		ApiResult res = await this.form.submit();
-		if (res.isSuccess()) return true;
-		return false;
-	}
 }

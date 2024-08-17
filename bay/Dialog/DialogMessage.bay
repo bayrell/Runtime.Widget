@@ -25,4 +25,5 @@ use Runtime.Widget.Dialog.DialogModel;
 class DialogMessage extends Message
 {
 	string value = "";
+	bool hide = true;
 }
