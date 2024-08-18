@@ -20,7 +20,15 @@
 	extends="Runtime.Widget.Dialog.Dialog"
 >
 
-<template name="renderContent">
+<style>
+.widget_dialog .widget_result{
+	margin-top: var(--widget-space);
+}
+</style>
+
+<template name="renderContent"></template>
+
+<template name="renderResult">
 	%render this.renderWidget(this.model.form.result);
 </template>
 

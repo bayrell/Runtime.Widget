@@ -104,6 +104,11 @@ class TableDialogModel extends TableModel
 			this.delete_form.addListener("submit", new Callback(this, "onFormSubmit"));
 		}
 		
+		/* Hide form result */
+		if (this.add_form) this.add_form.show_result = false;
+		if (this.edit_form) this.edit_form.show_result = false;
+		if (this.delete_form) this.delete_form.show_result = false;
+		
 		/* Create save wiget */
 		if (this.add_form or this.edit_form)
 		{
@@ -159,18 +164,6 @@ class TableDialogModel extends TableModel
 			return rtl::apply(this.get_title, [params]);
 		}
 		return "";
-	}
-	
-	
-	/**
-	 * On form submit
-	 */
-	void onFormSubmit(FormMessage message)
-	{
-		if (message.result.isSuccess())
-		{
-			this.reload();
-		}
 	}
 	
 	
@@ -277,6 +270,9 @@ class TableDialogModel extends TableModel
 		{
 			throw new DialogModelException(res.message);
 		}
+		
+		/* Reload table */
+		this.reload();
 	}
 	
 	
@@ -292,5 +288,8 @@ class TableDialogModel extends TableModel
 		{
 			throw new DialogModelException(res.message);
 		}
+		
+		/* Reload table */
+		this.reload();
 	}
 }

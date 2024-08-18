@@ -69,7 +69,10 @@ class DialogModel extends BaseDialogModel
 		);
 		
 		/* Add result */
-		this.result = this.addWidget(classof WidgetResultModel);
+		this.result = this.addWidget(classof WidgetResultModel,
+		{
+			"styles": ["margin_top"],
+		});
 	}
 	
 	

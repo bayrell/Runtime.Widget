@@ -137,6 +137,7 @@ class FormModel extends BaseModel
 			classof WidgetResultModel,
 			{
 				"widget_name": "result",
+				"styles": ["margin_top"],
 			}
 		);
 		

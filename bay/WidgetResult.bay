@@ -22,7 +22,9 @@
 <style>
 .widget_result{
 	text-align: center;
-	/*margin-top: var(--widget-space);*/
+}
+.widget_result--margin_top{
+	margin-top: var(--widget-space);
 }
 .widget_result--success{
 	color: var(--widget-color-success);
@@ -37,7 +39,10 @@
 
 
 <template>
-	<div class="widget_result" class={{ this.getErrorClass() }} >
+	<div class="widget_result"
+		class={{ this.getErrorClass() }}
+		class={{ static::getStyles("widget_result", this.model.styles) }}
+	>
 		{{ this.model.message }}
 	</div>
 </template>

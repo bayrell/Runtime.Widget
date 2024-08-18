@@ -32,6 +32,19 @@ class WidgetResultModel extends BaseModel
 	string message = "";
 	string widget_name = "result";
 	string component = classof WidgetResult;
+	Collection<string> styles = [];
+	
+	
+	/**
+	 * Init widget params
+	 */
+	void initParams(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("styles")) this.styles = params.get("styles");
+	}
 	
 	
 	/**
