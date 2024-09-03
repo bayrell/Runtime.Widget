@@ -254,7 +254,14 @@ class FormModel extends BaseModel
 	 */
 	void onFieldChange(string field_name, var value)
 	{
+		var old_value = this.item.get(field_name);
 		this.item.set(field_name, value);
+		this.emitAsync(new FormMessage{
+			"name": "field_change",
+			"field_name": field_name,
+			"old_value": old_value,
+			"value": value,
+		});
 	}
 	
 	

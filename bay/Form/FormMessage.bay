@@ -25,4 +25,7 @@ use Runtime.Web.Messages.Message;
 class FormMessage extends Message
 {
 	ApiResult result = null;
+	string field_name;
+	var old_value;
+	var value;
 }
