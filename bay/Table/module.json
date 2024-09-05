@@ -12,6 +12,7 @@
 		"Table.bay",
 		"TableModel.bay",
 		"TableDialogModel.bay",
+		"TableMessage.bay",
 		"TableProxyStorage.bay",
 		"TableRowButtonsModel.bay",
 		"TableStorage.bay",

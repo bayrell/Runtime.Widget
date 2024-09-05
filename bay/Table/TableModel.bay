@@ -29,6 +29,7 @@ use Runtime.Web.RenderContainer;
 use Runtime.Web.Messages.ClickMessage;
 use Runtime.Web.Messages.Message;
 use Runtime.Widget.Table.Table;
+use Runtime.Widget.Table.TableMessage;
 use Runtime.Widget.Table.TableStorageInterface;
 use Runtime.Widget.ButtonModel;
 use Runtime.Widget.Pagination;
@@ -303,7 +304,7 @@ class TableModel extends BaseModel
 	 */
 	void onRowClick(int row_number)
 	{
-		this.emit(new Message{
+		this.emit(new TableMessage{
 			"name": "row_click",
 			"data":
 			{
@@ -318,5 +319,9 @@ class TableModel extends BaseModel
 	 */
 	void onRowButtonClick(ClickMessage message)
 	{
+		this.emit(new TableMessage{
+			"name": "row_button_click",
+			"message": message,
+		});
 	}
 }

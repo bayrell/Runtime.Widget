@@ -57,7 +57,7 @@
 		{
 			%set selected = { "selected": "selected" };
 		}
-		<option @key=":select_value" value={{ " " }} ...selected>Select value</option>
+		<option @key=":select_value" value={{ "" }} ...selected>Select value</option>
 	}
 	
 	%if (options != null)

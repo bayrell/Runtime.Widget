@@ -182,6 +182,7 @@ class TableDialogModel extends TableModel
 		{
 			this.showDelete(data);
 		}
+		parent(message);
 	}
 	
 	
