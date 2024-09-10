@@ -32,6 +32,12 @@ class SectionSettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns short name
+	 */
+	string getShortName() => "section";
+	
+	
+	/**
 	 * Returns params
 	 */
 	Collection<Parameter> getParams() =>

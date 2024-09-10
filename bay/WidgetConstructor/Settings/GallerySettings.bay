@@ -31,6 +31,12 @@ class GallerySettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns short name
+	 */
+	string getShortName() => "gallery";
+	
+	
+	/**
 	 * Returns params
 	 */
 	Collection<Parameter> getParams() =>

@@ -32,6 +32,12 @@ class ImageSettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns short name
+	 */
+	string getShortName() => "image";
+	
+	
+	/**
 	 * Returns params
 	 */
 	Collection<Parameter> getParams() =>

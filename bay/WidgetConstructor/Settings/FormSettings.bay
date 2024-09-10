@@ -32,6 +32,12 @@ class FormSettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns short name
+	 */
+	string getShortName() => "form";
+	
+	
+	/**
 	 * Returns model name
 	 */
 	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";

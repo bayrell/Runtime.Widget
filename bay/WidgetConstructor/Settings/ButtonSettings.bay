@@ -29,7 +29,13 @@ class ButtonSettings implements WidgetSettingsInterface
 	 * Returns widgets list
 	 */
 	string getName() => "Runtime.Widget.Button";
-		
+	
+	
+	/**
+	 * Returns short name
+	 */
+	string getShortName() => "button";
+	
 	
 	/**
 	 * Returns params

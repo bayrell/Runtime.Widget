@@ -35,6 +35,12 @@ class FormModelSettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns short name
+	 */
+	string getShortName() => "form";
+	
+	
+	/**
 	 * Returns params
 	 */
 	Collection<Parameter> getParams() =>

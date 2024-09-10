@@ -29,6 +29,12 @@ class TextImageSettings implements WidgetSettingsInterface
 	 */
 	string getName() => "Runtime.Widget.TextImage";
     
+	
+	/**
+	 * Returns short name
+	 */
+	string getShortName() => "text_image";
+	
     
     /**
 	 * Returns params
