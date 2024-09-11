@@ -129,15 +129,17 @@ class TreeModel extends BaseModel
 	 */
 	bool canDrag(Collection<string> src, Collection<string> dest, string kind)
 	{
-		Reference result = new Reference(true);
-		this.emit(new TreeMessage{
+		TreeMessage message = new TreeMessage{
 			"name": "canDrag",
 			"src": src,
 			"dest": dest,
+			"src_item": this.root.get(src),
+			"dest_item": this.root.get(dest),
 			"kind": kind,
-			"result": result,
-		});
-		return result.value();
+			"result": true,
+		};
+		this.emit(message);
+		return message.result;
 	}
 	
 	

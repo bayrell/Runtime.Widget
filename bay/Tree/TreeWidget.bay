@@ -188,6 +188,16 @@ var findDragElem(var elem)
 
 
 /**
+ * Find elem by path
+ */
+var findElemByPath(var path)
+{
+	string path = ".tree_widget__item[data-path='" ~ path ~ "']";
+	return document.querySelector(path);
+}
+
+
+/**
  * Returns true if elem inside drag_elem
  */
 void checkInside(var elem)
@@ -195,21 +205,11 @@ void checkInside(var elem)
 	if (not this.drag_elem) return false;
 	if (elem == this.drag_elem) return false;
 	
-	string path = elem.getAttribute("data-path");
-	if (path == null) return false;
+	string drag_elem_path = this.drag_elem.getAttribute("data-path");
+	string elem_path = elem.getAttribute("data-path");
 	
-	Collection<string> arr = rs::split(".", path);
-	arr.pop();
-	
-	while (arr.count() != 0)
-	{
-		path = rs::join(".", arr);
-		path = ".tree_widget__item[data-path='" ~ path ~ "']";
-		var e = document.querySelector(path);
-		if (e == this.drag_elem) return true;
-		arr.pop();
-	}
-	
+	if (drag_elem_path == elem_path) return true;
+	if (rs::substr(elem_path, 0, rs::strlen(drag_elem_path) + 1) == drag_elem_path ~ ".") return true;
 	return false;
 }
 
@@ -261,23 +261,44 @@ void setDragDestElement(var elem, Dict item, string kind)
 	if (this.drag_dest_elem == elem and this.drag_dest_kind == kind) return;
 	
 	/* Setup box */
-	if (this.drag_elem != elem) this.drag_dest_box = this.getBoxStyles(elem, kind);
-	else this.drag_dest_box = null;
+	if (this.drag_elem == elem)
+	{
+		this.drag_dest_box = null;
+		return;
+	}
 	
-	/* Setup dest values */
+	/* Setup dest element */
 	this.drag_dest_elem = elem;
 	this.drag_dest_item = item;
-	this.drag_dest_kind = kind;
+	
+	/* Get elem path */
+	Collection src_path = this.getSrc();
+	Collection dest_path = this.getDest();
+	if (dest_path == null)
+	{
+		this.drag_dest_box = null;
+		return;
+	}
 	
 	/* Can drag */
-	if (this.drag_dest_box)
+	bool can_drag = this.model.canDrag(src_path, dest_path, kind);
+	if (not can_drag)
 	{
-		bool can_drag = this.model.canDrag(this.getSrc(), this.getDest(), this.drag_dest_kind);
-		if (not can_drag)
+		if (kind == "into")
 		{
-			this.drag_dest_box = null;
+			kind = "after";
+			can_drag = this.model.canDrag(src_path, dest_path, kind);
+			if (not can_drag)
+			{
+				this.drag_dest_box = null;
+				return;
+			}
 		}
 	}
+	
+	/* Setup dest values */
+	this.drag_dest_kind = kind;
+	this.drag_dest_box = this.getBoxStyles(elem, kind);
 }
 
 

@@ -21,6 +21,7 @@ namespace Runtime.Widget.WidgetConstructor.Settings;
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
 use BayLang.Constructor.Frontend.Editor.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Widget;
 
 
 class ButtonSettings implements WidgetSettingsInterface
@@ -35,6 +36,16 @@ class ButtonSettings implements WidgetSettingsInterface
 	 * Returns short name
 	 */
 	string getShortName() => "button";
+	
+	
+	/**
+	 * Can drag
+	 */
+	bool canDrag(Widget widget, string kind)
+	{
+		if (kind == "into") return false;
+		return true;
+	}
 	
 	
 	/**

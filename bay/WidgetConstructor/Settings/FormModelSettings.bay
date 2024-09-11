@@ -24,6 +24,7 @@ use BayLang.Constructor.Frontend.Editor.Parameter;
 use BayLang.Constructor.Frontend.Editor.ParameterDictModel;
 use BayLang.Constructor.Frontend.Editor.ParameterFactoryModel;
 use BayLang.Constructor.Frontend.Editor.ParameterModel;
+use BayLang.Constructor.Frontend.Editor.Widget;
 
 
 class FormModelSettings implements WidgetSettingsInterface
@@ -38,6 +39,16 @@ class FormModelSettings implements WidgetSettingsInterface
 	 * Returns short name
 	 */
 	string getShortName() => "form";
+	
+	
+	/**
+	 * Can drag
+	 */
+	bool canDrag(Widget widget, string kind)
+	{
+		if (kind == "into") return false;
+		return true;
+	}
 	
 	
 	/**

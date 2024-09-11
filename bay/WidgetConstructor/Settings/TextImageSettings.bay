@@ -20,6 +20,7 @@ namespace Runtime.Widget.WidgetConstructor.Settings;
 
 use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
 use BayLang.Constructor.Frontend.Editor.Parameter;
+use BayLang.Constructor.Frontend.Editor.Widget;
 
 
 class TextImageSettings implements WidgetSettingsInterface
@@ -34,6 +35,16 @@ class TextImageSettings implements WidgetSettingsInterface
 	 * Returns short name
 	 */
 	string getShortName() => "text_image";
+	
+	
+	/**
+	 * Can drag
+	 */
+	bool canDrag(Widget widget, string kind)
+	{
+		if (kind == "into") return false;
+		return true;
+	}
 	
     
     /**
