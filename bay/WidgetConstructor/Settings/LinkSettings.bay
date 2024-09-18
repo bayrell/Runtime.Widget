@@ -18,10 +18,9 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
-use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterComponent;
-use BayLang.Constructor.Frontend.Editor.Widget;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
 class LinkSettings implements WidgetSettingsInterface
@@ -41,7 +40,7 @@ class LinkSettings implements WidgetSettingsInterface
 	/**
 	 * Can drag
 	 */
-	bool canDrag(Widget widget, string kind)
+	bool canDrag(var widget, string kind)
 	{
 		if (kind == "into") return false;
 		return true;
@@ -51,33 +50,42 @@ class LinkSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Parameter> getParams() =>
+	Collection<Factory> getParams() =>
 	[
-		new ParameterComponent
-		{
-			"name": "href",
-			"label": "Href",
-			"component": "Runtime.Widget.Input",
-		},
-		new ParameterComponent
-		{
-			"name": "text",
-			"label": "Text",
-			"component": "Runtime.Widget.Input",
-		},
-		new ParameterComponent
-		{
-			"name": "target",
-			"label": "Target",
-			"component": "Runtime.Widget.Select",
-			"default": "_self",
-			"props": {
-				"options": [
-					{"key": "_self", "value": "self"},
-					{"key": "_blank", "value": "blank"},
-				],
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "href",
+				"label": "Href",
+				"component": "Runtime.Widget.Input",
 			}
-		},
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "text",
+				"label": "Text",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "target",
+				"label": "Target",
+				"component": "Runtime.Widget.Select",
+				"default": "_self",
+				"props": {
+					"options": [
+						{"key": "_self", "value": "self"},
+						{"key": "_blank", "value": "blank"},
+					],
+				}
+			}
+		),
 	];
 	
 	

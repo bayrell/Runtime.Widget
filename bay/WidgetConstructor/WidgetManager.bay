@@ -30,8 +30,8 @@ use Runtime.Widget.WidgetConstructor.Settings.LinkSettings;
 use Runtime.Widget.WidgetConstructor.Settings.SectionSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextImageSettings;
 use Runtime.Widget.WidgetConstructor.Settings.TextSettings;
-use BayLang.Constructor.Frontend.Annotations.WidgetManagerInterface;
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerInterface;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 
 
 class WidgetManager extends BaseObject implements WidgetManagerInterface
@@ -54,30 +54,5 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 			new TextImageSettings(),
 			new TextSettings(),
 		];
-	}
-	
-	
-	/**
-	 * Allow param class name
-	 */
-	bool allowParamClassName(string class_name)
-	{
-		if (class_name == "Runtime.Widget.Input") return true;
-		if (class_name == "Runtime.Widget.Select") return true;
-		if (class_name == "Runtime.Widget.SortableList") return true;
-		if (class_name == "Runtime.Widget.Tag") return true;
-		if (class_name == "Runtime.Widget.TextArea") return true;
-		if (class_name == "Runtime.Widget.TextEditable") return true;
-		if (class_name == "Runtime.Widget.WidgetConstructor.Params.FormFields") return true;
-		return false;
-	}
-	
-	
-	/**
-	 * Add components
-	 */
-	void addComponents(BaseLayoutModel layout)
-	{
-		layout.addComponent("Runtime.Widget.WidgetConstructor.Params.FormFields");
 	}
 }

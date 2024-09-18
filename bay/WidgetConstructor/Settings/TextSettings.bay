@@ -18,10 +18,9 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
-use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterComponent;
-use BayLang.Constructor.Frontend.Editor.Widget;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
 class TextSettings implements WidgetSettingsInterface
@@ -41,7 +40,7 @@ class TextSettings implements WidgetSettingsInterface
 	/**
 	 * Can drag
 	 */
-	bool canDrag(Widget widget, string kind)
+	bool canDrag(var widget, string kind)
 	{
 		if (kind == "into") return false;
 		return true;
@@ -51,47 +50,56 @@ class TextSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Parameter> getParams() =>
+	Collection<Factory> getParams() =>
 	[
-		new ParameterComponent
-		{
-			"name": "tag",
-			"label": "Tag",
-			"component": "Runtime.Widget.Select",
-			"default": "text",
-			"props": {
-				"options": [
-					{"key": "text", "value": "Text"},
-					{"key": "h1", "value": "H1"},
-					{"key": "h2", "value": "H2"},
-					{"key": "h3", "value": "H3"},
-					{"key": "h4", "value": "H4"},
-				],
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "tag",
+				"label": "Tag",
+				"component": "Runtime.Widget.Select",
+				"default": "text",
+				"props": {
+					"options": [
+						{"key": "text", "value": "Text"},
+						{"key": "h1", "value": "H1"},
+						{"key": "h2", "value": "H2"},
+						{"key": "h3", "value": "H3"},
+						{"key": "h4", "value": "H4"},
+					],
+				}
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "raw",
-			"label": "Raw",
-			"component": "Runtime.Widget.Select",
-			"default": "false",
-			"props": {
-				"options": [
-					{"key": "false", "value": "No"},
-					{"key": "true", "value": "Yes"},
-				],
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "raw",
+				"label": "Raw",
+				"component": "Runtime.Widget.Select",
+				"default": "false",
+				"props": {
+					"options": [
+						{"key": "false", "value": "No"},
+						{"key": "true", "value": "Yes"},
+					],
+				}
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "content",
-			"label": "Content",
-			"component": "Runtime.Widget.TextEditable",
-			"default": "Text",
-			"props": {
-				"direct_update": true,
-			},
-		},
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "content",
+				"label": "Content",
+				"component": "Runtime.Widget.TextEditable",
+				"default": "Text",
+				"props": {
+					"direct_update": true,
+				},
+			}
+		),
 	];
 	
 	

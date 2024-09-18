@@ -19,12 +19,11 @@
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
 use Runtime.Web.BaseModel;
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
-use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterDictModel;
-use BayLang.Constructor.Frontend.Editor.ParameterFactoryModel;
-use BayLang.Constructor.Frontend.Editor.ParameterModel;
-use BayLang.Constructor.Frontend.Editor.Widget;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
 class FormModelSettings implements WidgetSettingsInterface
@@ -44,7 +43,7 @@ class FormModelSettings implements WidgetSettingsInterface
 	/**
 	 * Can drag
 	 */
-	bool canDrag(Widget widget, string kind)
+	bool canDrag(var widget, string kind)
 	{
 		if (kind == "into") return false;
 		return true;
@@ -54,42 +53,51 @@ class FormModelSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Parameter> getParams() =>
+	Collection<Factory> getParams() =>
 	[
-		new ParameterFactoryModel
-		{
-			"name": "storage",
-			"path": "api_name",
-			"label": "API name",
-			"component": "Runtime.Widget.Input",
-		},
-		new ParameterDictModel
-		{
-			"name": "submit_button_text",
-			"path": ["submit_button", "text"],
-			"label": "Button text",
-			"component": "Runtime.Widget.Input",
-			"onChange": void (var iframeWindow, BaseModel widget, Parameter param)
+		new Factory
+		(
+			new ParameterFactoryModel,
 			{
-				var value = param.value;
-				var submit_button = widget.bottom_buttons.getWidget("submit");
-				submit_button.content = value;
-			},
-		},
-		new ParameterModel
-		{
-			"name": "fields",
-			"label": "Fields",
-			"component": "Runtime.Widget.WidgetConstructor.Params.FormFields",
-			"default":
-			[
+				"name": "storage",
+				"path": "api_name",
+				"label": "API name",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new Factory
+		(
+			new ParameterDictModel,
+			{
+				"name": "submit_button_text",
+				"path": ["submit_button", "text"],
+				"label": "Button text",
+				"component": "Runtime.Widget.Input",
+				"onChange": void (var iframeWindow, BaseModel widget, ParameterDictModel param)
 				{
-					"name": "name",
-					"label": "Username",
-					"component": "Runtime.Widget.Input",
+					var value = param.value;
+					var submit_button = widget.bottom_buttons.getWidget("submit");
+					submit_button.content = value;
 				},
-			],
-		},
+			}
+		),
+		new Factory
+		(
+			new ParameterModel,
+			{
+				"name": "fields",
+				"label": "Fields",
+				"component": "Runtime.Widget.WidgetConstructor.Params.FormFields",
+				"default":
+				[
+					{
+						"name": "name",
+						"label": "Username",
+						"component": "Runtime.Widget.Input",
+					},
+				],
+			}
+		),
 	];
 	
 	

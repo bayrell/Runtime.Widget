@@ -18,10 +18,9 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
-use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterComponent;
-use BayLang.Constructor.Frontend.Editor.Widget;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
 class ImageSettings implements WidgetSettingsInterface
@@ -41,7 +40,7 @@ class ImageSettings implements WidgetSettingsInterface
 	/**
 	 * Can drag
 	 */
-	bool canDrag(Widget widget, string kind)
+	bool canDrag(var widget, string kind)
 	{
 		if (kind == "into") return false;
 		return true;
@@ -51,25 +50,31 @@ class ImageSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Parameter> getParams() =>
+	Collection<Factory> getParams() =>
 	[
-		new ParameterComponent
-		{
-			"name": "image",
-			"label": "Image",
-			"component": "Runtime.Widget.Input",
-		},
-		new ParameterComponent
-		{
-			"name": "image_absolute",
-			"label": "Absolute image path",
-			"component": "Runtime.Widget.Select",
-			"options":
-			[
-				{"key": "false", "value": "No"},
-				{"key": "true", "value": "Yes"},
-			],
-		},
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "image",
+				"label": "Image",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "image_absolute",
+				"label": "Absolute image path",
+				"component": "Runtime.Widget.Select",
+				"options":
+				[
+					{"key": "false", "value": "No"},
+					{"key": "true", "value": "Yes"},
+				],
+			}
+		),
 	];
 	
 	

@@ -18,10 +18,9 @@
 
 namespace Runtime.Widget.WidgetConstructor.Settings;
 
-use BayLang.Constructor.Frontend.Annotations.WidgetSettingsInterface;
-use BayLang.Constructor.Frontend.Editor.Parameter;
-use BayLang.Constructor.Frontend.Editor.ParameterComponent;
-use BayLang.Constructor.Frontend.Editor.Widget;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
 class SectionSettings implements WidgetSettingsInterface
@@ -41,7 +40,7 @@ class SectionSettings implements WidgetSettingsInterface
 	/**
 	 * Can drag
 	 */
-	bool canDrag(Widget widget, string kind)
+	bool canDrag(var widget, string kind)
 	{
 		return true;
 	}
@@ -50,97 +49,109 @@ class SectionSettings implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Parameter> getParams() =>
+	Collection<Factory> getParams() =>
 	[
-		new ParameterComponent
-		{
-			"name": "wrap",
-			"label": "Wrap",
-			"component": "Runtime.Widget.Select",
-			"props": {
-				"options": [
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "wrap",
+				"label": "Wrap",
+				"component": "Runtime.Widget.Select",
+				"props": {
+					"options": [
+						{"key": "false", "value": "No"},
+						{"key": "true", "value": "Yes"},
+					],
+				}
+			}
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "image_absolute",
+				"label": "Absolute image path",
+				"component": "Runtime.Widget.Select",
+				"options":
+				[
 					{"key": "false", "value": "No"},
 					{"key": "true", "value": "Yes"},
 				],
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "image",
-			"label": "Image",
-			"component": "Runtime.Widget.Input",
-		},
-		new ParameterComponent
-		{
-			"name": "image_absolute",
-			"label": "Absolute image path",
-			"component": "Runtime.Widget.Select",
-			"options":
-			[
-				{"key": "false", "value": "No"},
-				{"key": "true", "value": "Yes"},
-			],
-		},
-		new ParameterComponent
-		{
-			"name": "flex",
-			"label": "Flex",
-			"component": "Runtime.Widget.Select",
-			"props": {
-				"options": [
-					{"key": "false", "value": "No"},
-					{"key": "true", "value": "Yes"},
-				],
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "flex",
+				"label": "Flex",
+				"component": "Runtime.Widget.Select",
+				"props": {
+					"options": [
+						{"key": "false", "value": "No"},
+						{"key": "true", "value": "Yes"},
+					],
+				}
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "align_items",
-			"label": "Align items",
-			"component": "Runtime.Widget.Select",
-			"props": {
-				"options": [
-					{"key": "baseline", "value": "baseline"},
-					{"key": "center", "value": "center"},
-					{"key": "end", "value": "end"},
-					{"key": "flex-end", "value": "flex-end"},
-					{"key": "flex-start", "value": "flex-start"},
-					{"key": "start", "value": "start"},
-					{"key": "stretch", "value": "stretch"},
-					{"key": "revert", "value": "revert"},
-				],
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "align_items",
+				"label": "Align items",
+				"component": "Runtime.Widget.Select",
+				"props": {
+					"options": [
+						{"key": "baseline", "value": "baseline"},
+						{"key": "center", "value": "center"},
+						{"key": "end", "value": "end"},
+						{"key": "flex-end", "value": "flex-end"},
+						{"key": "flex-start", "value": "flex-start"},
+						{"key": "start", "value": "start"},
+						{"key": "stretch", "value": "stretch"},
+						{"key": "revert", "value": "revert"},
+					],
+				}
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "justify_content",
-			"label": "Justify content",
-			"component": "Runtime.Widget.Select",
-			"props": {
-				"options": [
-					{"key": "left", "value": "left"},
-					{"key": "center", "value": "center"},
-					{"key": "right", "value": "right"},
-					{"key": "space-around", "value": "space-around"},
-					{"key": "space-between", "value": "space-between"},
-					{"key": "start", "value": "start"},
-					{"key": "stretch", "value": "stretch"},
-					{"key": "end", "value": "end"},
-				],
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "justify_content",
+				"label": "Justify content",
+				"component": "Runtime.Widget.Select",
+				"props": {
+					"options": [
+						{"key": "left", "value": "left"},
+						{"key": "center", "value": "center"},
+						{"key": "right", "value": "right"},
+						{"key": "space-around", "value": "space-around"},
+						{"key": "space-between", "value": "space-between"},
+						{"key": "start", "value": "start"},
+						{"key": "stretch", "value": "stretch"},
+						{"key": "end", "value": "end"},
+					],
+				}
 			}
-		},
-		new ParameterComponent
-		{
-			"name": "flex_wrap",
-			"label": "Flex wrap",
-			"component": "Runtime.Widget.Select",
-			"props": {
-				"options": [
-					{"key": "nowrap", "value": "nowrap"},
-					{"key": "wrap", "value": "wrap"},
-				],
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "flex_wrap",
+				"label": "Flex wrap",
+				"component": "Runtime.Widget.Select",
+				"props": {
+					"options": [
+						{"key": "nowrap", "value": "nowrap"},
+						{"key": "wrap", "value": "wrap"},
+					],
+				}
 			}
-		}
+		),
 	];
 	
 	
