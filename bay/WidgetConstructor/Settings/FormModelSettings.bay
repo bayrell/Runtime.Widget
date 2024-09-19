@@ -57,7 +57,7 @@ class FormModelSettings implements WidgetSettingsInterface
 	[
 		new Factory
 		(
-			new ParameterFactoryModel,
+			classof ParameterFactoryModel,
 			{
 				"name": "storage",
 				"path": "api_name",
@@ -67,7 +67,7 @@ class FormModelSettings implements WidgetSettingsInterface
 		),
 		new Factory
 		(
-			new ParameterDictModel,
+			classof ParameterDictModel,
 			{
 				"name": "submit_button_text",
 				"path": ["submit_button", "text"],
@@ -83,7 +83,7 @@ class FormModelSettings implements WidgetSettingsInterface
 		),
 		new Factory
 		(
-			new ParameterModel,
+			classof ParameterModel,
 			{
 				"name": "fields",
 				"label": "Fields",
