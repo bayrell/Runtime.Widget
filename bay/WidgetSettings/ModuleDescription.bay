@@ -16,54 +16,49 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings;
 
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
-use Runtime.Entity.Factory;
+use Runtime.Entity.Hook;
+use Runtime.Widget.WidgetSettings.WidgetManager;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerAnnotation;
 
 
-class FormSettings implements WidgetSettingsInterface
+static class ModuleDescription
 {
 	/**
-	 * Returns widgets list
+	 * Returns module name
+	 * @return string
 	 */
-	string getName() => "Runtime.Widget.Form.Form";
-	
-	
-	/**
-	 * Returns short name
-	 */
-	string getShortName() => "form";
-	
-	
-	/**
-	 * Can drag
-	 */
-	bool canDrag(var widget, string kind)
+	public static string getModuleName()
 	{
-		if (kind == "into") return false;
-		return true;
+		return "Runtime.Widget.WidgetSettings";
 	}
 	
 	
 	/**
-	 * Returns model name
+	 * Returns module name
+	 * @return string
 	 */
-	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";
+	public static string getModuleVersion()
+	{
+		return "0.12.1";
+	}
 	
 	
 	/**
-	 * Returns params
+	 * Returns required modules
+	 * @return Map<string>
 	 */
-	Collection<Factory> getParams() =>
-	[
-	];
-	
-	
-	/**
-	 * Returns default template
-	 */
-	Dict<fn> getDefaultTemplate() =>
+	pure Map<string> requiredModules() => 
 	{
 	};
+	
+	
+	/**
+	 * Returns enities
+	 */
+	pure Collection<Dict> entities() =>
+	[
+		new WidgetManagerAnnotation(classof WidgetManager),
+	];
 }

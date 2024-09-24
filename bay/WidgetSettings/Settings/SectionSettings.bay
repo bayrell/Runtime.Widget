@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
@@ -26,21 +26,27 @@ use Runtime.Entity.Factory;
 class SectionSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Section";
+	string getWidgetName() => "Section";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "section";
+	string getComponentName() => "Runtime.Widget.Section";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "section";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
 		return true;
 	}

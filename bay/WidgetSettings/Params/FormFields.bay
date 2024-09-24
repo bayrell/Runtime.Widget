@@ -16,7 +16,7 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.WidgetConstructor.Params.FormFields"
+<class name="Runtime.Widget.WidgetSettings.Params.FormFields"
 	extends="Runtime.Widget.SortableList"
 >
 

@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 use Runtime.Entity.Factory;
@@ -24,34 +24,39 @@ use Runtime.Entity.Factory;
 
 class TextImageSettings implements WidgetSettingsInterface
 {
-    /**
-	 * Returns widgets list
-	 */
-	string getName() => "Runtime.Widget.TextImage";
-    
-	
 	/**
-	 * Returns short name
+	 * Returns widget name
 	 */
-	string getShortName() => "text_image";
+	string getWidgetName() => "TextImage";
 	
 	
 	/**
-	 * Can drag
+	 * Returns component name
 	 */
-	bool canDrag(var widget, string kind)
+	string getComponentName() => "Runtime.Widget.TextImage";
+	
+	
+	/**
+	 * Returns selector name
+	 */
+	string getSelectorName() => "text_image";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
-    
-    /**
+	
+	/**
 	 * Returns params
 	 */
 	Collection<Factory> getParams() =>
 	[
-    ];
+	];
 	
 	
 	/**

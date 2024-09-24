@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.Web.BaseModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
@@ -29,24 +29,29 @@ use Runtime.Entity.Factory;
 class FormModelSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Form.FormSubmitModel";
+	string getWidgetName() => "Form";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "form";
+	string getComponentName() => "Runtime.Widget.Form.FormSubmitModel";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "form";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
 	
@@ -87,7 +92,7 @@ class FormModelSettings implements WidgetSettingsInterface
 			{
 				"name": "fields",
 				"label": "Fields",
-				"component": "Runtime.Widget.WidgetConstructor.Params.FormFields",
+				"component": "Runtime.Widget.WidgetSettings.Params.FormFields",
 				"default":
 				[
 					{

@@ -16,34 +16,39 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 use Runtime.Entity.Factory;
 
 
-class LinkSettings implements WidgetSettingsInterface
+class TextSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Link";
+	string getWidgetName() => "Text";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "link";
+	string getComponentName() => "Runtime.Widget.Text";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "text";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
 	
@@ -56,34 +61,48 @@ class LinkSettings implements WidgetSettingsInterface
 		(
 			classof ParameterComponent,
 			{
-				"name": "href",
-				"label": "Href",
-				"component": "Runtime.Widget.Input",
-			}
-		),
-		new Factory
-		(
-			classof ParameterComponent,
-			{
-				"name": "text",
-				"label": "Text",
-				"component": "Runtime.Widget.Input",
-			}
-		),
-		new Factory
-		(
-			classof ParameterComponent,
-			{
-				"name": "target",
-				"label": "Target",
+				"name": "tag",
+				"label": "Tag",
 				"component": "Runtime.Widget.Select",
-				"default": "_self",
+				"default": "text",
 				"props": {
 					"options": [
-						{"key": "_self", "value": "self"},
-						{"key": "_blank", "value": "blank"},
+						{"key": "text", "value": "Text"},
+						{"key": "h1", "value": "H1"},
+						{"key": "h2", "value": "H2"},
+						{"key": "h3", "value": "H3"},
+						{"key": "h4", "value": "H4"},
 					],
 				}
+			}
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "raw",
+				"label": "Raw",
+				"component": "Runtime.Widget.Select",
+				"default": "false",
+				"props": {
+					"options": [
+						{"key": "false", "value": "No"},
+						{"key": "true", "value": "Yes"},
+					],
+				}
+			}
+		),
+		new Factory
+		(
+			classof ParameterComponent,
+			{
+				"name": "content",
+				"label": "Content",
+				"component": "Runtime.Widget.TextEditable",
+				"default": "Text",
+				"props": {
+					"direct_update": true,
+				},
 			}
 		),
 	];

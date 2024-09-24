@@ -16,34 +16,39 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 use Runtime.Entity.Factory;
 
 
-class ButtonSettings implements WidgetSettingsInterface
+class ImageSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Button";
+	string getWidgetName() => "Image";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "button";
+	string getComponentName() => "Runtime.Widget.Image";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "image";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
 	
@@ -56,26 +61,23 @@ class ButtonSettings implements WidgetSettingsInterface
 		(
 			classof ParameterComponent,
 			{
-				"name": "type",
-				"label": "Type",
+				"name": "image",
+				"label": "Image",
 				"component": "Runtime.Widget.Input",
-				"default": "button",
 			}
 		),
 		new Factory
 		(
 			classof ParameterComponent,
 			{
-				"name": "target",
-				"label": "Target",
+				"name": "image_absolute",
+				"label": "Absolute image path",
 				"component": "Runtime.Widget.Select",
-				"default": "_self",
-				"props": {
-					"options": [
-						{"key": "_self", "value": "self"},
-						{"key": "_blank", "value": "blank"},
-					],
-				}
+				"options":
+				[
+					{"key": "false", "value": "No"},
+					{"key": "true", "value": "Yes"},
+				],
 			}
 		),
 	];

@@ -16,49 +16,59 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
-use Runtime.Entity.Hook;
-use Runtime.Widget.WidgetConstructor.WidgetManager;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerAnnotation;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.Entity.Factory;
 
 
-static class ModuleDescription
+class FormSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns widget name
 	 */
-	public static string getModuleName()
+	string getWidgetName() => "Form";
+	
+	
+	/**
+	 * Returns component name
+	 */
+	string getComponentName() => "Runtime.Widget.Form.Form";
+	
+	
+	/**
+	 * Returns selector name
+	 */
+	string getSelectorName() => "form";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		return "Runtime.Widget.WidgetConstructor";
+		return false;
 	}
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns model name
 	 */
-	public static string getModuleVersion()
-	{
-		return "0.12.1";
-	}
+	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";
 	
 	
 	/**
-	 * Returns required modules
-	 * @return Map<string>
+	 * Returns params
 	 */
-	pure Map<string> requiredModules() => 
+	Collection<Factory> getParams() =>
+	[
+	];
+	
+	
+	/**
+	 * Returns default template
+	 */
+	Dict<fn> getDefaultTemplate() =>
 	{
 	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new WidgetManagerAnnotation(classof WidgetManager),
-	];
 }

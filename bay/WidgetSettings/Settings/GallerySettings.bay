@@ -16,34 +16,38 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
-use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 use Runtime.Entity.Factory;
 
 
-class ImageSettings implements WidgetSettingsInterface
+class GallerySettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Image";
+	string getWidgetName() => "Gallery";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "image";
+	string getComponentName() => "Runtime.Widget.Gallery.Gallery";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "gallery";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
 	
@@ -52,29 +56,6 @@ class ImageSettings implements WidgetSettingsInterface
 	 */
 	Collection<Factory> getParams() =>
 	[
-		new Factory
-		(
-			classof ParameterComponent,
-			{
-				"name": "image",
-				"label": "Image",
-				"component": "Runtime.Widget.Input",
-			}
-		),
-		new Factory
-		(
-			classof ParameterComponent,
-			{
-				"name": "image_absolute",
-				"label": "Absolute image path",
-				"component": "Runtime.Widget.Select",
-				"options":
-				[
-					{"key": "false", "value": "No"},
-					{"key": "true", "value": "Yes"},
-				],
-			}
-		),
 	];
 	
 	

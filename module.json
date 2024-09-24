@@ -79,7 +79,7 @@
 			"type": "module"
 		},
 		{
-			"src": "bay/WidgetConstructor",
+			"src": "bay/WidgetSettings",
 			"type": "module"
 		}
 	],

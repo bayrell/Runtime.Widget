@@ -16,20 +16,20 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor;
+namespace Runtime.Widget.WidgetSettings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
-use Runtime.Widget.WidgetConstructor.Settings.ButtonSettings;
-use Runtime.Widget.WidgetConstructor.Settings.ContainerSettings;
-use Runtime.Widget.WidgetConstructor.Settings.FormModelSettings;
-use Runtime.Widget.WidgetConstructor.Settings.FormSettings;
-use Runtime.Widget.WidgetConstructor.Settings.GallerySettings;
-use Runtime.Widget.WidgetConstructor.Settings.ImageSettings;
-use Runtime.Widget.WidgetConstructor.Settings.LinkSettings;
-use Runtime.Widget.WidgetConstructor.Settings.SectionSettings;
-use Runtime.Widget.WidgetConstructor.Settings.TextImageSettings;
-use Runtime.Widget.WidgetConstructor.Settings.TextSettings;
+use Runtime.Widget.WidgetSettings.Settings.ButtonSettings;
+use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
+use Runtime.Widget.WidgetSettings.Settings.FormModelSettings;
+use Runtime.Widget.WidgetSettings.Settings.FormSettings;
+use Runtime.Widget.WidgetSettings.Settings.GallerySettings;
+use Runtime.Widget.WidgetSettings.Settings.ImageSettings;
+use Runtime.Widget.WidgetSettings.Settings.LinkSettings;
+use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
+use Runtime.Widget.WidgetSettings.Settings.TextImageSettings;
+use Runtime.Widget.WidgetSettings.Settings.TextSettings;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 

@@ -1,5 +1,5 @@
 {
-	"name": "Runtime.Widget.WidgetConstructor",
+	"name": "Runtime.Widget.WidgetSettings",
 	"assets":
 	[
 		"Params/FormFields.bay",
@@ -24,8 +24,8 @@
 	"src": "./",
 	"dest":
 	{
-		"php": "./../../php/WidgetConstructor",
-		"es6": "./../../es6/WidgetConstructor"
+		"php": "./../../php/WidgetSettings",
+		"es6": "./../../es6/WidgetSettings"
 	},
 	"allow":
 	[

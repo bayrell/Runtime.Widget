@@ -16,34 +16,39 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetConstructor.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings;
 
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 use Runtime.Entity.Factory;
 
 
-class TextSettings implements WidgetSettingsInterface
+class LinkSettings implements WidgetSettingsInterface
 {
 	/**
-	 * Returns widgets list
+	 * Returns widget name
 	 */
-	string getName() => "Runtime.Widget.Text";
+	string getWidgetName() => "Link";
 	
 	
 	/**
-	 * Returns short name
+	 * Returns component name
 	 */
-	string getShortName() => "text";
+	string getComponentName() => "Runtime.Widget.Link";
 	
 	
 	/**
-	 * Can drag
+	 * Returns selector name
 	 */
-	bool canDrag(var widget, string kind)
+	string getSelectorName() => "link";
+	
+	
+	/**
+	 * Can insert widget
+	 */
+	bool canInsert(var widget)
 	{
-		if (kind == "into") return false;
-		return true;
+		return false;
 	}
 	
 	
@@ -56,48 +61,34 @@ class TextSettings implements WidgetSettingsInterface
 		(
 			classof ParameterComponent,
 			{
-				"name": "tag",
-				"label": "Tag",
-				"component": "Runtime.Widget.Select",
-				"default": "text",
-				"props": {
-					"options": [
-						{"key": "text", "value": "Text"},
-						{"key": "h1", "value": "H1"},
-						{"key": "h2", "value": "H2"},
-						{"key": "h3", "value": "H3"},
-						{"key": "h4", "value": "H4"},
-					],
-				}
+				"name": "href",
+				"label": "Href",
+				"component": "Runtime.Widget.Input",
 			}
 		),
 		new Factory
 		(
 			classof ParameterComponent,
 			{
-				"name": "raw",
-				"label": "Raw",
-				"component": "Runtime.Widget.Select",
-				"default": "false",
-				"props": {
-					"options": [
-						{"key": "false", "value": "No"},
-						{"key": "true", "value": "Yes"},
-					],
-				}
+				"name": "text",
+				"label": "Text",
+				"component": "Runtime.Widget.Input",
 			}
 		),
 		new Factory
 		(
 			classof ParameterComponent,
 			{
-				"name": "content",
-				"label": "Content",
-				"component": "Runtime.Widget.TextEditable",
-				"default": "Text",
+				"name": "target",
+				"label": "Target",
+				"component": "Runtime.Widget.Select",
+				"default": "_self",
 				"props": {
-					"direct_update": true,
-				},
+					"options": [
+						{"key": "_self", "value": "self"},
+						{"key": "_blank", "value": "blank"},
+					],
+				}
 			}
 		),
 	];
