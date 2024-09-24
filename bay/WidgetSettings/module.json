@@ -11,6 +11,7 @@
 		"Settings/ImageSettings.bay",
 		"Settings/LinkSettings.bay",
 		"Settings/SectionSettings.bay",
+		"Settings/TemplateSettings.bay",
 		"Settings/TextImageSettings.bay",
 		"Settings/TextSettings.bay",
 		"WidgetManager.bay",

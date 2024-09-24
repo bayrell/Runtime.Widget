@@ -18,11 +18,12 @@
 
 namespace Runtime.Widget.WidgetSettings.Settings;
 
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use Runtime.BaseObject;
 use Runtime.Entity.Factory;
+use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 
 
-class GallerySettings implements WidgetSettingsInterface
+class GallerySettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
@@ -45,7 +46,7 @@ class GallerySettings implements WidgetSettingsInterface
 	/**
 	 * Can insert widget
 	 */
-	bool canInsert(var widget)
+	bool canInsert(WidgetSettingsInterface widget)
 	{
 		return false;
 	}

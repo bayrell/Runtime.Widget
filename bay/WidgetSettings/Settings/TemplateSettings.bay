@@ -20,27 +20,29 @@ namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
 use Runtime.Entity.Factory;
+use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
 
 
-class FormSettings extends BaseObject implements WidgetSettingsInterface
+class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Form";
+	string getWidgetName() => "Template";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Form.Form";
+	string getComponentName() => null;
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "form";
+	string getSelectorName() => "template";
 	
 	
 	/**
@@ -48,14 +50,9 @@ class FormSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
+		if (widget instanceof SectionSettings) return true;
 		return false;
 	}
-	
-	
-	/**
-	 * Returns model name
-	 */
-	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";
 	
 	
 	/**
@@ -71,5 +68,8 @@ class FormSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Dict<fn> getDefaultTemplate() =>
 	{
+		"default": Dict () =>
+		{
+		},
 	};
 }

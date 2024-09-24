@@ -18,12 +18,13 @@
 
 namespace Runtime.Widget.WidgetSettings.Settings;
 
+use Runtime.BaseObject;
+use Runtime.Entity.Factory;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
-use Runtime.Entity.Factory;
 
 
-class ButtonSettings implements WidgetSettingsInterface
+class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
@@ -46,7 +47,7 @@ class ButtonSettings implements WidgetSettingsInterface
 	/**
 	 * Can insert widget
 	 */
-	bool canInsert(var widget)
+	bool canInsert(WidgetSettingsInterface widget)
 	{
 		return false;
 	}

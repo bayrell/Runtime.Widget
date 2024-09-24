@@ -18,15 +18,16 @@
 
 namespace Runtime.Widget.WidgetSettings.Settings;
 
+use Runtime.BaseObject;
+use Runtime.Entity.Factory;
 use Runtime.Web.BaseModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
 use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
-use Runtime.Entity.Factory;
 
 
-class FormModelSettings implements WidgetSettingsInterface
+class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
@@ -49,7 +50,7 @@ class FormModelSettings implements WidgetSettingsInterface
 	/**
 	 * Can insert widget
 	 */
-	bool canInsert(var widget)
+	bool canInsert(WidgetSettingsInterface widget)
 	{
 		return false;
 	}
