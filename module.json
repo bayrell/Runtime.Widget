@@ -59,10 +59,6 @@
 			"type": "module"
 		},
 		{
-			"src": "bay/Gallery",
-			"type": "module"
-		},
-		{
 			"src": "bay/Seo",
 			"type": "module"
 		},

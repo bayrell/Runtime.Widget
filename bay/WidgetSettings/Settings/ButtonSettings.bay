@@ -19,9 +19,9 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
-use Runtime.Entity.Factory;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.ParameterFactory;
+use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class ButtonSettings extends BaseObject implements WidgetSettingsInterface
@@ -56,9 +56,9 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Factory> getParams() =>
+	Collection<ParameterFactory> getParams() =>
 	[
-		new Factory
+		new ParameterFactory
 		(
 			classof ParameterComponent,
 			{
@@ -68,7 +68,7 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 				"default": "button",
 			}
 		),
-		new Factory
+		new ParameterFactory
 		(
 			classof ParameterComponent,
 			{

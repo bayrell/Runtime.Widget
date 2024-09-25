@@ -2,12 +2,10 @@
 	"name": "Runtime.Widget.WidgetSettings",
 	"assets":
 	[
-		"Params/FormFields.bay",
 		"Settings/ButtonSettings.bay",
 		"Settings/ContainerSettings.bay",
 		"Settings/FormModelSettings.bay",
 		"Settings/FormSettings.bay",
-		"Settings/GallerySettings.bay",
 		"Settings/ImageSettings.bay",
 		"Settings/LinkSettings.bay",
 		"Settings/SectionSettings.bay",

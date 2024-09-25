@@ -20,7 +20,7 @@ namespace Runtime.Widget.WidgetSettings;
 
 use Runtime.Entity.Hook;
 use Runtime.Widget.WidgetSettings.WidgetManager;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerAnnotation;
+use BayLang.Constructor.WidgetPage.WidgetManagerAnnotation;
 
 
 static class ModuleDescription

@@ -19,8 +19,8 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
-use Runtime.Entity.Factory;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.ParameterFactory;
+use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class TextImageSettings extends BaseObject implements WidgetSettingsInterface
@@ -55,7 +55,7 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Factory> getParams() =>
+	Collection<ParameterFactory> getParams() =>
 	[
 	];
 	

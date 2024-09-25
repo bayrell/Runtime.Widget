@@ -19,10 +19,10 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
-use Runtime.Entity.Factory;
 use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.ParameterFactory;
+use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class TemplateSettings extends BaseObject implements WidgetSettingsInterface
@@ -58,7 +58,7 @@ class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Factory> getParams() =>
+	Collection<ParameterFactory> getParams() =>
 	[
 	];
 	

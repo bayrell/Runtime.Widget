@@ -24,15 +24,14 @@ use Runtime.Widget.WidgetSettings.Settings.ButtonSettings;
 use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormModelSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSettings;
-use Runtime.Widget.WidgetSettings.Settings.GallerySettings;
 use Runtime.Widget.WidgetSettings.Settings.ImageSettings;
 use Runtime.Widget.WidgetSettings.Settings.LinkSettings;
 use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
 use Runtime.Widget.WidgetSettings.Settings.TemplateSettings;
 use Runtime.Widget.WidgetSettings.Settings.TextImageSettings;
 use Runtime.Widget.WidgetSettings.Settings.TextSettings;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetManagerInterface;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
+use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class WidgetManager extends BaseObject implements WidgetManagerInterface
@@ -48,7 +47,6 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 			new ContainerSettings(),
 			new FormModelSettings(),
 			new FormSettings(),
-			new GallerySettings(),
 			new ImageSettings(),
 			new LinkSettings(),
 			new SectionSettings(),

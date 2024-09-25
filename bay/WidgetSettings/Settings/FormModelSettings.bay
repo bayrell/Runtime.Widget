@@ -19,12 +19,12 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
-use Runtime.Entity.Factory;
 use Runtime.Web.BaseModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
-use BayLang.Constructor.WidgetPage.Annotations.WidgetSettingsInterface;
+use BayLang.Constructor.WidgetPage.ParameterFactory;
+use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class FormModelSettings extends BaseObject implements WidgetSettingsInterface
@@ -59,9 +59,9 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns params
 	 */
-	Collection<Factory> getParams() =>
+	Collection<ParameterFactory> getParams() =>
 	[
-		new Factory
+		new ParameterFactory
 		(
 			classof ParameterFactoryModel,
 			{
@@ -71,7 +71,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 				"component": "Runtime.Widget.Input",
 			}
 		),
-		new Factory
+		new ParameterFactory
 		(
 			classof ParameterDictModel,
 			{
@@ -87,7 +87,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 				},
 			}
 		),
-		new Factory
+		new ParameterFactory
 		(
 			classof ParameterModel,
 			{
