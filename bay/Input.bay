@@ -49,7 +49,7 @@
 		class="widget_input"
 		type={{ this.type }}
 		name={{ this.name }}
-		value={{ this.value }}
+		value={{ this.getValue() }}
 		placeholder={{ this.placeholder }}
 		@ref="input"
 		@event:change={{ this.onChange }}
@@ -65,9 +65,20 @@ props bool direct_update = false;
 props bool readonly = false;
 props string name = "";
 props string value = "";
+props string default = "";
 props string placeholder = "";
 props string type = "text";
 var change_timer = null;
+
+
+/**
+ * Returns value
+ */
+string getValue()
+{
+	if (this.value) return this.value;
+	return this.default;
+}
 
 
 /**

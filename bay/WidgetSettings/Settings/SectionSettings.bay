@@ -66,25 +66,12 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 				"label": "Wrap",
 				"component": "Runtime.Widget.Select",
 				"props": {
+					"show_select_value": false,
 					"options": [
 						{"key": "false", "value": "No"},
-						{"key": "true", "value": "Yes"},
+						{"key": "", "value": "Yes"},
 					],
 				}
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "image_absolute",
-				"label": "Absolute image path",
-				"component": "Runtime.Widget.Select",
-				"options":
-				[
-					{"key": "false", "value": "No"},
-					{"key": "true", "value": "Yes"},
-				],
 			}
 		),
 		new ParameterFactory
@@ -95,8 +82,9 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 				"label": "Flex",
 				"component": "Runtime.Widget.Select",
 				"props": {
+					"show_select_value": false,
 					"options": [
-						{"key": "false", "value": "No"},
+						{"key": "", "value": "No"},
 						{"key": "true", "value": "Yes"},
 					],
 				}
@@ -157,6 +145,24 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 						{"key": "wrap", "value": "wrap"},
 					],
 				}
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "min_height",
+				"label": "min_height",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "height",
+				"label": "height",
+				"component": "Runtime.Widget.Input",
 			}
 		),
 	];

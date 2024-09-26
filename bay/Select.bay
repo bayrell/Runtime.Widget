@@ -49,11 +49,12 @@
 	
 	<select name={{ this.name }} class="widget_select" @event:change={{ this.onChange }}>
 	
+	%set string value = this.getValue();
 	%set Vector options = this.getOptions();
 	%set Dict selected = {};
 	%if (this.show_select_value === true or this.show_select_value == "true")
 	{
-		%if (this.value === "" or this.value === null)
+		%if (value === "" or value === null)
 		{
 			%set selected = { "selected": "selected" };
 		}
@@ -66,7 +67,7 @@
 		{
 			%set Dict item = options.get(i);
 			%set selected = {};
-			%if (item.get("key") == this.value and this.value !== "" and this.value !== null)
+			%if (item.get("key") == value and value !== "" and value !== null)
 			{
 				%set selected = { "selected": "selected" };
 			}
@@ -85,8 +86,19 @@
 
 props string name = "";
 props string value = "";
+props string default = "";
 props Vector options = null;
 props var show_select_value = true;
+
+
+/**
+ * Returns value
+ */
+string getValue()
+{
+	if (this.value) return this.value;
+	return this.default;
+}
 
 
 /**

@@ -33,7 +33,7 @@
 
 <template>
 	<div class="widget_section" class={{ this.class }} style={{ this.getStyle() }}>
-		%if (this.wrap)
+		%if (this.wrap == "true")
 		{
 			<div class="widget_section__wrap" style={{ this.getWrapStyle() }}>
 				%render this.renderSlot("default");
@@ -50,11 +50,12 @@
 <script>
 
 props string wrap = "true";
-props string image = "";
 props string flex = "false";
 props string align_items = "";
 props string justify_content = "";
 props string flex_wrap = "";
+props string height = "";
+props string min_height = "";
 
 
 /**
@@ -65,15 +66,8 @@ string getStyle()
 	Dict res = [];
 	if (not this.wrap)
 	{
-		if (this.flex == "true")
-		{
-			res.push("display: flex;");
-			if (this.align_items) res.push("align-items: " ~ this.align_items);
-			if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
-			if (this.flex_wrap) res.push("flex-wrap: " ~ this.flex_wrap);
-		}
+		res.push(this.getWrapStyle());
 	}
-	if (this.image) res.push("background-image: url(" ~ this.layout.assets(this.image) ~ ")");
 	return rs::join(";", res);
 }
 
@@ -91,6 +85,8 @@ string getWrapStyle()
 		if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
 		if (this.flex_wrap) res.push("flex-wrap: " ~ this.flex_wrap);
 	}
+	if (this.height) res.push("height: " ~ this.height);
+	if (this.min_height) res.push("min-height: " ~ this.min_height);
 	return rs::join(";", res);
 }
 
