@@ -62,25 +62,11 @@ class ImageSettings extends BaseObject implements WidgetSettingsInterface
 		(
 			classof ParameterComponent,
 			{
-				"name": "image",
+				"name": "src",
 				"label": "Image",
-				"component": "Runtime.Widget.Input",
+				"component": "BayLang.Constructor.Frontend.Components.SelectImageButton",
 			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "image_absolute",
-				"label": "Absolute image path",
-				"component": "Runtime.Widget.Select",
-				"options":
-				[
-					{"key": "false", "value": "No"},
-					{"key": "true", "value": "Yes"},
-				],
-			}
-		),
+		)
 	];
 	
 	

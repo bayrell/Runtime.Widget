@@ -20,7 +20,12 @@
 
 
 <template>
-	<a class={{ this.class }} href={{ this.href }} target={{ this.target }}>{{ this.text }}</a>
+	%set Dict attrs = {};
+	%if (this.target != "")
+	{
+		%set attrs = attrs.set("target", this.target);
+	}
+	<a class={{ this.class }} href={{ this.href }} ...attrs>{{ this.text }}</a>
 </template>
 
 

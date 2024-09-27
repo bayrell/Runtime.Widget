@@ -130,7 +130,7 @@
 
 
 <template name="renderButtons">
-	%if (this.show_buttons)
+	%if (this.show_buttons == "true")
 	{
 		<div class="widget_sortable_list__buttons">
 			<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
@@ -150,7 +150,7 @@
 
 <script>
 
-props bool show_buttons = "";
+props string show_buttons = "true";
 props string name = "";
 props Collection<string> value = [];
 Collection old_value = [];
