@@ -93,7 +93,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 			{
 				"name": "fields",
 				"label": "Fields",
-				"component": "Runtime.Widget.WidgetSettings.Params.FormFields",
+				"component": "BayLang.Constructor.Frontend.Components.SortableParams",
 				"default":
 				[
 					{
@@ -102,6 +102,28 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 						"component": "Runtime.Widget.Input",
 					},
 				],
+				"props":
+				{
+					"fields":
+					[
+						{
+							"name": "name",
+							"label": "Field name",
+							"component": "Runtime.Widget.Input",
+						},
+						{
+							"name": "label",
+							"label": "Label",
+							"component": "Runtime.Widget.Input",
+						},
+						{
+							"name": "component",
+							"label": "Component",
+							"component": "Runtime.Widget.Input",
+							"default": "Runtime.Widget.Input",
+						},
+					]
+				},
 			}
 		),
 	];
