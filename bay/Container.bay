@@ -18,71 +18,10 @@
 
 <class name="Runtime.Widget.Container">
 
-
-<style>
-.widget_container--flex{
-	display: flex;
-}
-</style>
-
-
 <template>
-	<div class="widget_container" class={{ this.getClass() }} style={{ this.getStyle() }}>
+	<div class="widget_container" class={{ this.class }}>
 		%render this.renderSlot("default");
 	</div>
 </template>
-
-
-<script>
-
-props string flex = "false";
-props string align_items = "";
-props string justify_content = "";
-props string flex_wrap = "";
-
-
-/**
- * Returns class
- */
-string getClass()
-{
-	Collection<string> styles = [];
-	if (this.class) styles.push(this.class);
-	if (this.flex == "true") styles.push("widget_container--flex");
-	return rs::join(" ", styles);
-}
-
-
-/**
- * Returns style
- */
-string getStyle()
-{
-	Dict res = [];
-	if (this.align_items) res.push("align-items: " ~ this.align_items);
-	if (this.justify_content) res.push("justify-content: " ~ this.justify_content);
-	if (this.flex_wrap) res.push("flex-wrap: " ~ this.flex_wrap);
-	return rs::join(";", res);
-}
-
-
-/**
- * Returns default template
- */
-static void getDefaultTemplate() => {
-	"default": Dict () =>
-	{
-		"template": rs::join("\n", [
-			"<style>",
-			"padding-top: 10px;",
-			"padding-bottom: 10px;",
-			"padding-left: 0px;",
-			"padding-right: 0px;",
-			"</style>"
-		])
-	},
-};
-
-</script>
 
 </class>

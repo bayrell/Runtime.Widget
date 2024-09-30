@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
@@ -57,6 +58,44 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Collection<ParameterFactory> getParams() =>
 	[
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "kind",
+				"label": "Kind",
+				"component": "Runtime.Widget.Select",
+				"default": "text_right",
+				"props":
+				{
+					"options":
+					[
+						{"key": "text_right", "value": "Text right"},
+						{"key": "text_left", "value": "Text left"},
+						{"key": "text_top", "value": "Text top"},
+						{"key": "text_bottom", "value": "Text bottom"},
+					]
+				},
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "image",
+				"label": "Image",
+				"component": "BayLang.Constructor.Frontend.Components.SelectImageButton",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "content",
+				"label": "Content",
+				"component": "Runtime.Widget.TextEditable",
+			}
+		)
 	];
 	
 	
@@ -72,20 +111,12 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 				"<use name='Runtime.Widget.Text' component='true' />",
 				"<style>",
 				"%(TextImage)widget_text_image{",
-				"  &__image{",
-				"  }",
-				"  &__text{",
-				"  }",
+				"\t&__image{",
+				"\t}",
+				"\t&__text{",
+				"\t}",
 				"}",
 				"</style>"
-				"<template>",
-				"\t<slot name='image'>",
-				"\t\t<Image class='[&_image]' />",
-				"\t</slot>",
-				"\t<slot name='text'>",
-				"\t\t<Text class='[&_text] center' content='Image text' />",
-				"\t</slot>",
-				"</template>",
 			])
 		},
 	};

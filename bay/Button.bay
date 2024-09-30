@@ -94,7 +94,7 @@
 				class={{ static::getStyles("widget_button", this.styles) }}
 				class={{ this.renderListClass() }}
 			>
-				%if (this.content)
+				%if (not this.checkSlot("default"))
 				{
 					%render this.content;
 				}

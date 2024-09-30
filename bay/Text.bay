@@ -27,14 +27,31 @@
 </style>
 
 
-<template name="renderContent">
+<template name="renderText" args="string content">
 	%if (this.raw == "true")
 	{
-		@raw{{ this.content }}
+		@raw{{ content }}
 	}
 	%else
 	{
-		{{ this.content }}
+		{{ content }}
+	}
+</template>
+
+
+<template name="renderContent">
+	%set Collection<string> content = rs::split("\n", this.content);
+	%if (content.count() == 1)
+	{
+		%render this.renderText(content.get(0));
+	}
+	%else
+	{
+		%for (int i=0; i<content.count(); i++)
+		{
+			%set string item = content.get(i);
+			<div @key={{ i }}>%render this.renderText(item);</div>
+		}
 	}
 </template>
 

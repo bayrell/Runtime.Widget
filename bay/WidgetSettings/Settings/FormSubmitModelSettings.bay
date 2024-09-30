@@ -27,7 +27,7 @@ use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class FormModelSettings extends BaseObject implements WidgetSettingsInterface
+class FormSubmitModelSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
@@ -52,7 +52,7 @@ class FormModelSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return false;
+		return true;
 	}
 	
 	
