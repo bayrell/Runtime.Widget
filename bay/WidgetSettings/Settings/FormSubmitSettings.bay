@@ -19,29 +19,38 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
-use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use Runtime.Web.BaseModel;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
-class ContainerSettings extends BaseObject implements WidgetSettingsInterface
+class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Container";
+	string getWidgetName() => "Form";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Container";
+	string getComponentName() => "Runtime.Widget.Form.Form";
 	
+
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";
+
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "container";
+	string getSelectorName() => "form";
 	
 	
 	/**
@@ -68,14 +77,6 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
-			"template": rs::join("\n", [
-				"<style>",
-				"padding-top: 10px;",
-				"padding-bottom: 10px;",
-				"padding-left: 0px;",
-				"padding-right: 0px;",
-				"</style>"
-			])
-		},
+		}
 	};
 }

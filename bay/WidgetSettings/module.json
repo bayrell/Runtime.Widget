@@ -4,7 +4,8 @@
 	[
 		"Settings/ButtonSettings.bay",
 		"Settings/ContainerSettings.bay",
-		"Settings/FormModelSettings.bay",
+		"Settings/FormSubmitSettings.bay",
+		"Settings/FormSubmitModelSettings.bay",
 		"Settings/ImageSettings.bay",
 		"Settings/LinkSettings.bay",
 		"Settings/SectionSettings.bay",

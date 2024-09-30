@@ -62,6 +62,16 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 		(
 			classof ParameterComponent,
 			{
+				"name": "content",
+				"label": "Content",
+				"component": "Runtime.Widget.Input",
+				"default": "",
+			}
+		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
 				"name": "type",
 				"label": "Type",
 				"component": "Runtime.Widget.Input",
