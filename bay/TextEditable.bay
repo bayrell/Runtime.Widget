@@ -39,6 +39,7 @@
 	outline: transparent;
 	line-height: 1.5;
 	tab-size: 4;
+	text-wrap: balance;
 	white-space: pre;
 }
 .widget_text_editable.wrap{
@@ -89,7 +90,8 @@ string getValue() => this.getRef("text").innerText;
 void setValue(string content)
 {
 	var text = this.getRef("text");
-	text.innerText = this.value;
+	text.innerText = content;
+	this.old_value = content;
 }
 
 
