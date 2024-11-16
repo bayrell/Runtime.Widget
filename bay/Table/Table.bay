@@ -98,7 +98,7 @@
 	{
 		%set value = this.model.getItemValue(item, field_name);
 	}
-	%set _ = data.set("value", value);
+	%set var _ = data.set("value", value);
 	<td class={{ "widget_table__td widget_table__td--" ~ field_name }} @key={{ field_name }}>
 		%if (field_name == "row_number")
 		{

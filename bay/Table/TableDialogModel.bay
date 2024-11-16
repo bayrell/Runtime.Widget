@@ -257,13 +257,21 @@ class TableDialogModel extends TableModel
 	async void onConfirmSaveClick(DialogMessage message)
 	{
 		ApiResult res;
-		if (this.save_dialog.action == "add")
+		
+		/* Get form */
+		FormModel form = null;
+		if (this.save_dialog.action == "add") form = this.add_form;
+		else if (this.save_dialog.action == "edit") form = this.edit_form;
+		if (not form) return;
+		
+		/* Submit form */
+		res = await form.submit();
+		
+		/* Check response is exists */
+		if (not res)
 		{
-			res = await this.add_form.submit();
-		}
-		else if (this.save_dialog.action == "edit")
-		{
-			res = await this.edit_form.submit();
+			form.result.setError("Response does not exists");
+			throw new DialogModelException("Response does not exists");
 		}
 		
 		/* Error message */

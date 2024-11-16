@@ -94,7 +94,10 @@ class TableModel extends BaseModel
 		{
 			this.pagination_class_name = params.get("pagination_class_name");
 		}
-		if (params.has("pagination_props")) this.pagination_props = params.get("pagination_props");
+		if (params.has("pagination_props"))
+		{
+			this.pagination_props = params.get("pagination_props");
+		}
 		
 		/* Setup fields */
 		if (params.has("fields"))
