@@ -82,7 +82,7 @@
 				
 				%if (this.name)
 				{
-					%set _ = props.set("href", this.getPageUrl(1));
+					%set var _ = props.set("href", this.getPageUrl(1));
 				}
 				
 				<li class={{ this.page == 1 ? "active" : "" }} @key={{ 1 }}>
@@ -104,7 +104,7 @@
 					{
 						%if (this.name)
 						{
-							%set _ = props.set("href", this.getPageUrl(p));
+							%set var _ = props.set("href", this.getPageUrl(p));
 						}
 						<li class={{ this.page == p ? "active" : "" }} @key={{ p }}>
 							<a @event:onClick={{ void () use (p) => this.onClick(p) }}
@@ -127,7 +127,7 @@
 				{
 					%if (this.name)
 					{
-						%set _ = props.set("href", this.getPageUrl(this.pages));
+						%set var _ = props.set("href", this.getPageUrl(this.pages));
 					}
 					<li class={{ this.page == this.pages ? "active" : "" }} @key={{ this.pages }}>
 						<a @event:onClick={{ void () => this.onClick(this.pages) }}
