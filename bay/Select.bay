@@ -96,7 +96,7 @@ props var show_select_value = true;
  */
 string getValue()
 {
-	if (this.value) return this.value;
+	if (this.value !== "" and this.value !== null) return this.value;
 	return this.default;
 }
 

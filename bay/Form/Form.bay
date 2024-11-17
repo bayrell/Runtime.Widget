@@ -85,7 +85,7 @@
 	{
 		%set value = this.model.getItemValue(field_name);
 	}
-	%set _ = data.set("value", value);
+	%set var _ = data.set("value", value);
 	%if (field_component != null)
 	{
 		<{field_component}
