@@ -191,6 +191,7 @@ class TableDialogModel extends TableModel
 	 */
 	void showAdd()
 	{
+		if (not this.add_form) return;
 		this.add_form.clear();
 		
 		/* Change confirm button */
@@ -212,6 +213,7 @@ class TableDialogModel extends TableModel
 	 */
 	void showEdit(Dict data)
 	{
+		if (not this.edit_form) return;
 		Dict item = Serializer::copy(data.get("item"));
 		this.edit_form.clear();
 		this.edit_form.setItem(item);

@@ -20,6 +20,7 @@ namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
@@ -35,13 +36,19 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Container";
+	string getComponentName() => "";
 	
 	
 	/**
 	 * Returns selector name
 	 */
 	string getSelectorName() => "container";
+	
+	
+	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "basic";
 	
 	
 	/**
@@ -68,7 +75,7 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
-			"template": rs::join("\n", [
+			"content": rs::join("\n", [
 				"<style>",
 				"padding-top: 10px;",
 				"padding-bottom: 10px;",

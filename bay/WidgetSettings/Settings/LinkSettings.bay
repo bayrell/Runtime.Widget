@@ -45,6 +45,12 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "basic";
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

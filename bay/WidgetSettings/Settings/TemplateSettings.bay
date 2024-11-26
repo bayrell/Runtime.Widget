@@ -46,6 +46,12 @@ class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "";
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

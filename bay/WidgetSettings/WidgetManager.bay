@@ -21,7 +21,6 @@ namespace Runtime.Widget.WidgetSettings;
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
 use Runtime.Widget.WidgetSettings.Settings.ButtonSettings;
-use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitModelSettings;
 use Runtime.Widget.WidgetSettings.Settings.ImageSettings;
@@ -29,7 +28,14 @@ use Runtime.Widget.WidgetSettings.Settings.LinkSettings;
 use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
 use Runtime.Widget.WidgetSettings.Settings.TemplateSettings;
 use Runtime.Widget.WidgetSettings.Settings.TextImageSettings;
-use Runtime.Widget.WidgetSettings.Settings.TextSettings;
+use Runtime.Widget.WidgetSettings.Settings.Html.Div;
+use Runtime.Widget.WidgetSettings.Settings.Html.H1;
+use Runtime.Widget.WidgetSettings.Settings.Html.H2;
+use Runtime.Widget.WidgetSettings.Settings.Html.H3;
+use Runtime.Widget.WidgetSettings.Settings.Html.H4;
+use Runtime.Widget.WidgetSettings.Settings.Html.H5;
+use Runtime.Widget.WidgetSettings.Settings.Html.Paragraph;
+use Runtime.Widget.WidgetSettings.Settings.Html.Span;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
@@ -37,22 +43,51 @@ use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 class WidgetManager extends BaseObject implements WidgetManagerInterface
 {
 	/**
+	 * Returns group settings
+	 */
+	Dict getGroupSettings() =>
+	{
+		"basic":
+		{
+			"label": "Basic",
+			"priority": 0,
+		},
+		"widget":
+		{
+			"label": "Widget",
+			"priority": 100,
+		},
+		"other":
+		{
+			"label": "Basic",
+			"priority": 9999,
+		}
+	};
+	
+	
+	/**
 	 * Returns list of widget settings
 	 */
-	Collection<WidgetSettingsInterface> getWidgetSettings()
-	{
-		return
-		[
-			new ButtonSettings(),
-			new ContainerSettings(),
-			new FormSubmitSettings(),
-			new FormSubmitModelSettings(),
-			new ImageSettings(),
-			new LinkSettings(),
-			new SectionSettings(),
-			new TemplateSettings(),
-			new TextImageSettings(),
-			new TextSettings(),
-		];
-	}
+	Collection<WidgetSettingsInterface> getWidgetSettings() =>
+	[
+		/* Html settings */
+		new Div(),
+		new H1(),
+		new H2(),
+		new H3(),
+		new H4(),
+		new H5(),
+		new Paragraph(),
+		new Span(),
+		
+		/* Widgets */
+		new ButtonSettings(),
+		new FormSubmitSettings(),
+		new FormSubmitModelSettings(),
+		new ImageSettings(),
+		new LinkSettings(),
+		new SectionSettings(),
+		new TemplateSettings(),
+		new TextImageSettings(),
+	];
 }

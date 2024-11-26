@@ -45,6 +45,12 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "widget";
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
@@ -106,7 +112,7 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
-			"template": rs::join("\n", [
+			"content": rs::join("\n", [
 				"<use name='Runtime.Widget.Image' component='true' />",
 				"<use name='Runtime.Widget.Text' component='true' />",
 				"<style>",

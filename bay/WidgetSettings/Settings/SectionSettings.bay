@@ -45,6 +45,12 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "basic";
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
@@ -175,7 +181,7 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 	{
 		"default": Dict () =>
 		{
-			"template": rs::join("\n", [
+			"content": rs::join("\n", [
 				"<style>",
 				"padding-top: 20px;",
 				"padding-bottom: 20px;",

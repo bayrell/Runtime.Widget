@@ -16,32 +16,34 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetSettings.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
+use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 
 
-class ButtonSettings extends BaseObject implements WidgetSettingsInterface
+class Header extends ContainerSettings implements WidgetSettingsInterface
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Button";
+	string getWidgetName() => "Header 1";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Button";
+	string getComponentName() => "h1";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "button";
+	string getSelectorName() => "page_title";
 	
 	
 	/**
@@ -55,7 +57,7 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return false;
+		return true;
 	}
 	
 	
@@ -66,36 +68,19 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 	[
 		new ParameterFactory
 		(
-			classof ParameterComponent,
+			classof ParameterTagName,
 			{
-				"name": "content",
-				"label": "Content",
-				"component": "Runtime.Widget.Input",
-				"default": "",
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "type",
-				"label": "Type",
-				"component": "Runtime.Widget.Input",
-				"default": "button",
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "target",
-				"label": "Target",
-				"component": "Runtime.Widget.Select",
-				"default": "_self",
 				"props": {
+					"show_select_value": false,
 					"options": [
-						{"key": "_self", "value": "self"},
-						{"key": "_blank", "value": "blank"},
+						{"key": "", "value": "Text"},
+						{"key": "h1", "value": "H1"},
+						{"key": "h2", "value": "H2"},
+						{"key": "h3", "value": "H3"},
+						{"key": "h4", "value": "H4"},
+						{"key": "h5", "value": "H5"},
+						{"key": "p", "value": "Paragraph"},
+						{"key": "span", "value": "Span"},
 					],
 				}
 			}
@@ -108,5 +93,11 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Dict<fn> getDefaultTemplate() =>
 	{
+		"default": Dict () =>
+		{
+			"content": rs::join("\n", [
+				"<template>Header</template>"
+			])
+		},
 	};
 }

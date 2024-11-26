@@ -54,6 +54,12 @@ class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "widget";
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

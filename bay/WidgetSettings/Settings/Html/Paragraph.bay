@@ -16,32 +16,40 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetSettings.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
+use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 
 
-class TextSettings extends BaseObject implements WidgetSettingsInterface
+class Paragraph extends ContainerSettings
 {
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Text";
+	string getWidgetName() => "Paragraph";
 	
 	
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Text";
+	string getComponentName() => "p";
 	
 	
 	/**
 	 * Returns selector name
 	 */
-	string getSelectorName() => "text";
+	string getSelectorName() => "";
+	
+	
+	/**
+	 * Returns group name
+	 */
+	string getGroupName() => "basic";
 	
 	
 	/**
@@ -49,7 +57,7 @@ class TextSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return false;
+		return true;
 	}
 	
 	
@@ -60,50 +68,21 @@ class TextSettings extends BaseObject implements WidgetSettingsInterface
 	[
 		new ParameterFactory
 		(
-			classof ParameterComponent,
+			classof ParameterTagName,
 			{
-				"name": "tag",
-				"label": "Tag",
-				"component": "Runtime.Widget.Select",
-				"default": "text",
 				"props": {
+					"show_select_value": false,
 					"options": [
-						{"key": "text", "value": "Text"},
+						{"key": "", "value": "Text"},
 						{"key": "h1", "value": "H1"},
 						{"key": "h2", "value": "H2"},
 						{"key": "h3", "value": "H3"},
 						{"key": "h4", "value": "H4"},
+						{"key": "h5", "value": "H5"},
+						{"key": "p", "value": "Paragraph"},
+						{"key": "span", "value": "Span"},
 					],
 				}
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "raw",
-				"label": "Raw",
-				"component": "Runtime.Widget.Select",
-				"default": "false",
-				"props": {
-					"options": [
-						{"key": "false", "value": "No"},
-						{"key": "true", "value": "Yes"},
-					],
-				}
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "content",
-				"label": "Content",
-				"component": "Runtime.Widget.TextEditable",
-				"default": "Text",
-				"props": {
-					"direct_update": true,
-				},
 			}
 		),
 	];
@@ -114,5 +93,11 @@ class TextSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Dict<fn> getDefaultTemplate() =>
 	{
+		"default": Dict () =>
+		{
+			"content": rs::join("\n", [
+				"<template>Text</template>"
+			])
+		},
 	};
 }
