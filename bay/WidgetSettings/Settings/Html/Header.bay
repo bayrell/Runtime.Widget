@@ -37,7 +37,7 @@ class Header extends ContainerSettings implements WidgetSettingsInterface
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "h1";
+	string getComponentName() => "";
 	
 	
 	/**
@@ -50,6 +50,15 @@ class Header extends ContainerSettings implements WidgetSettingsInterface
 	 * Returns group name
 	 */
 	string getGroupName() => "basic";
+	
+	
+	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		return false;
+	}
 	
 	
 	/**

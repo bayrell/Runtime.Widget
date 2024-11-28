@@ -51,6 +51,17 @@ class ButtonSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		if (not widget.isComponent()) return false;
+		if (widget.component_class_name != this.getComponentName()) return false;
+		return true;
+	}
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

@@ -60,6 +60,15 @@ class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		return false;
+	}
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

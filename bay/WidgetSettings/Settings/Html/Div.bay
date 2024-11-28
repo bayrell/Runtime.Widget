@@ -24,6 +24,7 @@ use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
+use BayLang.OpCodes.BaseOpCode;
 
 
 class Div extends ContainerSettings
@@ -31,7 +32,7 @@ class Div extends ContainerSettings
 	/**
 	 * Returns widget name
 	 */
-	string getWidgetName() => "Container";
+	string getWidgetName() => "Text";
 	
 	
 	/**
@@ -50,6 +51,22 @@ class Div extends ContainerSettings
 	 * Returns group name
 	 */
 	string getGroupName() => "basic";
+	
+	
+	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		if (widget.code::getClassName() != "BayLang.OpCodes.OpHtmlTag") return false;
+		if (rs::lower(widget.code.tag_name) != "div") return false;
+		if (widget.code.items == null) return false;
+		if (widget.code.items.items.count() == 0) return false;
+		BaseOpCode item = widget.code.items.items.get(0);
+		if (item::getClassName() == "BayLang.OpCodes.OpHtmlContent") return true;
+		if (item::getClassName() == "BayLang.OpCodes.OpHtmlValue") return true;
+		return false;
+	}
 	
 	
 	/**

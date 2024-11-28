@@ -52,6 +52,15 @@ class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		return true;
+	}
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)

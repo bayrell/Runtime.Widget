@@ -21,6 +21,7 @@ namespace Runtime.Widget.WidgetSettings;
 use Runtime.BaseObject;
 use Runtime.Web.BaseLayoutModel;
 use Runtime.Widget.WidgetSettings.Settings.ButtonSettings;
+use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitModelSettings;
 use Runtime.Widget.WidgetSettings.Settings.ImageSettings;
@@ -82,6 +83,7 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 		
 		/* Widgets */
 		new ButtonSettings(),
+		new ContainerSettings(),
 		new FormSubmitSettings(),
 		new FormSubmitModelSettings(),
 		new ImageSettings(),

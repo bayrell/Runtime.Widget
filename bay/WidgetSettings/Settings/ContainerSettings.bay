@@ -23,6 +23,7 @@ use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
+use BayLang.OpCodes.BaseOpCode;
 
 
 class ContainerSettings extends BaseObject implements WidgetSettingsInterface
@@ -36,7 +37,7 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "";
+	string getComponentName() => "div";
 	
 	
 	/**
@@ -52,9 +53,25 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		if (widget.code::getClassName() != "BayLang.OpCodes.OpHtmlTag") return false;
+		if (rs::lower(widget.code.tag_name) != "div") return false;
+		if (widget.code.items == null) return true;
+		if (widget.code.items.items.count() == 0) return true;
+		BaseOpCode item = widget.code.items.items.get(0);
+		if (item::getClassName() == "BayLang.OpCodes.OpHtmlContent") return false;
+		if (item::getClassName() == "BayLang.OpCodes.OpHtmlValue") return false;
+		return true;
+	}
+	
+	
+	/**
 	 * Can insert widget
 	 */
-	bool canInsert(WidgetSettingsInterface widget)
+	bool canInsert(var widget)
 	{
 		return true;
 	}
@@ -76,12 +93,6 @@ class ContainerSettings extends BaseObject implements WidgetSettingsInterface
 		"default": Dict () =>
 		{
 			"content": rs::join("\n", [
-				"<style>",
-				"padding-top: 10px;",
-				"padding-bottom: 10px;",
-				"padding-left: 0px;",
-				"padding-right: 0px;",
-				"</style>"
 			])
 		},
 	};

@@ -53,11 +53,22 @@ class Paragraph extends ContainerSettings
 	
 	
 	/**
+	 * Returns true if is widget settings
+	 */
+	bool checkWidget(var widget)
+	{
+		if (widget.code::getClassName() != "BayLang.OpCodes.OpHtmlTag") return false;
+		if (rs::lower(widget.code.tag_name) != "p") return false;
+		return true;
+	}
+	
+	
+	/**
 	 * Can insert widget
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return true;
+		return false;
 	}
 	
 	
