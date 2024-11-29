@@ -70,31 +70,4 @@ class H2 extends Header
 	{
 		return false;
 	}
-	
-	
-	/**
-	 * Returns params
-	 */
-	Collection<ParameterFactory> getParams() =>
-	[
-		new ParameterFactory
-		(
-			classof ParameterTagName,
-			{
-				"props": {
-					"show_select_value": false,
-					"options": [
-						{"key": "", "value": "Text"},
-						{"key": "h1", "value": "H1"},
-						{"key": "h2", "value": "H2"},
-						{"key": "h3", "value": "H3"},
-						{"key": "h4", "value": "H4"},
-						{"key": "h5", "value": "H5"},
-						{"key": "p", "value": "Paragraph"},
-						{"key": "span", "value": "Span"},
-					],
-				}
-			}
-		),
-	];
 }

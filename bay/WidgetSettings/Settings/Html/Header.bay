@@ -20,6 +20,8 @@ namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterContent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterRawHtml;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -94,6 +96,8 @@ class Header extends ContainerSettings implements WidgetSettingsInterface
 				}
 			}
 		),
+		new ParameterFactory(classof ParameterRawHtml),
+		new ParameterFactory(classof ParameterContent),
 	];
 	
 	

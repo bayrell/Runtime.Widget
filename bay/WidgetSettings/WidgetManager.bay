@@ -25,7 +25,6 @@ use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitSettings;
 use Runtime.Widget.WidgetSettings.Settings.FormSubmitModelSettings;
 use Runtime.Widget.WidgetSettings.Settings.ImageSettings;
-use Runtime.Widget.WidgetSettings.Settings.LinkSettings;
 use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
 use Runtime.Widget.WidgetSettings.Settings.TemplateSettings;
 use Runtime.Widget.WidgetSettings.Settings.TextImageSettings;
@@ -35,6 +34,7 @@ use Runtime.Widget.WidgetSettings.Settings.Html.H2;
 use Runtime.Widget.WidgetSettings.Settings.Html.H3;
 use Runtime.Widget.WidgetSettings.Settings.Html.H4;
 use Runtime.Widget.WidgetSettings.Settings.Html.H5;
+use Runtime.Widget.WidgetSettings.Settings.Html.Link;
 use Runtime.Widget.WidgetSettings.Settings.Html.Paragraph;
 use Runtime.Widget.WidgetSettings.Settings.Html.Span;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
@@ -78,6 +78,7 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 		new H3(),
 		new H4(),
 		new H5(),
+		new Link(),
 		new Paragraph(),
 		new Span(),
 		
@@ -87,7 +88,6 @@ class WidgetManager extends BaseObject implements WidgetManagerInterface
 		new FormSubmitSettings(),
 		new FormSubmitModelSettings(),
 		new ImageSettings(),
-		new LinkSettings(),
 		new SectionSettings(),
 		new TemplateSettings(),
 		new TextImageSettings(),

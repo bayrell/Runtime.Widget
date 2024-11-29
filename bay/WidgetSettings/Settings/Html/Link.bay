@@ -16,15 +16,20 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.WidgetSettings.Settings;
+namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterContent;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterRawHtml;
+use BayLang.Constructor.Frontend.Editor.Parameters.ParameterTagName;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
+use Runtime.Widget.WidgetSettings.Settings.ContainerSettings;
+use BayLang.OpCodes.BaseOpCode;
 
 
-class LinkSettings extends BaseObject implements WidgetSettingsInterface
+class Link extends ContainerSettings
 {
 	/**
 	 * Returns widget name
@@ -35,7 +40,7 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	/**
 	 * Returns component name
 	 */
-	string getComponentName() => "Runtime.Widget.Link";
+	string getComponentName() => "a";
 	
 	
 	/**
@@ -55,8 +60,8 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool checkWidget(var widget)
 	{
-		if (not widget.isComponent()) return false;
-		if (widget.component_class_name != this.getComponentName()) return false;
+		if (widget.code::getClassName() != "BayLang.OpCodes.OpHtmlTag") return false;
+		if (rs::lower(widget.code.tag_name) != "a") return false;
 		return true;
 	}
 	
@@ -66,7 +71,7 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return false;
+		return true;
 	}
 	
 	
@@ -75,24 +80,6 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Collection<ParameterFactory> getParams() =>
 	[
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "href",
-				"label": "Href",
-				"component": "Runtime.Widget.Input",
-			}
-		),
-		new ParameterFactory
-		(
-			classof ParameterComponent,
-			{
-				"name": "text",
-				"label": "Text",
-				"component": "Runtime.Widget.Input",
-			}
-		),
 		new ParameterFactory
 		(
 			classof ParameterComponent,
@@ -109,6 +96,17 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 				}
 			}
 		),
+		new ParameterFactory
+		(
+			classof ParameterComponent,
+			{
+				"name": "href",
+				"label": "Href",
+				"component": "Runtime.Widget.Input",
+			}
+		),
+		new ParameterFactory(classof ParameterRawHtml),
+		new ParameterFactory(classof ParameterContent),
 	];
 	
 	
@@ -117,5 +115,11 @@ class LinkSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	Dict<fn> getDefaultTemplate() =>
 	{
+		"default": Dict () =>
+		{
+			"content": rs::join("\n", [
+				"<template>Content</template>"
+			])
+		},
 	};
 }
