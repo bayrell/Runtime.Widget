@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
+use Runtime.Web.RenderContainer;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -33,9 +34,21 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns alias name
+	 */
+	string getAliasName() => "Section";
+	
+	
+	/**
 	 * Returns component name
 	 */
 	string getComponentName() => "Runtime.Widget.Section";
+	
+	
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => "";
 	
 	
 	/**
@@ -48,6 +61,12 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 	 * Returns group name
 	 */
 	string getGroupName() => "basic";
+	
+	
+	/**
+	 * Returns true if model
+	 */
+	bool isModel() => false;
 	
 	
 	/**
@@ -66,6 +85,7 @@ class SectionSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
+		if (widget.getComponentName() == this.getComponentName()) return false;
 		return true;
 	}
 	

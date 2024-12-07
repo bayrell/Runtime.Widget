@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
+use Runtime.Web.RenderContainer;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
@@ -33,9 +34,21 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns alias name
+	 */
+	string getAliasName() => "TextImage";
+	
+	
+	/**
 	 * Returns component name
 	 */
 	string getComponentName() => "Runtime.Widget.TextImage";
+	
+	
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => "";
 	
 	
 	/**
@@ -48,6 +61,12 @@ class TextImageSettings extends BaseObject implements WidgetSettingsInterface
 	 * Returns group name
 	 */
 	string getGroupName() => "widget";
+	
+	
+	/**
+	 * Returns true if model
+	 */
+	bool isModel() => false;
 	
 	
 	/**

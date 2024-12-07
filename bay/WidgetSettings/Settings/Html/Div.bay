@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
+use Runtime.Web.RenderContainer;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterContent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterRawHtml;
@@ -41,6 +42,12 @@ class Div extends ContainerSettings
 	 * Returns component name
 	 */
 	string getComponentName() => "div";
+	
+	
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => "";
 	
 	
 	/**

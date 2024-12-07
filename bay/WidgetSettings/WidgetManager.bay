@@ -37,12 +37,21 @@ use Runtime.Widget.WidgetSettings.Settings.Html.H5;
 use Runtime.Widget.WidgetSettings.Settings.Html.Link;
 use Runtime.Widget.WidgetSettings.Settings.Html.Paragraph;
 use Runtime.Widget.WidgetSettings.Settings.Html.Span;
+use BayLang.Constructor.WidgetPage.EditorProvider;
 use BayLang.Constructor.WidgetPage.WidgetManagerInterface;
 use BayLang.Constructor.WidgetPage.WidgetSettingsInterface;
 
 
 class WidgetManager extends BaseObject implements WidgetManagerInterface
 {
+	/**
+	 * Init widgets
+	 */
+	void init(EditorProvider provider)
+	{
+	}
+	
+	
 	/**
 	 * Returns group settings
 	 */

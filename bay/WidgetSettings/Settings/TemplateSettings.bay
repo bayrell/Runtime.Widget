@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.WidgetSettings.Settings.SectionSettings;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.WidgetPage.ParameterFactory;
@@ -34,9 +35,21 @@ class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns alias name
+	 */
+	string getAliasName() => null;
+	
+	
+	/**
 	 * Returns component name
 	 */
 	string getComponentName() => null;
+	
+	
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => null;
 	
 	
 	/**
@@ -52,11 +65,17 @@ class TemplateSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if model
+	 */
+	bool isModel() => false;
+	
+	
+	/**
 	 * Returns true if is widget settings
 	 */
 	bool checkWidget(var widget)
 	{
-		return true;
+		return false;
 	}
 	
 	

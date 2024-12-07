@@ -20,6 +20,7 @@ namespace Runtime.Widget.WidgetSettings.Settings;
 
 use Runtime.BaseObject;
 use Runtime.Web.BaseModel;
+use Runtime.Web.RenderContainer;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterDictModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterFactoryModel;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterModel;
@@ -36,16 +37,22 @@ class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns alias name
+	 */
+	string getAliasName() => "Form";
+	
+	
+	/**
 	 * Returns component name
 	 */
 	string getComponentName() => "Runtime.Widget.Form.Form";
 	
-
+	
 	/**
 	 * Returns model name
 	 */
 	string getModelName() => "Runtime.Widget.Form.FormSubmitModel";
-
+	
 	
 	/**
 	 * Returns selector name
@@ -60,11 +67,19 @@ class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns true if model
+	 */
+	bool isModel() => false;
+	
+	
+	/**
 	 * Returns true if is widget settings
 	 */
 	bool checkWidget(var widget)
 	{
-		return false;
+		if (not widget.isComponent()) return false;
+		if (widget.component_class_name != this.getComponentName()) return false;
+		return true;
 	}
 	
 	
@@ -73,7 +88,7 @@ class FormSubmitSettings extends BaseObject implements WidgetSettingsInterface
 	 */
 	bool canInsert(WidgetSettingsInterface widget)
 	{
-		return true;
+		return false;
 	}
 	
 	

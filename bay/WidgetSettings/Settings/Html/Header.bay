@@ -19,6 +19,7 @@
 namespace Runtime.Widget.WidgetSettings.Settings.Html;
 
 use Runtime.BaseObject;
+use Runtime.Web.RenderContainer;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterComponent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterContent;
 use BayLang.Constructor.Frontend.Editor.Parameters.ParameterRawHtml;
@@ -37,9 +38,21 @@ class Header extends ContainerSettings implements WidgetSettingsInterface
 	
 	
 	/**
+	 * Returns alias name
+	 */
+	string getAliasName() => "";
+	
+	
+	/**
 	 * Returns component name
 	 */
 	string getComponentName() => "";
+	
+	
+	/**
+	 * Returns model name
+	 */
+	string getModelName() => "";
 	
 	
 	/**
