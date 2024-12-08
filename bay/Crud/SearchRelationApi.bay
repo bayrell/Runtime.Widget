@@ -85,7 +85,7 @@ class SearchRelationApi extends SearchApi
 	async void searchItems()
 	{
 		int page = this.post_data.get("page", 0);
-		int limit = this.post_data.get("limit");
+		int limit = this.post_data.get("limit", 10);
 		string table_name = this.getTableName();
 		
 		/* Build query */
