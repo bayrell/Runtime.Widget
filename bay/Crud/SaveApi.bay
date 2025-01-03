@@ -106,6 +106,7 @@ class SaveApi extends BaseApi
 	 */
 	void setItemValue(string key, var value)
 	{
+		this.item.set(key, value);
 	}
 	
 	
