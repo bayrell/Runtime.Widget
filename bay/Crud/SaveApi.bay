@@ -102,6 +102,15 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Convert item
+	 */
+	Map convertItem(Collection fields, Dict item)
+	{
+		return item.intersect(fields);
+	}
+	
+	
+	/**
 	 * Set item
 	 */
 	void setItemValue(string key, var value)
@@ -311,6 +320,13 @@ class SaveApi extends BaseApi
 	async void buildResult()
 	{
 		if (not this.item) return;
+		
+		/* Convert item */
+		Collection fields = this.getItemFields();
+		Dict item = this.convertItem(fields, this.item);
+		
+		/* Setup result */
+		this.result.data.set("item", item);
 		
 		/* Success */
 		this.success();

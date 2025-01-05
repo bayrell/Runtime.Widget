@@ -24,7 +24,7 @@ use Runtime.Widget.Crud.SaveApi;
 use Runtime.Widget.Crud.Rules.CrudRule;
 
 
-struct ReadOnly extends CrudRule
+struct ReadOnlyRule extends CrudRule
 {
 	string name = "";
 	bool can_create = false;
@@ -39,7 +39,7 @@ struct ReadOnly extends CrudRule
 		Dict pk = api.pk;
 		if (api.pk == null and this.can_create) return data;
 		if (api.pk != null and this.can_update) return data;
-		data = data.removeIm(this.name);
+		data.remove(this.name);
 		return data;
 	}
 }
