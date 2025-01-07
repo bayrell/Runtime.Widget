@@ -128,7 +128,7 @@ class SaveApi extends BaseApi
 		if (pk != null and pk instanceof Dict)
 		{
 			this.pk = pk;
-			this.item = this.findItem(pk);
+			this.item = await this.findItem(pk);
 		}
 		else
 		{

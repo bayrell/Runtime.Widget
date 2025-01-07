@@ -31,6 +31,7 @@
 		"TextArea.bay",
 		"TextEditable.bay",
 		"TextImage.bay",
+		"UploadFileButton.bay",
 		"WidgetResult.bay",
 		"WidgetResultModel.bay",
 		"ModuleDescription.bay"

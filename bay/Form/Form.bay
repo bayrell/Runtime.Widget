@@ -24,6 +24,7 @@
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.RowButtons" component="true" />
+<use name="Runtime.Widget.RowButtonsModel" />
 <use name="Runtime.Widget.TextArea" component="true" />
 <use name="Runtime.Widget.WidgetResult" component="true" />
 <use name="Runtime.Widget.WidgetResultModel" />
@@ -145,26 +146,33 @@
 	%if (field.has("buttons"))
 	{
 		%set Collection<Dict> buttons = field.get("buttons");
-		<div class="widget_form__field_buttons">
-			%for (int i=0; i<buttons.count(); i++)
-			{
-				%set Dict settings = buttons.get(i);
-				%set Dict props = settings.get("props");
-				%set string content = settings.get("content");
-				<Button
-					@event:click={{
-						void (var e) use (field, settings)
-						{
-							string event_name = settings.get("event");
-							var component = this.getRef("field_" ~ field.get("name"));
-							fn callback = new Callback(component, event_name);
-							callback.apply();
-						}
-					}}
-					...props
-				/>
-			}
-		</div>
+		%if (buttons instanceof RowButtonsModel)
+		{
+			%render this.renderWidget(buttons);
+		}
+		%else
+		{
+			<div class="widget_form__field_buttons">
+				%for (int i=0; i<buttons.count(); i++)
+				{
+					%set Dict settings = buttons.get(i);
+					%set Dict props = settings.get("props");
+					%set string content = settings.get("content");
+					<Button
+						@event:click={{
+							void (var e) use (field, settings)
+							{
+								string event_name = settings.get("event");
+								var component = this.getRef("field_" ~ field.get("name"));
+								fn callback = new Callback(component, event_name);
+								callback.apply();
+							}
+						}}
+						...props
+					/>
+				}
+			</div>
+		}
 	}
 </template>
 
