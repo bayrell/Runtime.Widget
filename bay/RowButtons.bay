@@ -32,6 +32,15 @@
 .widget_row_buttons--align-end{
 	justify-content: end;
 }
+.widget_row_buttons--center{
+	justify-content: center;
+}
+.widget_row_buttons--bottom_buttons{
+	margin-top: 10px;
+}
+.widget_row_buttons--top_buttons{
+	margin-bottom: 10px;
+}
 .widget_row_buttons--no-gap{
 	gap: 0;
 }

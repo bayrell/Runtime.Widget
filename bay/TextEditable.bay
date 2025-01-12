@@ -25,7 +25,8 @@
 <style>
 .widget_text{
 	display: flex;
-	align-items: stretch;
+	align-items: flex-start;
+	position: overflow;
 	width: 100%;
 	max-width: 100%;
 	border-width: var(--widget-border-width);
@@ -36,6 +37,7 @@
 }
 .widget_text__lines{
 	width: 20px;
+	min-height: 100%;
 	padding-top: 7px;
 	border-right-width: var(--widget-border-width);
 	border-right-color: var(--widget-color-border);
@@ -49,6 +51,7 @@
 }
 .widget_text__editable{
 	width: calc(100% - 20px);
+	min-height: 100%;
 	font-family: monospace;
 	font-size: var(--widget-font-size);
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x); margin: 0;
@@ -374,10 +377,8 @@ void pasteText(string text)
 		
 		/* Change last line */
 		int lines_last_pos = lines.count() - 1;
-		lines.set(
-			lines_last_pos,
-			lines.get(lines_last_pos) ~ line_text.slice(line_offset)
-		);
+		line_offset_new = rs::strlen(lines.get(lines_last_pos));
+		lines.set(lines_last_pos, lines.get(lines_last_pos) ~ line_text.slice(line_offset));
 	}
 	else
 	{
@@ -393,7 +394,6 @@ void pasteText(string text)
 		string line_content = lines.get(i);
 		var line_new = this.createNewLine(line_content);
 		line_elem = line_elem.insertAdjacentElement("afterend", line_new);
-		if (i == lines_count - 1) line_offset_new = rs::strlen(line_content);
 	}
 	
 	this.setCursorPos(line_offset_new, line_pos + lines.count());
