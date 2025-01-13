@@ -112,6 +112,12 @@ class SaveRelationApi extends SaveApi
 	
 	
 	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Relation item) => item.getPrimaryKey();
+	
+	
+	/**
 	 * Convert item
 	 */
 	Map convertItem(Collection fields, Relation item)
@@ -151,7 +157,7 @@ class SaveRelationApi extends SaveApi
 		await this.save();
 		
 		/* Refresh item */
-		this.item = await this.findItem(this.item.getPrimaryKey());
+		this.item = await this.findItem(this.getPrimaryKey(this.item));
 		
 		/* After save */
 		await this.onSaveAfter();
@@ -181,26 +187,5 @@ class SaveRelationApi extends SaveApi
 		
 		/* Before delete */
 		await this.onDeleteAfter();
-	}
-	
-	
-	/**
-	 * Build result
-	 */
-	async void buildResult()
-	{
-		if (not this.item) return;
-		
-		/* Convert item */
-		Collection fields = this.getItemFields();
-		Dict item = this.convertItem(fields, this.item);
-		Dict pk = this.item.getPrimaryKey();
-		
-		/* Setup result */
-		this.result.data.set("pk", pk);
-		this.result.data.set("item", item);
-		
-		/* Success */
-		this.success();
 	}
 }

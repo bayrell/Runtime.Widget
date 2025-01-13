@@ -102,6 +102,12 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Dict item) => null;
+	
+	
+	/**
 	 * Convert item
 	 */
 	Map convertItem(Collection fields, Dict item)
@@ -170,7 +176,7 @@ class SaveApi extends BaseApi
 	 */
 	async void loadData()
 	{
-		Dict item = this.post_data.get("item");
+		Dict item = this.post_data.get("item").copy();
 		if (item == null)
 		{
 			throw new ApiError(new RuntimeException("Post data 'item' not found"));
@@ -324,8 +330,10 @@ class SaveApi extends BaseApi
 		/* Convert item */
 		Collection fields = this.getItemFields();
 		Dict item = this.convertItem(fields, this.item);
+		Dict pk = this.getPrimaryKey(this.item);
 		
 		/* Setup result */
+		this.result.data.set("pk", pk);
 		this.result.data.set("item", item);
 		
 		/* Success */

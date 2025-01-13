@@ -26,7 +26,6 @@
 .widget_text{
 	display: flex;
 	align-items: flex-start;
-	position: overflow;
 	width: 100%;
 	max-width: 100%;
 	border-width: var(--widget-border-width);
@@ -36,17 +35,18 @@
 	overflow: auto;
 }
 .widget_text__lines{
+	display: flex;
+	align-items: center;
+	flex-direction: column;
 	width: 20px;
 	min-height: 100%;
-	padding-top: 7px;
+	padding-top: var(--widget-button-padding-y);
 	border-right-width: var(--widget-border-width);
 	border-right-color: var(--widget-color-border);
 	border-right-style: solid;
 }
 .widget_text__lines .line{
-	display: flex;
-	align-items: center;
-	justify-content: center;
+	text-align: right;
 	min-height: 21px;
 }
 .widget_text__editable{
@@ -81,12 +81,14 @@
 	%set Map props = this.getProps();
 	<div class="widget_text">
 		<div class="widget_text__lines">
-		%for (int i=0; i<this.lines.count(); i++)
-		{
-			<div class="line" @key={{ i }} style={{ "width: " ~ this.lines.get(i) ~ "px" }}>
-				{{ i + 1 }}
+			<div class="widget_text__wrap">
+			%for (int i=0; i<this.lines.count(); i++)
+			{
+				<div class="line" @key={{ i }} style={{ "height: " ~ this.lines.get(i) ~ "px" }}>
+					{{ i + 1 }}
+				</div>
+			}
 			</div>
-		}
 		</div>
 		<div class="widget_text__editable"
 			class={{ this.class }}

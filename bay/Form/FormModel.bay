@@ -323,27 +323,29 @@ class FormModel extends BaseModel
 	{
 		if (res == null) return;
 		
+		/* Set data */
+		if (res.data.has("item") and res.data.has("item") != null)
+		{
+			this.item = res.data.get("item");
+		}
+		if (res.data.has("pk") and res.data.get("pk") != null)
+		{
+			this.pk = res.data.get("pk");
+		}
+		if (res.data.has("fields"))
+		{
+			this.fields_error = res.data.get("fields");
+		}
+		
 		/* Load */
 		if (action == "load")
 		{
-			if (res.data.has("item"))
-			{
-				this.item = res.data.get("item");
-			}
 			this.load.setApiResult(res);
 		}
 		
 		/* Submit */
 		if (action == "submit")
 		{
-			if (res.data.has("item"))
-			{
-				this.item = res.data.get("item");
-			}
-			if (res.data.has("fields"))
-			{
-				this.fields_error = res.data.get("fields");
-			}
 			this.result.setApiResult(res);
 		}
 	}
