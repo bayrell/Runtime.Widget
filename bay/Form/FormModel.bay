@@ -146,7 +146,7 @@ class FormModel extends BaseModel
 			classof RowButtonsModel,
 			{
 				"widget_name": "bottom_buttons",
-				"styles": ["@widget_form__bottom_buttons"],
+				"styles": ["bottom_buttons", "center"],
 			}
 		);
 	}

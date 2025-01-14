@@ -162,7 +162,10 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			CrudRule rule = rules[i];
-			data = await rule.validateItem(this, data);
+			if (rule)
+			{
+				data = await rule.validateItem(this, data);
+			}
 		}
 		
 		/* Filter data */
@@ -176,18 +179,15 @@ class SaveApi extends BaseApi
 	 */
 	async void loadData()
 	{
-		Dict item = this.post_data.get("item").copy();
-		if (item == null)
-		{
-			throw new ApiError(new RuntimeException("Post data 'item' not found"));
-		}
+		Dict item = this.post_data.get("item");
+		if (item == null) item = {};
 		if (not(item instanceof Dict))
 		{
 			throw new ApiError(new RuntimeException("Post data 'item' not found"));
 		}
 		
 		/* Get data */
-		this.data = await this.validateItem(item);
+		this.data = await this.validateItem(item.copy());
 		
 		/* Check fields error */
 		this.fields.checkError();
@@ -219,7 +219,10 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			CrudRule rule = rules[i];
-			await rule.onSaveBefore(this);
+			if (rule)
+			{
+				await rule.onSaveBefore(this);
+			}
 		}
 		
 		/* Check fields error */
@@ -236,7 +239,10 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			CrudRule rule = rules[i];
-			await rule.onSaveAfter(this);
+			if (rule)
+			{
+				await rule.onSaveAfter(this);
+			}
 		}
 	}
 	
@@ -274,7 +280,10 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			CrudRule rule = rules[i];
-			await rule.onDeleteBefore(this);
+			if (rule)
+			{
+				await rule.onDeleteBefore(this);
+			}
 		}
 		
 		/* Check fields error */
@@ -291,7 +300,10 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			CrudRule rule = rules[i];
-			await rule.onDeleteAfter(this);
+			if (rule)
+			{
+				await rule.onDeleteAfter(this);
+			}
 		}
 	}
 	

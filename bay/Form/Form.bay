@@ -42,7 +42,7 @@
 	}
 	.widget_form__field_error{
 		color: var(--widget-color-danger);
-		margin-top: var(--widget-space);
+		margin-top: 5px;
 	}
 	.widget_form__field_error--hide{
 		display: none;
