@@ -23,54 +23,30 @@
 
 
 <style>
-.widget_text{
-	display: flex;
-	align-items: flex-start;
+.widget_text_editable{
 	width: 100%;
 	max-width: 100%;
-	border-width: var(--widget-border-width);
-	border-color: var(--widget-color-border);
-	border-style: solid;
-	border-radius: 4px;
-	overflow: auto;
-}
-.widget_text__lines{
-	display: flex;
-	align-items: center;
-	flex-direction: column;
-	width: 20px;
-	min-height: 100%;
-	padding-top: var(--widget-button-padding-y);
-	border-right-width: var(--widget-border-width);
-	border-right-color: var(--widget-color-border);
-	border-right-style: solid;
-}
-.widget_text__lines .line{
-	text-align: right;
-	min-height: 21px;
-}
-.widget_text__editable{
-	width: calc(100% - 20px);
-	min-height: 100%;
 	font-family: monospace;
 	font-size: var(--widget-font-size);
 	padding: var(--widget-button-padding-y) var(--widget-button-padding-x); margin: 0;
 	background-color: var(--widget-color-default);
+	border-width: var(--widget-border-width);
+	border-color: var(--widget-color-border);
+	border-style: solid;
+	border-radius: 4px;
 	box-shadow: none;
+	overflow: auto;
 	outline: transparent;
 	line-height: 1.5;
 	tab-size: 4;
 	text-wrap: balance;
 	white-space: pre;
 }
-.widget_text__editable .line{
-	min-height: 21px;
-}
-.widget_text__editable.wrap{
+.widget_text_editable.wrap{
 	overflow-wrap: break-word;
 	text-wrap: wrap;
 }
-.widget_text__editable.overflow{
+.widget_text_editable.overflow{
 	overflow: auto;
 	text-wrap: nowrap;
 }
@@ -79,28 +55,15 @@
 
 <template>
 	%set Map props = this.getProps();
-	<div class="widget_text">
-		<div class="widget_text__lines">
-			<div class="widget_text__wrap">
-			%for (int i=0; i<this.lines.count(); i++)
-			{
-				<div class="line" @key={{ i }} style={{ "height: " ~ this.lines.get(i) ~ "px" }}>
-					{{ i + 1 }}
-				</div>
-			}
-			</div>
-		</div>
-		<div class="widget_text__editable"
-			class={{ this.class }}
-			name={{ this.name }}
-			contenteditable="plaintext-only"
-			@event:keydown={{ this.onKeyDown }}
-			@event:input={{ this.onInput }}
-			@event:paste={{ this.onPaste }}
-			@ref="text"
-			...props
-		></div>
-	</div>
+	<div class="widget_text_editable"
+		class={{ this.class }}
+		name={{ this.name }}
+		contenteditable="plaintext-only"
+		@event:keydown={{ this.onKeyDown }}
+		@event:input={{ this.onInput }}
+		@ref="text"
+		...props
+	></div>
 </template>
 
 
@@ -111,7 +74,6 @@ props bool readonly = false;
 props int timeout = 500;
 props string name = "";
 props string value = "";
-Collection<int> lines = [];
 var change_timer = null;
 var old_value = null;
 
@@ -119,17 +81,7 @@ var old_value = null;
 /**
  * Returns value
  */
-string getValue()
-{
-	var nodes = this.getRef("text").childNodes;
-	Collection content = [];
-	for (int i=0; i<nodes.length; i++)
-	{
-		string item = nodes.item(i).innerText.trimRight();
-		content.push(item);
-	}
-	return rs::join("\n", content);
-}
+string getValue() => this.getRef("text").innerText;
 
 
 /**
@@ -138,20 +90,8 @@ string getValue()
 void setValue(string content)
 {
 	var text = this.getRef("text");
+	text.innerText = content;
 	this.old_value = content;
-	
-	/* Add lines */
-	text.innerHTML = "";
-	Collection<string> lines = rs::split("\n", content ? content : "");
-	for (int i=0; i<lines.count(); i++)
-	{
-		string line_text = lines.get(i).trimRight();
-		var line_elem = this.createNewLine(line_text);
-		text.append(line_elem);
-	}
-	
-	/* Update lines */
-	this.updateLinesCount();
 }
 
 
@@ -164,176 +104,6 @@ Map getProps()
 		"readonly": true,
 	};
 	return {};
-}
-
-
-/**
- * Returns new line
- */
-var createNewLine(string text = "")
-{
-	var div = document.createElement("div");
-	div.classList.add("line");
-	div.innerText = text;
-	return div;
-}
-
-
-/**
- * Returns line
- */
-var findLine(var node)
-{
-	while (node and (node.nodeType == 3 or not(node.classList.contains("line"))))
-	{
-		node = node.parentElement;
-	}
-	return node;
-}
-
-
-/**
- * Returns line element
- */
-var getLineElement(int pos) => this.getRef("text").childNodes.item(pos);
-
-
-/**
- * Returns line element
- */
-var getLinePosition(var line)
-{
-	var nodes = this.getRef("text").childNodes;
-	for (int i=0; i<nodes.length; i++)
-	{
-		if (nodes.item(i) == line) return i;
-	}
-	return -1;
-}
-
-
-/**
- * Returns node offset
- */
-int getNodeOffset(var line, var node, int offset)
-{
-	int pos = 0;
-	bool is_line = line == node;
-	var current = line.firstChild;
-	while (current)
-	{
-		if (is_line and offset == 0) break;
-		if (current.nodeType == 3)
-		{
-			if (is_line)
-			{
-				offset = offset - 1;
-			}
-			else
-			{
-				if (current == node)
-				{
-					return pos + offset;
-				}
-			}
-			pos = pos + current.textContent.length;
-		}
-		current = current.nextSibling;
-	}
-	return pos;
-}
-
-
-/**
- * Returns selection
- */
-var getSelection() => this.getRef("text").ownerDocument.defaultView.getSelection();
-
-
-/**
- * Returns cursor position
- */
-var getCursorPos()
-{
-	var selection = this.getSelection();
-	var range = selection.getRangeAt(0);
-	
-	/* Get range start */
-	var start_line = this.findLine(range.startContainer);
-	int start_y = this.getLinePosition(start_line);
-	int start_x = this.getNodeOffset(start_line, range.startContainer, range.startOffset);
-	
-	/* Get range end */
-	var end_line = this.findLine(range.endContainer);
-	int end_y = this.getLinePosition(end_line);
-	int end_x = this.getNodeOffset(end_line, range.endContainer, range.endOffset);
-	
-	return {
-		"start_y": start_y, "start_x": start_x,
-		"end_y": end_y, "end_x": end_x,
-	}
-}
-
-
-/**
- * Set cursor position
- */
-void setCursorPos(int x, int y)
-{
-	var selection = this.getSelection();
-	var range = document.createRange();
-	
-	/* Get first node of line */
-	var line_elem = this.getLineElement(y);
-	var current = line_elem.firstChild;
-	
-	/* Find node contains x */
-	int pos = 0;
-	int offset = 0;
-	while (current)
-	{
-		if (current.nodeType == 3)
-		{
-			int node_size = current.textContent.length;
-			if (pos + node_size >= x)
-			{
-				offset = x - pos;
-				break;
-			}
-			pos = pos + node_size;
-		}
-		current = current.nextSibling;
-	}
-	
-	/* If node not found */
-	if (current == null)
-	{
-		current = line_elem;
-		offset = line_elem.childNodes.length;
-	}
-	
-	/* Set cursor */
-	range.setStart(current, offset);
-	range.setEnd(current, offset);
-	selection.removeAllRanges();
-	selection.addRange(range);
-	
-	return range;
-}
-
-
-/**
- * Update lines count
- */
-void updateLinesCount()
-{
-	this.lines = [];
-	var nodes = this.getRef("text").childNodes;
-	for (int i=0; i<nodes.length; i++)
-	{
-		var item = nodes.item(i);
-		this.lines.push(item.getBoundingClientRect().height);
-	}
 }
 
 
@@ -359,124 +129,21 @@ void onUpdated()
 
 
 /**
- * Paste text to current position
- */
-void pasteText(string text)
-{
-	Dict cursor = this.getCursorPos();
-	int line_pos = cursor.get("end_y");
-	int line_offset = cursor.get("end_x");
-	int line_offset_new = 0;
-	var line_elem = this.getLineElement(line_pos);
-	string line_text = line_elem.innerText;
-	
-	Collection<string> lines = rs::split("\n", text);
-	if (lines.count() > 1)
-	{
-		/* Change first line */
-		string first_line = lines.shift();
-		line_elem.innerText = line_text.slice(0, line_offset) ~ first_line;
-		
-		/* Change last line */
-		int lines_last_pos = lines.count() - 1;
-		line_offset_new = rs::strlen(lines.get(lines_last_pos));
-		lines.set(lines_last_pos, lines.get(lines_last_pos) ~ line_text.slice(line_offset));
-	}
-	else
-	{
-		string first_line = line_text.slice(0, line_offset) ~ lines.pop();
-		line_elem.innerText = first_line ~ line_text.slice(line_offset);
-		line_offset_new = rs::strlen(first_line);
-	}
-	
-	/* Insert lines after line_elem */
-	int lines_count = lines.count();
-	for (int i=0; i<lines_count; i++)
-	{
-		string line_content = lines.get(i);
-		var line_new = this.createNewLine(line_content);
-		line_elem = line_elem.insertAdjacentElement("afterend", line_new);
-	}
-	
-	this.setCursorPos(line_offset_new, line_pos + lines.count());
-	this.updateLinesCount();
-}
-
-
-/**
  * Key down event
  */
 void onKeyDown(var e)
 {
-	if (e.key == "Enter")
+	if (e.key == "Tab")
 	{
 		e.preventDefault();
 		e.stopPropagation();
-		this.pasteText("\n");
+		var selection = this.getRef("text").ownerDocument.defaultView.getSelection();
+		var range = selection.getRangeAt(0);
+		var node = document.createTextNode("\t");
+		range.insertNode(node);
+		range.setStartAfter(node);
+		range.setEndAfter(node);
 	}
-	else if (e.key == "Backspace")
-	{
-		Dict cursor = this.getCursorPos();
-		if (cursor.get("start_x") == 0)
-		{
-			window.setTimeout(void (){ this.updateLinesCount(); }, 10);
-		}
-	}
-	else if (e.key == "Delete")
-	{
-		Dict cursor = this.getCursorPos();
-		var line = this.getLineElement(cursor.get("start_y"));
-		if (cursor.get("start_x") == line.innerText.length)
-		{
-			window.setTimeout(void (){ this.updateLinesCount(); }, 10);
-		}
-	}
-	else if (e.key == "Tab")
-	{
-		e.preventDefault();
-		e.stopPropagation();
-		
-		/* Shift + Tab */
-		if (e.shiftKey)
-		{
-			Dict cursor = this.getCursorPos();
-			var line = this.getLineElement(cursor.get("start_y"));
-			int offset = cursor.get("start_x");
-			if (offset == 0) return;
-			
-			string text = line.innerText;
-			string last_char = rs::charAt(text, offset - 1);
-			if (last_char != "\t") return;
-			
-			line.innerText = text.slice(0, offset - 1) ~ text.slice(offset);
-			this.setCursorPos(offset - 1, cursor.get("start_y"));
-		}
-		
-		/* Tab */
-		else
-		{
-			var node = document.createTextNode("\t");
-			var selection = this.getSelection();
-			var range = selection.getRangeAt(0);
-			range.insertNode(node);
-			range.setStartAfter(node);
-			range.setEndAfter(node);
-		}
-	}
-	this.sendChangeMessage();
-}
-
-
-/**
- * Paste event
- */
-void onPaste(var e)
-{
-	e.preventDefault();
-	e.stopPropagation();
-	string text = e.clipboardData.getData("text");
-	this.pasteText(text);
-	this.sendChangeMessage();
 }
 
 
@@ -484,15 +151,6 @@ void onPaste(var e)
  * Input event
  */
 void onInput(var e)
-{
-	this.sendChangeMessage();
-}
-
-
-/**
- * Send change message
- */
-void sendChangeMessage()
 {
 	if (this.change_timer != null)
 	{
@@ -508,14 +166,6 @@ void sendChangeMessage()
  */
 void onChange(var e)
 {
-	/* Clear timer */
-	if (this.change_timer != null)
-	{
-		window.clearTimeout(this.change_timer);
-		this.change_timer = null;
-	}
-	
-	/* Get value */
 	string value = this.getValue();
 	
 	/* Send value change */
