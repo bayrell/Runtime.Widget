@@ -71,7 +71,7 @@
 	{
 		<div class="widget_row_buttons"
 			class={{ this.class }}
-			class={{ static::getStyles("widget_row_buttons", this.model.styles) }}
+			class={{ static::mergeStyles("widget_row_buttons", this.model.styles) }}
 		>
 			%render this.renderItems();
 		</div>
@@ -80,7 +80,7 @@
 	{
 		<div class="widget_row_buttons"
 			class={{ this.class }}
-			class={{ static::getStyles("widget_row_buttons", this.styles) }}
+			class={{ static::mergeStyles("widget_row_buttons", this.styles) }}
 		>
 			%render this.renderSlot("default");
 		</div>

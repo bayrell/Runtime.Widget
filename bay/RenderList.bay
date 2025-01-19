@@ -26,21 +26,19 @@
 	%for (int i=0; i<items_count; i++)
 	{
 		%set BaseModel widget = this.model.items.get(i);
-		%render this.renderWidget(
+		%set Dict widget_params = this.getWidgetParams(
 			widget,
-			this.getWidgetParams(
-				widget,
-				{
-					"data": this.data,
-					"render_list": {
-						"position": i,
-						"count": items_count,
-						"first": i == 0,
-						"last": i == (items_count - 1),
-					}
+			{
+				"data": this.data,
+				"render_list": {
+					"position": i,
+					"count": items_count,
+					"first": i == 0,
+					"last": i == (items_count - 1),
 				}
-			)
+			}
 		);
+		%render this.renderWidget(widget, widget_params);
 	}
 </template>
 

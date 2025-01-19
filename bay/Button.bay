@@ -35,6 +35,9 @@
 .widget_button:active{
 	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
 }
+.widget_button--bold{
+	font-weight: bold;
+}
 .widget_button--small{
 	padding: var(--widget-button-padding-small-y) var(--widget-button-padding-small-x);
 	line-height: 1.2em;
@@ -69,7 +72,7 @@
 	{
 		<button type={{ this.type }}
 			class="widget_button"
-			class={{ static::getStyles("widget_button", data.get("styles")) }}
+			class={{ static::mergeStyles("widget_button", data.get("styles")) }}
 			class={{ this.renderListClass() }}
 			class={{ this.class }}
 			@event:click={{ this.onClick }}
@@ -94,7 +97,7 @@
 		>
 			<button type={{ this.type }}
 				class="widget_button"
-				class={{ static::getStyles("widget_button", data.get("styles")) }}
+				class={{ static::mergeStyles("widget_button", data.get("styles")) }}
 				class={{ this.renderListClass() }}
 				@event:click={{ this.onClick }}
 			>
@@ -131,7 +134,7 @@ Dict getData()
 	if (this.model)
 	{
 		Dict props = this.model.getProps(this.data);
-		props.set("styles", props.get("styles").concat(this.model.styles));
+		props.set("styles", this.styles.concat(this.model.styles).removeDuplicates());
 		return props;
 	}
 	return {
