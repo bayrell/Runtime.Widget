@@ -32,6 +32,11 @@
 
 <style>
 .widget_form{
+	.widget_form__title{
+		text-align: center;
+		font-size: 16px;
+		margin-bottom: 10px;
+	}
 	.widget_form__field_row{
 		margin-bottom: 10px;
 	}
@@ -60,7 +65,16 @@
 
 
 <template name="renderTitle">
-	%render this.renderSlot("title");
+	%if (this.model.form_title != "")
+	{
+		<div class="widget_form__title">
+			{{ this.model.form_title }}
+		</div>
+	}
+	%else
+	{
+		%render this.renderSlot("title");
+	}
 </template>
 
 
@@ -179,8 +193,9 @@
 
 <template name="renderFieldRow" args="Dict field">
 	%set string field_name = field.get("name");
+	%set bool show_label = this.model.field_settings.get("show_label", true);
 	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
-		%if (field.has("label"))
+		%if (show_label and field.has("label"))
 		{
 			<div class="widget_form__field_label">
 				%render this.renderFieldLabel(field);
@@ -223,7 +238,9 @@
 
 
 <template>
-	<div class="widget_form" class={{ this.class }}>
+	<div class="widget_form" class={{ this.class }}
+		class={{ static::mergeStyles("widget_form", this.model.styles) }}
+	>
 		%render this.renderTitle();
 		%render this.renderFields();
 		%render this.renderBottomButtons();

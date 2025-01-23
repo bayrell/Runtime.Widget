@@ -16,36 +16,39 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.RenderList">
+<class name="Runtime.Widget.Gallery.Gallery">
 
-<use name="Runtime.Web.BaseModel" />
+<use name="Runtime.Web.Annotations.Param" />
 
 
-<template name="renderItems">
-	%set int items_count = this.model.items.count();
-	%for (int i=0; i<items_count; i++)
-	{
-		%set BaseModel widget = this.model.items.get(i);
-		%set Dict widget_params = this.getWidgetParams(
-			widget,
-			{
-				"data": this.data,
-				"render_list": {
-					"position": i,
-					"count": items_count,
-					"first": i == 0,
-					"last": i == (items_count - 1),
-				}
-			}
-		);
-		%render this.renderWidget(widget, widget_params);
-	}
+<style>
+.widget_gallery__items{
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	flex-wrap: wrap;
+}
+</style>
+
+
+<template name="renderItem" args="int pos">
+	%render this.renderSlot("default", {
+		"pos": pos,
+		"item": this.model.items.get(pos),
+		"onClick": void () use (pos){ this.onClick(pos); },
+	});
 </template>
 
 
 <template>
-	<div class="widget_render_list" @ref="widget">
-		%render this.renderItems();
+	<div class="widget_gallery" class={{ this.class }}>
+		<div class="widget_gallery__items">
+			%for (int i=0; i<this.model.items.count(); i++)
+			{
+				%render this.renderItem(i);
+			}
+		</div>
+		%render this.renderWidget(this.model.dialog);
 	</div>
 </template>
 
@@ -53,9 +56,13 @@
 <script>
 
 /**
- * Returns widget params
+ * On click
  */
-Dict getWidgetParams(BaseModel widget, Dict data) => data;
+void onClick(int pos)
+{
+	this.model.dialog.select(pos);
+	this.model.dialog.show();
+}
 
 </script>
 

@@ -58,7 +58,15 @@
 			"type": "module"
 		},
 		{
+			"src": "bay/Editor",
+			"type": "module"
+		},
+		{
 			"src": "bay/Form",
+			"type": "module"
+		},
+		{
+			"src": "bay/Gallery",
 			"type": "module"
 		},
 		{
@@ -100,10 +108,13 @@
 		"ContextMenu/",
 		"Crud/",
 		"Dialog/",
+		"Editor/",
 		"Form/",
+		"Gallery/",
 		"Seo/",
 		"Tab/",
 		"Table/",
-		"Tree/"
+		"Tree/",
+		"WidgetSettings/"
 	]
 }
