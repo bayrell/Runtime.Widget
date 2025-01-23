@@ -20,22 +20,15 @@ namespace Runtime.Widget.Crud;
 
 use Runtime.Web.BaseApi;
 use Runtime.Widget.Crud.CrudRule;
+use Runtime.Widget.Crud.CrudService;
 
 
 class SearchApi extends BaseApi
 {
-	Collection<Dict> items = null;
-	int page = 0;
-	int pages = 0;
-	int limit = 0;
-	
-	
 	/**
-	 * Returns rules
+	 * Returns service
 	 */
-	Vector<CrudRule> getRules() =>
-	[
-	];
+	CrudService createService() => null;
 	
 	
 	/**
@@ -47,18 +40,26 @@ class SearchApi extends BaseApi
 	
 	
 	/**
-	 * Search items
-	 */
-	async void searchItems()
-	{
-	}
-	
-	
-	/**
 	 * Build result
 	 */
-	async void buildResult()
+	async void buildResult(CrudService service)
 	{
+		if (not service.items) return;
+		
+		/* Convert item */
+		Collection fields = this.getItemFields();
+		Collection items = service.items.map(
+			Dict (Dict item) use (service, fields) => service.convertItem(item, fields)
+		);
+		
+		/* Setup result */
+		this.result.data.set("items", items);
+		this.result.data.set("page", service.page);
+		this.result.data.set("pages", service.pages);
+		this.result.data.set("limit", service.limit);
+		
+		/* Success */
+		this.success();
 	}
 	
 	
@@ -67,7 +68,13 @@ class SearchApi extends BaseApi
 	 */
 	async void actionSearch()
 	{
-		await this.searchItems();
-		await this.buildResult();
+		/* Create service */
+		CrudService service = this.createService();
+		
+		/* Search items */
+		await service.search(this.post_data);
+		
+		/* Build result */
+		this.buildResult(service);
 	}
 }

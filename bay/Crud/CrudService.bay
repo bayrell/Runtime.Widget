@@ -1,0 +1,265 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.BaseObject;
+use Runtime.Web.ApiResult;
+use Runtime.Widget.Crud.RulesManager;
+
+
+class CrudService extends BaseObject
+{
+	RulesManager rules = null;
+	Dict post_data = null;
+	string action = "";
+	
+	/* Item */
+	Dict pk = null;
+	Dict item = null;
+	
+	/* Search */
+	Collection<Dict> items = null;
+	int page = 0;
+	int pages = 0;
+	int limit = 0;
+	
+	
+	/**
+	 * New item
+	 */
+	async Dict newItem() => null;
+	
+	
+	/**
+	 * Find item
+	 */
+	async Dict findItem(Dict pk) => null;
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Collection getItemFields() =>
+	[
+	];
+	
+	
+	/**
+	 * Returns save fields
+	 */
+	Collection getSaveFields() =>
+	[
+	];
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Dict item) => null;
+	
+	
+	/**
+	 * Set item
+	 */
+	void setItemValue(Dict item, string key, var value)
+	{
+		item.set(key, value);
+	}
+	
+	
+	/**
+	 * Set item data
+	 */
+	void setItemData(Dict item, Dict data)
+	{
+		Collection<string> keys = this.getSaveFields();
+		for (int i=0; i<keys.count(); i++)
+		{
+			string key = keys.get(i);
+			if (not data.has(key)) continue;
+			var value = data.get(key);
+			this.setItemValue(item, key, value);
+		}
+	}
+	
+	
+	/**
+	 * Convert item
+	 */
+	Map convertItem(Dict item, Collection fields)
+	{
+		return item.intersect(fields);
+	}
+	
+	
+	/**
+	 * Load item
+	 */
+	async bool loadItem(Dict pk, bool create_instance = true)
+	{
+		this.item = null;
+		
+		if (pk != null and pk instanceof Dict)
+		{
+			this.item = await this.findItem(pk);
+		}
+		else
+		{
+			if (create_instance)
+			{
+				this.item = this.newItem();
+			}
+		}
+		
+		return this.item != null;
+	}
+	
+	
+	/**
+	 * Validate data
+	 */
+	Dict validate(Dict data) => this.rules.validate(data);
+	
+	
+	/**
+	 * Search items
+	 */
+	async void search(Dict post_data)
+	{
+		this.action = "search";
+		this.post_data = post_data;
+		
+		/* Set result */
+		this.items = [];
+		this.page = 0;
+		this.pages = 0;
+		this.limit = 0;
+	}
+	
+	
+	/**
+	 * Before save
+	 */
+	async void onSaveBefore()
+	{
+		await this.rules.onSaveBefore(this);
+	}
+	
+	
+	/**
+	 * After save
+	 */
+	async void onSaveAfter()
+	{
+		await this.rules.onSaveAfter(this);
+	}
+	
+	
+	/**
+	 * Save item
+	 */
+	async void saveItem()
+	{
+	}
+	
+	
+	/**
+	 * Save
+	 */
+	async bool save(Dict pk, Dict post_data)
+	{
+		this.action = "save";
+		this.post_data = post_data;
+		this.pk = pk;
+		
+		/* Load item */
+		await this.loadItem(this.pk);
+		if (this.item == null) return false;
+		
+		/* Validate item */
+		this.data = this.validate(post_data.copy());
+		if (not this.rules.correct()) return false;
+		
+		/* Set item data */
+		this.setItemData(this.item, this.data);
+		
+		/* Before save */
+		await this.onSaveBefore();
+		if (not this.rules.correct()) return;
+		
+		/* Save item */
+		await this.saveItem();
+		
+		/* After save */
+		await this.onSaveAfter();
+		
+		return true;
+	}
+	
+	
+	/**
+	 * Before delete
+	 */
+	async void onDeleteBefore()
+	{
+		await this.rules.onDeleteBefore(this);
+	}
+	
+	
+	/**
+	 * After delete
+	 */
+	async void onDeleteAfter()
+	{
+		await this.rules.onDeleteAfter(this);
+	}
+	
+	
+	/**
+	 * Delete item
+	 */
+	async void deleteItem()
+	{
+	}
+	
+	
+	/**
+	 * Delete
+	 */
+	async bool delete(Dict pk)
+	{
+		this.action = "delete";
+		this.pk = pk;
+		
+		/* Load item */
+		await this.loadItem(this.pk);
+		if (this.item == null) return false;
+		
+		/* Before delete */
+		await this.onDeleteBefore();
+		
+		/* Delete item */
+		await this.deleteItem();
+		
+		/* After delete */
+		await this.onDeleteAfter();
+		
+		return true;
+	}
+}

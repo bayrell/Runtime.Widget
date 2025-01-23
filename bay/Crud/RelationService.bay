@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.Crud;
 
+use Runtime.Callback;
 use Runtime.ORM.Connection;
-use Runtime.ORM.Cursor;
 use Runtime.ORM.Provider;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryField;
@@ -27,22 +27,31 @@ use Runtime.ORM.QueryFilter;
 use Runtime.ORM.QueryResult;
 use Runtime.ORM.Relation;
 use Runtime.ORM.Annotations.BaseType;
-use Runtime.Widget.Crud.SearchApi;
+use Runtime.Widget.Crud.CrudService;
 
 
-class SearchRelationApi extends SearchApi
+class RelationService extends CrudService
 {
-	Provider provider = null;
-	QueryResult items = null;
-	int page = 0;
-	int pages = 0;
-	int limit = 0;
+	Connection connection = this.getConnection();
+	Provider provider = @.provider(classof Provider);
+	Relation item = null;
+	
+	
+	/**
+	 * Returns relation name
+	 */
+	string getRelationName() => "";
 	
 	
 	/**
 	 * Returns table name
 	 */
-	string getTableName() => "";
+	string getTableName()
+	{
+		string class_name = this.getRelationName();
+		string table_name = new Callback(class_name, "getTableName").apply();
+		return table_name;
+	}
 	
 	
 	/**
@@ -63,6 +72,12 @@ class SearchRelationApi extends SearchApi
 	
 	
 	/**
+	 * Create search query
+	 */
+	Query createSearchQuery() => new Query().relation(this.getRelationName()).select();
+	
+	
+	/**
 	 * Build search query
 	 */
 	async void buildSearchQuery(Query q)
@@ -71,49 +86,65 @@ class SearchRelationApi extends SearchApi
 	
 	
 	/**
-	 * Convert item
+	 * New item
 	 */
-	Map convertItem(Collection fields, Relation item)
+	async Dict newItem() => Relation::newInstance(this.getRelationName());
+	
+	
+	/**
+	 * Find item
+	 */
+	async Relation findItem(Dict pk)
 	{
-		return item.intersect(fields);
+		string class_name = this.getRelationName();
+		
+		/* Create query */
+		Query q = this.createSearchQuery().limit(1);
+		
+		/* Get primary key */
+		Collection filter = this.provider.getPrimaryFilter(q.table_name, pk);
+		q.setFilter(filter);
+		
+		/* Extend query */
+		await this.buildSearchQuery(q);
+		
+		/* Find relation */
+		Relation item = await this.connection.findRelation(q);
+		return item;
 	}
 	
 	
 	/**
 	 * Search items
 	 */
-	async void searchItems()
+	async void search(Dict post_data)
 	{
-		int page = this.post_data.get("page", 0);
-		int limit = this.post_data.get("limit", 10);
-		string table_name = this.getTableName();
+		this.action = "search";
+		this.post_data = post_data;
+		this.page = this.post_data.get("page", 0);
+		this.limit = this.post_data.get("limit", 10);
 		
-		/* Build query */
-		Query q = new Query()
-			.select()
-			.from(table_name)
-			.limit(limit)
-			.page(page)
-		;
-		
-		/* Get provider */
-		this.provider = @.provider(classof Provider);
+		/* Create query */
+		Query q = this.createSearchQuery();
 		
 		/* Add fields */
 		Collection<string> fields = this.getItemFields();
 		for (int i=0; i<fields.count(); i++)
 		{
 			string field_name = fields.get(i);
-			QueryField field = this.getQueryField(table_name, field_name);
+			QueryField field = this.getQueryField(q._table_name, field_name);
 			if (field) q.addField(field);
 		}
+		
+		/* Set page */
+		q.limit(this.limit).page(this.page);
 		
 		/* Set found_rows */
 		q.calcFoundRows(true);
 		bool found_rows = this.post_data.get("found_rows", true);
 		if (q._calc_found_rows and not found_rows) q.calcFoundRows(false);
 		
-		/* Build search query */
+		/* Extend query */
 		await this.buildSearchQuery(q);
 		
 		/* Get query result */
@@ -128,25 +159,22 @@ class SearchRelationApi extends SearchApi
 	
 	
 	/**
-	 * Build result
+	 * Save item
 	 */
-	async void buildResult()
+	async void saveItem()
 	{
-		if (not this.items) return;
+		await this.item.save(this.connection);
 		
-		/* Convert item */
-		Collection fields = this.getItemFields();
-		Collection items = this.items.map(
-			Dict (Relation item) use (fields) => this.convertItem(fields, item)
-		);
-		
-		/* Setup result */
-		this.result.data.set("items", items);
-		this.result.data.set("page", this.page);
-		this.result.data.set("pages", this.pages);
-		this.result.data.set("limit", this.limit);
-		
-		/* Success */
-		this.success();
+		/* Refresh item */
+		this.item = await this.findItem(this.getPrimaryKey(this.item));
+	}
+	
+	
+	/**
+	 * Delete item
+	 */
+	async void deleteItem()
+	{
+		await this.item.delete(this.connection);
 	}
 }

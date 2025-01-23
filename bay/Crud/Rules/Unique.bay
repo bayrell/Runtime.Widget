@@ -23,6 +23,7 @@ use Runtime.BaseStruct;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.ORM.Connection;
 use Runtime.ORM.Cursor;
+use Runtime.ORM.Provider;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryFilter;
 use Runtime.ORM.Relation;
@@ -41,9 +42,13 @@ struct Unique extends CrudRule
 	 */
 	async void onSaveBefore(SaveApi api)
 	{
+		Connection connection = api.getConnection();
+		Provider provider = @.provider(classof Provider);
+		string table_name = api.getTableName();
+		
 		Query q = new Query()
 			.select()
-			.from(api.getTableName())
+			.from(table_name)
 			.addRawField("count(1) as c")
 		;
 		
@@ -61,7 +66,7 @@ struct Unique extends CrudRule
 		/* Add primary key */
 		if (api.item != null and not api.item.isNew())
 		{
-			Collection filter = Relation::getPrimaryFilter(
+			Collection filter = provider.getPrimaryFilter(
 				api.getTableName(), api.item.toMap(), true
 			);
 			for (int i=0; i<filter.count(); i++)
@@ -73,8 +78,7 @@ struct Unique extends CrudRule
 		}
 		
 		/* Execute query */
-		Connection connection = api.getConnection();
-		int res = await connection.fetchVar(q, 'c');
+		int res = await connection.fetchVar(q, "c");
 		if (res > 0)
 		{
 			for (int i=0; i<this.keys.count(); i++)
