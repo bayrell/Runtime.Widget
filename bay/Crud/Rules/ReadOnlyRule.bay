@@ -19,12 +19,11 @@
 namespace Runtime.Widget.Crud.Rules;
 
 use Runtime.re;
-use Runtime.BaseStruct;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.Widget.Crud.Rules.CrudRule;
+use Runtime.Widget.Crud.RulesManager;
+use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct ReadOnlyRule extends CrudRule
+struct ReadOnlyRule extends BaseRule
 {
 	string name = "";
 	bool can_create = false;
@@ -34,12 +33,11 @@ struct ReadOnlyRule extends CrudRule
 	/**
 	 * Validate item
 	 */
-	async Dict validateItem(SaveApi api, Dict data)
+	async bool validate(RulesManager rules, Dict data)
 	{
-		Dict pk = api.pk;
-		if (api.pk == null and this.can_create) return data;
-		if (api.pk != null and this.can_update) return data;
+		if (rules.isCreate() and this.can_create) return true;
+		if (rules.isUpdate() and this.can_update) return true;
 		data.remove(this.name);
-		return data;
+		return true;
 	}
 }

@@ -19,25 +19,66 @@
 namespace Runtime.Widget.Crud;
 
 use Runtime.BaseObject;
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.ItemNotFound;
 use Runtime.Web.ApiResult;
 use Runtime.Widget.Crud.RulesManager;
 
 
 class CrudService extends BaseObject
 {
-	RulesManager rules = null;
-	Dict post_data = null;
-	string action = "";
+	/* Rules */
+	RulesManager rules = new RulesManager();
 	
 	/* Item */
 	Dict pk = null;
 	Dict item = null;
+	bool is_create = false;
 	
 	/* Search */
+	Dict search_params = null;
 	Collection<Dict> items = null;
 	int page = 0;
 	int pages = 0;
 	int limit = 0;
+	
+	
+	/**
+	 * Constructor
+	 */
+	void constructor()
+	{
+		parent();
+		this.initRules();
+	}
+	
+	
+	/**
+	 * Returns true if create
+	 */
+	bool isCreate() => this.is_create;
+	
+	
+	/**
+	 * Returns true if update
+	 */
+	bool isUpdate() => not this.is_create;
+	
+	
+	/**
+	 * Returns true if search
+	 */
+	bool isSearch() => this.search_params != null;
+	
+	
+	/**
+	 * Set create
+	 */
+	void setCreate(bool value)
+	{
+		this.is_create = value;
+		this.rules.setCreate(value);
+	}
 	
 	
 	/**
@@ -53,11 +94,11 @@ class CrudService extends BaseObject
 	
 	
 	/**
-	 * Returns item fields
+	 * Init rules
 	 */
-	Collection getItemFields() =>
-	[
-	];
+	void initRules()
+	{
+	}
 	
 	
 	/**
@@ -75,6 +116,17 @@ class CrudService extends BaseObject
 	
 	
 	/**
+	 * Set new item
+	 */
+	void setItem(Dict item, bool is_new = false)
+	{
+		this.item = item;
+		this.pk = item ? this.getPrimaryKey(this.item) : null;
+		this.setCreate(is_new);
+	}
+	
+	
+	/**
 	 * Set item
 	 */
 	void setItemValue(Dict item, string key, var value)
@@ -88,6 +140,8 @@ class CrudService extends BaseObject
 	 */
 	void setItemData(Dict item, Dict data)
 	{
+		if (not data) return;
+		
 		Collection<string> keys = this.getSaveFields();
 		for (int i=0; i<keys.count(); i++)
 		{
@@ -111,45 +165,100 @@ class CrudService extends BaseObject
 	/**
 	 * Load item
 	 */
-	async bool loadItem(Dict pk, bool create_instance = true)
+	async void loadItem(Dict pk, bool create_instance = false)
 	{
-		this.item = null;
-		
 		if (pk != null and pk instanceof Dict)
 		{
-			this.item = await this.findItem(pk);
+			var item = await this.findItem(pk);
+			this.setItem(item, false);
 		}
 		else
 		{
 			if (create_instance)
 			{
-				this.item = this.newItem();
+				this.setItem(this.newItem(), true);
 			}
 		}
 		
-		return this.item != null;
+		/* Item not found */
+		if (this.item == null)
+		{
+			throw new ApiError(new ItemNotFound());
+		}
 	}
 	
 	
 	/**
 	 * Validate data
 	 */
-	Dict validate(Dict data) => this.rules.validate(data);
+	async void validate()
+	{
+		await this.rules.validate(this.data);
+	}
+	
+	
+	/**
+	 * Before search
+	 */
+	async void onSearchBefore()
+	{
+		await this.rules.onSearchBefore(this);
+	}
+	
+	
+	/**
+	 * After search
+	 */
+	async void onSearchAfter()
+	{
+		await this.rules.onSearchAfter(this);
+	}
+	
+	
+	/**
+	 * Load items
+	 */
+	async void loadItems()
+	{
+		this.items = [];
+		this.page = 0;
+		this.pages = 0;
+		this.limit = 0;
+	}
 	
 	
 	/**
 	 * Search items
 	 */
-	async void search(Dict post_data)
+	async void search(Dict params)
 	{
-		this.action = "search";
-		this.post_data = post_data;
+		/* Set search params */
+		this.search_params = params;
 		
-		/* Set result */
-		this.items = [];
-		this.page = 0;
-		this.pages = 0;
-		this.limit = 0;
+		/* Before search */
+		await this.onSearchBefore();
+		
+		/* Load items */
+		await this.loadItems();
+		
+		/* After search */
+		await this.onSearchAfter();
+	}
+	
+	
+	/**
+	 * Search item
+	 */
+	async void searchItem(Dict pk)
+	{
+		/* Before search */
+		await this.onSearchBefore();
+		
+		/* Load item */
+		await this.loadItem(pk, false);
+		
+		/* After search */
+		await this.onSearchAfter();
 	}
 	
 	
@@ -182,26 +291,21 @@ class CrudService extends BaseObject
 	/**
 	 * Save
 	 */
-	async bool save(Dict pk, Dict post_data)
+	async bool save(Dict data)
 	{
-		this.action = "save";
-		this.post_data = post_data;
-		this.pk = pk;
-		
-		/* Load item */
-		await this.loadItem(this.pk);
-		if (this.item == null) return false;
+		if (data == null or not(data instanceof Dict)) data = {};
 		
 		/* Validate item */
-		this.data = this.validate(post_data.copy());
+		this.data = data.copy();
+		await this.validate();
 		if (not this.rules.correct()) return false;
-		
-		/* Set item data */
-		this.setItemData(this.item, this.data);
 		
 		/* Before save */
 		await this.onSaveBefore();
 		if (not this.rules.correct()) return;
+		
+		/* Set item data */
+		this.setItemData(this.item, this.data);
 		
 		/* Save item */
 		await this.saveItem();
@@ -242,15 +346,8 @@ class CrudService extends BaseObject
 	/**
 	 * Delete
 	 */
-	async bool delete(Dict pk)
+	async bool delete()
 	{
-		this.action = "delete";
-		this.pk = pk;
-		
-		/* Load item */
-		await this.loadItem(this.pk);
-		if (this.item == null) return false;
-		
 		/* Before delete */
 		await this.onDeleteBefore();
 		

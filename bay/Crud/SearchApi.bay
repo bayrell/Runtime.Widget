@@ -64,6 +64,45 @@ class SearchApi extends BaseApi
 	
 	
 	/**
+	 * Build item result
+	 */
+	async void buildItemResult(CrudService service)
+	{
+		if (not service.item) return;
+		
+		/* Convert item */
+		Collection fields = this.getItemFields();
+		Dict item = service.convertItem(service.item, fields);
+		Dict pk = service.getPrimaryKey(service.item);
+		
+		/* Setup result */
+		this.result.data.set("pk", pk);
+		this.result.data.set("item", item);
+		this.result.data.set("fields", service.rules.getFields());
+		
+		/* Success */
+		this.success();
+	}
+	
+	
+	/**
+	 * Action item
+	 */
+	async void actionItem()
+	{
+		/* Create service */
+		CrudService service = this.createService();
+		
+		/* Load item */
+		await service.searchItem(this.post_data.get("pk"));
+		
+		/* Build result */
+		this.buildError(service);
+		this.buildItemResult(service);
+	}
+	
+	
+	/**
 	 * Action search
 	 */
 	async void actionSearch()

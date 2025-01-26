@@ -19,13 +19,11 @@
 namespace Runtime.Widget.Crud.Rules;
 
 use Runtime.re;
-use Runtime.BaseStruct;
-use Runtime.Widget.Crud.SaveApi;
-use Runtime.Widget.Crud.FieldResult;
-use Runtime.Widget.Crud.Rules.CrudRule;
+use Runtime.Widget.Crud.RulesManager;
+use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct MatchRule extends CrudRule
+struct MatchRule extends BaseRule
 {
 	static const string ALPHA_NUMERIC = "^[0-9a-zA-Z]*$";
 	static const string ALPHA_NUMERIC_DASH = "^[0-9a-zA-Z\_\-]*$";
@@ -37,18 +35,19 @@ struct MatchRule extends CrudRule
 	/**
 	 * Validate item
 	 */
-	async Dict validateItem(SaveApi api, Dict data)
+	async bool validate(RulesManager rules, Dict data)
 	{
 		var value = data[this.name];
-		if (value == "") return data;
+		if (value == "") return true;
 		
 		/* Match string */
 		bool check = re::match(this.regular, value, this.pattern);
 		if (not check)
 		{
-			api.fields.addFieldError(this.name, "The field contains invalid characters");
+			rules.addFieldError(this.name, "The field contains invalid characters");
+			return false;
 		}
 		
-		return data;
+		return true;
 	}
 }

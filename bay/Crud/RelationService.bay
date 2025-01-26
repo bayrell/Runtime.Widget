@@ -61,20 +61,13 @@ class RelationService extends CrudService
 	
 	
 	/**
-	 * Returns query field
-	 */
-	QueryField getQueryField(string table_name, string field_name)
-	{
-		BaseType field = this.provider.getFieldType(table_name, field_name);
-		if (not field) return null;
-		return new QueryField(table_name, field_name);
-	}
-	
-	
-	/**
 	 * Create search query
 	 */
-	Query createSearchQuery() => new Query().relation(this.getRelationName()).select();
+	Query createSearchQuery() => new Query()
+		.select()
+		.relation(this.getRelationName())
+		.addField(new QueryField(this.getTableName(), "*"))
+	;
 	
 	
 	/**
@@ -96,13 +89,14 @@ class RelationService extends CrudService
 	 */
 	async Relation findItem(Dict pk)
 	{
+		if (pk == null) return null;
 		string class_name = this.getRelationName();
 		
 		/* Create query */
 		Query q = this.createSearchQuery().limit(1);
 		
 		/* Get primary key */
-		Collection filter = this.provider.getPrimaryFilter(q.table_name, pk);
+		Collection filter = this.provider.getPrimaryFilter(q._table_name, pk);
 		q.setFilter(filter);
 		
 		/* Extend query */
@@ -115,33 +109,22 @@ class RelationService extends CrudService
 	
 	
 	/**
-	 * Search items
+	 * Load items
 	 */
-	async void search(Dict post_data)
+	async void loadItems()
 	{
-		this.action = "search";
-		this.post_data = post_data;
-		this.page = this.post_data.get("page", 0);
-		this.limit = this.post_data.get("limit", 10);
+		this.page = this.search_params.get("page", 0);
+		this.limit = this.search_params.get("limit", 10);
 		
 		/* Create query */
 		Query q = this.createSearchQuery();
-		
-		/* Add fields */
-		Collection<string> fields = this.getItemFields();
-		for (int i=0; i<fields.count(); i++)
-		{
-			string field_name = fields.get(i);
-			QueryField field = this.getQueryField(q._table_name, field_name);
-			if (field) q.addField(field);
-		}
 		
 		/* Set page */
 		q.limit(this.limit).page(this.page);
 		
 		/* Set found_rows */
 		q.calcFoundRows(true);
-		bool found_rows = this.post_data.get("found_rows", true);
+		bool found_rows = this.search_params.get("found_rows", true);
 		if (q._calc_found_rows and not found_rows) q.calcFoundRows(false);
 		
 		/* Extend query */
@@ -156,6 +139,12 @@ class RelationService extends CrudService
 		this.pages = this.items.getPages();
 		this.limit = this.items.q._limit;
 	}
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Dict getPrimaryKey(Relation item) => item.getPrimaryKey();
 	
 	
 	/**

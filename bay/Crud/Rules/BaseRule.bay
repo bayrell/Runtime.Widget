@@ -16,42 +16,16 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.Crud;
+namespace Runtime.Widget.Crud.Rules;
 
-use Runtime.Exceptions.ApiError;
-use Runtime.Widget.Crud.FieldException;
+use Runtime.BaseStruct;
+use Runtime.Widget.Crud.RulesManager;
 
 
-class FieldResult extends Map
+struct BaseRule extends BaseStruct
 {
 	/**
-	 * Returns true if is success
+	 * Validate item
 	 */
-	bool isSuccess() => this.keys().count() == 0;
-	
-	
-	/**
-	 * Add field error
-	 */
-	void addFieldError(string field_name, string error_message)
-	{
-		if (not this.has(field_name))
-		{
-			this.set(field_name, new Vector);
-		}
-		Vector messages = this.get(field_name);
-		messages.push(error_message);
-	}
-	
-	
-	/**
-	 * Check error
-	 */
-	void checkError()
-	{
-		if (not this.isSuccess())
-		{
-			throw new ApiError( new FieldException() );
-		}
-	}
+	async bool validate(RulesManager rules, Map data) => true;
 }

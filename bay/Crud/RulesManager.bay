@@ -26,6 +26,8 @@ use Runtime.Widget.Crud.Rules.CrudRule;
 
 class RulesManager extends BaseObject
 {
+	string action = "";
+	bool is_create = false;
 	Collection rules = [];
 	Dict fields = {};
 	
@@ -41,6 +43,27 @@ class RulesManager extends BaseObject
 	
 	
 	/**
+	 * Returns true if create
+	 */
+	bool isCreate() => this.is_create;
+	
+	
+	/**
+	 * Returns true if update
+	 */
+	bool isUpdate() => not this.is_create;
+	
+	
+	/**
+	 * Set create
+	 */
+	void setCreate(bool value)
+	{
+		this.is_create = value;
+	}
+	
+	
+	/**
 	 * Returns fields
 	 */
 	Dict getFields() => this.fields;
@@ -49,7 +72,16 @@ class RulesManager extends BaseObject
 	/**
 	 * Returns true if all rules pass
 	 */
-	bool correct() => this.keys().count() == 0;
+	bool correct() => this.fields.keys().count() == 0;
+	
+	
+	/**
+	 * Add rules
+	 */
+	void addRules(Collection rules)
+	{
+		this.rules.appendItems(rules);
+	}
 	
 	
 	/**
@@ -59,7 +91,7 @@ class RulesManager extends BaseObject
 	{
 		if (not this.fields.has(field_name))
 		{
-			this.set(field_name, new Vector);
+			this.fields.set(field_name, new Vector);
 		}
 		Vector messages = this.fields.get(field_name);
 		messages.push(error_message);
@@ -69,20 +101,52 @@ class RulesManager extends BaseObject
 	/**
 	 * Validate data
 	 */
-	Dict validate(Dict data)
+	async void validate(Dict data)
 	{
 		for (int i=0; i<this.rules.count(); i++)
 		{
 			BaseRule rule = this.rules.get(i);
 			if (rule instanceof BaseRule)
 			{
-				rule.validate(this, data);
+				await rule.validate(this, data);
 			}
 		}
 	}
 	
 	
 	#ifdef BACKEND then
+	
+	/**
+	 * Before search
+	 */
+	async void onSearchBefore(CrudService service)
+	{
+		for (int i=0; i<this.rules.count(); i++)
+		{
+			CrudRule rule = this.rules[i];
+			if (rule instanceof CrudRule)
+			{
+				await rule.onSearchBefore(service);
+			}
+		}
+	}
+	
+	
+	/**
+	 * After search
+	 */
+	async void onSearchAfter(CrudService service)
+	{
+		for (int i=0; i<this.rules.count(); i++)
+		{
+			CrudRule rule = this.rules[i];
+			if (rule instanceof CrudRule)
+			{
+				await rule.onSearchAfter(service);
+			}
+		}
+	}
+	
 	
 	/**
 	 * Before save

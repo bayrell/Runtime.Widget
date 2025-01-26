@@ -65,7 +65,10 @@ class SaveApi extends BaseApi
 	 */
 	async void buildResult(CrudService service)
 	{
-		if (not service.item) return;
+		this.result.data.set("fields", service.rules.getFields());
+		
+		/* Check error */
+		this.buildError(service);
 		
 		/* Convert item */
 		Collection fields = this.getItemFields();
@@ -75,7 +78,6 @@ class SaveApi extends BaseApi
 		/* Setup result */
 		this.result.data.set("pk", pk);
 		this.result.data.set("item", item);
-		this.result.data.set("fields", service.rules.getFields());
 		
 		/* Success */
 		this.success();
@@ -91,15 +93,19 @@ class SaveApi extends BaseApi
 		CrudService service = this.createService();
 		
 		/* Load item */
-		Dict pk = this.post_data.get("pk");
-		await service.loadItem(pk);
+		await service.searchItem(this.post_data.get("pk"));
 		
 		/* Build result */
-		this.buildError(service);
 		this.buildResult(service);
-		
-		/* Build result */
-		await service.buildItemResult(this.result);
+	}
+	
+	
+	/**
+	 * Action create
+	 */
+	async void actionCreate()
+	{
+		await this.actionSave();
 	}
 	
 	
@@ -111,18 +117,14 @@ class SaveApi extends BaseApi
 		/* Create service */
 		CrudService service = this.createService();
 		
-		/* Get data */
-		Dict pk = this.post_data.get("pk");
-		Dict data = this.post_data.get("data");
+		/* Load item */
+		await service.loadItem(this.post_data.get("pk"), true);
 		
-		/* Save */
-		await service.save(pk, data);
-		
-		/* Build error */
-		this.buildError();
+		/* Save item */
+		await service.save(this.post_data.get("item"));
 		
 		/* Build result */
-		service.buildItemResult(this.result);
+		this.buildResult(service);
 	}
 	
 	
@@ -134,14 +136,13 @@ class SaveApi extends BaseApi
 		/* Create service */
 		CrudService service = this.createService();
 		
-		/* Delete */
-		Dict pk = this.post_data.get("pk");
-		await service.delete(pk);
+		/* Load item */
+		await service.loadItem(this.post_data.get("pk"));
 		
-		/* Build error */
-		this.buildError();
+		/* Delete item */
+		await service.delete();
 		
 		/* Build result */
-		service.buildItemResult(this.result);
+		this.buildResult(service);
 	}
 }

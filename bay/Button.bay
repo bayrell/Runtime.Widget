@@ -152,7 +152,8 @@ Dict getData()
 void onClick(var e)
 {
 	e.stopPropagation();
-	if (this.model)
+	Dict data = this.getData();
+	if (this.model and data.get("href") == null)
 	{
 		this.model.onClick(this.data);
 	}
