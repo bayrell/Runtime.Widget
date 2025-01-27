@@ -26,8 +26,9 @@
 	max-width: 1000px;
 	background: transparent;
 	border: 0px transparent solid;
-	margin: calc(var(--widget-space) * 5) auto;
 	padding: 0px;
+	margin: calc(var(--widget-space) * 5) auto;
+	text-align: center;
 }
 .widget_dialog__arrow{
 	position: fixed;

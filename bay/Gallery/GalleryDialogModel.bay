@@ -31,31 +31,35 @@ class GalleryDialogModel extends DialogModel
 	/**
 	 * Returns items
 	 */
-	Collection getItems() => this.parent_widget.items;
+	Collection getItems() => this.parent_widget.getItems();
 	
 	
 	/**
 	 * Returns item
 	 */
-	Collection getItem(int pos) => this.parent_widget.items.get(pos);
+	Collection getItem(int pos) => this.parent_widget.getItem(pos);
+	
+	
+	/**
+	 * Returns image
+	 */
+	Collection getImage(int pos) => this.parent_widget.getBigImage(pos);
 	
 	
 	/**
 	 * Returns true if image is contains
 	 */
-	bool getImageContains() => this.parent_widget.big_image_contains;
+	bool getImageContains() =>
+		this.parent_widget.dialog_image_contains == true or
+		this.parent_widget.dialog_image_contains == "1" or
+		this.parent_widget.dialog_image_contains == "true"
+	;
 	
 	
 	/**
 	 * Returns current image
 	 */
-	string getCurrentImage()
-	{
-		Dict item = this.getItem(this.current);
-		if (not item) return "";
-		if (not item.has("big")) return "";
-		return item.get("big");
-	}
+	string getCurrentImage() => this.getImage(this.current);
 	
 	
 	/**

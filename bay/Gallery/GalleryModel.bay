@@ -27,9 +27,33 @@ class GalleryModel extends BaseModel
 {
 	string component = classof Gallery;
 	string widget_name = "gallery";
-	bool big_image_contains = false;
+	bool dialog_image_contains = false;
 	Collection items = [];
 	GalleryDialogModel dialog = null;
+	
+	
+	/**
+	 * Returns items
+	 */
+	Collection getItems() => this.items;
+	
+	
+	/**
+	 * Returns item
+	 */
+	Collection getItem(int pos) => this.items.get(pos);
+	
+	
+	/**
+	 * Returns small image
+	 */
+	Collection getSmallImage(int pos) => this.getItem(pos);
+	
+	
+	/**
+	 * Returns big image
+	 */
+	Collection getBigImage(int pos) => this.getItem(pos);
 	
 	
 	/**
@@ -40,9 +64,9 @@ class GalleryModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
-		if (params.has("big_image_contains"))
+		if (params.has("dialog_image_contains"))
 		{
-			this.big_image_contains = params.get("big_image_contain");
+			this.dialog_image_contains = params.get("dialog_image_contains");
 		}
 		if (params.has("items")) this.items = params.get("items");
 	}
