@@ -50,7 +50,7 @@ class GalleryDialogModel extends DialogModel
 	 * Returns true if image is contains
 	 */
 	bool getImageContains() =>
-		this.parent_widget.dialog_image_contains == true or
+		this.parent_widget.dialog_image_contains === true or
 		this.parent_widget.dialog_image_contains == "1" or
 		this.parent_widget.dialog_image_contains == "true"
 	;
