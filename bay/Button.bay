@@ -91,7 +91,7 @@
 	}
 	%else
 	{
-		<a class="nolink" class={{ this.class }}
+		<a class="nolink" class={{ this.class }} class="widget_button__link"
 			href={{ data.get("href") }} target={{ data.get("target") }}
 			@ref="widget"
 		>

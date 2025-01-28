@@ -16,7 +16,7 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Web.Widget;
+namespace Runtime.Widget.Crud;
 
 use Runtime.rtl;
 use Runtime.Exceptions.AbstractException;

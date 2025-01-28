@@ -32,7 +32,7 @@ class TableRowButtonsModel extends RowButtonsModel
 	 */
 	Dict getButtonParams(Dict params, string action)
 	{
-		if (not params.has("edit"))
+		if (not params.has(action))
 		{
 			return {
 				"show": true,

@@ -195,7 +195,7 @@
 	%set string field_name = field.get("name");
 	%set bool show_label = this.model.field_settings.get("show_label", true);
 	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
-		%if (show_label and field.has("label"))
+		%if (field.has("label") and (show_label === true or show_label == "true"))
 		{
 			<div class="widget_form__field_label">
 				%render this.renderFieldLabel(field);
