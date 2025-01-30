@@ -32,7 +32,7 @@
 
 <style>
 .widget_form{
-	.widget_form__title{
+	.widget_form__content{
 		text-align: center;
 		font-size: 16px;
 		margin-bottom: 10px;
@@ -64,16 +64,16 @@
 </style>
 
 
-<template name="renderTitle">
-	%if (this.model.form_title != "")
+<template name="renderContent">
+	%if (this.model.form_content != "")
 	{
-		<div class="widget_form__title">
-			{{ this.model.form_title }}
+		<div class="widget_form__content">
+			{{ this.model.form_content }}
 		</div>
 	}
 	%else
 	{
-		%render this.renderSlot("title");
+		%render this.renderSlot("content");
 	}
 </template>
 
@@ -241,7 +241,7 @@
 	<div class="widget_form" class={{ this.class }}
 		class={{ static::mergeStyles("widget_form", this.model.styles) }}
 	>
-		%render this.renderTitle();
+		%render this.renderContent();
 		%render this.renderFields();
 		%render this.renderBottomButtons();
 		%render this.renderResult();

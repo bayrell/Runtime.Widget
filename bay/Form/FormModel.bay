@@ -38,6 +38,7 @@ class FormModel extends BaseModel
 	string component = classof Form;
 	string widget_name = "form";
 	string form_title = "";
+	string form_content = "";
 	Collection<string> styles = [];
 	
 	/* Fields */
@@ -86,6 +87,7 @@ class FormModel extends BaseModel
 		if (params == null) return;
 		if (params.has("field_settings")) this.field_settings = params.get("field_settings");
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
+		if (params.has("form_content")) this.form_content = params.get("form_content");
 		if (params.has("form_title")) this.form_title = params.get("form_title");
 		if (params.has("post_data")) this.post_data = params.get("post_data");
 		if (params.has("show_result")) this.show_result = params.get("show_result");
