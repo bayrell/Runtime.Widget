@@ -192,19 +192,34 @@
 
 
 <template name="renderFieldRow" args="Dict field">
+	%set bool is_show = true;
 	%set string field_name = field.get("name");
-	%set bool show_label = this.model.field_settings.get("show_label", true);
-	<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
-		%if (field.has("label") and (show_label === true or show_label == "true"))
+	%set string field_show = field.get("show", null);
+	%if (field_show)
+	{
+		%set Dict data =
 		{
-			<div class="widget_form__field_label">
-				%render this.renderFieldLabel(field);
-				%render this.renderFieldButtons(field);
-			</div>
-		}
-		%render this.renderField(field);
-		%render this.renderFieldResult(field);
-	</div>
+			"item": this.model.item,
+			"field_name": field_name,
+			"form": this.model,
+		};
+		%set is_show = rtl::apply(field_show, [data]);
+	}
+	%if (is_show)
+	{
+		%set bool show_label = this.model.field_settings.get("show_label", true);
+		<div class="widget_form__field_row" data-name={{ field_name }} @key={{ field_name }}>
+			%if (field.has("label") and (show_label === true or show_label == "true"))
+			{
+				<div class="widget_form__field_label">
+					%render this.renderFieldLabel(field);
+					%render this.renderFieldButtons(field);
+				</div>
+			}
+			%render this.renderField(field);
+			%render this.renderFieldResult(field);
+		</div>
+	}
 </template>
 
 
