@@ -261,7 +261,7 @@ class FormModel extends BaseModel
 			Dict field = this.fields.get(i);
 			string field_name = field.get("name");
 			var default_value = field.get("default", "");
-			this.item.set(field_name, default_value);
+			this.item.set(field_name, Serializer::copy(default_value));
 		}
 	}
 	
@@ -371,7 +371,7 @@ class FormModel extends BaseModel
 	/**
 	 * Returns post item
 	 */
-	Dict getPostItem() => this.item;
+	Dict getPostItem() => Serializer::copy(this.item);
 	
 	
 	/**

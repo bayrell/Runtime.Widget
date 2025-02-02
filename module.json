@@ -26,6 +26,7 @@
 		"SelectModel.bay",
 		"SelectWrap.bay",
 		"SortableList.bay",
+		"SortableFieldList.bay",
 		"Tag.bay",
 		"Text.bay",
 		"TextArea.bay",
