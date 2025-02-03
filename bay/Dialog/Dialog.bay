@@ -24,7 +24,9 @@
 
 
 <style>
-.widget_dialog{}
+.widget_dialog{
+	text-align: left;
+}
 .widget_dialog__box, .widget_dialog__shadow{
 	position: fixed;
 	top: 0; left: 0;
