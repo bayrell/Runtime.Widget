@@ -1,0 +1,114 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.Web.Hooks.AppHook as BaseAppHook;
+use Runtime.Widget.Crud.CrudFactory;
+use Runtime.Widget.Crud.SaveApi;
+use Runtime.Widget.Crud.SearchApi;
+use Runtime.Web.Annotations.Api;
+use Runtime.Web.RouteList;
+
+
+class CrudHook extends BaseAppHook
+{
+	CrudFactory crud = null;
+	
+	
+	/**
+	 * Setup hook params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("crud")) this.crud = params.get("crud");
+	}
+	
+	
+	/**
+	 * Register hooks
+	 */
+	void register_hooks()
+	{
+		#ifdef BACKEND then
+		this.register(static::FIND_API);
+		this.register(static::ROUTE_BEFORE);
+		this.register(static::ROUTES_INIT);
+		#endif
+	}
+	
+	
+	#ifdef BACKEND then
+	
+	/**
+	 * Find api
+	 */
+	void find_api(Map params)
+	{
+		string api_name = params.get("api_name");
+		Api annotation = params.get("annotation");
+		if (annotation) return;
+		
+		/* Setup save api */
+		if (api_name == this.crud.getApiName("save"))
+		{
+			Api annotation = new Api(classof SaveApi, {
+				"crud": this.crud,
+			});
+			params.set("annotation", annotation);
+		}
+		
+		/* Setup search api */
+		if (api_name == this.crud.getApiName("search"))
+		{
+			Api annotation = new Api(classof SearchApi, {
+				"crud": this.crud,
+			});
+			params.set("annotation", annotation);
+		}
+	}
+	
+	
+	/**
+	 * Routes init
+	 */
+	async void routes_init(Map params)
+	{
+		RouteList routes = params.get("routes");
+		
+		/* Add route index */
+		string route_index_name = this.crud.getParam("route.index.name");
+		if (route_index_name and not routes.hasRoute(route_index_name))
+		{
+			routes.addRoute(this.crud.createRoute("index"));
+		}
+	}
+	
+	
+	/**
+	 * Route before
+	 */
+	async void route_before(Map params)
+	{
+	}
+	
+	#endif
+}

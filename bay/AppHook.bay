@@ -39,19 +39,19 @@ class AppHook extends BaseAppHook
 	 */
 	void register_hooks()
 	{
-        this.register(static::COMPONENTS, 10);
-    }
-    
-    
-    /**
+		this.register(static::COMPONENTS, 10);
+	}
+	
+	
+	/**
 	 * Components
 	 */
 	void components(Map params)
-    {
+	{
 		Vector components = [
 			classof CSS,
 		];
 		components.appendItems(params["components"]);
 		params.set("components", components);
-    }
+	}
 }

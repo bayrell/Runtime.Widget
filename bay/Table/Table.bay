@@ -167,7 +167,7 @@
 
 
 <template name="renderBody">
-	%if (this.model)
+	%if (this.model and this.model.storage)
 	{
 		%set Collection items = this.model.storage.getItems();
 		%if (items)

@@ -1,0 +1,212 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Crud;
+
+use Runtime.BaseStruct;
+use Runtime.Entity.Factory;
+use Runtime.Entity.Hook;
+use Runtime.Web.BasePageModel;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.RouteInfo;
+use Runtime.Web.RouteModel;
+use Runtime.Widget.Crud.CrudHook;
+use Runtime.Widget.Crud.CrudService;
+use Runtime.Widget.Crud.Pages.IndexPageModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableModel;
+
+
+struct CrudFactory extends BaseStruct
+{
+	/**
+	 * Returns api name
+	 */
+	string getApiName(string action) => "";
+	
+	
+	/**
+	 * Returns true if api method is allow
+	 */
+	Collection allowApiMethod(string action) => false;
+	
+	
+	/**
+	 * Create hook
+	 */
+	static Hook create() => new Hook(
+		classof CrudHook,
+		{
+			"crud": rtl::newInstance(static::getClassName()),
+		}
+	);
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Collection getPrimaryKey() => ["id"];
+	
+	
+	/**
+	 * Returns routes
+	 */
+	string getParam(string name, Dict params = null)
+	{
+		/* Crud widget settings */
+		if (name == "form.add.model.name") return classof FormModel;
+		if (name == "form.edit.model.name") return classof FormModel;
+		if (name == "form.delete.model.name") return classof FormModel;
+		if (name == "table.model.name") return classof TableModel;
+		
+		/* Form storage settings */
+		if (
+			name == "form.add.storage" or
+			name == "form.edit.storage" or
+			name == "form.delete.storage"
+		)
+		{
+			string storage_name = "Runtime.Widget.Form.FormSaveStorage";
+			if (name == "form.delete.storage")
+			{
+				storage_name = "Runtime.Widget.Form.FormDeleteStorage";
+			}
+			return new Factory(
+				storage_name,
+				{
+					"api_name": this.getApiName("save"),
+				}
+			);
+		}
+		
+		/* Table storage settings */
+		if (name == "table.storage")
+		{
+			return new Factory(
+				"Runtime.Widget.Table.TableStorage",
+				{
+					"api_name": this.getApiName("search"),
+				}
+			);
+		}
+		
+		/* Route index */
+		if (name == "route.index.name") return "";
+		if (name == "route.index.uri") return "";
+		if (name == "route.index.layout") return "clear";
+		if (name == "route.index.title") return "Index page";
+		if (name == "route.index.model.name") return classof IndexPageModel;
+		if (name == "route.index.model") return new Factory
+		(
+			this.getParam("route.index.model.name"),
+			{
+				"crud": this,
+			}
+		);
+		
+		return "";
+	}
+	
+	
+	/**
+	 * Create route
+	 */
+	RouteInfo createRoute(string action)
+	{
+		if (action == "index")
+		{
+			return new RouteModel
+			{
+				"uri": this.getParam("route.index.uri"),
+				"name": this.getParam("route.index.name"),
+				"layout": this.getParam("route.index.layout"),
+				"model": this.getParam("route.index.model"),
+			}
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * Returns form fields
+	 */
+	Collection getFormFields(string action) => [];
+	
+	
+	/**
+	 * Returns table fields
+	 */
+	Collection getTableFields(string action) => [];
+	
+	
+	/**
+	 * Table title
+	 */
+	string getTableTitle(Dict params)
+	{
+		string action = params.get("action");
+		if (action == "add")
+		{
+			return "Add item";
+		}
+		if (action == "edit")
+		{
+			return "Edit item";
+		}
+		if (action == "delete")
+		{
+			return "Delete item";
+		}
+		return "";
+	}
+	
+	
+	/**
+	 * Build title
+	 */
+	void buildTitle(RenderContainer container)
+	{
+		if (container.layout.route.name == this.getParam("route.index.name"))
+		{
+			string title = this.getParam("route.index.title", {"container": container});
+			container.layout.setPageTitle(title);
+		}
+	}
+	
+	
+	#ifdef BACKEND then
+	
+	/**
+	 * Returns service
+	 */
+	CrudService createService() => null;
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Collection getItemFields() => [];
+	
+	
+	/**
+	 * Returns user relation name
+	 */
+	string getRelationName() => null;
+	
+	#endif
+}

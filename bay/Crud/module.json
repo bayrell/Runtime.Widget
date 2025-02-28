@@ -2,6 +2,13 @@
 	"name": "Runtime.Widget.Crud",
 	"assets":
 	[
+		"Pages/IndexPage.bay",
+		"Pages/IndexPageModel.bay",
+		"Pages/DialogPage.bay",
+		"Pages/DialogPageModel.bay",
+		"CrudFactory.bay",
+		"CrudDialog.bay",
+		"CrudHook.bay"
 	],
 	"require": [
 		"Runtime.Widget"

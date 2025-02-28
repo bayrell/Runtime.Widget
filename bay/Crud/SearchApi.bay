@@ -18,25 +18,41 @@
 
 namespace Runtime.Widget.Crud;
 
+use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.RuntimeException;
 use Runtime.Web.BaseApi;
-use Runtime.Widget.Crud.CrudRule;
+use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Widget.Crud.CrudFactory;
 use Runtime.Widget.Crud.CrudService;
 
 
 class SearchApi extends BaseApi
 {
+	CrudFactory crud = null;
+	
+	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => null;
+	CrudService createService() => this.crud ? this.crud.createService() : null;
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
-	[
-	];
+	Collection getItemFields() => this.crud ? this.crud.getItemFields() : [];
+	
+	
+	/**
+	 * Setup params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("crud")) this.crud = params.get("crud");
+	}
 	
 	
 	/**
@@ -88,10 +104,15 @@ class SearchApi extends BaseApi
 	/**
 	 * Action item
 	 */
+	@ApiMethod
 	async void actionItem()
 	{
 		/* Create service */
 		CrudService service = this.createService();
+		if (not service)
+		{
+			throw new ApiError(new RuntimeException("Service not found"));
+		}
 		
 		/* Load item */
 		await service.searchItem(this.post_data.get("pk"));
@@ -105,10 +126,15 @@ class SearchApi extends BaseApi
 	/**
 	 * Action search
 	 */
+	@ApiMethod
 	async void actionSearch()
 	{
 		/* Create service */
 		CrudService service = this.createService();
+		if (not service)
+		{
+			throw new ApiError(new RuntimeException("Service not found"));
+		}
 		
 		/* Search items */
 		await service.search(this.post_data);

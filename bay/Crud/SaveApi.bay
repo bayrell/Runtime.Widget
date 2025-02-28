@@ -20,25 +20,41 @@ namespace Runtime.Widget.Crud;
 
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.ItemNotFound;
+use Runtime.Exceptions.RuntimeException;
 use Runtime.Web.BaseApi;
+use Runtime.Web.Annotations.ApiMethod;
+use Runtime.Widget.Crud.CrudFactory;
 use Runtime.Widget.Crud.CrudService;
 use Runtime.Widget.Crud.FieldException;
 
 
 class SaveApi extends BaseApi
 {
+	CrudFactory crud = null;
+	
+	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => null;
+	CrudService createService() => this.crud ? this.crud.createService() : null;
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() =>
-	[
-	];
+	Collection getItemFields() => this.crud ? this.crud.getItemFields() : [];
+	
+	
+	/**
+	 * Setup params
+	 */
+	void setup(Dict params)
+	{
+		parent(params);
+		
+		if (params == null) return;
+		if (params.has("crud")) this.crud = params.get("crud");
+	}
 	
 	
 	/**
@@ -55,7 +71,7 @@ class SaveApi extends BaseApi
 		/* Validate error */
 		if (not service.rules.correct())
 		{
-			throw new ApiError( new FieldException() );
+			throw new ApiError(new FieldException());
 		}
 	}
 	
@@ -91,6 +107,10 @@ class SaveApi extends BaseApi
 	{
 		/* Create service */
 		CrudService service = this.createService();
+		if (not service)
+		{
+			throw new ApiError(new RuntimeException("Service not found"));
+		}
 		
 		/* Load item */
 		await service.searchItem(this.post_data.get("pk"));
@@ -103,6 +123,7 @@ class SaveApi extends BaseApi
 	/**
 	 * Action create
 	 */
+	@ApiMethod
 	async void actionCreate()
 	{
 		await this.actionSave();
@@ -112,10 +133,15 @@ class SaveApi extends BaseApi
 	/**
 	 * Action save
 	 */
+	@ApiMethod
 	async void actionSave()
 	{
 		/* Create service */
 		CrudService service = this.createService();
+		if (not service)
+		{
+			throw new ApiError(new RuntimeException("Service not found"));
+		}
 		
 		/* Load item */
 		await service.loadItem(this.post_data.get("pk"), true);
@@ -131,10 +157,15 @@ class SaveApi extends BaseApi
 	/**
 	 * Action delete
 	 */
+	@ApiMethod
 	async void actionDelete()
 	{
 		/* Create service */
 		CrudService service = this.createService();
+		if (not service)
+		{
+			throw new ApiError(new RuntimeException("Service not found"));
+		}
 		
 		/* Load item */
 		await service.loadItem(this.post_data.get("pk"));
