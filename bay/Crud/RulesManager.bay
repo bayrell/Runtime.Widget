@@ -76,6 +76,15 @@ class RulesManager extends BaseObject
 	
 	
 	/**
+	 * Clear
+	 */
+	void clear()
+	{
+		this.fields = {};
+	}
+	
+	
+	/**
 	 * Add rules
 	 */
 	void addRules(Collection rules)

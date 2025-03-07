@@ -23,6 +23,7 @@ use Runtime.Callback;
 use Runtime.Serializer;
 use Runtime.Web.ApiResult;
 use Runtime.Web.BaseModel;
+use Runtime.Web.ModelFactory;
 use Runtime.Web.Messages.ClickMessage;
 use Runtime.Widget.Button;
 use Runtime.Widget.ButtonModel;
@@ -50,9 +51,8 @@ class SaveDialogModel extends ConfirmDialogModel
 		parent(params);
 		
 		if (params == null) return;
+		if (params.has("action")) this.action = params.get("action");
 		if (params.has("table")) this.table = params.get("table");
-		if (params.has("add_form")) this.add_form = params.get("add_form");
-		if (params.has("edit_form")) this.edit_form = params.get("edit_form");
 	}
 	
 	
@@ -62,6 +62,28 @@ class SaveDialogModel extends ConfirmDialogModel
 	void initWidget(Dict params)
 	{
 		parent(params);
+		if (params.has("add_form"))
+		{
+			if (params.get("add_form") instanceof ModelFactory)
+			{
+				this.add_form = params.get("add_form").factory(this);
+			}
+			else
+			{
+				this.add_form = params.get("add_form");
+			}
+		}
+		if (params.has("edit_form"))
+		{
+			if (params.get("edit_form") instanceof ModelFactory)
+			{
+				this.edit_form = params.get("edit_form").factory(this);
+			}
+			else
+			{
+				this.edit_form = params.get("edit_form");
+			}
+		}
 	}
 	
 	

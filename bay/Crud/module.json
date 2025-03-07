@@ -6,9 +6,16 @@
 		"Pages/IndexPageModel.bay",
 		"Pages/DialogPage.bay",
 		"Pages/DialogPageModel.bay",
+		"Rules/BaseRule.bay",
+		"Rules/LowerCase.bay",
+		"Rules/MatchRule.bay",
+		"Rules/Purify.bay",
+		"Rules/ReadOnlyRule.bay",
+		"Rules/Required.bay",
 		"CrudFactory.bay",
 		"CrudDialog.bay",
-		"CrudHook.bay"
+		"CrudHook.bay",
+		"RulesManager.bay"
 	],
 	"require": [
 		"Runtime.Widget"
