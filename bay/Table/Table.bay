@@ -52,6 +52,9 @@
 	border-bottom-width: var(--widget-border-width);
 	border-bottom-style: solid;
 }
+.widget_table--stretch .widget_table__table{
+	width: 100%;
+}
 </style>
 
 

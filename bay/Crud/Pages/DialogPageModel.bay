@@ -87,6 +87,7 @@ class DialogPageModel extends BasePageModel
 		if (name == "form.edit.model.name") return classof FormModel;
 		if (name == "form.delete.model.name") return classof FormModel;
 		if (name == "table.model.name") return classof TableDialogModel;
+		if (name == "table.page.name") return "p";
 		
 		/* Form storage settings */
 		if (
@@ -186,6 +187,13 @@ class DialogPageModel extends BasePageModel
 				
 				/* Table storage */
 				"storage": this.getParam("table.storage", { "widget": this }),
+				
+				/* Set page */
+				"page": this.layout.request_query.get(this.getParam("table.page.name"), 1) - 1,
+				"pagination_props":
+				{
+					"name": this.getParam("table.page.name"),
+				},
 				
 				/* Form */
 				"add_form": this.add_form,
