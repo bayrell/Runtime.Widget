@@ -28,19 +28,16 @@ use Runtime.Widget.Crud.CrudService;
 
 class SearchApi extends BaseApi
 {
-	CrudFactory crud = null;
-	
-	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => this.crud ? this.crud.createService() : null;
+	CrudService createService() => null;
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => this.crud ? this.crud.getItemFields() : [];
+	Collection getItemFields() => [];
 	
 	
 	/**

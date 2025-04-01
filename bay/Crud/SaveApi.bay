@@ -30,19 +30,16 @@ use Runtime.Widget.Crud.FieldException;
 
 class SaveApi extends BaseApi
 {
-	CrudFactory crud = null;
-	
-	
 	/**
 	 * Returns service
 	 */
-	CrudService createService() => this.crud ? this.crud.createService() : null;
+	CrudService createService() => null;
 	
 	
 	/**
 	 * Returns item fields
 	 */
-	Collection getItemFields() => this.crud ? this.crud.getItemFields() : [];
+	Collection getItemFields() => [];
 	
 	
 	/**
