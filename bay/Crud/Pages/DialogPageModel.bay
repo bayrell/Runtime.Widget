@@ -26,7 +26,7 @@ use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.Pages.DialogPage;
 use Runtime.Widget.Crud.CrudFactory;
 use Runtime.Widget.Form.FormModel;
-use Runtime.Widget.Table.TableModel;
+use Runtime.Widget.Table.TableDialogModel;
 use Runtime.Widget.RowButtonsModel;
 
 
@@ -37,8 +37,90 @@ class DialogPageModel extends BasePageModel
 	FormModel add_form = null;
 	FormModel edit_form = null;
 	FormModel delete_form = null;
-	TableModel table = null;
+	TableDialogModel table = null;
 	RowButtonsModel top_buttons = null;
+	
+	
+	/**
+	 * Returns api name
+	 */
+	string getApiName(string action) => "";
+	
+	
+	/**
+	 * Returns primary key
+	 */
+	Collection getPrimaryKey() => [];
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Collection getItemFields() => [];
+	
+	
+	/**
+	 * Returns form fields
+	 */
+	Collection getFormFields(string action) => [];
+	
+	
+	/**
+	 * Returns table fields
+	 */
+	Collection getTableFields(string action) => [];
+	
+	
+	/**
+	 * Table title
+	 */
+	string getTableTitle(Dict params) => "";
+	
+	
+	/**
+	 * Returns routes
+	 */
+	string getParam(string name, Dict params = null)
+	{
+		/* Crud widget settings */
+		if (name == "form.add.model.name") return classof FormModel;
+		if (name == "form.edit.model.name") return classof FormModel;
+		if (name == "form.delete.model.name") return classof FormModel;
+		if (name == "table.model.name") return classof TableDialogModel;
+		
+		/* Form storage settings */
+		if (
+			name == "form.add.storage" or
+			name == "form.edit.storage" or
+			name == "form.delete.storage"
+		)
+		{
+			string storage_name = "Runtime.Widget.Form.FormSaveStorage";
+			if (name == "form.delete.storage")
+			{
+				storage_name = "Runtime.Widget.Form.FormDeleteStorage";
+			}
+			return new Factory(
+				storage_name,
+				{
+					"api_name": this.getApiName("save"),
+				}
+			);
+		}
+		
+		/* Table storage settings */
+		if (name == "table.storage")
+		{
+			return new Factory(
+				"Runtime.Widget.Table.TableStorage",
+				{
+					"api_name": this.getApiName("search"),
+				}
+			);
+		}
+		
+		return "";
+	}
 	
 	
 	/**
@@ -47,18 +129,6 @@ class DialogPageModel extends BasePageModel
 	void initParams(Dict params)
 	{
 		parent(params);
-		
-		if (params == null) return;
-		if (params.has("crud"))
-		{
-			this.crud = params.get("crud");
-			if (this.crud instanceof Map)
-			{
-				Serializer serializer = new Serializer();
-				serializer.setFlag(Serializer::ALLOW_OBJECTS);
-				this.crud = serializer.decodeObject(this.crud);
-			}
-		}
 	}
 	
 	
@@ -71,39 +141,39 @@ class DialogPageModel extends BasePageModel
 		
 		/* Add form */
 		this.add_form = this.addWidget(
-			this.crud.getParam("form.add.model.name"),
+			this.getParam("form.add.model.name"),
 			{
 				"widget_name": "form",
-				"primary_key": this.crud.getPrimaryKey(),
-				"storage": this.crud.getParam("form.add.storage", { "widget": this }),
-				"fields": this.crud.getFormFields("add_form"),
+				"primary_key": this.getPrimaryKey(),
+				"storage": this.getParam("form.add.storage", { "widget": this }),
+				"fields": this.getFormFields("add_form"),
 			}
 		);
 		
 		/* Edit form */
 		this.edit_form = this.addWidget(
-			this.crud.getParam("form.edit.model.name"),
+			this.getParam("form.edit.model.name"),
 			{
 				"widget_name": "form",
-				"primary_key": this.crud.getPrimaryKey(),
-				"storage": this.crud.getParam("form.edit.storage", { "widget": this }),
-				"fields": this.crud.getFormFields("edit_form"),
+				"primary_key": this.getPrimaryKey(),
+				"storage": this.getParam("form.edit.storage", { "widget": this }),
+				"fields": this.getFormFields("edit_form"),
 			}
 		);
 		
 		/* Delete form */
 		this.delete_form = this.addWidget(
-			this.crud.getParam("form.delete.model.name"),
+			this.getParam("form.delete.model.name"),
 			{
 				"widget_name": "delete_form",
-				"primary_key": this.crud.getPrimaryKey(),
-				"storage": this.crud.getParam("form.delete.storage", { "widget": this }),
+				"primary_key": this.getPrimaryKey(),
+				"storage": this.getParam("form.delete.storage", { "widget": this }),
 			}
 		);
 		
 		/* Add table */
 		this.table = this.addWidget(
-			this.crud.getParam("table.model.name"),
+			this.getParam("table.model.name"),
 			{
 				"widget_name": "table",
 				"styles": ["border"],
@@ -111,11 +181,11 @@ class DialogPageModel extends BasePageModel
 				/* Table title */
 				"get_title": void (Dict params)
 				{
-					return this.crud.getTableTitle(params);
+					return this.getTableTitle(params);
 				},
 				
 				/* Table storage */
-				"storage": this.crud.getParam("table.storage", { "widget": this }),
+				"storage": this.getParam("table.storage", { "widget": this }),
 				
 				/* Form */
 				"add_form": this.add_form,
@@ -123,7 +193,7 @@ class DialogPageModel extends BasePageModel
 				"delete_form": this.delete_form,
 				
 				/* Table fields */
-				"fields": this.crud.getTableFields("table"),
+				"fields": this.getTableFields("table"),
 			}
 		);
 		
@@ -166,6 +236,5 @@ class DialogPageModel extends BasePageModel
 	 */
 	void buildTitle(RenderContainer container)
 	{
-		this.crud.buildTitle(container);
 	}
 }
