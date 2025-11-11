@@ -79,7 +79,7 @@
 </template>
 
 
-<template name="renderField" args="Dict item, int row_number, FieldInfo field">
+<template name="renderField" args="Dict item, int row_number, Map field">
 	%set TableModel model = this.model;
 	%set var storage = model.storage;
 	%set string field_name = field.get("name");

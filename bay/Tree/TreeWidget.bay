@@ -161,7 +161,7 @@ Collection<int> getSrc()
 	if (not this.drag_elem) return null;
 	string src_elem_path = this.drag_elem.getAttribute("data-path");
 	Collection<string> src_elem = src_elem_path ? rs::split(".", src_elem_path) : [];
-	return src_elem.map(int (string s) => (int)s);
+	return src_elem.map(int (string s) => rtl::toInt(s));
 }
 
 
@@ -173,7 +173,7 @@ Collection<int> getDest()
 	if (not this.drag_dest_elem) return null;
 	string dest_elem_path = this.drag_dest_elem.getAttribute("data-path");
 	Collection<string> dest_elem = dest_elem_path ? rs::split(".", dest_elem_path) : [];
-	return dest_elem.map(int (string s) => (int)s);
+	return dest_elem.map(int (string s) => rtl::toInt(s));
 }
 
 

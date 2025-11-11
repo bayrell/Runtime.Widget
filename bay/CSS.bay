@@ -21,46 +21,33 @@
 
 <style global="true">
 :root{
-	--widget-font-family: 'Ubuntu', sans-serif;
-	--widget-font-size: 14px;
-	--widget-font-size-h1: 1.8em;
-	--widget-font-size-h2: 1.5em;
-	--widget-font-size-h3: 1.2em;
-	--widget-font-size-h4: 1em;
-	--widget-font-size-h5: 1em;
-	--widget-font-size-h6: 1em;
-	--widget-line-height: normal;
-	--widget-space: 0.5em;
-	/*--widget-color-border: #dee2e6;*/
-	--widget-color-border: #e0e1e6;
-	--widget-color-success: #198754;
-	--widget-color-success-text: #fff;
-	--widget-color-danger-text: #fff;
-	--widget-color-danger: #dc3545;
-	--widget-color-default: #fff;
-	--widget-color-hover: rgba(0, 0, 0, 0.075);
-	--widget-color-link: #337ab7;
-	--widget-color-primary-text: #fff;
-	--widget-color-primary: #337ab7;
-	--widget-color-selected-text: #fff;
-	--widget-color-selected: #337ab7;
-	--widget-color-text: #000;
-	--widget-color-table-background: #fff;
-	--widget-border-width: 1px;
-	--widget-button-padding-x: 12.6px;
-	--widget-button-padding-y: 7px;
-	--widget-button-padding-small-x: 10px;
-	--widget-button-padding-small-y: 5.6px;
-	--widget-button-padding-large-x: 17.5px;
-	--widget-button-padding-large-y: 9.8px;
-	--widget-input-padding-x: 10px;
-	--widget-input-padding-y: 7px;
-	--widget-margin-h1: 1.8em 0px;
-	--widget-margin-h2: 1.5em 0px;
-	--widget-margin-h3: 1.2em 0px;
-	--widget-margin-h4: 1em 0px;
-	--widget-margin-h5: 1em 0px;
-	--widget-margin-h6: 1em 0px;
+	--font-family: 'Ubuntu', sans-serif;
+	--font-size: 14px;
+	--font-size-h1: 1.8em;
+	--font-size-h2: 1.5em;
+	--font-size-h3: 1.2em;
+	--font-size-h4: 1em;
+	--font-size-h5: 1em;
+	--font-size-h6: 1em;
+	--line-height: normal;
+	--space: 0.5em;
+	/*--color-border: #dee2e6;*/
+	--color-border: #e0e1e6;
+	--color-success: #198754;
+	--color-success-text: #fff;
+	--color-danger-text: #fff;
+	--color-danger: #dc3545;
+	--color-default: #fff;
+	--color-hover: rgba(0, 0, 0, 0.075);
+	--color-link: #337ab7;
+	--color-primary-text: #fff;
+	--color-primary: #337ab7;
+	--color-selected-text: #fff;
+	--color-selected: #337ab7;
+	--color-text: #000;
+	--color-table-background: #fff;
+	--border-radius: 6px;
+	--border-width: 1px;
 }
 .core_ui_root{
 	font-family: var(--widget-font-family);

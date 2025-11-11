@@ -22,7 +22,7 @@ use Runtime.Entity.Hook;
 use Runtime.Web.Annotations.Widget;
 
 
-static class ModuleDescription
+class ModuleDescription
 {
 	/**
 	 * Returns module name

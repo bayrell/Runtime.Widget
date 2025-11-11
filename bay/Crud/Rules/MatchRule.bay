@@ -23,7 +23,7 @@ use Runtime.Widget.Crud.RulesManager;
 use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct MatchRule extends BaseRule
+class MatchRule extends BaseRule
 {
 	static const string ALPHA_NUMERIC = "^[0-9a-zA-Z]*$";
 	static const string ALPHA_NUMERIC_DASH = "^[0-9a-zA-Z\_\-]*$";

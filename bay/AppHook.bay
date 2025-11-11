@@ -18,28 +18,18 @@
 
 namespace Runtime.Widget;
 
-use Runtime.Web.Hooks.AppHook as BaseAppHook;
-use Runtime.Widget.Button;
+use Runtime.Hooks.RuntimeHook;
 use Runtime.Widget.CSS;
-use Runtime.Widget.Container;
-use Runtime.Widget.Input;
-use Runtime.Widget.Label;
-use Runtime.Widget.RowButtons;
-use Runtime.Widget.Section;
-use Runtime.Widget.Select;
-use Runtime.Widget.SelectLabel;
-use Runtime.Widget.TextArea;
-use Runtime.Widget.WidgetResult;
 
 
-class AppHook extends BaseAppHook
+class AppHook extends RuntimeHook
 {
 	/**
 	 * Register hooks
 	 */
 	void register_hooks()
 	{
-		this.register(static::COMPONENTS, 10);
+		this.register(static::COMPONENTS, "components", 50);
 	}
 	
 	
@@ -51,7 +41,7 @@ class AppHook extends BaseAppHook
 		Vector components = [
 			classof CSS,
 		];
-		components.appendItems(params["components"]);
+		components.appendItems(params.get("components"));
 		params.set("components", components);
 	}
 }

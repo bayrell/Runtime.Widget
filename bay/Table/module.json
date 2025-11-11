@@ -2,11 +2,9 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
-		"AddButtonModel.bay",
 		"DeleteDialog.bay",
 		"DeleteDialogModel.bay",
 		"RefreshButton.bay",
-		"RefreshButtonModel.bay",
 		"SaveDialog.bay",
 		"SaveDialogModel.bay",
 		"Table.bay",
@@ -14,7 +12,6 @@
 		"TableDialogModel.bay",
 		"TableMessage.bay",
 		"TableProxyStorage.bay",
-		"TableRowButtonsModel.bay",
 		"TableStorage.bay",
 		"TableStorageInterface.bay"
 	],

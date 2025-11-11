@@ -141,7 +141,7 @@
 	%if (this.show_buttons == "true")
 	{
 		<div class="widget_sortable_list__buttons">
-			<Button styles=["small"] @event:click={{ this.onAddItemClick }}>Add</Button>
+			<Button styles=["small"] @event:click="this.onAddItemClick()">Add</Button>
 		</div>
 	}
 </template>

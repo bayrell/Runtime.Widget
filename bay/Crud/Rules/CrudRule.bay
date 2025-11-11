@@ -18,13 +18,12 @@
 
 namespace Runtime.Widget.Crud.Rules;
 
-use Runtime.BaseStruct;
 use Runtime.Web.BaseApi;
 use Runtime.Widget.Crud.CrudService;
 use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct CrudRule extends BaseRule
+class CrudRule extends BaseRule
 {
 	/**
 	 * Before search item

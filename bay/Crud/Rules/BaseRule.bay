@@ -18,11 +18,11 @@
 
 namespace Runtime.Widget.Crud.Rules;
 
-use Runtime.BaseStruct;
+use Runtime.BaseObject;
 use Runtime.Widget.Crud.RulesManager;
 
 
-struct BaseRule extends BaseStruct
+class BaseRule extends BaseObject
 {
 	/**
 	 * Validate item

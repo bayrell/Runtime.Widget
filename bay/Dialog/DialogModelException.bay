@@ -19,10 +19,10 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.rtl;
-use Runtime.Exceptions.AbstractException;
+use Runtime.Exceptions.RuntimeException;
 
 
-class DialogModelException extends AbstractException
+class DialogModelException extends RuntimeException
 {
 	void constructor(string message, Object prev = null)
 	{

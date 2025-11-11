@@ -20,7 +20,7 @@
 
 
 <style>
-.widget_section__wrap{
+.section__wrap{
 	max-width: 1200px;
 	margin-left: auto;
 	margin-right: auto;
@@ -32,10 +32,11 @@
 
 
 <template>
-	<div class="widget_section" class={{ this.class }} style={{ this.getStyle() }}>
+	%set Map attrs = this.getAttrs;
+	<div class="section" class={{ this.class }} style={{ this.getStyle() }} ...attrs>
 		%if (this.wrap == "true")
 		{
-			<div class="widget_section__wrap" style={{ this.getWrapStyle() }}>
+			<div class="section__wrap" style={{ this.getWrapStyle() }}>
 				%render this.renderSlot("default");
 			</div>
 		}
@@ -49,6 +50,7 @@
 
 <script>
 
+props string id = "";
 props string wrap = "true";
 props string flex = "false";
 props string align_items = "";
@@ -56,6 +58,17 @@ props string justify_content = "";
 props string flex_wrap = "";
 props string height = "";
 props string min_height = "";
+
+
+/**
+ * Returns attrs
+ */
+computed Map getAttrs()
+{
+	Map attrs = {};
+	if (this.id != "") attrs.set("id", this.id);
+	return attrs;
+}
 
 
 /**

@@ -23,7 +23,7 @@ use Runtime.Widget.Crud.RulesManager;
 use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct LowerCase extends BaseRule
+class LowerCase extends BaseRule
 {
 	string name = "";
 	

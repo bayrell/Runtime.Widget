@@ -23,7 +23,7 @@ use Runtime.Widget.Crud.RulesManager;
 use Runtime.Widget.Crud.Rules.BaseRule;
 
 
-struct Required extends BaseRule
+class Required extends BaseRule
 {
 	string name = "";
 	bool check_create = true;

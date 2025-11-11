@@ -18,11 +18,11 @@
 
 namespace Runtime.Widget;
 
+use Runtime.BaseModel;
 use Runtime.SerializeInterface;
 use Runtime.Serializer;
 use Runtime.Exceptions.AbstractException;
 use Runtime.Web.ApiResult;
-use Runtime.Web.BaseModel;
 use Runtime.Widget.WidgetResult;
 
 

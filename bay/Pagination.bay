@@ -86,7 +86,7 @@
 				}
 				
 				<li class={{ this.page == 1 ? "active" : "" }} @key={{ 1 }}>
-					<a @event:onClick={{ void () => this.onClick(1) }} ...props>
+					<a @event:click="this.onClick(1)" ...props>
 						1
 					</a>
 				</li>
@@ -107,7 +107,7 @@
 							%set var _ = props.set("href", this.getPageUrl(p));
 						}
 						<li class={{ this.page == p ? "active" : "" }} @key={{ p }}>
-							<a @event:onClick={{ void () use (p) => this.onClick(p) }}
+							<a @event:click="this.onClick(p)"
 								...props
 							>
 								{{ p }}
@@ -130,7 +130,7 @@
 						%set var _ = props.set("href", this.getPageUrl(this.pages));
 					}
 					<li class={{ this.page == this.pages ? "active" : "" }} @key={{ this.pages }}>
-						<a @event:onClick={{ void () => this.onClick(this.pages) }}
+						<a @event:click="this.onClick(this.pages)"
 							...props
 						>
 							{{ this.pages }}
