@@ -192,7 +192,7 @@ var findDragElem(var elem)
  */
 var findElemByPath(var path)
 {
-	string path = ".tree_widget__item[data-path='" ~ path ~ "']";
+	path = ".tree_widget__item[data-path='" ~ path ~ "']";
 	return document.querySelector(path);
 }
 

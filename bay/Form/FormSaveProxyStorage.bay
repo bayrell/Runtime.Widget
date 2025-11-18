@@ -78,7 +78,7 @@ class FormSaveProxyStorage extends BaseObject implements FormStorageInterface
 		{
 			"item": this.form.getPostItem(),
 		};
-		Dict post_data = this.form.mergePostData(post_data, "load");
+		post_data = this.form.mergePostData(post_data, "load");
 		
 		/* Copy item */
 		Dict item = post_data.get("item");
