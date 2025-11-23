@@ -1,7 +1,7 @@
 /*!
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,16 +23,14 @@ use Runtime.SerializeInterface;
 use Runtime.Serializer;
 use Runtime.Exceptions.AbstractException;
 use Runtime.Web.ApiResult;
-use Runtime.Widget.WidgetResult;
+use Runtime.Widget.Result;
 
 
-class WidgetResultModel extends BaseModel
+class ResultModel extends BaseModel
 {
 	int code = 0;
 	string message = "";
-	string widget_name = "result";
-	string component = classof WidgetResult;
-	Collection<string> styles = [];
+	string component = classof Result;
 	
 	
 	/**
@@ -41,9 +39,6 @@ class WidgetResultModel extends BaseModel
 	void initParams(Dict params)
 	{
 		parent(params);
-		
-		if (params == null) return;
-		if (params.has("styles")) this.styles = params.get("styles");
 	}
 	
 	

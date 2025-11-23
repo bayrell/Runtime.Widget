@@ -1,7 +1,7 @@
 <!--
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
 -->
 
 
-<class name="Runtime.Widget.SortableFieldList"
-	extends="Runtime.Widget.SortableList"
+<class name="Runtime.Widget.Sortable.FieldList"
+	extends="Runtime.Widget.Sortable.List"
 >
 
 <use name="Runtime.Widget.Input" component="true" />
@@ -26,45 +26,45 @@
 
 
 <style>
-.widget_sortable_list__item{
+.sortable_list__item{
 	align-items: stretch;
 	margin: 10px 0px;
 }
-.widget_sortable_list__item_element{
+.sortable_list__item_element{
 	display: flex;
 }
-.widget_sortable_list__item_element--drag{
+.sortable_list__item_element--drag{
 	align-items: center;
 }
-.widget_sortable_list__item_element--remove{
+.sortable_list__item_element--remove{
 	align-items: start;
 }
-.widget_sortable_list__item_value{
+.sortable_list__item_value{
 	padding: 5px;
-	%(Input)widget_input, %(Select)widget_select{
+	%(Input)input, %(Select)select{
 		border-bottom: 1px var(--widget-color-border) solid;
 		box-shadow: none;
 		outline: none;
 	}
 }
-.widget_sortable_list__item_value_row{
+.sortable_list__item_value_row{
 	display: flex;
 	align-items: center;
 	margin-bottom: 1px;
 }
-.widget_sortable_list__item_value_label{
+.sortable_list__item_value_label{
 	width: 80px;
 }
-.widget_sortable_list__item_value_item{
+.sortable_list__item_value_item{
 	flex: 1;
 }
 </style>
 
 
 <template name="renderValueItem" args="Dict field, int pos, Dict item">
-	<div class="widget_sortable_list__item_value_row">
-		<div class="widget_sortable_list__item_value_label">{{ field.get("label") }}</div>
-		<div class="widget_sortable_list__item_value_item">
+	<div class="sortable_list__item_value_row">
+		<div class="sortable_list__item_value_label">{{ field.get("label") }}</div>
+		<div class="sortable_list__item_value_item">
 			%if (item)
 			{
 				%set string field_name = field.get("name");
@@ -99,22 +99,22 @@
 
 <template name="renderItem" args="int pos">
 	%set var item = this.getItems().get(pos);
-	<div class="widget_sortable_list__item"
+	<div class="sortable_list__item"
 		data-pos={{ pos }}
 		@key={{ item }}
 	>
-		<div class="widget_sortable_list__item_element widget_sortable_list__item_element--drag">
-			<div class="widget_sortable_list__item_drag"
+		<div class="sortable_list__item_element sortable_list__item_element--drag">
+			<div class="sortable_list__item_drag"
 				@event:mousedown={{
 					void (var e) use (item){ this.onMouseDown(e, item); }
 				}}
 			>@raw{{ "&#9776;" }}</div>
 		</div>
-		<div class="widget_sortable_list__item_value">
+		<div class="sortable_list__item_value">
 			%render this.renderValue(pos, item);
 		</div>
-		<div class="widget_sortable_list__item_element widget_sortable_list__item_element--remove">
-			<div class="widget_sortable_list__item_remove"
+		<div class="sortable_list__item_element sortable_list__item_element--remove">
+			<div class="sortable_list__item_remove"
 				@event:click={{
 					void (var e) use (pos){ this.removeItem(pos); }
 				}}
@@ -140,12 +140,12 @@ var createItem() => {};
  */
 void getDragElement(var elem)
 {
-	if (elem.classList.contains("widget_sortable_list__item")) return elem;
-	if (elem.parentElement.classList.contains("widget_sortable_list__item"))
+	if (elem.classList.contains("sortable_list__item")) return elem;
+	if (elem.parentElement.classList.contains("sortable_list__item"))
 	{
 		return elem.parentElement;
 	}
-	if (elem.parentElement.parentElement.classList.contains("widget_sortable_list__item"))
+	if (elem.parentElement.parentElement.classList.contains("sortable_list__item"))
 	{
 		return elem.parentElement.parentElement;
 	}

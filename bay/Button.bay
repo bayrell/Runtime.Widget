@@ -1,7 +1,7 @@
 <!--
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,19 +21,30 @@
 
 <style global="true">
 .button{
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 	color: var(--color-text);
+	font-weight: 500;
 	font-family: var(--font-family);
-	font-size: var(--font-size);
+	font-size: var(--font-input-size);
 	line-height: var(--line-height);
-	background-color: var(--color-background);
+	text-decoration: none;
+	background-color: var(--color-surface);
 	border: var(--border-width) var(--color-border) solid;
 	padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
-	outline: 0;
+	outline: none;
 	cursor: pointer;
 	border-radius: var(--border-radius);
-}
-.button:active{
-	box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
+	transition: background-color var(--transition) ease-in-out,
+		border-color var(--transition) ease-in-out,
+		color var(--transition) ease-in-out;
+	&:hover{
+		box-shadow: 0 0 0 calc(var(--space) * 0.25) rgba(var(--color-primary-dark), 0.25);
+	}
+	&:active{
+		box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
+	}
 }
 .button--bold{
 	font-weight: bold;
@@ -48,17 +59,59 @@
 .button--primary{
 	color: var(--color-primary-text);
 	background-color: var(--color-primary);
-	border-color: var(--color-primary);
+	border-color: var(--color-primary-border);
+	&:hover{
+		background-color: var(--color-primary-hover);
+		border-color: var(--color-primary-hover)
+	}
+}
+.button--secondary{
+	color: var(--color-secondary-text);
+	background-color: var(--color-secondary);
+	border-color: var(--color-secondary-border);
+	&:hover{
+		background-color: var(--color-secondary-hover);
+		border-color: var(--color-secondary-hover);
+	}
+}
+.button--outline{
+	background-color: transparent;
+	color: var(--color-text);
+	border-color: var(--color-border);
+	&:hover{
+		background-color: var(--color-surface);
+	}
 }
 .button--danger{
 	color: var(--color-danger-text);
 	background-color: var(--color-danger);
-	border-color: var(--color-danger);
+	border-color: var(--color-danger-border);
+	&:hover{
+		background-color: var(--color-danger-hover);
+	}
 }
 .button--success{
 	color: var(--color-success-text);
 	background-color: var(--color-success);
-	border-color: var(--color-success);
+	border-color: var(--color-success-border);
+	&:hover{
+		background-color: var(--color-success-hover);
+	}
+}
+.button--info{
+	color: var(--color-info-text);
+	background-color: var(--color-info);
+	border-color: var(--color-info-border);
+	&:hover{
+		background-color: var(--color-info-hover);
+	}
+}
+.button--warning{
+	background-color: var(--color-warning);
+	border-color: var(--color-warning-border);
+	&:hover{
+		background-color: var(--color-warning-hover);
+	}
 }
 .button--stretch{
 	width: 100%;
@@ -96,7 +149,6 @@
 
 <script>
 
-props string class = "";
 props string type = "button";
 props string target = "_self";
 props string content = "";

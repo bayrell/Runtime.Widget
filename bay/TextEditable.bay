@@ -1,7 +1,7 @@
 <!--
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,34 +19,34 @@
 <class name="Runtime.Widget.TextEditable" extends="Runtime.Widget.Field">
 
 <use name="Runtime.Reference" />
-<use name="Runtime.Web.Messages.ValueChangeMessage" />
+<use name="Runtime.Widget.Messages.ValueChangeMessage" />
 
 
 <style>
-.widget_text_editable{
+.text_editable{
 	width: 100%;
 	max-width: 100%;
 	font-family: monospace;
-	font-size: var(--widget-font-size);
-	padding: var(--widget-button-padding-y) var(--widget-button-padding-x); margin: 0;
-	background-color: var(--widget-color-default);
-	border-width: var(--widget-border-width);
-	border-color: var(--widget-color-border);
+	font-size: var(--font-input-size);
+	padding: calc(var(--space) * 0.75) calc(var(--button-padding-x) * 1.5); margin: 0;
+	background-color: var(--color-default);
+	border-width: var(--border-width);
+	border-color: var(--color-border);
 	border-style: solid;
-	border-radius: 4px;
+	border-radius: var(--space);
 	box-shadow: none;
 	overflow: auto;
 	outline: transparent;
-	line-height: 1.5;
+	line-height: normal;
 	tab-size: 4;
 	text-wrap: balance;
 	white-space: pre;
 }
-.widget_text_editable.wrap{
+.text_editable.wrap{
 	overflow-wrap: break-word;
 	text-wrap: wrap;
 }
-.widget_text_editable.overflow{
+.text_editable.overflow{
 	overflow: auto;
 	text-wrap: nowrap;
 }
@@ -55,7 +55,7 @@
 
 <template>
 	%set Map props = this.getProps();
-	<div class="widget_text_editable"
+	<div class="text_editable"
 		class={{ this.class }}
 		name={{ this.name }}
 		contenteditable="plaintext-only"
@@ -110,7 +110,7 @@ Map getProps()
 /**
  * Mounted event
  */
-void onMounted()
+void mounted()
 {
 	if (this.reference) this.reference.setValue(this);
 	this.setValue(this.value);
@@ -120,7 +120,7 @@ void onMounted()
 /**
  * Updated event
  */
-void onUpdated()
+void updated()
 {
 	if (this.old_value == this.value) return;
 	if (this.change_timer) return;
@@ -169,7 +169,7 @@ void onChange(var e)
 	string value = this.getValue();
 	
 	/* Send value change */
-	this.emit("valueChange", new ValueChangeMessage{
+	this.emit(new ValueChangeMessage{
 		"value": value,
 		"old_value": this.old_value,
 		"data": this.data,

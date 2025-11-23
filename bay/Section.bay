@@ -1,7 +1,7 @@
 <!--
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,12 +21,18 @@
 
 <style>
 .section__wrap{
-	max-width: 1200px;
+	max-width: var(--content-max-width);
 	margin-left: auto;
 	margin-right: auto;
-	padding: 0px 0px;
-	padding-left: 10px;
-	padding-right: 10px;
+	padding: 0px var(--padding-desktop);
+	@media(max-width: 1000px)
+	{
+		padding: 0px var(--padding-tablet);
+	}
+	@media(max-width: 768px)
+	{
+		padding: 0px var(--padding-mobile);
+	}
 }
 </style>
 

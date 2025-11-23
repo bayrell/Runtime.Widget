@@ -12,6 +12,8 @@
 		"Link.bay",
 		"Menu.bay",
 		"Pagination.bay",
+		"Result.bay",
+		"ResultModel.bay",
 		"Container.bay",
 		"Section.bay",
 		"Select.bay",
@@ -24,8 +26,8 @@
 		"TextEditable.bay",
 		"TextImage.bay",
 		"UploadFileButton.bay",
-		"WidgetResult.bay",
-		"WidgetResultModel.bay",
+		"Messages/ClickMessage.bay",
+		"Messages/ValueChangeMessage.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [

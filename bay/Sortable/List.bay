@@ -1,7 +1,7 @@
 <!--
  *  BayLang Technology
  *
- *  (c) Copyright 2016-2024 "Ildar Bikmamatov" <support@bayrell.org>
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,68 +16,68 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.SortableList">
+<class name="Runtime.Widget.Sortable.List">
 
 <use name="Runtime.lib" />
 <use name="Runtime.Math" />
 <use name="Runtime.Serializer" />
-<use name="Runtime.Web.Messages.ValueChangeMessage" />
+<use name="Runtime.Widget.Messages.ValueChangeMessage" />
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 <use name="Runtime.Widget.Select" component="true" />
 
 
 <style>
-.widget_sortable_list{
+.sortable_list{
 	position: relative;
 }
-.widget_sortable_list__item{
+.sortable_list__item{
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
-	border-width: var(--widget-border-width);
-	border-color: var(--widget-color-border);
+	border-width: var(--border-width);
+	border-color: var(--color-border);
 	border-style: solid;
 	border-radius: 4px;
 	margin: 5px;
 }
-.widget_sortable_list__item_drag,
-.widget_sortable_list__item_remove{
+.sortable_list__item_drag,
+.sortable_list__item_remove{
 	cursor: pointer;
 	padding: 0px 5px;
 }
-.widget_sortable_list__item_value{
+.sortable_list__item_value{
 	flex: 1;
-	%(Input)widget_input, %(Select)widget_select{
+	.input, .select{
 		padding: 0px 10px;
 		border-color: transparent;
 		border-radius: 0;
 		border-width: 0;
 	}
 }
-.widget_sortable_list__buttons{
+.sortable_list__buttons{
 	text-align: center;
-	margin-top: var(--widget-space);
+	margin-top: var(--space);
 }
-.widget_sortable_list__shadow_elem{
+.sortable_list__shadow_elem{
 	position: absolute;
 	opacity: 0.5;
 	user-select: none;
 	z-index: 9999999;
-	.widget_sortable_list__item_drag{
+	.sortable_list__item_drag{
 		cursor: grabbing;
 	}
-	.widget_sortable_list__item{
+	.sortable_list__item{
 		margin: 0;
 	}
 }
-.widget_sortable_list-move,
-.widget_sortable_list-enter-active,
-.widget_sortable_list-leave-active {
+.sortable_list-move,
+.sortable_list-enter-active,
+.sortable_list-leave-active {
 	transition: all 0.3s ease;
 }
-.widget_sortable_list-enter-from,
-.widget_sortable_list-leave-to {
+.sortable_list-enter-from,
+.sortable_list-leave-to {
 	opacity: 0;
 }
 </style>
@@ -100,19 +100,19 @@
 
 <template name="renderItem" args="int pos">
 	%set var item = this.getItems().get(pos);
-	<div class="widget_sortable_list__item"
+	<div class="sortable_list__item"
 		data-pos={{ pos }}
 		@key={{ item }}
 	>
-		<div class="widget_sortable_list__item_drag"
+		<div class="sortable_list__item_drag"
 			@event:mousedown={{
 				void (var e) use (item){ this.onMouseDown(e, item); }
 			}}
 		>@raw{{ "&#9776;" }}</div>
-		<div class="widget_sortable_list__item_value">
+		<div class="sortable_list__item_value">
 			%render this.renderValue(pos, item);
 		</div>
-		<div class="widget_sortable_list__item_remove"
+		<div class="sortable_list__item_remove"
 			@event:click={{
 				void (var e) use (pos){ this.removeItem(pos); }
 			}}
@@ -122,11 +122,11 @@
 
 
 <template name="renderItems">
-	<div class="widget_sortable_list__items">
+	<div class="sortable_list__items">
 		%set Collection items = this.getItems();
 		%if (items)
 		{
-			<TransitionGroup name="widget_sortable_list">
+			<TransitionGroup name="sortable_list">
 			%for (int i=0; i<items.count(); i++)
 			{
 				%render this.renderItem(i);
@@ -140,7 +140,7 @@
 <template name="renderButtons">
 	%if (this.show_buttons == "true")
 	{
-		<div class="widget_sortable_list__buttons">
+		<div class="sortable_list__buttons">
 			<Button styles=["small"] @event:click="this.onAddItemClick()">Add</Button>
 		</div>
 	}
@@ -148,10 +148,10 @@
 
 
 <template>
-	<div class="widget_sortable_list">
+	<div class="sortable_list">
 		%render this.renderItems();
 		%render this.renderButtons();
-		<div class="widget_sortable_list__shadow" @ref="shadow"></div>
+		<div class="sortable_list__shadow" @ref="shadow"></div>
 	</div>
 </template>
 
@@ -236,7 +236,7 @@ void getDragElementFromPoint(int x, int y)
 	{
 		var elem = items[i];
 		if (elem.parentElement == this.shadow_elem) continue;
-		if (elem.classList.contains("widget_sortable_list__item")) return elem;
+		if (elem.classList.contains("sortable_list__item")) return elem;
 	}
 	return null;
 }
@@ -247,8 +247,8 @@ void getDragElementFromPoint(int x, int y)
  */
 void getDragElement(var elem)
 {
-	if (elem.classList.contains("widget_sortable_list__item")) return elem;
-	if (elem.parentElement.classList.contains("widget_sortable_list__item"))
+	if (elem.classList.contains("sortable_list__item")) return elem;
+	if (elem.parentElement.classList.contains("sortable_list__item"))
 	{
 		return elem.parentElement;
 	}
@@ -264,7 +264,7 @@ void createShadow()
 	if (not this.drag_elem) return;
 	this.shadow_elem = document.createElement("div");
 	this.shadow_elem.innerHTML = this.drag_elem.outerHTML;
-	this.shadow_elem.classList.add("widget_sortable_list__shadow_elem");
+	this.shadow_elem.classList.add("sortable_list__shadow_elem");
 	string arr = rs::split(" ", static::getCssHash(static::getClassName()));
 	arr = arr.filter(lib::equalNot(""));
 	for (int i=0; i<arr.count(); i++)

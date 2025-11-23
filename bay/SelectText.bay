@@ -16,6 +16,33 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Crud.Pages.IndexPage">
+<class name="Runtime.Widget.SelectText">
+
+<use name="Runtime.Core.Message" />
+<use name="Runtime.Web.Events.User.ChangeEvent" />
+<use name="Runtime.Widget.Helper" />
+
+
+<style>
+</style>
+
+
+<template>
+	<span class="select_text">
+		%set Map item = this.options
+			? this.options.findItem( bool (Map item) => item.get("key") == this.value )
+			: null
+		;
+		{{ item != null ? item.get("value") : this.value }}
+	</span>
+</template>
+
+
+<script>
+
+props int value = "";
+props Vector options = [];
+
+</script>
 
 </class>
