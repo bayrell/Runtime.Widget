@@ -63,7 +63,7 @@ void onFileUploadChange(var e)
             "value": file,
             "data": this.data,
         }
-		this.emit("file", message);
+		this.emit(message);
 		if (this.model) this.model.emit(message);
 	}
 }

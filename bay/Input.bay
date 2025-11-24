@@ -18,7 +18,7 @@
 
 <class name="Runtime.Widget.Input" extends="Runtime.Widget.Field">
 
-<use name="Runtime.Web.Messages.ValueChangeMessage" />
+<use name="Runtime.Widget.Messages.ValueChangeMessage" />
 
 
 <style>
@@ -33,9 +33,13 @@
 	border-style: solid;
 	border-radius: var(--border-radius);
 	box-shadow: none;
+	color: var(--text-color);
 	outline: transparent;
 	line-height: normal;
 	min-height: 32px;
+	transition: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 }
 .input:focus{
 	outline: transparent;
@@ -78,18 +82,6 @@ string getValue()
 {
 	if (this.value) return this.value;
 	return this.default;
-}
-
-
-/**
- * Returns input props
- */
-Map getProps()
-{
-	if (this.readonly) return {
-		"readonly": true,
-	};
-	return {};
 }
 
 

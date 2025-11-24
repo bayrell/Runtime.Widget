@@ -36,18 +36,15 @@
 	outline: none;
 	cursor: pointer;
 	border-radius: var(--border-radius);
-	transition: background-color var(--transition) ease-in-out,
-		border-color var(--transition) ease-in-out,
-		color var(--transition) ease-in-out;
+	transition: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 	&:hover{
 		box-shadow: 0 0 0 calc(var(--space) * 0.25) rgba(var(--color-primary-dark), 0.25);
 	}
 	&:active{
 		box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.25);
 	}
-}
-.button--bold{
-	font-weight: bold;
 }
 .button--small{
 	padding: calc(var(--space) * 0.5) calc(var(--space) * 1);

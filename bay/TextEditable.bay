@@ -26,9 +26,9 @@
 .text_editable{
 	width: 100%;
 	max-width: 100%;
-	font-family: monospace;
+	font-family: var(--font-family);
 	font-size: var(--font-input-size);
-	padding: calc(var(--space) * 0.75) calc(var(--button-padding-x) * 1.5); margin: 0;
+	padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5); margin: 0;
 	background-color: var(--color-default);
 	border-width: var(--border-width);
 	border-color: var(--color-border);
@@ -36,19 +36,12 @@
 	border-radius: var(--space);
 	box-shadow: none;
 	overflow: auto;
+	overflow-wrap: break-word;
 	outline: transparent;
 	line-height: normal;
 	tab-size: 4;
-	text-wrap: balance;
-	white-space: pre;
-}
-.text_editable.wrap{
-	overflow-wrap: break-word;
 	text-wrap: wrap;
-}
-.text_editable.overflow{
-	overflow: auto;
-	text-wrap: nowrap;
+	white-space: pre;
 }
 </style>
 
@@ -61,6 +54,7 @@
 		contenteditable="plaintext-only"
 		@event:keydown={{ this.onKeyDown }}
 		@event:input={{ this.onInput }}
+		@event:blur={{ this.onChange }}
 		@ref="text"
 		...props
 	></div>

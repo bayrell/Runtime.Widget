@@ -100,6 +100,7 @@
 	
 	/* Transition */
 	--transition: 0.3s;
+	--transition-type: ease-in-out;
 	
 	/* Width */
 	--content-max-width: 1280px;
@@ -162,8 +163,8 @@
 }
 body, html{
 	scroll-behavior: smooth;
-	transition: background-color var(--transition) ease,
-		color var(--transition) ease;
+	transition: background-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 }
 .root_container{
 	font-family: var(--font-family);

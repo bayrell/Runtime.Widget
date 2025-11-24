@@ -25,7 +25,6 @@
 .textarea{
 	width: 100%;
 	max-width: 100%;
-	min-height: 400px;
 	font-family: var(--font-family);
 	font-size: var(--font-input-size);
 	padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
@@ -37,6 +36,9 @@
 	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
+	transition: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 }
 .textarea:focus{
 	outline: transparent;
@@ -48,6 +50,7 @@
 	%set Map props = this.getProps();
 	<textarea
 		class="textarea"
+		class={{ this.class }}
 		name={{ this.name }}
 		placeholder={{ this.placeholder }}
 		style={{ this.getStyle() }}
@@ -55,7 +58,7 @@
 		@event:change={{ this.onChange }}
 		@event:keydown={{ this.onKeyDown }}
 		...props
-	>{{ this.value }}</textarea>
+	></textarea>
 </template>
 
 
@@ -68,18 +71,6 @@ props string name = "";
 props string value = "";
 props string placeholder = "";
 var change_timer = null;
-
-
-/**
- * Returns textarea props
- */
-Map getProps()
-{
-	if (this.readonly) return {
-		"readonly": true,
-	};
-	return {};
-}
 
 
 /**
@@ -129,7 +120,7 @@ void onChange()
 	var textarea = this.getRef("textarea");
 	
 	/* Send value change */
-	this.emit("valueChange", new ValueChangeMessage{
+	this.emit(new ValueChangeMessage{
 		"value": textarea.value,
 		"old_value": this.value,
 		"data": this.data,

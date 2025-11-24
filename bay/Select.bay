@@ -18,7 +18,7 @@
 
 <class name="Runtime.Widget.Select" extends="Runtime.Widget.Field">
 
-<use name="Runtime.Web.Messages.ValueChangeMessage" />
+<use name="Runtime.Widget.Messages.ValueChangeMessage" />
 
 
 <style>
@@ -38,6 +38,9 @@
 	color: inherit;
 	max-width: 100%;
 	min-height: 32px;
+	transition: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 }
 .widget_select:hover{
 	color: inherit;
@@ -47,7 +50,14 @@
 
 <template name="render">
 	
-	<select name={{ this.name }} class="select" @event:change={{ this.onChange }}>
+	%set Map props = this.getProps();
+	<select
+		name={{ this.name }}
+		class="select"
+		class={{ this.class }}
+		@event:change={{ this.onChange }}
+		...props
+	>
 	
 	%set string value = this.getValue();
 	%set Vector options = this.getOptions();

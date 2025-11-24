@@ -25,11 +25,24 @@
 <script>
 
 props bool readonly = false;
+props string id = "";
 props string name = "";
 props string value = "";
 props string default = "";
 props string placeholder = "";
 props string type = "text";
+
+
+/**
+ * Returns textarea props
+ */
+Map getProps()
+{
+	Map res = {};
+	if (this.readonly) res.set("readonly", true);
+	if (this.id) res.set("id", this.id);
+	return {};
+}
 
 </script>
 

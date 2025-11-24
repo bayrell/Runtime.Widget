@@ -43,7 +43,7 @@
 	{
 		<img class="image"
 			class={{ this.class }}
-			src={{ this.layout.assets(this.src) }}
+			src={{ this.src }}
 			@key="image"
 		/>
 	}
