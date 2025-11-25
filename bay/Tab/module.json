@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"Tab.bay",
+		"TabMessage.bay",
 		"Tabs.bay",
 		"TabsModel.bay"
 	],

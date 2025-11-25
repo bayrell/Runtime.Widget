@@ -18,7 +18,7 @@
 
 namespace Runtime.Widget.Dialog;
 
-use Runtime.Web.Messages.Message;
+use Runtime.Message;
 use Runtime.Widget.Dialog.DialogModel;
 
 

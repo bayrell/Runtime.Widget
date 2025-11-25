@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.Table;
 
+use Runtime.Message;
 use Runtime.Web.ApiResult;
-use Runtime.Web.Messages.Message;
 
 
 class TableMessage extends Message

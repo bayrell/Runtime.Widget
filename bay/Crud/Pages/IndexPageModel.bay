@@ -18,13 +18,13 @@
 
 namespace Runtime.Widget.Crud.Pages;
 
+use Runtime.BaseModel;
 use Runtime.Serializer;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.CrudFactory;
 
 
-class IndexPageModel extends BasePageModel
+class IndexPageModel extends BaseModel
 {
 	CrudFactory crud = null;
 	

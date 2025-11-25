@@ -19,8 +19,8 @@
 namespace Runtime.Widget.Seo;
 
 use Runtime.BaseObject;
+use Runtime.BaseModel;
 use Runtime.Serializer;
-use Runtime.Web.BaseModel;
 use Runtime.Widget.Seo.SeoWidget;
 
 

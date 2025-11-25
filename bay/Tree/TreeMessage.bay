@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.Tree;
 
+use Runtime.Message;
 use Runtime.Reference;
-use Runtime.Web.Messages.Message;
 use Runtime.Widget.Tree.TreeItem;
 
 

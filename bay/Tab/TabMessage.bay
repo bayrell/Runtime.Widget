@@ -16,12 +16,13 @@
  *  limitations under the License.
  */
 
-namespace Runtime.Widget.ContextMenu;
+namespace Runtime.Widget.Tab;
 
 use Runtime.Message;
 
 
-class ContextMenuMessage extends Message
+class TabMessage extends Message
 {
-	Dict item = null;
+	string name = "tab";
+	string key = "";
 }

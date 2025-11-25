@@ -18,7 +18,7 @@
 
 namespace Runtime.Widget.Gallery;
 
-use Runtime.Web.BaseModel;
+use Runtime.BaseModel;
 use Runtime.Widget.Gallery.Gallery;
 use Runtime.Widget.Gallery.GalleryDialogModel;
 

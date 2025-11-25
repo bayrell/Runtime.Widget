@@ -18,8 +18,8 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.Message;
 use Runtime.Web.ApiResult;
-use Runtime.Web.Messages.Message;
 
 
 class FormMessage extends Message

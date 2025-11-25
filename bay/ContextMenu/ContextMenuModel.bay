@@ -18,7 +18,7 @@
 
 namespace Runtime.Widget.ContextMenu;
 
-use Runtime.Web.BaseModel;
+use Runtime.BaseModel;
 use Runtime.Widget.ContextMenu.ContextMenu;
 use Runtime.Widget.ContextMenu.ContextMenuMessage;
 

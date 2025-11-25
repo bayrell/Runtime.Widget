@@ -18,9 +18,9 @@
 
 namespace Runtime.Widget.Crud.Pages;
 
+use Runtime.BaseModel;
 use Runtime.Serializer;
 use Runtime.Entity.Factory;
-use Runtime.Web.BasePageModel;
 use Runtime.Web.ModelFactory;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Crud.Pages.DialogPage;
@@ -30,7 +30,7 @@ use Runtime.Widget.Table.TableDialogModel;
 use Runtime.Widget.RowButtonsModel;
 
 
-class DialogPageModel extends BasePageModel
+class DialogPageModel extends BaseModel
 {
 	string component = classof DialogPage;
 	CrudFactory crud = null;

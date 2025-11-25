@@ -34,6 +34,9 @@
 	border-color: var(--color-border);
 	border-style: solid;
 	border-radius: var(--space);
+	transition: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 	box-shadow: none;
 	overflow: auto;
 	overflow-wrap: break-word;
