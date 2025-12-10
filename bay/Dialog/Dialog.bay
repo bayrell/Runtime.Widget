@@ -18,117 +18,152 @@
 
 <class name="Runtime.Widget.Dialog.Dialog">
 
-<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.Button" />
+<use name="Runtime.Widget.Dialog.DialogModel" />
 
 <style>
 .dialog{
 	display: none;
 	position: fixed;
-	flex-direction: row;
+	top: 0; left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.2);
+	z-index: 99999;
 	align-items: center;
 	justify-content: center;
-	left: 0; top: 0;
-	width: 100vw;
-	min-height: 100vh;
-	z-index: 99999;
-	&__shadow{
-		position: absolute;
-		display: none;
-		background-color: #000;
-		opacity: 0.2;
-		overflow: hidden;
-		height: 100%;
-		width: 100%;
+	overflow-y: auto;
+	
+	&--open{
+		display: grid;
 	}
-	&.open{
-		display: flex;
-		.dialog__shadow{
-			display: block;
-		}
-	}
+	
 	&__container{
 		background-color: var(--color-background);
 		border-radius: var(--border-radius);
-		border: 1px var(--color-shadow) solid;
-		min-width: 600px;
-		z-index: 1;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+		width: 600px;
+		margin: calc(var(--space) * 2) auto;
 	}
-	&__title{
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: var(--space) calc(var(--space) * 2);
-		border-bottom: 1px var(--color-shadow) solid;
-		.content{
-			font-weight: bold;
-			font-size: var(--font-size-h4);
-		}
-		.button{
-			padding: 6px;
-			border-width: 0;
-			&:hover, &:focus, &:active{
-				border-width: 0;
-			}
-		}
-		svg{
-			width: 16px;
-			height: 16px;
-		}
-	}
+	
 	&__content{
 		padding: calc(var(--space) * 2);
+		flex-grow: 1;
+		overflow-y: auto;
 	}
-	&__buttons{
+	
+	&__header{
+		padding: var(--space) calc(var(--space) * 2);
+		border-bottom: 1px solid var(--color-border);
 		display: flex;
-		align-items: baseline;
-		justify-content: flex-end;
-		gap: var(--space);
+		justify-content: space-between;
+		align-items: center;
+		font-weight: bold;
+		font-size: 1.2em;
+		
+		.button{
+			font-size: 1.5em;
+			line-height: 0;
+			border: none;
+		}
+	}
+
+	/* Footer dialog */
+	&__footer{
+		padding: calc(var(--space) * 2);
 		padding-top: var(--space);
+		display: flex;
+		justify-content: flex-end;
+		gap: 10px;
+	}
+	
+	@media (max-width: 768px){
+		&__content_wrapper{
+			width: 95%;
+		}
+		&__header{
+			font-size: 1.1em;
+			padding: 10px 15px;
+		}
+		&__content{
+			padding: 15px;
+		}
+		&__footer{
+			padding: 10px 15px;
+		}
 	}
 }
 </style>
 
-<template name="renderCloseButton">
-	<Button class="button--small" @event:click="this.model.hide()">
-		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-			<path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-		</svg>
+<template name="renderHeader">
+	<div class="dialog__header_title">
+		%render this.renderSlot("title");
+	</div>
+	<Button
+		class="dialog__header_close button--small"
+		@event:click="this.onCloseClick()"
+	>
+		&times;
 	</Button>
 </template>
 
-<template name="renderTitle">
-	<div class="dialog__title">
-		<span class="content">%render this.renderSlot("title");</span>
-		%render this.renderCloseButton();
-	</div>
-</template>
-
-<template name="renderContent">
-	%render this.renderSlot("content");
-</template>
-
-<template name="renderButtons">
-	%render this.renderSlot("buttons");
-</template>
-
 <template>
-	<div class="dialog" class={{ this.model.is_open ? "open" : "" }}>
-		<div class="dialog__shadow"></div>
-		<div class="dialog__container">
-			%render this.renderTitle();
-			<div class="dialog__content">
-				%render this.renderContent();
-				<div class="dialog__buttons">
-					%render this.renderButtons();
-				</div>
+	<div
+		class="dialog"
+		class={{ this.model.is_open ? "dialog--open" : "" }}
+		@event:click="this.onOverlayClick()"
+	>
+		<div class="dialog__container"
+			@event:click="event.stopPropagation();"
+		>
+			<div class="dialog__header">
+				%render this.renderHeader();
 			</div>
+			
+			<div class="dialog__content">
+				%render this.renderSlot("content");
+			</div>
+			
+			%if (this.slot("footer"))
+			{
+				<div class="dialog__footer">
+					%render this.renderSlot("footer");
+				</div>
+			}
 		</div>
 	</div>
 </template>
 
 <script>
 
+props DialogModel model = null;
+props bool modal = true;
+
+
+/**
+ * Overlay click
+ */
+void onOverlayClick()
+{
+	if (not this.modal)
+	{
+		this.model.hide();
+	}
+}
+
+
+/**
+ * Close button click
+ */
+void onCloseClick()
+{
+	this.model.hide();
+}
+
+
+/**
+ * Update component
+ */
 void updated()
 {
 	var body = document.getElementsByTagName("body")[0];
@@ -136,14 +171,14 @@ void updated()
 	{
 		if (not body.classList.contains("scroll-lock"))
 		{
-			body.classList.add("scroll-lock")
+			body.classList.add("scroll-lock");
 		}
 	}
 	else
 	{
 		if (body.classList.contains("scroll-lock"))
 		{
-			body.classList.remove("scroll-lock")
+			body.classList.remove("scroll-lock");
 		}
 	}
 }
