@@ -101,6 +101,9 @@
 	/* Transition */
 	--transition: 0.3s;
 	--transition-type: ease-in-out;
+	--transition-background: background-color var(--transition) var(--transition-type),
+		border-color var(--transition) var(--transition-type),
+		color var(--transition) var(--transition-type);
 	
 	/* Width */
 	--content-max-width: 1280px;

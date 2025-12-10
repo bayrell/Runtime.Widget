@@ -2,18 +2,8 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
-		"DeleteDialog.bay",
-		"DeleteDialogModel.bay",
-		"RefreshButton.bay",
-		"SaveDialog.bay",
-		"SaveDialogModel.bay",
 		"Table.bay",
-		"TableModel.bay",
-		"TableDialogModel.bay",
-		"TableMessage.bay",
-		"TableProxyStorage.bay",
-		"TableStorage.bay",
-		"TableStorageInterface.bay"
+		"TableModel.bay"
 	],
 	"require": [
 		"Runtime.Widget"

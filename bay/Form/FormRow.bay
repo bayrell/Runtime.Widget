@@ -18,74 +18,36 @@
 
 <class name="Runtime.Widget.Form.FormRow">
 
+<use name="Runtime.Widget.ResultModel" />
 
 <style>
 .form_row{
-	margin-bottom: 10px;
-	&:last-child{
-		margin-bottom: 0px;
+	margin-bottom: calc(var(--space) * 2);
+	label{
+		display: block;
+		font-weight: bold;
+		margin-bottom: calc(var(--space) * 0.5);
 	}
-	&__label{
-		margin-bottom: 5px;
-	}
-}
-.form_row--flex{
-	display: flex;
-	align-items: center;
-	&__label, &__content{
-		width: 50%;
-	}
-}
-.form_row__error{
-	color: var(--widget-color-danger);
-	margin-top: var(--widget-space);
-}
-.form_row__error--hide{
-	display: none;
 }
 </style>
 
-
 <template>
-	<div class="form_row"
-		class={{ this.class }}
-		class={{ static::mergeStyles("form_row", this.styles) }}
-	>
-		%if (this.checkSlot("label"))
+	<div class="form_row">
+		<label>{{ this.label }}</label>
+		<div class="form_row__content">
+			%render this.renderSlot("default");
+		</div>
+		%if (this.result)
 		{
-			<div class="form_row__label" @key="label">
-				%render this.renderSlot("label");
-			</div>
-		}
-		%if (this.checkSlot("content"))
-		{
-			<div class="form_row__content" @key="content">
-				%render this.renderSlot("content");
-			</div>
-		}
-		%if (this.checkSlot("result"))
-		{
-			<div class="form_row__result" @key="result">
-				%render this.renderSlot("result");
-			</div>
-		}
-		%if (this.error.count() > 0)
-		{
-			<div class="form_row__error" @key="error">
-				%for (int i=0; i<this.error.count(); i++)
-				{
-					<div>{{ this.error.get(i) }}</div>
-				}
-			</div>
+			%render this.renderWidget(this.result);
 		}
 	</div>
 </template>
 
-
 <script>
 
-props Collection<string> styles = [];
-props Collection<string> error = [];
+props string label = "";
+props ResultModel result = null;
 
 </script>
 

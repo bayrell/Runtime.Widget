@@ -18,62 +18,12 @@
 
 namespace Runtime.Widget.Dialog;
 
-use Runtime.Widget.RowButtonsModel;
-use Runtime.Widget.WidgetResultModel;
-use Runtime.Widget.Dialog.BaseDialogModel;
-use Runtime.Widget.Dialog.Dialog;
+use Runtime.BaseModel;
 
 
-class DialogModel extends BaseDialogModel
+class DialogModel extends BaseModel
 {
-	string action = "";
-	string title = "";
-	string content = "";
-	string width = "";
-	string component = classof Dialog;
-	Dict data = {};
-	Collection<string> styles = [];
-	RowButtonsModel buttons;
-	WidgetResultModel result;
-	
-	
-	/**
-	 * Init widget params
-	 */
-	void initParams(Dict params)
-	{
-		parent(params);
-		
-		if (params == null) return;
-		if (params.has("content")) this.content = params.get("content");
-		if (params.has("styles")) this.styles = params.get("styles");
-		if (params.has("title")) this.title = params.get("title");
-		if (params.has("width")) this.width = params.get("width");
-	}
-	
-	
-	/**
-	 * Init widget settings
-	 */
-	void initWidget(Dict params)
-	{
-		parent(params);
-		
-		/* Add button */
-		this.buttons = this.addWidget(
-			classof RowButtonsModel,
-			{
-				"widget_name": "buttons",
-				"styles": ["@widget_dialog__buttons", "align-end"],
-			}
-		);
-		
-		/* Add result */
-		this.result = this.addWidget(classof WidgetResultModel,
-		{
-			"styles": ["margin_top"],
-		});
-	}
+	bool is_open = false;
 	
 	
 	/**
@@ -81,25 +31,15 @@ class DialogModel extends BaseDialogModel
 	 */
 	void show()
 	{
-		this.result.clear();
-		parent();
+		this.is_open = true;
 	}
 	
 	
 	/**
-	 * Set title
+	 * Hide dialog
 	 */
-	void setTitle(string title)
+	void hide()
 	{
-		this.title = title;
-	}
-	
-	
-	/**
-	 * Set width
-	 */
-	void setWidth(string value)
-	{
-		this.width = value;
+		this.is_open = false;
 	}
 }
