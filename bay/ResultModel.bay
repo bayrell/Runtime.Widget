@@ -18,11 +18,13 @@
 
 namespace Runtime.Widget;
 
+use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.SerializeInterface;
 use Runtime.Serializer;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.StringType;
 use Runtime.Exceptions.AbstractException;
-use Runtime.Web.ApiResult;
 use Runtime.Widget.Result;
 
 
@@ -31,6 +33,17 @@ class ResultModel extends BaseModel
 	int code = 0;
 	string message = "";
 	string component = classof Result;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serializer)
+	{
+		parent(serializer);
+		serializer.addType("code", new IntegerType());
+		serializer.addType("message", new StringType());
+	}
 	
 	
 	/**
@@ -121,15 +134,4 @@ class ResultModel extends BaseModel
 	 * Returns true if success
 	 */
 	bool isSuccess() => this.code > 0;
-	
-	
-	/**
-	 * Process frontend data
-	 */
-	void serialize(Serializer serializer, Map data)
-	{
-		serializer.process(this, "code", data);
-		serializer.process(this, "message", data);
-		parent(serializer, data);
-	}
 }

@@ -1,0 +1,185 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Table;
+
+use Runtime.BaseModel;
+use Runtime.Message;
+use Runtime.Serializer;
+use Runtime.Serializer.ObjectType;
+use Runtime.Widget.Dialog.DialogModel;
+use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableModel;
+
+
+class Manager extends BaseModel
+{
+	FormModel form = null;
+	TableModel table = null;
+	Vector primary_key = [];
+	
+	/* Dialog */
+	string dialog_action = "";
+	DialogModel dialog = null;
+	Map dialog_pk = null;
+	Map dialog_item = null;
+	
+	/* Functions */
+	fn title = null;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serialize)
+	{
+		parent(serialize);
+		serialize.addType("form", new ObjectType{
+			"extends": classof FormModel,
+		});
+		serialize.addType("table", new ObjectType{
+			"extends": classof TableModel,
+			"item_type": serialize.getParam("item_type"),
+		});
+		serialize.addType("dialog", new ObjectType{
+			"extends": classof DialogModel,
+		});
+	}
+	
+	
+	/**
+	 * Init params
+	 */
+	void initParams(Map params)
+	{
+		parent(params);
+		
+		if (params.has("primary_key")) this.primary_key = params.get("primary_key");
+		if (params.has("title")) this.title = params.get("title");
+	}
+	
+	
+	/**
+	 * Init widget
+	 */
+	void initWidget(Map params)
+	{
+		parent(params);
+		
+		if (params.has("dialog")) this.dialog = params.get("dialog");
+		else this.dialog = this.createWidget(classof DialogModel);
+		
+		if (params.has("form")) this.form = params.get("form");
+		else this.form = this.createWidget(classof FormModel);
+		
+		if (params.has("table")) this.table = params.get("table");
+		else this.table = this.createWidget(classof TableModel);
+	}
+	
+	
+	/**
+	 * Returns dialog action
+	 */
+	string getDialogAction()
+	{
+		if (this.dialog_action == "save")
+		{
+			if (this.dialog_pk) return "edit";
+			else return "add";
+		}
+		return this.dialog_action;
+	}
+	
+	
+	/**
+	 * Returns dialog title
+	 */
+	string getDialogTitle(string action)
+	{
+		fn title = this.title;
+		if (title) return title(action, this.dialog_item);
+		return "";
+	}
+	
+	
+	/**
+	 * Set item value
+	 */
+	void setValue(string key, var value)
+	{
+		this.dialog_item.set(key, value);
+	}
+	
+	
+	/**
+	 * Show add dialog
+	 */
+	void showAddDialog()
+	{
+		this.dialog_action = "save";
+		this.dialog_pk = null;
+		this.dialog_item = {};
+		this.dialog.show();
+	}
+	
+	
+	/**
+	 * Show edit dialog
+	 */
+	void showEditDialog(Map item)
+	{
+		this.dialog_action = "save";
+		this.dialog_pk = item.intersect(this.primary_key);
+		this.dialog_item = item;
+		this.dialog.show();
+	}
+	
+	
+	/**
+	 * Show delete dialog
+	 */
+	void showDeleteDialog(Map item)
+	{
+		this.dialog_action = "delete";
+		this.dialog_pk = item.intersect(this.primary_key);
+		this.dialog_item = item;
+		this.dialog.show();
+	}
+	
+	
+	/**
+	 * On save
+	 */
+	void onSave()
+	{
+		Message message = new Message();
+		message.name = "save";
+		this.listener.emit(message);
+	}
+	
+	
+	/**
+	 * On delete
+	 */
+	void onDelete()
+	{
+		Message message = new Message();
+		message.name = "delete";
+		this.listener.emit(message);
+	}
+}

@@ -2,7 +2,9 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
+		"Manager.bay",
 		"Table.bay",
+		"TableDialog.bay",
 		"TableModel.bay"
 	],
 	"require": [

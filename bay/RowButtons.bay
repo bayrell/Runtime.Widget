@@ -16,12 +16,22 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Form.Form">
+<class name="Runtime.Widget.RowButtons">
+
+<style>
+.row_buttons{
+	display: flex;
+	gap: calc(var(--space) * 0.5);
+	&.margin_bottom{
+		margin-bottom: calc(var(--space) * 2);
+	}
+}
+</style>
 
 <template>
-    <form class="form">
-        %render this.renderSlot("default");
-    </form>
+	<div class="row_buttons" class={{ this.class }}>
+		%render this.renderSlot("default");
+	</div>
 </template>
 
 </class>

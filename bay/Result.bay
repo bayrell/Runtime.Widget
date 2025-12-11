@@ -39,12 +39,7 @@
 
 
 <template>
-	<div class="result"
-		class={{ this.getErrorClass() }}
-		class={{ rs::mergeStyles("result", this.styles) }}
-	>
-		{{ this.model.message }}
-	</div>
+	<div class="result" class={{ this.getErrorClass() }}>{{ this.model.message }}</div>
 </template>
 
 

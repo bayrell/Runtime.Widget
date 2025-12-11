@@ -74,7 +74,7 @@
 		padding-top: var(--space);
 		display: flex;
 		justify-content: flex-end;
-		gap: 10px;
+		gap: var(--space);
 	}
 	
 	@media (max-width: 768px){
@@ -95,16 +95,37 @@
 }
 </style>
 
+<template name="renderTitle">
+	%render this.renderSlot("title");
+</template>
+
 <template name="renderHeader">
-	<div class="dialog__header_title">
-		%render this.renderSlot("title");
+	<div class="dialog__header">
+		<div class="dialog__header_title">
+			%render this.renderTitle();
+		</div>
+		<Button
+			class="dialog__header_close button--small"
+			@event:click="this.onCloseClick()"
+		>
+			&times;
+		</Button>
 	</div>
-	<Button
-		class="dialog__header_close button--small"
-		@event:click="this.onCloseClick()"
-	>
-		&times;
-	</Button>
+</template>
+
+<template name="renderContent">
+	<div class="dialog__content">
+		%render this.renderSlot("content");
+	</div>
+</template>
+
+<template name="renderFooter">
+	%if (this.slot("footer"))
+	{
+		<div class="dialog__footer">
+			%render this.renderSlot("footer");
+		</div>
+	}
 </template>
 
 <template>
@@ -116,20 +137,9 @@
 		<div class="dialog__container"
 			@event:click="event.stopPropagation();"
 		>
-			<div class="dialog__header">
-				%render this.renderHeader();
-			</div>
-			
-			<div class="dialog__content">
-				%render this.renderSlot("content");
-			</div>
-			
-			%if (this.slot("footer"))
-			{
-				<div class="dialog__footer">
-					%render this.renderSlot("footer");
-				</div>
-			}
+			%render this.renderHeader();
+			%render this.renderContent();
+			%render this.renderFooter();
 		</div>
 	</div>
 </template>

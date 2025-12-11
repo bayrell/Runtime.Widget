@@ -29,22 +29,6 @@ class TableModel extends BaseModel
 {
 	string component = classof Table;
 	Vector<Map> items = [];
-	BaseType item_type = null;
-	
-	
-	/**
-	 * Returns item type;
-	 */
-	Map getItemType() => this.item_type;
-	
-	
-	/**
-	 * Set item type
-	 */
-	void setItemType(BaseType item_type)
-	{
-		this.item_type = item_type;
-	}
 	
 	
 	/**
@@ -53,6 +37,6 @@ class TableModel extends BaseModel
 	void serialize(Serializer serialize)
 	{
 		parent(serialize);
-		serialize.addType("items", new VectorType(this.item_type));
+		serialize.addType("items", new VectorType(serialize.params.get("item_type")));
 	}
 }
