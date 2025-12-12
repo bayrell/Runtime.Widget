@@ -45,7 +45,7 @@
 		%if (action == "add")
 		{
 			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
-			<Button @event:click="this.manager.onCreate()" class="button--primary">Create</Button>
+			<Button @event:click="this.manager.onSave()" class="button--primary">Create</Button>
 		}
 		%else if (action == "edit")
 		{

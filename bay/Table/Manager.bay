@@ -36,8 +36,6 @@ class Manager extends BaseModel
 	/* Dialog */
 	string dialog_action = "";
 	DialogModel dialog = null;
-	Map dialog_pk = null;
-	Map dialog_item = null;
 	
 	/* Functions */
 	fn title = null;
@@ -51,6 +49,8 @@ class Manager extends BaseModel
 		parent(serialize);
 		serialize.addType("form", new ObjectType{
 			"extends": classof FormModel,
+			"pk_type": serialize.getParam("pk_type"),
+			"item_type": serialize.getParam("item_type"),
 		});
 		serialize.addType("table", new ObjectType{
 			"extends": classof TableModel,
@@ -99,7 +99,7 @@ class Manager extends BaseModel
 	{
 		if (this.dialog_action == "save")
 		{
-			if (this.dialog_pk) return "edit";
+			if (this.form.pk) return "edit";
 			else return "add";
 		}
 		return this.dialog_action;
@@ -112,17 +112,8 @@ class Manager extends BaseModel
 	string getDialogTitle(string action)
 	{
 		fn title = this.title;
-		if (title) return title(action, this.dialog_item);
+		if (title) return title(action, this.form.item);
 		return "";
-	}
-	
-	
-	/**
-	 * Set item value
-	 */
-	void setValue(string key, var value)
-	{
-		this.dialog_item.set(key, value);
 	}
 	
 	
@@ -132,8 +123,8 @@ class Manager extends BaseModel
 	void showAddDialog()
 	{
 		this.dialog_action = "save";
-		this.dialog_pk = null;
-		this.dialog_item = {};
+		this.form.pk = null;
+		this.form.item = {};
 		this.dialog.show();
 	}
 	
@@ -144,8 +135,8 @@ class Manager extends BaseModel
 	void showEditDialog(Map item)
 	{
 		this.dialog_action = "save";
-		this.dialog_pk = item.intersect(this.primary_key);
-		this.dialog_item = item;
+		this.form.pk = item.intersect(this.primary_key);
+		this.form.item = item;
 		this.dialog.show();
 	}
 	
@@ -156,8 +147,8 @@ class Manager extends BaseModel
 	void showDeleteDialog(Map item)
 	{
 		this.dialog_action = "delete";
-		this.dialog_pk = item.intersect(this.primary_key);
-		this.dialog_item = item;
+		this.form.pk = item.intersect(this.primary_key);
+		this.form.item = item;
 		this.dialog.show();
 	}
 	

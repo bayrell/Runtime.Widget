@@ -19,10 +19,33 @@
 namespace Runtime.Widget.Form;
 
 use Runtime.BaseModel;
+use Runtime.Serializer;
 use Runtime.Widget.Form.Form;
 
 
 class FormModel extends BaseModel
 {
 	string component = classof Form;
+	Map pk = null;
+	Map item = {};
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serializer)
+	{
+		parent(serializer);
+		serializer.addType("pk", serializer.getParam("pk_type"));
+		serializer.addType("item", serializer.getParam("item_type"));
+	}
+	
+	
+	/**
+	 * Set item value
+	 */
+	void setValue(string name, var value)
+	{
+		this.item.set(name, value);
+	}
 }
