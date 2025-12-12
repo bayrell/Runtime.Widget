@@ -1,0 +1,177 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+namespace Runtime.Widget.Api;
+
+use Runtime.ORM.Connection;
+use Runtime.ORM.Query;
+use Runtime.ORM.QueryResult;
+use Runtime.ORM.Record;
+use Runtime.ORM.Relation;
+use Runtime.Web.BaseApi;
+use Runtime.Widget.Api.Rules.BaseRule;
+
+
+class SearchApi extends BaseApi
+{
+	string action = "";
+	string connection_name = "";
+	Connection connection = null;
+	Relation relation = null;
+	Map filter = {};
+	QueryResult items = null;
+	
+	
+	/**
+	 * Returns relation name
+	 */
+	string getRealtionName() => "";
+	
+	
+	/**
+	 * Constructor
+	 */
+	void constructor(Map params)
+	{
+		parent(params);
+		
+		this.connection = Connection::getConnection(this.connection_name);
+		this.relation = rtl::newInstance(this.getRealtionName(), [{
+			"connection": this.connection,
+		}]);
+	}
+	
+	
+	/**
+	 * Init params
+	 */
+	void initParams(Map params)
+	{
+		parent(params);
+		if (not params) return;
+		if (params.has("action")) this.action = params.get("action");
+		if (params.has("connection_name")) this.connection_name = params.get("connection_name");
+	}
+	
+	
+	/**
+	 * Returns save rules
+	 */
+	Vector<BaseRule> rules() => [];
+	
+	
+	/**
+	 * Returns item fields
+	 */
+	Vector getItemFields() => [];
+	
+	
+	/**
+	 * Convert item
+	 */
+	Map convertItem(Map item) => item;
+	
+	
+	/**
+	 * Returns max limit
+	 */
+	int getMaxLimit() => 100;
+	
+	
+	/**
+	 * Set action
+	 */
+	void setAction(string action)
+	{
+		this.action = action;
+	}
+	
+	
+	/**
+	 * Set filter
+	 */
+	void setFilter(Map filter)
+	{
+		if (not (filter instanceof Map)) return;
+		this.filter = filter;
+	}
+	
+	
+	/**
+	 * Returns limit
+	 */
+	int getLimit()
+	{
+		int limit = this.filter.get("limit", 10);
+		if (not rtl::isInteger(limit)) limit = 0;
+		
+		int max_limit = this.getMaxLimit();
+		if (limit > max_limit and max_limit >= 0) limit = max_limit;
+		
+		return limit;
+	}
+	
+	
+	/**
+	 * Returns page
+	 */
+	int getPage()
+	{
+		int page = this.filter.get("page", 0);
+		if (not rtl::isInteger(page)) page = 0;
+		return page;
+	}
+	
+	
+	/**
+	 * Build query
+	 */
+	async void buildQuery(Query q)
+	{
+	}
+	
+	
+	/**
+	 * Search items
+	 */
+	async void search()
+	{
+		Query q = this.relation.select();
+		q.limit(this.getLimit());
+		q.page(this.getPage());
+		await this.buildQuery(q);
+		
+		this.items = this.relation.fetchAll(q);
+	}
+	
+	
+	/**
+	 * Set result
+	 */
+	void setResult()
+	{
+		if (this.items)
+		{
+			this.result.data.set("items", this.items.map(Map (Record item){
+				Map data = item.getData();
+				data = this.convertItem(data);
+				return data.intersect(this.getItemFields());
+			}));
+		}
+	}
+}

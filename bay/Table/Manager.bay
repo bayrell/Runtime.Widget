@@ -125,6 +125,7 @@ class Manager extends BaseModel
 		this.dialog_action = "save";
 		this.form.pk = null;
 		this.form.item = {};
+		this.form.result.clear();
 		this.dialog.show();
 	}
 	
@@ -137,6 +138,7 @@ class Manager extends BaseModel
 		this.dialog_action = "save";
 		this.form.pk = item.intersect(this.primary_key);
 		this.form.item = item;
+		this.form.result.clear();
 		this.dialog.show();
 	}
 	
@@ -149,6 +151,7 @@ class Manager extends BaseModel
 		this.dialog_action = "delete";
 		this.form.pk = item.intersect(this.primary_key);
 		this.form.item = item;
+		this.form.result.clear();
 		this.dialog.show();
 	}
 	

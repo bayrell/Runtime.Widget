@@ -18,8 +18,11 @@
 
 namespace Runtime.Widget.Form;
 
+use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Serializer;
+use Runtime.Serializer.ObjectType;
+use Runtime.Widget.ResultModel;
 use Runtime.Widget.Form.Form;
 
 
@@ -28,6 +31,7 @@ class FormModel extends BaseModel
 	string component = classof Form;
 	Map pk = null;
 	Map item = {};
+	ResultModel result = null;
 	
 	
 	/**
@@ -38,6 +42,36 @@ class FormModel extends BaseModel
 		parent(serializer);
 		serializer.addType("pk", serializer.getParam("pk_type"));
 		serializer.addType("item", serializer.getParam("item_type"));
+		serializer.addType("result", new ObjectType{"extends": classof ResultModel});
+	}
+	
+	
+	/**
+	 * Init widget
+	 */
+	void initWidget(Map params)
+	{
+		parent(params);
+		
+		this.result = this.createWidget(classof ResultModel);
+	}
+	
+	
+	/**
+	 * Set wait message
+	 */
+	void setWaitMessage()
+	{
+		this.result.setWaitMessage();
+	}
+	
+	
+	/**
+	 * Set api result
+	 */
+	void setApiResult(ApiResult result)
+	{
+		this.result.setApiResult(result);
 	}
 	
 	

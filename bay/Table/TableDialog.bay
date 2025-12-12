@@ -35,6 +35,7 @@
 	%else
 	{
 		<div class="dialog__delete_message">{{ this.manager.getDialogTitle("delete_message") }}</div>
+		%render this.renderWidget(this.manager.form.result);
 	}
 	</div>
 </template>
