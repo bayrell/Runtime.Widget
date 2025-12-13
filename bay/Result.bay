@@ -20,11 +20,11 @@
 
 
 <style>
-.result{
+.result--center{
 	text-align: center;
 }
 .result--margin_top{
-	margin-top: var(--space);
+	margin-top: calc(var(--space) * 0.5);
 }
 .result--success{
 	color: var(--color-success);
@@ -39,7 +39,8 @@
 
 
 <template>
-	<div class="result" class={{ this.getErrorClass() }}>{{ this.model.message }}</div>
+	<div class="result" class={{ this.class }}
+		class={{ this.getErrorClass() }}>{{ this.model.message }}</div>
 </template>
 
 

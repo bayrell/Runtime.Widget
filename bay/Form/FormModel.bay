@@ -31,6 +31,7 @@ class FormModel extends BaseModel
 	string component = classof Form;
 	Map pk = null;
 	Map item = {};
+	Map field_errors = {};
 	ResultModel result = null;
 	
 	
@@ -72,6 +73,26 @@ class FormModel extends BaseModel
 	void setApiResult(ApiResult result)
 	{
 		this.result.setApiResult(result);
+		this.setFieldErrors(result.data.get("fields"));
+	}
+	
+	
+	/**
+	 * Set field errors
+	 */
+	void setFieldErrors(Map field_errors)
+	{
+		this.field_errors = {};
+		Vector keys = rtl::list(field_errors.keys());
+		for (int i=0; i<keys.count(); i++)
+		{
+			string field_name = keys.get(i);
+			Vector messages = field_errors.get(field_name);
+			string message = rs::join(", ", messages);
+			ResultModel result = new ResultModel();
+			result.setError(message);
+			this.field_errors.set(field_name, result);
+		}
 	}
 	
 	

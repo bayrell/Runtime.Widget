@@ -39,7 +39,9 @@
 		</div>
 		%if (this.result)
 		{
-			%render this.renderWidget(this.result);
+			%render this.renderWidget(this.result, {
+				"class": "result--margin_top"
+			});
 		}
 	</div>
 </template>
