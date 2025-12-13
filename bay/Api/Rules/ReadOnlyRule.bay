@@ -18,13 +18,31 @@
 
 namespace Runtime.Widget.Api.Rules;
 
-use Runtime.Serializer;
+use Runtime.BaseObject;
+use Runtime.Widget.Api.Rules.BaseRule;
 
 
-interface BaseRule
+class ReadOnlyRule extends BaseObject implements BaseRule
 {
+	string field_name = "";
+	
+	
+	/**
+	 * Create object
+	 */
+	void constructor(string field_name)
+	{
+		parent();
+		this.field_name = field_name;
+	}
+	
+	
 	/**
 	 * Filter data
 	 */
-	void filter(Map data, Vector errors);
+	void filter(Map data, Vector errors)
+	{
+		if (not data.has(this.field_name)) return;
+		data.remove(this.field_name);
+	}
 }

@@ -22,6 +22,7 @@ use Runtime.Serializer;
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.AssertException;
 use Runtime.Exceptions.ItemNotFound;
+use Runtime.Exceptions.RuntimeException;
 use Runtime.ORM.Connection;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryFilter;
@@ -39,11 +40,11 @@ class SaveApi extends BaseApi
 	string connection_name = "";
 	Connection connection = null;
 	Relation relation = null;
+	Map pk = null;
 	Record item = null;
 	Map original_data = {};
 	Map update_data = {};
 	Map field_errors = {};
-	bool is_create = false;
 	
 	
 	/**
@@ -74,7 +75,7 @@ class SaveApi extends BaseApi
 	{
 		parent(params);
 		if (not params) return;
-		if (params.has("action")) this.action = params.get("action");
+		if (params.has("action")) this.action.setAction(params.get("action"));
 		if (params.has("connection_name")) this.connection_name = params.get("connection_name");
 	}
 	
@@ -83,6 +84,12 @@ class SaveApi extends BaseApi
 	 * Returns save rules
 	 */
 	Vector<BaseRule> rules() => [];
+	
+	
+	/**
+	 * Returns serialize rules for pk
+	 */
+	BaseType getPrimaryRules() => null;
 	
 	
 	/**
@@ -122,11 +129,53 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Filter primary key
+	 */
+	Map getPrimaryKey(Map pk)
+	{
+		Vector errors = [];
+		
+		/* Get primary key rule */
+		BaseType rule = this.getPrimaryRules();
+		if (not rule)
+		{
+			throw new ApiError(new RuntimeException("Primary rule not found"));
+		}
+		
+		/* Filter primary key */
+		pk = rule.filter(pk, errors, null);
+		
+		/* Check errors */
+		if (errors.count() > 0)
+		{
+			this.fail({"message": "Fields error"});
+			this.addFieldErrors(errors);
+			throw new ApiError(this.result);
+		}
+		return pk;
+	}
+	
+	
+	/**
 	 * Set action
 	 */
 	void setAction(string action)
 	{
 		this.action = action;
+	}
+	
+	
+	/**
+	 * Set primary key
+	 */
+	void setPrimaryKey(Map pk)
+	{
+		if (not (pk instanceof Map))
+		{
+			throw new ApiError(new RuntimeException("Primary key not found"));
+		}
+		
+		this.pk = this.getPrimaryKey(pk);
 	}
 	
 	
@@ -140,12 +189,23 @@ class SaveApi extends BaseApi
 		this.original_data = data;
 		this.update_data = {};
 		
+		/* Get base type rule */
+		BaseType rule = this.getType();
+		if (not rule)
+		{
+			throw new ApiError(new RuntimeException("Base type not found"));
+		}
+		
 		/* Filter */
 		Vector errors = [];
-		BaseType rule = this.getType();
-		if (rule)
+		this.update_data = rule.filter(data, errors, null);
+		
+		/* Rules */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
 		{
-			this.update_data = rule.filter(data, errors, null);
+			BaseRule item = rules.get(i);
+			item.filter(this.update_data, errors);
 		}
 		
 		/* Check error */
@@ -169,25 +229,34 @@ class SaveApi extends BaseApi
 	/**
 	 * Find item
 	 */
-	async Record findItem(Map pk, bool create = true)
+	async void findItem(Map pk)
 	{
-		if (not(pk instanceof Map))
-		{
-			this.is_create = true;
-			if (create) this.item = this.relation.createRecord();
-		}
-		else
-		{
-			this.is_create = false;
-			Vector<QueryFilter> filter = this.relation.getPrimaryFilter(pk);
-			Query q = this.relation.select().setFilter(filter).limit(1);
-			await this.buildQuery(q);
-			this.item = await this.relation.fetch(q);
-		}
-		if (not this.item)
-		{
-			throw new ApiError(new ItemNotFound());
-		}
+		if (pk == null) return;
+		
+		Vector<QueryFilter> filter = this.relation.getPrimaryFilter(pk);
+		Query q = this.relation.select().setFilter(filter).limit(1);
+		await this.buildQuery(q);
+		this.item = await this.relation.fetch(q);
+	}
+	
+	
+	/**
+	 * Create item
+	 */
+	void createItem()
+	{
+		this.item = this.relation.createRecord();
+	}
+	
+	
+	/**
+	 * Find or create item
+	 */
+	async void findOrCreate()
+	{
+		await this.findItem(this.pk);
+		if (not this.item and this.pk == null) this.createItem();
+		if (not this.item) throw new ApiError(new ItemNotFound());
 	}
 	
 	
