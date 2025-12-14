@@ -117,7 +117,7 @@ class SearchApi extends BaseApi
 	 */
 	int getLimit()
 	{
-		int limit = this.filter.get("limit", 10);
+		int limit = rtl::toInt(this.filter.get("limit", 10));
 		if (not rtl::isInteger(limit)) limit = 0;
 		
 		int max_limit = this.getMaxLimit();
@@ -132,7 +132,7 @@ class SearchApi extends BaseApi
 	 */
 	int getPage()
 	{
-		int page = this.filter.get("page", 0);
+		int page = rtl::toInt(this.filter.get("page", 0));
 		if (not rtl::isInteger(page)) page = 0;
 		return page;
 	}

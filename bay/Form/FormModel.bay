@@ -82,6 +82,8 @@ class FormModel extends BaseModel
 	 */
 	void setFieldErrors(Map field_errors)
 	{
+		if (not field_errors) return;
+		
 		this.field_errors = {};
 		Vector keys = rtl::list(field_errors.keys());
 		for (int i=0; i<keys.count(); i++)

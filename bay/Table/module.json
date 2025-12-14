@@ -5,6 +5,7 @@
 		"Manager.bay",
 		"Table.bay",
 		"TableDialog.bay",
+		"TableLoader.bay",
 		"TableModel.bay"
 	],
 	"require": [
