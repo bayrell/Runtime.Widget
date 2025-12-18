@@ -22,7 +22,7 @@
 .row_buttons{
 	display: flex;
 	gap: calc(var(--space) * 0.5);
-	&.margin_bottom{
+	&.margin_top, &.margin_bottom{
 		margin-bottom: calc(var(--space) * 2);
 	}
 }

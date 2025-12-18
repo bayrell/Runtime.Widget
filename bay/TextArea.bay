@@ -28,7 +28,7 @@
 	font-family: var(--font-family);
 	font-size: var(--font-input-size);
 	padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
-	background-color: var(--color-default);
+	background-color: var(--color-background);
 	border-width: var(--border-width);
 	border-color: var(--color-border);
 	border-style: solid;
@@ -58,7 +58,7 @@
 		@event:change={{ this.onChange }}
 		@event:keydown={{ this.onKeyDown }}
 		...props
-	></textarea>
+	>{{ this.value }}</textarea>
 </template>
 
 
