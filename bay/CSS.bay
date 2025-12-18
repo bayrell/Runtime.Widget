@@ -84,7 +84,7 @@
 	--color-link-hover: var(--color-primary-dark);
 	
 	/* Hover & Active States */
-	--color-default-hover: rgba(0, 0, 0, 0.05);
+	--color-hover: rgba(0, 0, 0, 0.05);
 	--color-selected: var(--color-primary);
 	--color-selected-text: #ffffff;
 	

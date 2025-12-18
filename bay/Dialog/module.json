@@ -3,7 +3,12 @@
 	"assets":
 	[
 		"Dialog.bay",
-		"DialogModel.bay"
+		"DialogMessage.bay",
+		"DialogModel.bay",
+		"ConfirmDialog.bay",
+		"ConfirmDialogModel.bay",
+		"PromptDialog.bay",
+		"PromptDialogModel.bay"
 	],
 	"require": [
 		"Runtime.Widget"

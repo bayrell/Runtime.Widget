@@ -105,7 +105,7 @@ class ContextMenuModel extends BaseModel
 	 */
 	void onClickItem(Dict item)
 	{
-		this.emit(new ContextMenuMessage{
+		this.listener.emit(new ContextMenuMessage{
 			"name": "clickItem",
 			"item": item,
 		});

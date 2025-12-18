@@ -22,6 +22,7 @@ use Runtime.BaseObject;
 use Runtime.BaseModel;
 use Runtime.Reference;
 use Runtime.Serializer;
+use Runtime.Serializer.ObjectType;
 use Runtime.Web.Events;
 use Runtime.Widget.ContextMenu.ContextMenuModel;
 use Runtime.Widget.Tree.TreeItem;
@@ -32,16 +33,27 @@ use Runtime.Widget.Tree.TreeWidget;
 class TreeModel extends BaseModel
 {
 	string component = classof TreeWidget;
-	string widget_name = "tree";
 	bool autoselect = true;
 	bool dnd = false;
 	bool icons = true;
 	bool is_open = false;
-	bool render_context_menu = true;
+	bool context_menu_render = true;
 	ContextMenuModel context_menu = null;
 	Collection<int> selected_path = null;
 	TreeItem selected_item = null;
 	TreeItem root = null;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	void serialize(Serializer serializer)
+	{
+		parent(serializer);
+		serializer.addType("root", new ObjectType{
+			"extends": classof TreeItem
+		});
+	}
 	
 	
 	/**
@@ -69,40 +81,31 @@ class TreeModel extends BaseModel
 		if (params.has("context_menu"))
 		{
 			this.setContextMenu(params.get("context_menu"));
+			if (params.has("context_menu_render"))
+			{
+				this.context_menu_render = params.get("context_menu_render");
+			}
 		}
-	}
-	
-	
-	/**
-	 * Serialize object
-	 */
-	void serialize(Serializer serializer, Map data)
-	{
-		serializer.process(this, "root", data);
-		parent(serializer, data);
 	}
 	
 	
 	/**
 	 * Set context menu
 	 */
-	void setContextMenu(ContextMenuModel context_menu)
+	void setContextMenu(var context_menu)
 	{
-		this.render_context_menu = true;
-		if (context_menu instanceof Dict)
+		if (context_menu instanceof ContextMenuModel)
 		{
-			this.context_menu = this.addWidget(
+			this.context_menu_render = false;
+			this.context_menu = context_menu;
+		}
+		else if (context_menu instanceof Map)
+		{
+			this.context_menu_render = true;
+			this.context_menu = this.createWidget(
 				classof ContextMenuModel,
 				context_menu
 			);
-		}
-		else
-		{
-			this.context_menu = this.createModel(context_menu);
-			if (context_menu instanceof BaseModel)
-			{
-				this.render_context_menu = false;
-			}
 		}
 	}
 	
