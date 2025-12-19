@@ -99,6 +99,15 @@ class FormModel extends BaseModel
 	
 	
 	/**
+	 * Returns result
+	 */
+	void getResult(string name)
+	{
+		return this.field_errors.get(name);
+	}
+	
+	
+	/**
 	 * Set item value
 	 */
 	void setValue(string name, var value)

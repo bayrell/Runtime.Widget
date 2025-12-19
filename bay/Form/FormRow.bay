@@ -40,7 +40,7 @@
 		%if (this.result)
 		{
 			%render this.renderWidget(this.result, {
-				"class": "result--margin_top"
+				"class": "result--field"
 			});
 		}
 	</div>

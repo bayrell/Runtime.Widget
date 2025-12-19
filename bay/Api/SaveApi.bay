@@ -56,15 +56,21 @@ class SaveApi extends BaseApi
 	/**
 	 * Constructor
 	 */
-	void constructor(Map params)
+	void constructor(Map params = null)
 	{
 		parent(params);
 		
 		this.result.data.set("fields", this.field_errors);
 		this.connection = Connection::getConnection(this.connection_name);
-		this.relation = rtl::newInstance(this.getRealtionName(), [{
-			"connection": this.connection,
-		}]);
+		
+		/* Create relation */
+		string relation_name = this.getRealtionName();
+		if (relation_name)
+		{
+			this.relation = rtl::newInstance(this.getRealtionName(), [{
+				"connection": this.connection,
+			}]);
+		}
 	}
 	
 	

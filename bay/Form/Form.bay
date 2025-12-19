@@ -18,10 +18,21 @@
 
 <class name="Runtime.Widget.Form.Form">
 
+<style>
+.form{
+	textarea{
+		min-height: 300px;
+	}
+	.row_buttons{
+		justify-content: center;
+	}
+}
+</style>
+
 <template>
-    <form class="form">
-        %render this.renderSlot("default");
-    </form>
+	<form class="form">
+		%render this.renderSlot("default");
+	</form>
 </template>
 
 </class>

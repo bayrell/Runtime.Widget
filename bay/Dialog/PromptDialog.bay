@@ -21,6 +21,14 @@
 <use name="Runtime.Widget.Button" component="true" />
 <use name="Runtime.Widget.Input" component="true" />
 
+<style>
+.dialog__content{
+	.result{
+		margin-top: calc(var(--space) * 0.5);
+	}
+}
+</style>
+
 <template name="renderTitle">
 	%if (this.slot("title"))
 	{
@@ -45,7 +53,7 @@
 		<Input name="value" value={{ this.model.value }}
 			@event:change="this.model.setValue(event.target.value)" />
 		%render this.renderWidget(this.model.result, {
-			"class": "result--center result--margin_top"
+			"class": "result--center"
 		});
 	</div>
 </template>

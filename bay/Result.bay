@@ -23,8 +23,15 @@
 .result--center{
 	text-align: center;
 }
-.result--margin_top{
+.result--margin_top, .result--margin_bottom{
+	margin-top: calc(var(--space) * 2);
+}
+.result--field{
 	margin-top: calc(var(--space) * 0.5);
+}
+.result--form{
+	text-align: center;
+	margin-bottom: calc(var(--space) * 2);
 }
 .result--success{
 	color: var(--color-success);
