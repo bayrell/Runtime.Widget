@@ -20,7 +20,9 @@ namespace Runtime.Widget.Table;
 
 use Runtime.BaseModel;
 use Runtime.Message;
+use Runtime.Method;
 use Runtime.Serializer;
+use Runtime.Serializer.BaseType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Form.FormModel;
@@ -32,6 +34,7 @@ class Manager extends BaseModel
 	FormModel form = null;
 	TableModel table = null;
 	Vector primary_key = [];
+	string data_object = "";
 	
 	/* Dialog */
 	string dialog_action = "";
@@ -47,18 +50,24 @@ class Manager extends BaseModel
 	void serialize(Serializer serialize)
 	{
 		parent(serialize);
-		serialize.addType("form", new ObjectType{
-			"extends": classof FormModel,
-			"pk_type": serialize.getParam("pk_type"),
-			"item_type": serialize.getParam("item_type"),
-		});
-		serialize.addType("table", new ObjectType{
-			"extends": classof TableModel,
-			"item_type": serialize.getParam("item_type"),
-		});
-		serialize.addType("dialog", new ObjectType{
-			"extends": classof DialogModel,
-		});
+		if (serialize.params.get("item_type"))
+		{
+			serialize.addType("form", new ObjectType{
+				"extends": classof FormModel,
+				"pk_type": serialize.params.get("pk_type"),
+				"item_type": serialize.params.get("item_type"),
+			});
+			serialize.addType("table", new ObjectType{
+				"extends": classof TableModel,
+				"item_type": serialize.params.get("item_type"),
+			});
+		}
+		else
+		{
+			serialize.addType("form", new ObjectType{ "extends": classof FormModel });
+			serialize.addType("table", new ObjectType{ "extends": classof TableModel });
+		}
+		serialize.addType("dialog", new ObjectType{ "extends": classof DialogModel });
 	}
 	
 	
@@ -69,6 +78,7 @@ class Manager extends BaseModel
 	{
 		parent(params);
 		
+		if (params.has("data_object")) this.data_object = params.get("data_object");
 		if (params.has("primary_key")) this.primary_key = params.get("primary_key");
 		if (params.has("title")) this.title = params.get("title");
 	}
@@ -83,12 +93,17 @@ class Manager extends BaseModel
 		
 		if (params.has("dialog")) this.dialog = params.get("dialog");
 		else this.dialog = this.createWidget(classof DialogModel);
+		this.dialog.addEventListener("hide", new Method(this, "onDialogHide"));
 		
 		if (params.has("form")) this.form = params.get("form");
-		else this.form = this.createWidget(classof FormModel);
+		else this.form = this.createWidget(classof FormModel, {
+			"data_object": this.data_object,
+		});
 		
 		if (params.has("table")) this.table = params.get("table");
-		else this.table = this.createWidget(classof TableModel);
+		else this.table = this.createWidget(classof TableModel, {
+			"data_object": this.data_object,
+		});
 	}
 	
 	
@@ -123,9 +138,7 @@ class Manager extends BaseModel
 	void showAddDialog()
 	{
 		this.dialog_action = "save";
-		this.form.pk = null;
-		this.form.item = {};
-		this.form.result.clear();
+		this.form.clear();
 		this.dialog.show();
 	}
 	
@@ -136,9 +149,9 @@ class Manager extends BaseModel
 	void showEditDialog(Map item)
 	{
 		this.dialog_action = "save";
+		this.form.clear();
 		this.form.pk = item.intersect(this.primary_key);
 		this.form.item = item;
-		this.form.result.clear();
 		this.dialog.show();
 	}
 	
@@ -149,10 +162,19 @@ class Manager extends BaseModel
 	void showDeleteDialog(Map item)
 	{
 		this.dialog_action = "delete";
+		this.form.clear();
 		this.form.pk = item.intersect(this.primary_key);
 		this.form.item = item;
-		this.form.result.clear();
 		this.dialog.show();
+	}
+	
+	
+	/**
+	 * On hide dialog
+	 */
+	void onDialogHide()
+	{
+		this.dialog_action = "";
 	}
 	
 	

@@ -32,7 +32,7 @@
 	{
 		%render this.renderSlot("save");
 	}
-	%else
+	%else if (this.manager.dialog_action == "delete")
 	{
 		<div class="dialog__delete_message">{{ this.manager.getDialogTitle("delete_message") }}</div>
 		%render this.renderWidget(this.manager.form.result, {

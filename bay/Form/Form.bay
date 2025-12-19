@@ -18,6 +18,8 @@
 
 <class name="Runtime.Widget.Form.Form">
 
+<use name="Runtime.Widget.Form.FormRow" component="true" />
+
 <style>
 .form{
 	textarea{
@@ -29,10 +31,92 @@
 }
 </style>
 
+<template name="renderTitle">
+	%if (this.slot("title"))
+	{
+		%render this.renderSlot("title");
+	}
+</template>
+
+<template name="renderContent">
+	%if (this.slot("default") and this.fields.count() == 0)
+	{
+		%render this.renderSlot("default");
+	}
+	%else
+	{
+		%for (int i=0; i<this.fields.count(); i++)
+		{
+			%set Map field = this.fields.get(i);
+			%set Map props = field.get("props");
+			%set string component = field.get("component");
+			%set string name = field.get("name");
+			%if (not props){ %set props = {}; }
+			<FormRow name={{ name }} label={{ field.get("label") }} key={{ name }}
+				result={{ this.model.field_errors.get(name) }}
+			>
+				<{component} name={{ name }} value={{ this.getValue(field) }}
+					@event:valueChange="this.setValue(field, event.value)" ...props />
+			</FormRow>
+		}
+		%render this.renderWidget(this.model.result, {
+			"class": "result--form"
+		});
+	}
+</template>
+
+<template name="renderButtons">
+	%if (this.slot("buttons"))
+	{
+		%render this.renderSlot("buttons");
+	}
+</template>
+
 <template>
 	<form class="form">
-		%render this.renderSlot("default");
+		%render this.renderTitle();
+		%render this.renderContent();
+		%render this.renderButtons();
 	</form>
 </template>
+
+<script>
+
+props Map fields = [];
+
+
+/**
+ * Returns value
+ */
+var getValue(Map field)
+{
+	if (field.has("value"))
+	{
+		fn value = field.get("value");
+		return value(this.model.item);
+	}
+	string name = field.get("name");
+	return this.model.item.get(name);
+}
+
+
+/**
+ * Set value
+ */
+void setValue(Map field, var value)
+{
+	if (field.has("setValue"))
+	{
+		fn setValue = field.get("setValue");
+		setValue(this.model.item, value);
+	}
+	else
+	{
+		string name = field.get("name");
+		this.model.setValue(name, value);
+	}
+}
+
+</script>
 
 </class>

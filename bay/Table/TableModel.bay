@@ -22,13 +22,16 @@ use Runtime.BaseModel;
 use Runtime.Serializer;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.MapType;
+use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.VectorType;
 use Runtime.Widget.Table.Table;
+
 
 class TableModel extends BaseModel
 {
 	string component = classof Table;
 	Vector<Map> items = [];
+	string data_object = "";
 	
 	
 	/**
@@ -37,6 +40,42 @@ class TableModel extends BaseModel
 	void serialize(Serializer serialize)
 	{
 		parent(serialize);
-		serialize.addType("items", new VectorType(serialize.params.get("item_type")));
+		if (serialize.params.has("item_type"))
+		{
+			serialize.addType("items", new VectorType(serialize.params.get("item_type")));
+		}
+		if (this.data_object)
+		{
+			serialize.addType("items", new VectorType(
+				new ObjectType{ "class_name": this.data_object }
+			));
+		}
+	}
+	
+	
+	/**
+	 * Init params
+	 */
+	void initParams(Map params)
+	{
+		parent(params);
+		if (params.has("data_object")) this.data_object = params.get("data_object");
+	}
+	
+	
+	/**
+	 * Set items
+	 */
+	void setItems(Vector items)
+	{
+		if (this.data_object)
+		{
+			VectorType vector = new VectorType(new ObjectType{ "class_name": this.data_object });
+			this.items = vector.filter(items, []);
+		}
+		else
+		{
+			this.items = items;
+		}
 	}
 }

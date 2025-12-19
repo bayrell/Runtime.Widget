@@ -267,12 +267,30 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Before save
+	 */
+	async void onSaveBefore()
+	{
+	}
+	
+	
+	/**
+	 * After save
+	 */
+	async void onSaveAfter()
+	{
+	}
+	
+	
+	/**
 	 * Save item
 	 */
 	async void save()
 	{
 		this.item.assign(this.update_data);
+		await this.onSaveBefore();
 		await this.relation.save(this.item);
+		await this.onSaveAfter();
 	}
 	
 	

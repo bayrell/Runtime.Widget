@@ -18,7 +18,7 @@
 
 
 <class name="Runtime.Widget.Sortable.FieldList"
-	extends="Runtime.Widget.Sortable.List"
+	extends="Runtime.Widget.Sortable.ItemList"
 >
 
 <use name="Runtime.Widget.Input" component="true" />
@@ -41,11 +41,6 @@
 }
 .sortable_list__item_value{
 	padding: 5px;
-	%(Input)input, %(Select)select{
-		border-bottom: 1px var(--widget-color-border) solid;
-		box-shadow: none;
-		outline: none;
-	}
 }
 .sortable_list__item_value_row{
 	display: flex;
@@ -70,16 +65,11 @@
 				%set string field_name = field.get("name");
 				%set string field_component = field.get("component");
 				%set Dict field_props = field.get("props");
+				%if (not field_props){ %set field_props = {}; }
 				<{field_component}
 					name={{ field_name }}
-					value={{ item.get(field_name) }}
-					@event:valueChange={{
-						void (var message) use (field_name, pos, item)
-						{
-							item.set(field_name, message.value);
-							this.onValueChange();
-						}
-					}}
+					value={{ this.getValue(field, item) }}
+					@event:valueChange="this.setValue(field, item, event)"
 					...field_props
 				/>
 			}
@@ -108,7 +98,7 @@
 				@event:mousedown={{
 					void (var e) use (item){ this.onMouseDown(e, item); }
 				}}
-			>@raw{{ "&#9776;" }}</div>
+			>&#9776;</div>
 		</div>
 		<div class="sortable_list__item_value">
 			%render this.renderValue(pos, item);
@@ -118,7 +108,7 @@
 				@event:click={{
 					void (var e) use (pos){ this.removeItem(pos); }
 				}}
-			>@raw{{ "&#10005;" }}</div>
+			>&#10005;</div>
 		</div>
 	</div>
 </template>
@@ -133,6 +123,40 @@ Collection fields = [];
  * Create new item
  */
 var createItem() => {};
+
+
+/**
+ * Returns value
+ */
+var getValue(Map field, Map item)
+{
+	if (field.has("value"))
+	{
+		fn value = field.get("value");
+		return value(item);
+	}
+	string field_name = field.get("name");
+	return item.get(field_name);
+}
+
+
+/**
+ * Set value
+ */
+void setValue(Map field, Map item, var message)
+{
+	if (field.has("setValue"))
+	{
+		fn setValue = field.get("setValue");
+		setValue(item, message.value);
+	}
+	else
+	{
+		string field_name = field.get("name");
+		item.set(field_name, message.value);
+	}
+	this.onValueChange();
+}
 
 
 /**
@@ -151,7 +175,6 @@ void getDragElement(var elem)
 	}
 	return null;
 }
-
 
 </script>
 

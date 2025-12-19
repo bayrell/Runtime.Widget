@@ -31,7 +31,11 @@
 }
 .result--form{
 	text-align: center;
+	margin-top: calc(var(--space) * 2);
 	margin-bottom: calc(var(--space) * 2);
+	&:last-child{
+		margin-bottom: 0;
+	}
 }
 .result--success{
 	color: var(--color-success);

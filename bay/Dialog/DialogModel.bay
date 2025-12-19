@@ -19,6 +19,7 @@
 namespace Runtime.Widget.Dialog;
 
 use Runtime.BaseModel;
+use Runtime.Widget.Dialog.DialogMessage;
 
 
 class DialogModel extends BaseModel
@@ -41,5 +42,8 @@ class DialogModel extends BaseModel
 	void hide()
 	{
 		this.is_open = false;
+		this.listener.emit(new DialogMessage{
+			"name": "hide",
+		})
 	}
 }

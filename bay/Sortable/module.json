@@ -1,0 +1,24 @@
+{
+	"name": "Runtime.Widget.Sortable",
+	"assets":
+	[
+		"ItemList.bay",
+		"FieldList.bay"
+	],
+	"require": [
+		"Runtime.Web"
+	],
+	"groups": [
+		"widget"
+	],
+	"src": "./",
+	"dest":
+	{
+		"php": "./../../php/Sortable",
+		"es6": "./../../es6/Sortable"
+	},
+	"allow":
+	[
+		"\\.bay$"
+	]
+}

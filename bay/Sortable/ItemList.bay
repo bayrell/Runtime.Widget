@@ -16,10 +16,8 @@
  *  limitations under the License.
 -->
 
-<class name="Runtime.Widget.Sortable.List">
+<class name="Runtime.Widget.Sortable.ItemList">
 
-<use name="Runtime.lib" />
-<use name="Runtime.Math" />
 <use name="Runtime.Serializer" />
 <use name="Runtime.Widget.Messages.ValueChangeMessage" />
 <use name="Runtime.Widget.Button" component="true" />
@@ -188,6 +186,12 @@ var createItem() => "";
 
 
 /**
+ * Copy item
+ */
+var copyItem(var item) => item;
+
+
+/**
  * Create value
  */
 void createValue() => [];
@@ -220,7 +224,7 @@ void swapItems(int a, int b)
 void removeItem(int pos)
 {
 	Collection items = this.getItems();
-	this.old_value = Serializer::copy(this.value);
+	this.old_value = this.value.slice();
 	items.remove(pos);
 	this.onValueChange();
 }
@@ -265,8 +269,8 @@ void createShadow()
 	this.shadow_elem = document.createElement("div");
 	this.shadow_elem.innerHTML = this.drag_elem.outerHTML;
 	this.shadow_elem.classList.add("sortable_list__shadow_elem");
-	string arr = rs::split(" ", static::getCssHash(static::getClassName()));
-	arr = arr.filter(lib::equalNot(""));
+	string arr = rs::split(" ", rs::getCssHash(this.getClassName()));
+	arr = arr.filter(bool (string item) => item != "");
 	for (int i=0; i<arr.count(); i++)
 	{
 		this.shadow_elem.classList.add(arr.get(i));
@@ -299,8 +303,8 @@ void startDrag(var e)
 	if (this.drag_start_point == null) return false;
 	
 	/* Check move */
-	double move_x = Math::abs(e.pageX - this.drag_start_point.get("x"));
-	double move_y = Math::abs(e.pageY - this.drag_start_point.get("y"));
+	double move_x = rtl::abs(e.pageX - this.drag_start_point.get("x"));
+	double move_y = rtl::abs(e.pageY - this.drag_start_point.get("y"));
 	if (move_x < 10 and move_y < 10) return false;
 	
 	/* Start drag */
@@ -345,7 +349,7 @@ void moveDrag(var e)
 	
 	/* Swap items with animation */
 	this.is_transition = true;
-	this.old_value = Serializer::copy(this.value);
+	this.old_value = this.copyItem(this.value);
 	this.swapItems(this.drag_item_pos, pos);
 	this.drag_item_pos = pos;
 	
@@ -362,7 +366,7 @@ void moveDrag(var e)
  */
 void onValueChange()
 {
-	this.emit("valueChange", new ValueChangeMessage{
+	this.emit(new ValueChangeMessage{
 		"value": this.value,
 		"old_value": this.old_value,
 		"data": this.data,
@@ -378,14 +382,14 @@ void onAddItemClick()
 	Collection items = this.getItems();
 	if (items == null)
 	{
-		this.emit("valueChange", new ValueChangeMessage{
+		this.emit(new ValueChangeMessage{
 			"value": this.createValue(),
 			"old_value": this.old_value,
 			"data": this.data,
 		});
 	}
 	this.nextTick(void(){
-		this.old_value = Serializer::copy(this.value);
+		this.old_value = this.value.slice();
 		Collection items = this.getItems();
 		items.push(this.createItem());
 		this.onValueChange();
