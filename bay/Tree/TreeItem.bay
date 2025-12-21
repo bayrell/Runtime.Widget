@@ -39,24 +39,23 @@ class TreeItem extends BaseObject implements SerializeInterface
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("key", new StringType());
-		serializer.addType("label", new StringType());
-		serializer.addType("items", new VectorType(new ObjectType{
+		parent(rules);
+		rules.addType("key", new StringType());
+		rules.addType("label", new StringType());
+		rules.addType("items", new VectorType(new ObjectType{
+			"autocreate": true,
 			"extends": classof TreeItem,
-			"create": TreeItem (Map data)
-			{
-				string class_name = data.get("class_name");
-				if (not rtl::isInstanceOf(class_name, classof TreeItem)) return null;
-				return rtl::newInstance(class_name);
-			},
-			"serialize": void (Map data, TreeItem item)
-			{
-				data.set("class_name", item::getClassName());
-			}
 		}));
+	}
+	
+	
+	/**
+	 * Assign rules
+	 */
+	void assignRules(ObjectType rules)
+	{
 	}
 	
 	

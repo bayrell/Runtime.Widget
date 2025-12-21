@@ -47,10 +47,11 @@ class TreeModel extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		serializer.addType("root", new ObjectType{
+		parent(rules);
+		rules.addType("root", new ObjectType{
+			"autocreate": true,
 			"extends": classof TreeItem
 		});
 	}

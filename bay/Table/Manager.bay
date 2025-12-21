@@ -34,7 +34,6 @@ class Manager extends BaseModel
 	FormModel form = null;
 	TableModel table = null;
 	Vector primary_key = [];
-	string data_object = "";
 	
 	/* Dialog */
 	string dialog_action = "";
@@ -47,27 +46,21 @@ class Manager extends BaseModel
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serialize)
+	static void serialize(ObjectType rules)
 	{
-		parent(serialize);
-		if (serialize.params.get("item_type"))
-		{
-			serialize.addType("form", new ObjectType{
-				"extends": classof FormModel,
-				"pk_type": serialize.params.get("pk_type"),
-				"item_type": serialize.params.get("item_type"),
-			});
-			serialize.addType("table", new ObjectType{
-				"extends": classof TableModel,
-				"item_type": serialize.params.get("item_type"),
-			});
-		}
-		else
-		{
-			serialize.addType("form", new ObjectType{ "extends": classof FormModel });
-			serialize.addType("table", new ObjectType{ "extends": classof TableModel });
-		}
-		serialize.addType("dialog", new ObjectType{ "extends": classof DialogModel });
+		parent(rules);
+		rules.addType("form", new ObjectType{
+			"autocreate": true,
+			"extends": classof FormModel,
+			"pk_type": rules.params ? rules.params.get("pk_type") : null,
+			"item_type": rules.params ? rules.params.get("item_type") : null,
+		});
+		rules.addType("table", new ObjectType{
+			"autocreate": true,
+			"extends": classof TableModel,
+			"item_type": rules.params ? rules.params.get("item_type") : null,
+		});
+		rules.addType("dialog", new ObjectType{ "extends": classof DialogModel });
 	}
 	
 	
@@ -78,7 +71,6 @@ class Manager extends BaseModel
 	{
 		parent(params);
 		
-		if (params.has("data_object")) this.data_object = params.get("data_object");
 		if (params.has("primary_key")) this.primary_key = params.get("primary_key");
 		if (params.has("title")) this.title = params.get("title");
 	}
@@ -96,14 +88,10 @@ class Manager extends BaseModel
 		this.dialog.addEventListener("hide", new Method(this, "onDialogHide"));
 		
 		if (params.has("form")) this.form = params.get("form");
-		else this.form = this.createWidget(classof FormModel, {
-			"data_object": this.data_object,
-		});
+		else this.form = this.createWidget(classof FormModel);
 		
 		if (params.has("table")) this.table = params.get("table");
-		else this.table = this.createWidget(classof TableModel, {
-			"data_object": this.data_object,
-		});
+		else this.table = this.createWidget(classof TableModel);
 	}
 	
 	

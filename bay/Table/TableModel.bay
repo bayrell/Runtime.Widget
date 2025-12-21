@@ -19,7 +19,7 @@
 namespace Runtime.Widget.Table;
 
 use Runtime.BaseModel;
-use Runtime.Serializer;
+use Runtime.Message;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
@@ -31,25 +31,31 @@ class TableModel extends BaseModel
 {
 	string component = classof Table;
 	Vector<Map> items = [];
-	string data_object = "";
+	BaseType item_type = null;
 	
 	
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serialize)
+	static void serialize(ObjectType rules)
 	{
-		parent(serialize);
-		if (serialize.params.has("item_type"))
-		{
-			serialize.addType("items", new VectorType(serialize.params.get("item_type")));
-		}
-		if (this.data_object)
-		{
-			serialize.addType("items", new VectorType(
-				new ObjectType{ "class_name": this.data_object }
-			));
-		}
+		parent(rules);
+		rules.addType("items", new VectorType(rules.params ? rules.params.get("item_type") : null));
+		rules.listener.add("setup", void (Message message){
+			ObjectType rules = message.data.get("rules");
+			TableModel model = message.data.get("item");
+			model.item_type = rules.params ? rules.params.get("item_type") : null;
+		});
+	}
+	
+	
+	/**
+	 * Assign rules
+	 */
+	void assignRules(ObjectType rules)
+	{
+		parent(rules);
+		this.item_type = rules.params.get("item_type");
 	}
 	
 	
@@ -59,7 +65,6 @@ class TableModel extends BaseModel
 	void initParams(Map params)
 	{
 		parent(params);
-		if (params.has("data_object")) this.data_object = params.get("data_object");
 	}
 	
 	
@@ -68,14 +73,7 @@ class TableModel extends BaseModel
 	 */
 	void setItems(Vector items)
 	{
-		if (this.data_object)
-		{
-			VectorType vector = new VectorType(new ObjectType{ "class_name": this.data_object });
-			this.items = vector.filter(items, []);
-		}
-		else
-		{
-			this.items = items;
-		}
+		VectorType vector = new VectorType(this.item_type);
+		this.items = vector.filter(items, []);
 	}
 }

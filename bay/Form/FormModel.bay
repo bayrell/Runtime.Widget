@@ -21,7 +21,8 @@ namespace Runtime.Widget.Form;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Method;
-use Runtime.Serializer;
+use Runtime.Message;
+use Runtime.Serializer.BaseType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Widget.ResultModel;
 use Runtime.Widget.Form.Form;
@@ -34,30 +35,25 @@ class FormModel extends BaseModel
 	Map item = {};
 	Map field_errors = {};
 	ResultModel result = null;
-	string data_object = "";
+	BaseType pk_type = null;
+	BaseType item_type = null;
 	
 	
 	/**
 	 * Serialize object
 	 */
-	void serialize(Serializer serializer)
+	static void serialize(ObjectType rules)
 	{
-		parent(serializer);
-		if (serializer.params.has("pk_type"))
-		{
-			serializer.addType("pk", serializer.params.get("pk_type"));
-		}
-		if (serializer.params.has("item_type"))
-		{
-			serializer.addType("item", serializer.params.get("item_type"));
-		}
-		if (this.data_object)
-		{
-			fn getPrimaryRules = new Method(this.data_object, "getPrimaryRules");
-			serializer.addType("pk", getPrimaryRules.apply());
-			serializer.addType("item", new ObjectType{ "class_name": this.data_object });
-		}
-		serializer.addType("result", new ObjectType{"extends": classof ResultModel});
+		parent(rules);
+		rules.addType("pk", rules.params ? rules.params.get("pk_type") : null);
+		rules.addType("item", rules.params ? rules.params.get("item_type") : null);
+		rules.addType("result", new ObjectType{"class_name": classof ResultModel});
+		rules.listener.add("setup", void (Message message){
+			ObjectType rules = message.data.get("rules");
+			FormModel model = message.data.get("item");
+			model.pk_type = rules.params ? rules.params.get("pk_type") : null;
+			model.item_type = rules.params ? rules.params.get("item_type") : null;
+		});
 	}
 	
 	
@@ -67,8 +63,6 @@ class FormModel extends BaseModel
 	void initParams(Map params)
 	{
 		parent(params);
-		
-		if (params.has("data_object")) this.data_object = params.get("data_object");
 	}
 	
 	
@@ -146,15 +140,7 @@ class FormModel extends BaseModel
 	 */
 	void setItem(var item)
 	{
-		if (this.data_object)
-		{
-			ObjectType rule = new ObjectType{ "class_name": this.data_object };
-			this.item = rule.filter(item, []);
-		}
-		else
-		{
-			this.item = item;
-		}
+		this.item = this.item_type ? this.item_type.fiter(item, []) : item;
 	}
 	
 	
