@@ -48,9 +48,7 @@ class FormModel extends BaseModel
 		rules.addType("pk", rules.params ? rules.params.get("pk_type") : null);
 		rules.addType("item", rules.params ? rules.params.get("item_type") : null);
 		rules.addType("result", new ObjectType{"class_name": classof ResultModel});
-		rules.listener.add("setup", void (Message message){
-			ObjectType rules = message.data.get("rules");
-			FormModel model = message.data.get("item");
+		rules.setup.add(void (FormModel model, ObjectType rules){
 			model.pk_type = rules.params ? rules.params.get("pk_type") : null;
 			model.item_type = rules.params ? rules.params.get("item_type") : null;
 		});
@@ -136,11 +134,28 @@ class FormModel extends BaseModel
 	
 	
 	/**
+	 * Set primary key
+	 */
+	void setPrimaryKey(Map item)
+	{
+		if (this.pk_type)
+		{
+			Vector primary_key = this.pk_type.keys();
+			this.pk = this.pk_type.filter(item.intersect(primary_key), []);
+		}
+		else
+		{
+			this.pk = null;
+		}
+	}
+	
+	
+	/**
 	 * Set item
 	 */
 	void setItem(var item)
 	{
-		this.item = this.item_type ? this.item_type.fiter(item, []) : item;
+		this.item = this.item_type ? this.item_type.filter(item, []) : item;
 	}
 	
 	

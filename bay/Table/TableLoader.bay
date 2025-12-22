@@ -27,8 +27,9 @@ use Runtime.Widget.Table.TableModel;
 class TableLoader extends BaseModel
 {
 	TableModel table = null;
+	Map foreign_key = null;
 	string api_name = "";
-	string method_name = "";
+	string method_name = "search";
 	string page_name = "page";
 	int page = 0;
 	int limit = 10;
@@ -41,6 +42,7 @@ class TableLoader extends BaseModel
 	{
 		parent(params);
 		if (params.has("table")) this.table = params.get("table");
+		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
 		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("method_name")) this.method_name = params.get("method_name");
 		if (params.has("page_name")) this.page_name = params.get("page_name");
@@ -71,11 +73,12 @@ class TableLoader extends BaseModel
 			"data": {
 				"page": this.page,
 				"limit": this.limit,
+				"foreign_key": this.foreign_key,
 			},
 		});
 		if (api_result.isSuccess() and api_result.data.has("items"))
 		{
-			this.table.items = api_result.data.get("items");
+			this.table.setItems(api_result.data.get("items"));
 		}
 		return api_result;
 	}

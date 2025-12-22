@@ -41,9 +41,7 @@ class TableModel extends BaseModel
 	{
 		parent(rules);
 		rules.addType("items", new VectorType(rules.params ? rules.params.get("item_type") : null));
-		rules.listener.add("setup", void (Message message){
-			ObjectType rules = message.data.get("rules");
-			TableModel model = message.data.get("item");
+		rules.setup.add(void (TableModel model, ObjectType rules){
 			model.item_type = rules.params ? rules.params.get("item_type") : null;
 		});
 	}

@@ -23,6 +23,8 @@ use Runtime.ORM.Query;
 use Runtime.ORM.QueryResult;
 use Runtime.ORM.Record;
 use Runtime.ORM.Relation;
+use Runtime.Web.ApiRequest;
+use Runtime.Web.ApiResult;
 use Runtime.Web.BaseApi;
 use Runtime.Widget.Api.Rules.BaseRule;
 
@@ -35,6 +37,7 @@ class SearchApi extends BaseApi
 	Relation relation = null;
 	Map filter = {};
 	QueryResult items = null;
+	Map foreign_key = null;
 	
 	
 	/**
@@ -173,5 +176,29 @@ class SearchApi extends BaseApi
 				return data.intersect(this.getItemFields());
 			}));
 		}
+	}
+	
+	
+	/**
+	 * Action search
+	 */
+	static async ApiResult actionSearch(ApiRequest request)
+	{
+		SearchApi api = static::newInstance([{
+			"action": "search",
+			"request": request,
+		}]);
+		
+		/* Set foreign key */
+		api.foreign_key = request.get("foreign_key");
+		
+		/* Set filter */
+		api.setFilter(request.data);
+		
+		/* Search */
+		await api.search();
+		api.setResult();
+		
+		return api.success();
 	}
 }

@@ -18,14 +18,16 @@
 
 namespace Runtime.Widget.Table;
 
+use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Message;
 use Runtime.Method;
-use Runtime.Serializer;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.ObjectType;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Table.TableLoader;
 use Runtime.Widget.Table.TableModel;
 
 
@@ -33,11 +35,14 @@ class Manager extends BaseModel
 {
 	FormModel form = null;
 	TableModel table = null;
-	Vector primary_key = [];
+	string api_name = "";
+	string page_name = "page";
+	Map foreign_key = null;
 	
 	/* Dialog */
 	string dialog_action = "";
 	DialogModel dialog = null;
+	TableLoader loader = null;
 	
 	/* Functions */
 	fn title = null;
@@ -71,7 +76,9 @@ class Manager extends BaseModel
 	{
 		parent(params);
 		
-		if (params.has("primary_key")) this.primary_key = params.get("primary_key");
+		if (params.has("api_name")) this.api_name = params.get("api_name");
+		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
+		if (params.has("page_name")) this.page_name = params.get("page_name");
 		if (params.has("title")) this.title = params.get("title");
 	}
 	
@@ -92,6 +99,33 @@ class Manager extends BaseModel
 		
 		if (params.has("table")) this.table = params.get("table");
 		else this.table = this.createWidget(classof TableModel);
+		
+		if (params.has("loader")) this.loader = params.get("loader");
+		else this.loader = this.createWidget(classof TableLoader, {
+			"api_name": this.api_name,
+			"foreign_key": this.foreign_key,
+			"page_name": this.page_name,
+			"table": this.table,
+		});
+	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		await this.loader.loadData(container);
+	}
+	
+	
+	/**
+	 * Set foreign key
+	 */
+	void setForeignKey(Map key)
+	{
+		this.foreign_key = key;
+		this.loader.foreign_key = key;
 	}
 	
 	
@@ -114,8 +148,7 @@ class Manager extends BaseModel
 	 */
 	string getDialogTitle(string action)
 	{
-		fn title = this.title;
-		if (title) return title(action, this.form.item);
+		if (this.title) return rtl::apply(this.title, [action, this.form.item]);
 		return "";
 	}
 	
@@ -138,8 +171,8 @@ class Manager extends BaseModel
 	{
 		this.dialog_action = "save";
 		this.form.clear();
-		this.form.pk = item.intersect(this.primary_key);
-		this.form.item = item;
+		this.form.setPrimaryKey(item);
+		this.form.setItem(item);
 		this.dialog.show();
 	}
 	
@@ -151,8 +184,8 @@ class Manager extends BaseModel
 	{
 		this.dialog_action = "delete";
 		this.form.clear();
-		this.form.pk = item.intersect(this.primary_key);
-		this.form.item = item;
+		this.form.setPrimaryKey(item);
+		this.form.setItem(item);
 		this.dialog.show();
 	}
 	
@@ -169,21 +202,46 @@ class Manager extends BaseModel
 	/**
 	 * On save
 	 */
-	void onSave()
+	async void onSave()
 	{
-		Message message = new Message();
-		message.name = "save";
-		this.listener.emit(message);
+		this.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": this.api_name,
+			"method_name": "save",
+			"data": {
+				"pk": this.form.pk,
+				"item": this.form.item,
+				"foreign_key": this.foreign_key,
+			},
+		});
+		this.form.setApiResult(result);
+		if (result.isSuccess())
+		{
+			this.loader.reload();
+			this.dialog.hide();
+		}
 	}
 	
 	
 	/**
 	 * On delete
 	 */
-	void onDelete()
+	async void onDelete()
 	{
-		Message message = new Message();
-		message.name = "delete";
-		this.listener.emit(message);
+		this.form.setWaitMessage();
+		ApiResult result = await this.layout.sendApi({
+			"api_name": this.api_name,
+			"method_name": "delete",
+			"data": {
+				"pk": this.form.pk,
+				"foreign_key": this.foreign_key,
+			},
+		});
+		this.form.setApiResult(result);
+		if (result.isSuccess())
+		{
+			this.loader.reload();
+			this.dialog.hide();
+		}
 	}
 }

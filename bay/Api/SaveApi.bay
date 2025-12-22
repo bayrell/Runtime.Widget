@@ -30,6 +30,8 @@ use Runtime.ORM.Record;
 use Runtime.ORM.Relation;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.TypeError;
+use Runtime.Web.ApiRequest;
+use Runtime.Web.ApiResult;
 use Runtime.Web.BaseApi;
 use Runtime.Widget.Api.Rules.BaseRule;
 
@@ -45,6 +47,7 @@ class SaveApi extends BaseApi
 	Map original_data = {};
 	Map update_data = {};
 	Map field_errors = {};
+	Map foreign_key = null;
 	
 	
 	/**
@@ -124,11 +127,12 @@ class SaveApi extends BaseApi
 		for (int i=0; i<errors.count(); i++)
 		{
 			TypeError error = errors.get(i);
-			if (not this.field_errors.has(error.field_name))
+			string field_name = error.getFieldName();
+			if (not this.field_errors.has(field_name))
 			{
-				this.field_errors.set(error.field_name, []);
+				this.field_errors.set(field_name, []);
 			}
-			Vector item = this.field_errors.get(error.field_name);
+			Vector item = this.field_errors.get(field_name);
 			item.push(error.message);
 		}
 	}
@@ -314,5 +318,64 @@ class SaveApi extends BaseApi
 			item = this.convertItem(item);
 			this.result.data.set("item", item.intersect(this.getItemFields()));
 		}
+	}
+	
+	
+	/**
+	 * Save form
+	 */
+	static async ApiResult actionSave(ApiRequest request)
+	{
+		SaveApi api = static::newInstance([{
+			"action": "save",
+			"request": request,
+		}]);
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		if (pk) api.setPrimaryKey(pk);
+		
+		/* Set foreign key */
+		api.foreign_key = request.get("foreign_key");
+		
+		/* Set data */
+		Map item = request.get("item");
+		api.setData(item);
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Save item */
+		await api.save();
+		api.setResult();
+		
+		return api.success();
+	}
+	
+	
+	/**
+	 * Delete form
+	 */
+	static async ApiResult actionDelete(ApiRequest request)
+	{
+		SaveApi api = static::newInstance([{
+			"action": "delete",
+			"request": request,
+		}]);
+		
+		/* Set primary key */
+		Map pk = request.get("pk");
+		api.setPrimaryKey(pk);
+		
+		/* Set foreign key */
+		api.foreign_key = request.get("foreign_key");
+		
+		/* Find item */
+		await api.findOrCreate();
+		
+		/* Delete item */
+		await api.delete();
+		
+		return api.success();
 	}
 }
