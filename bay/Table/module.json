@@ -6,7 +6,8 @@
 		"Table.bay",
 		"TableDialog.bay",
 		"TableLoader.bay",
-		"TableModel.bay"
+		"TableModel.bay",
+		"TableWrap.bay"
 	],
 	"require": [
 		"Runtime.Widget"
