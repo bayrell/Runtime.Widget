@@ -20,7 +20,10 @@ namespace Runtime.Widget.Seo;
 
 use Runtime.BaseObject;
 use Runtime.BaseModel;
-use Runtime.Serializer;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
+use Runtime.Serializer.VectorType;
 use Runtime.Widget.Seo.SeoWidget;
 
 
@@ -38,6 +41,22 @@ class SeoModel extends BaseModel
 	
 	
 	/**
+	 * Process frontend data
+	 */
+	static void serialize(ObjectType rules)
+	{
+		parent(rules);
+		rules.addType("article_modified_time", new StringType());
+		rules.addType("article_published_time", new StringType());
+		rules.addType("canonical_url", new StringType());
+		rules.addType("description", new StringType());
+		rules.addType("favicon", new StringType());
+		rules.addType("robots", new VectorType(new StringType()));
+		rules.addType("tags", new VectorType(new StringType()));
+	}
+	
+	
+	/**
 	 * Init widget params
 	 */
 	void initParams(Dict params)
@@ -45,22 +64,6 @@ class SeoModel extends BaseModel
 		parent(params);
 		
 		if (params == null) return;
-	}
-	
-	
-	/**
-	 * Process frontend data
-	 */
-	void serialize(Serializer serializer, Map data)
-	{
-		serializer.process(this, "article_modified_time", data);
-		serializer.process(this, "article_published_time", data);
-		serializer.process(this, "canonical_url", data);
-		serializer.process(this, "description", data);
-		serializer.process(this, "favicon", data);
-		serializer.process(this, "robots", data);
-		serializer.process(this, "tags", data);
-		parent(serializer, data);
 	}
 	
 	

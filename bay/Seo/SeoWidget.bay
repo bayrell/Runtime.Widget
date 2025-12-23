@@ -27,10 +27,10 @@
 	}
 	
 	<!-- Locale -->
-	<meta property="og:locale" content={{ this.layout.getLocale() }} />
+	<meta property="og:locale" content={{ this.layout.lang }} />
 	
 	<!-- Title and description -->
-	<meta property="og:title" content={{ this.layout.getFullTitle() }} />
+	<meta property="og:title" content={{ this.layout.title }} />
 	%if (this.model.description != "")
 	{
 		<meta property="og:description" content={{ this.model.description }} />

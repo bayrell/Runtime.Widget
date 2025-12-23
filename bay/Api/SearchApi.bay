@@ -49,26 +49,10 @@ class SearchApi extends BaseApi
 	/**
 	 * Constructor
 	 */
-	void constructor(Map params)
+	void constructor()
 	{
-		parent(params);
-		
-		this.connection = Connection::getConnection(this.connection_name);
-		this.relation = rtl::newInstance(this.getRealtionName(), [{
-			"connection": this.connection,
-		}]);
-	}
-	
-	
-	/**
-	 * Init params
-	 */
-	void initParams(Map params)
-	{
-		parent(params);
-		if (not params) return;
-		if (params.has("action")) this.action = params.get("action");
-		if (params.has("connection_name")) this.connection_name = params.get("connection_name");
+		parent();
+		this.relation = rtl::newInstance(this.getRealtionName());
 	}
 	
 	
@@ -170,8 +154,7 @@ class SearchApi extends BaseApi
 	{
 		if (this.items)
 		{
-			this.result.data.set("items", this.items.map(Map (Record item){
-				Map data = item.getData();
+			this.result.data.set("items", this.items.map(Map (Map data){
 				data = this.convertItem(data);
 				return data.intersect(this.getItemFields());
 			}));
@@ -182,23 +165,20 @@ class SearchApi extends BaseApi
 	/**
 	 * Action search
 	 */
-	static async ApiResult actionSearch(ApiRequest request)
+	async ApiResult actionSearch()
 	{
-		SearchApi api = static::newInstance([{
-			"action": "search",
-			"request": request,
-		}]);
+		this.setAction("search");
 		
 		/* Set foreign key */
-		api.foreign_key = request.get("foreign_key");
+		this.foreign_key = this.request.get("foreign_key");
 		
 		/* Set filter */
-		api.setFilter(request.data);
+		this.setFilter(this.request.data);
 		
 		/* Search */
-		await api.search();
-		api.setResult();
+		await this.search();
+		this.setResult();
 		
-		return api.success();
+		return this.success();
 	}
 }

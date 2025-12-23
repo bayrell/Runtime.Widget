@@ -18,8 +18,6 @@
 
 <class name="Runtime.Widget.Pagination">
 
-<use name="Runtime.Math" />
-
 
 <style>
 .pagination {
@@ -71,8 +69,8 @@
 
 
 <template>
-	%set int page_start = Math::max(2, this.page - this.delta + 1);
-	%set int page_end = Math::min(this.page + this.delta, this.pages - 1);
+	%set int page_start = rtl::max(2, this.page - this.delta + 1);
+	%set int page_end = rtl::min(this.page + this.delta, this.pages - 1);
 	%set Map props = {};
 	
 	<nav class="pagination">
