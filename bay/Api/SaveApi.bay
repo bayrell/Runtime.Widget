@@ -84,13 +84,17 @@ class SaveApi extends BaseApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	BaseType getPrimaryRules() => null;
+	void getPrimaryRules(BaseType rules)
+	{
+	}
 	
 	
 	/**
 	 * Returns serialize rules
 	 */
-	BaseType getType() => null;
+	void getItemRules(BaseType rules)
+	{
+	}
 	
 	
 	/**
@@ -130,15 +134,6 @@ class SaveApi extends BaseApi
 			throw new ApiError(this.result);
 		}
 		return pk;
-	}
-	
-	
-	/**
-	 * Set action
-	 */
-	void setAction(string action)
-	{
-		this.action = action;
 	}
 	
 	
@@ -291,9 +286,12 @@ class SaveApi extends BaseApi
 	/**
 	 * Save form
 	 */
-	async ApiResult actionSave()
+	async void actionSave()
 	{
 		this.setAction("save");
+		
+		/* Filter data */
+		this.filterData();
 		
 		/* Set primary key */
 		Map pk = this.request.get("pk");
@@ -313,16 +311,19 @@ class SaveApi extends BaseApi
 		await this.save();
 		this.setResult();
 		
-		return this.success();
+		this.success();
 	}
 	
 	
 	/**
 	 * Delete form
 	 */
-	async ApiResult actionDelete()
+	async void actionDelete()
 	{
 		this.setAction("delete");
+		
+		/* Filter data */
+		this.filterData();
 		
 		/* Set primary key */
 		Map pk = this.request.get("pk");
@@ -337,6 +338,6 @@ class SaveApi extends BaseApi
 		/* Delete item */
 		await this.delete();
 		
-		return this.success();
+		this.success();
 	}
 }

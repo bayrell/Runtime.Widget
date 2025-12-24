@@ -18,6 +18,10 @@
 
 namespace Runtime.Widget.Api;
 
+use Runtime.Exceptions.ApiError;
+use Runtime.Serializer.BaseType;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
 use Runtime.ORM.Connection;
 use Runtime.ORM.Query;
 use Runtime.ORM.QueryResult;
@@ -35,7 +39,6 @@ class SearchApi extends BaseApi
 	string connection_name = "";
 	Connection connection = null;
 	Relation relation = null;
-	Map filter = {};
 	QueryResult items = null;
 	Map foreign_key = null;
 	
@@ -81,30 +84,11 @@ class SearchApi extends BaseApi
 	
 	
 	/**
-	 * Set action
-	 */
-	void setAction(string action)
-	{
-		this.action = action;
-	}
-	
-	
-	/**
-	 * Set filter
-	 */
-	void setFilter(Map filter)
-	{
-		if (not (filter instanceof Map)) return;
-		this.filter = filter;
-	}
-	
-	
-	/**
 	 * Returns limit
 	 */
 	int getLimit()
 	{
-		int limit = rtl::toInt(this.filter.get("limit", 10));
+		int limit = rtl::toInt(this.data.get("limit", 10));
 		if (not rtl::isInteger(limit)) limit = 0;
 		
 		int max_limit = this.getMaxLimit();
@@ -119,7 +103,7 @@ class SearchApi extends BaseApi
 	 */
 	int getPage()
 	{
-		int page = rtl::toInt(this.filter.get("page", 0));
+		int page = rtl::toInt(this.data.get("page", 0));
 		if (not rtl::isInteger(page)) page = 0;
 		return page;
 	}
@@ -141,6 +125,7 @@ class SearchApi extends BaseApi
 		Query q = this.relation.select();
 		q.limit(this.getLimit());
 		q.page(this.getPage());
+		q.calcFoundRows();
 		await this.buildQuery(q);
 		
 		this.items = this.relation.fetchAll(q);
@@ -158,27 +143,42 @@ class SearchApi extends BaseApi
 				data = this.convertItem(data);
 				return data.intersect(this.getItemFields());
 			}));
+			this.result.data.set("count", this.items.getCount());
+			this.result.data.set("limit", this.items.getLimit());
+			this.result.data.set("page", this.items.getPage());
+			this.result.data.set("pages", this.items.getPages());
 		}
+	}
+	
+	
+	/**
+	 * Returns data rules
+	 */
+	void getDataRules(MapType rules)
+	{
+		parent(rules);
+		rules.addType("page", new IntegerType{ "default": 0 });
+		rules.addType("limit", new IntegerType{ "default": 10 });
 	}
 	
 	
 	/**
 	 * Action search
 	 */
-	async ApiResult actionSearch()
+	async void actionSearch()
 	{
 		this.setAction("search");
 		
-		/* Set foreign key */
-		this.foreign_key = this.request.get("foreign_key");
+		/* Filter data */
+		this.filterData();
 		
-		/* Set filter */
-		this.setFilter(this.request.data);
+		/* Set foreign key */
+		this.foreign_key = this.data.get("foreign_key");
 		
 		/* Search */
 		await this.search();
 		this.setResult();
 		
-		return this.success();
+		this.success();
 	}
 }
