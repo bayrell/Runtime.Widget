@@ -18,7 +18,7 @@
 
 namespace Runtime.Widget.Api;
 
-use Runtime.Serializer;
+use Runtime.Serializer.MapType;
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.AssertException;
 use Runtime.Exceptions.ItemNotFound;
@@ -43,11 +43,11 @@ class SaveApi extends BaseApi
 	string connection_name = "";
 	Connection connection = null;
 	Relation relation = null;
-	Map pk = null;
 	Record item = null;
 	Map original_data = {};
 	Map update_data = {};
 	Map fields = new FieldErrors();
+	Map primary_key = null;
 	Map foreign_key = null;
 	
 	
@@ -117,7 +117,8 @@ class SaveApi extends BaseApi
 		Vector errors = [];
 		
 		/* Get primary key rule */
-		BaseType rule = this.getPrimaryRules();
+		MapType rule = new MapType();
+		this.getPrimaryRules(rule);
 		if (not rule)
 		{
 			throw new ApiError(new RuntimeException("Primary rule not found"));
@@ -147,7 +148,16 @@ class SaveApi extends BaseApi
 			throw new ApiError(new RuntimeException("Primary key not found"));
 		}
 		
-		this.pk = this.getPrimaryKey(pk);
+		this.primary_key = this.getPrimaryKey(pk);
+	}
+	
+	
+	/**
+	 * Set foreign key
+	 */
+	void setForeignKey(Map data)
+	{
+		this.foreign_key = data;
 	}
 	
 	
@@ -226,8 +236,8 @@ class SaveApi extends BaseApi
 	 */
 	async void findOrCreate()
 	{
-		await this.findItem(this.pk);
-		if (not this.item and this.pk == null) this.createItem();
+		await this.findItem(this.primary_key);
+		if (not this.item and this.primary_key == null) this.createItem();
 		if (not this.item) throw new ApiError(new ItemNotFound());
 	}
 	
@@ -298,7 +308,7 @@ class SaveApi extends BaseApi
 		if (pk) this.setPrimaryKey(pk);
 		
 		/* Set foreign key */
-		this.foreign_key = this.request.get("foreign_key");
+		this.setForeignKey(this.request.get("foreign_key"));
 		
 		/* Set data */
 		Map item = this.request.get("item");
@@ -330,7 +340,7 @@ class SaveApi extends BaseApi
 		this.setPrimaryKey(pk);
 		
 		/* Set foreign key */
-		this.foreign_key = this.request.get("foreign_key");
+		this.setForeignKey(this.request.get("foreign_key"));
 		
 		/* Find item */
 		await this.findOrCreate();
