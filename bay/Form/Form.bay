@@ -53,7 +53,7 @@
 			%set string name = field.get("name");
 			%if (not props){ %set props = {}; }
 			<FormRow name={{ name }} label={{ field.get("label") }} key={{ name }}
-				result={{ this.model.field_errors.get(name) }}
+				result={{ this.model.getResult(name) }}
 			>
 				<{component} name={{ name }} value={{ this.getValue(field) }}
 					@event:valueChange="this.setValue(field, event.value)" ...props />

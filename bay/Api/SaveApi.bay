@@ -21,6 +21,7 @@ namespace Runtime.Widget.Api;
 use Runtime.Serializer.MapType;
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.AssertException;
+use Runtime.Exceptions.FieldException;
 use Runtime.Exceptions.ItemNotFound;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.ORM.Connection;
@@ -46,7 +47,6 @@ class SaveApi extends BaseApi
 	Record item = null;
 	Map original_data = {};
 	Map update_data = {};
-	Map fields = new FieldErrors();
 	Map primary_key = null;
 	Map foreign_key = null;
 	
@@ -63,8 +63,6 @@ class SaveApi extends BaseApi
 	void constructor(Map params = null)
 	{
 		parent();
-		
-		this.result.data.set("fields", this.fields.errors);
 		
 		/* Create relation */
 		string relation_name = this.getRealtionName();
@@ -130,10 +128,12 @@ class SaveApi extends BaseApi
 		/* Check errors */
 		if (errors.count() > 0)
 		{
-			this.fail({"message": "Fields error"});
-			this.fields.addFieldErrors(errors);
-			throw new ApiError(this.result);
+			TypeError::addFieldErrors(errors, "pk");
+			throw new ApiError(new FieldException({
+				"error": TypeError::getMap(errors),
+			}));
 		}
+		
 		return pk;
 	}
 	
@@ -172,7 +172,8 @@ class SaveApi extends BaseApi
 		this.update_data = {};
 		
 		/* Get base type rule */
-		BaseType rule = this.getType();
+		BaseType rule = new MapType();
+		this.getItemRules(rule);
 		if (not rule)
 		{
 			throw new ApiError(new RuntimeException("Base type not found"));
@@ -193,9 +194,9 @@ class SaveApi extends BaseApi
 		/* Check error */
 		if (errors.count() > 0)
 		{
-			this.fail({"message": "Fields error"});
-			this.fields.addFieldErrors(errors);
-			throw new ApiError(this.result);
+			throw new ApiError(new FieldException({
+				"fields": TypeError::getMap(errors),
+			}));
 		}
 	}
 	
@@ -308,7 +309,7 @@ class SaveApi extends BaseApi
 		if (pk) this.setPrimaryKey(pk);
 		
 		/* Set foreign key */
-		this.setForeignKey(this.request.get("foreign_key"));
+		this.setForeignKey(this.data.get("foreign_key"));
 		
 		/* Set data */
 		Map item = this.request.get("item");
@@ -340,7 +341,7 @@ class SaveApi extends BaseApi
 		this.setPrimaryKey(pk);
 		
 		/* Set foreign key */
-		this.setForeignKey(this.request.get("foreign_key"));
+		this.setForeignKey(this.data.get("foreign_key"));
 		
 		/* Find item */
 		await this.findOrCreate();

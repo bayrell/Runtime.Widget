@@ -19,6 +19,7 @@
 namespace Runtime.Widget.Api;
 
 use Runtime.Exceptions.ApiError;
+use Runtime.Exceptions.FieldException;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.IntegerType;
@@ -108,9 +109,8 @@ class SearchApi extends BaseApi
 		/* Check errors */
 		if (errors.count() > 0)
 		{
-			this.fail({"message": "Fields error"});
-			this.fields.addFieldErrors(errors);
-			throw new ApiError(this.result);
+			TypeError::addFieldErrors(errors, "pk");
+			throw new ApiError(new FieldException(TypeError::getMap(errors)));
 		}
 		return pk;
 	}
@@ -233,7 +233,6 @@ class SearchApi extends BaseApi
 	 */
 	void getDataRules(MapType rules)
 	{
-		parent(rules);
 		rules.addType("page", new IntegerType{ "default": 0 });
 		rules.addType("limit", new IntegerType{ "default": 10 });
 	}
