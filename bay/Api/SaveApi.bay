@@ -82,9 +82,7 @@ class SaveApi extends BaseApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	void getPrimaryRules(BaseType rules)
-	{
-	}
+	MapType getPrimaryRules() => this.relation.getPrimaryRules();
 	
 	
 	/**
@@ -115,8 +113,7 @@ class SaveApi extends BaseApi
 		Vector errors = [];
 		
 		/* Get primary key rule */
-		MapType rule = new MapType();
-		this.getPrimaryRules(rule);
+		MapType rule = this.getPrimaryRules();
 		if (not rule)
 		{
 			throw new ApiError(new RuntimeException("Primary rule not found"));
