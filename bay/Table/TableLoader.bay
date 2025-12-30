@@ -20,6 +20,8 @@ namespace Runtime.Widget.Table;
 
 use Runtime.ApiResult;
 use Runtime.BaseModel;
+use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.ObjectType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.TableModel;
 
@@ -33,6 +35,18 @@ class TableLoader extends BaseModel
 	string page_name = "page";
 	int page = 0;
 	int limit = 10;
+	
+	
+	/**
+	 * Serialize object
+	 */
+	static void serialize(ObjectType rules)
+	{
+		parent(rules);
+		rules.addType("foreign_key", rules.params ? rules.params.get("foreign_key") : null);
+		rules.addType("page", new IntegerType());
+		rules.addType("limit", new IntegerType());
+	}
 	
 	
 	/**

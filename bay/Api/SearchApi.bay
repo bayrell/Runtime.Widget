@@ -49,7 +49,7 @@ class SearchApi extends BaseApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => "";
+	string getRelationName() => "";
 	
 	
 	/**
@@ -58,7 +58,7 @@ class SearchApi extends BaseApi
 	void constructor()
 	{
 		parent();
-		this.relation = rtl::newInstance(this.getRealtionName());
+		this.relation = rtl::newInstance(this.getRelationName());
 	}
 	
 	
@@ -189,13 +189,31 @@ class SearchApi extends BaseApi
 	 */
 	async void search()
 	{
+		/* Build query */
 		Query q = this.relation.select();
 		q.limit(this.getLimit());
 		q.page(this.getPage());
 		q.calcFoundRows();
 		await this.buildQuery(q);
 		
+		/* Search before */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSearchBefore(this, q);
+		}
+		
+		/* Search */
 		this.items = this.relation.fetchAll(q);
+		
+		/* Search after */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSearchAfter(this);
+		}
 	}
 	
 	

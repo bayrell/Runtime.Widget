@@ -162,7 +162,7 @@
 	--color-text-secondary: #a0aec0;
 	--color-heading-text: #ffffff;
 	--color-link: var(--color-primary);
-	--color-link-hover: var(--color-primary-light);
+	--color-link-hover: red;
 }
 body, html{
 	scroll-behavior: smooth;
@@ -200,7 +200,7 @@ body, html{
 	}
 }
 .link{ text-decoration: none; color: var(--color-link); cursor: pointer; }
-.link:hover, .link:visited:hover{ text-decoration: underline; color: red; }
+.link:hover, .link:visited:hover{ text-decoration: underline; color: var(--color-link-hover); }
 .link:visited{ text-decoration: none; color: var(--color-link); }
 .nolink{ text-decoration: inherit; color: inherit; }
 .nolink:hover,.nolink:visited,.nolink:visited:hover{ text-decoration: inherit; color: inherit; }

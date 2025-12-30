@@ -54,7 +54,7 @@ class SaveApi extends BaseApi
 	/**
 	 * Returns relation name
 	 */
-	string getRealtionName() => "";
+	string getRelationName() => "";
 	
 	
 	/**
@@ -65,10 +65,10 @@ class SaveApi extends BaseApi
 		parent();
 		
 		/* Create relation */
-		string relation_name = this.getRealtionName();
+		string relation_name = this.getRelationName();
 		if (relation_name)
 		{
-			this.relation = rtl::newInstance(this.getRealtionName());
+			this.relation = rtl::newInstance(this.getRelationName());
 		}
 	}
 	
@@ -103,6 +103,12 @@ class SaveApi extends BaseApi
 	 * Convert item
 	 */
 	Map convertItem(Map item) => item;
+	
+	
+	/**
+	 * Returns save fields
+	 */
+	Vector getSaveFields() => null;
 	
 	
 	/**
@@ -185,7 +191,7 @@ class SaveApi extends BaseApi
 		for (int i=0; i<rules.count(); i++)
 		{
 			BaseRule item = rules.get(i);
-			item.filter(this.update_data, errors);
+			this.update_data = item.filter(this.update_data, errors);
 		}
 		
 		/* Check error */
@@ -225,6 +231,10 @@ class SaveApi extends BaseApi
 	 */
 	void createItem()
 	{
+		if (not this.relation)
+		{
+			throw new ApiError(new ItemNotFound(this.getRelationName(), "Relation"));
+		}
 		this.item = this.relation.createRecord();
 	}
 	
@@ -257,13 +267,51 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Before delete
+	 */
+	async void onDeleteBefore()
+	{
+	}
+	
+	
+	/**
+	 * After delete
+	 */
+	async void onDeleteAfter()
+	{
+	}
+	
+	
+	/**
 	 * Save item
 	 */
 	async void save()
 	{
-		this.item.assign(this.update_data);
+		/* Set items */
+		Vector save_fields = this.getSaveFields();
+		Map save_data = not save_fields ?
+			this.update_data.copy() : this.update_data.intersect(save_fields);
+		this.item.assign(save_data);
+		
+		/* Save before */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSaveBefore(this);
+		}
 		await this.onSaveBefore();
+		
+		/* Save item */
 		await this.relation.save(this.item);
+		
+		/* Save after */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSaveAfter(this);
+		}
 		await this.onSaveAfter();
 	}
 	
@@ -273,7 +321,26 @@ class SaveApi extends BaseApi
 	 */
 	async void delete()
 	{
+		/* Delete before */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onDeleteBefore(this);
+		}
+		await this.onDeleteBefore();
+		
+		/* Delete item */
 		await this.relation.delete(this.item);
+		
+		/* Delete after */
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onDeleteAfter(this);
+		}
+		await this.onDeleteAfter();
 	}
 	
 	

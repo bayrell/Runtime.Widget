@@ -53,6 +53,16 @@
 	{
 		%render row_number + this.row_offset + 1;
 	}
+	%else if (field.has("component"))
+	{
+		%set string component = field.get("component");
+		%set Map props = field.get("props", {});
+		<{component} name={{ field_name }} value={{ item.get(field_name) }} ...props />
+	}
+	%else if (field.has("model"))
+	{
+		%render this.renderWidget(field.get("model"));
+	}
 	%else if (field.has("slot"))
 	{
 		%render this.renderSlot(field.get("slot"), [item, field, row_number]);

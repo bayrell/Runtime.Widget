@@ -22,7 +22,7 @@ use Runtime.BaseObject;
 use Runtime.Widget.Api.Rules.BaseRule;
 
 
-class ReadOnlyRule extends BaseObject implements BaseRule
+class ReadOnlyRule extends BaseRule
 {
 	string field_name = "";
 	
@@ -40,9 +40,10 @@ class ReadOnlyRule extends BaseObject implements BaseRule
 	/**
 	 * Filter data
 	 */
-	void filter(Map data, Vector errors)
+	Map filter(Map data, Vector errors)
 	{
 		if (not data.has(this.field_name)) return;
 		data.remove(this.field_name);
+		return data;
 	}
 }

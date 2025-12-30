@@ -18,13 +18,75 @@
 
 namespace Runtime.Widget.Api.Rules;
 
+use Runtime.BaseObject;
 use Runtime.Serializer;
+use Runtime.ORM.Query;
+use Runtime.Widget.Api.SaveApi;
+use Runtime.Widget.Api.SearchApi;
 
 
-interface BaseRule
+class BaseRule extends BaseObject
 {
+	/**
+	 * Create object
+	 */
+	void constructor(Map params)
+	{
+		parent();
+		this._assign_values(params);
+	}
+	
+	
 	/**
 	 * Filter data
 	 */
-	void filter(Map data, Vector errors);
+	void filter(Map data, Vector errors) => data;
+	
+	
+	/**
+	 * On search before
+	 */
+	async void onSearchBefore(SearchApi api, Query q)
+	{
+	}
+	
+	
+	/**
+	 * On search after
+	 */
+	async void onSearchAfter(SearchApi api)
+	{
+	}
+	
+	
+	/**
+	 * On save before
+	 */
+	async void onSaveBefore(SaveApi api)
+	{
+	}
+	
+	
+	/**
+	 * On save after
+	 */
+	async void onSaveAfter(SaveApi api)
+	{
+	}
+	
+	
+	/**
+	 * On delete before
+	 */
+	async void onDeleteBefore(SaveApi api)
+	{
+	}
+	
+	
+	/**
+	 * On delete after
+	 */
+	async void onDeleteAfter(SaveApi api)
+	{
+	}
 }
