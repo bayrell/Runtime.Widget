@@ -38,7 +38,12 @@ class Manager extends BaseModel
 	TableModel table = null;
 	string api_name = "";
 	string page_name = "page";
+	Vector form_fields = [];
+	Vector table_fields = [];
 	Map foreign_key = null;
+	MapType foreign_rules = null;
+	MapType item_rules = null;
+	MapType primary_rules = null;
 	
 	/* Dialog */
 	string dialog_action = "";
@@ -72,6 +77,19 @@ class Manager extends BaseModel
 			"extends": classof TableLoader,
 			"foreign_key": rules.params ? rules.params.get("foreign_key") : null,
 		});
+		rules.setup.add(void (Manager model, ObjectType rules){
+			rules.addType("foreign_key", model.foreign_rules);
+			
+			ObjectType form = rules.items.get("form").get(0);
+			form.params.set("pk_type", model.primary_rules);
+			form.params.set("item_type", model.item_rules);
+			
+			ObjectType table = rules.items.get("table").get(0);
+			table.params.set("item_type", model.item_rules);
+			
+			ObjectType loader = rules.items.get("loader").get(0);
+			loader.params.set("foreign_key", model.foreign_rules);
+		});
 	}
 	
 	
@@ -84,6 +102,9 @@ class Manager extends BaseModel
 		
 		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
+		if (params.has("foreign_rules")) this.foreign_rules = params.get("foreign_rules");
+		if (params.has("item_rules")) this.item_rules = params.get("item_rules");
+		if (params.has("primary_rules")) this.primary_rules = params.get("primary_rules");
 		if (params.has("page_name")) this.page_name = params.get("page_name");
 		if (params.has("title")) this.title = params.get("title");
 	}
@@ -112,6 +133,17 @@ class Manager extends BaseModel
 			"foreign_key": this.foreign_key,
 			"page_name": this.page_name,
 			"table": this.table,
+		});
+		
+		if (params.has("form_fields")) this.form_fields = params.get("form_fields");
+		if (params.has("table_fields")) this.table_fields = params.get("table_fields");
+		
+		/* Add fields */
+		Vector fields = this.form_fields ? this.form_fields : [];
+		if (this.table_fields) fields = fields.concat(this.table_fields);
+		fields.each(void (Map field){
+			if (not field.has("component")) return;
+			this.layout.components.push(field.get("component"));
 		});
 	}
 	

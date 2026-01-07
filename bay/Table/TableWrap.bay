@@ -41,7 +41,7 @@
 	{
 		<TableDialog model={{ this.model.dialog }} manager={{ this.model }}>
 			<slot name="save">
-				<Form fields={{ this.form_fields }} model={{ this.model.form }} />
+				<Form fields={{ this.model.form_fields }} model={{ this.model.form }} />
 			</slot>
 		</TableDialog>
 	}
@@ -56,7 +56,7 @@
 	%else if (field.has("component"))
 	{
 		%set string component = field.get("component");
-		%set Map props = field.get("props", {});
+		%set Map props = field.has("props") ? field.get("props") : {};
 		<{component} name={{ field_name }} value={{ item.get(field_name) }} ...props />
 	}
 	%else if (field.has("model"))
@@ -82,16 +82,16 @@
 		%render this.renderTopButtons();
 		<Table model={{ this.model.table }}>
 			<slot name="header">
-				%for (int i=0; i<this.table_fields.count(); i++)
+				%for (int i=0; i<this.model.table_fields.count(); i++)
 				{
-					%set Map field = this.table_fields.get(i);
-					<th>{{ field.get("label") }}</th>
+					%set Map field = this.model.table_fields.get(i);
+					<th>{{ field.has("label") ? field.get("label") : "" }}</th>
 				}
 			</slot>
 			<slot name="row" args="Map item, int row_number">
-				%for (int i=0; i<this.table_fields.count(); i++)
+				%for (int i=0; i<this.model.table_fields.count(); i++)
 				{
-					%set Map field = this.table_fields.get(i);
+					%set Map field = this.model.table_fields.get(i);
 					<td>
 						%render this.renderTableValue(item, field, row_number);
 					</td>
@@ -104,8 +104,6 @@
 
 <script>
 
-props Vector table_fields = [];
-props Vector form_fields = [];
 props string dialog = "true";
 
 
