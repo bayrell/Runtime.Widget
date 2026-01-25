@@ -18,47 +18,43 @@
 
 namespace Runtime.Widget;
 
-use Runtime.Entity.Hook;
-use Runtime.Entity.Provider;
-use Runtime.Web.Annotations.Widget;
+use Runtime.BaseObject;
+use Runtime.SerializeInterface;
+use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.StringType;
 
 
-class ModuleDescription
+class Assets extends BaseObject implements SerializeInterface
 {
+	Map<string> path = {};
+	
+	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Serialize object
 	 */
-	public static string getModuleName()
+	static void serialize(ObjectType rules)
 	{
-		return "Runtime.Widget";
+		parent(rules);
+		rules.addType("path", new MapType(new StringType()));
 	}
 	
 	
 	/**
-	 * Returns module name
-	 * @return string
+	 * Returns path
 	 */
-	public static string getModuleVersion()
+	string get(string library, string path)
 	{
-		return "0.12.1";
+		string library_path = this.path.get(library, "");
+		return rs::join("/", [library_path, path]);
 	}
 	
 	
 	/**
-	 * Returns required modules
-	 * @return Map<string>
+	 * Register library
 	 */
-	pure Map<string> requiredModules() => 
+	void register(string library, string path)
 	{
-	};
-	
-	
-	/**
-	 * Returns enities
-	 */
-	pure Collection<Dict> entities() =>
-	[
-		new Hook("Runtime.Widget.AppHook"),
-	];
+		this.path.set(library, path);
+	}
 }

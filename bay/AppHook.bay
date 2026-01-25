@@ -18,18 +18,44 @@
 
 namespace Runtime.Widget;
 
+use Runtime.BaseLayout;
 use Runtime.Hooks.RuntimeHook;
+use Runtime.Web.RenderContainer;
+use Runtime.Web.Hooks.AppHook as WebHook;
+use Runtime.Widget.Assets;
 use Runtime.Widget.CSS;
 
 
 class AppHook extends RuntimeHook
 {
+	const string ASSETS = "runtime.widget::assets";
+	
+	
 	/**
 	 * Register hooks
 	 */
 	void register_hooks()
 	{
-		this.register(static::COMPONENTS, "components", 50);
+		this.register(RuntimeHook::COMPONENTS, "components", 50);
+		this.register(WebHook::ROUTE_BEFORE, "registerAssets");
+	}
+	
+	
+	/**
+	 * Register assets
+	 */
+	async void registerAssets(Map params)
+	{
+		RenderContainer container = params.get("container");
+		BaseLayout layout = container.layout;
+		if (not layout) return;
+		
+		/* Create assets */
+		Assets assets = new Assets();
+		layout.storage.set("assets", assets);
+		
+		/* Init assets */
+		@.hook(static::ASSETS, {"assets": assets});
 	}
 	
 	

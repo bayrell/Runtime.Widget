@@ -50,7 +50,7 @@
 	<div class="context_menu__item"
 		class={{ item.get("hidden") == true ? "hidden" : "" }}
 		@key={{ item.get("key") }}
-		@event:click="this.onClickItem(item)"
+		@event:click="event.stopPropagation(); this.onClickItem(item)"
 	>
 		{{ item.get("label") }}
 	</div>

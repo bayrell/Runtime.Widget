@@ -3,6 +3,7 @@
 	"assets":
 	[
 		"AppHook.bay",
+		"Assets.bay",
 		"BoolEnum.bay",
 		"Button.bay",
 		"CSS.bay",

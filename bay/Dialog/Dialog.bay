@@ -131,7 +131,7 @@
 
 <template>
 	<div
-		class="dialog"
+		class={{ "dialog" ~ (this.class ? " " ~ this.class : "") }}
 		class={{ this.model.is_open ? "dialog--open" : "" }}
 		@event:click="this.onOverlayClick()"
 	>

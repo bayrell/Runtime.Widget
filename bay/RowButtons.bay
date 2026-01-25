@@ -22,19 +22,56 @@
 .row_buttons{
 	display: flex;
 	gap: calc(var(--space) * 0.5);
-	&.margin_top{
+	&.margin_top, &--margin_top{
 		margin-top: calc(var(--space) * 2);
 	}
-	&.margin_bottom{
+	&.margin_bottom, &--margin_bottom{
 		margin-bottom: calc(var(--space) * 2);
+	}
+	&--solid{
+		gap: 0;
+		.button, .button:focus{
+			border-right-width: 0;
+			border-top-left-radius: 0;
+			border-bottom-left-radius: 0;
+			border-top-right-radius: 0;
+			border-bottom-right-radius: 0;
+		}
+		.button:active{
+			outline: none;
+		}
+		.button:first-child{
+			border-top-left-radius: var(--border-radius);
+			border-bottom-left-radius: var(--border-radius);
+		}
+		.button:last-child{
+			border-right-width: var(--border-width);
+			border-top-right-radius: var(--border-radius);
+			border-bottom-right-radius: var(--border-radius);
+		}
 	}
 }
 </style>
 
 <template>
-	<div class="row_buttons" class={{ this.class }}>
+	<div class="row_buttons" class={{ this.getClass }}>
 		%render this.renderSlot("default");
 	</div>
 </template>
+
+<script>
+
+props string style = "";
+
+
+computed string getClass()
+{
+	Vector arr = [];
+	if (this.class) arr.push(this.class);
+	arr.push(rs::mergeStyles("row_buttons", rs::split(" ", this.style)));
+	return rs::join(" ", arr);
+}
+
+</script>
 
 </class>
