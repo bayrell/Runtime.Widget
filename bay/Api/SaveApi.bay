@@ -52,9 +52,9 @@ class SaveApi extends BaseApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => "";
+	static string getRecordName() => "";
 	
 	
 	/**
@@ -65,11 +65,7 @@ class SaveApi extends BaseApi
 		parent();
 		
 		/* Create relation */
-		string relation_name = this.getRelationName();
-		if (relation_name)
-		{
-			this.relation = rtl::newInstance(this.getRelationName());
-		}
+		this.relation = new Relation(this.getRecordName());
 	}
 	
 	

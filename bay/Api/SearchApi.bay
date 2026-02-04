@@ -47,9 +47,9 @@ class SearchApi extends BaseApi
 	
 	
 	/**
-	 * Returns relation name
+	 * Returns record name
 	 */
-	string getRelationName() => "";
+	static string getRecordName() => "";
 	
 	
 	/**
@@ -58,7 +58,7 @@ class SearchApi extends BaseApi
 	void constructor()
 	{
 		parent();
-		this.relation = rtl::newInstance(this.getRelationName());
+		this.relation = new Relation(this.getRecordName());
 	}
 	
 	

@@ -35,6 +35,10 @@
 .tree_widget__items.hide{
 	display: none;
 }
+.tree_widget__item_icon{
+	display: inline-block;
+	padding: 5px;
+}
 .tree_widget__item_label{
 	display: inline-block;
 	padding: 5px;
@@ -63,7 +67,7 @@
 
 
 <template name="renderBox">
-	%if (this.dnd and this.drag_dest_box != null and this.is_drag)
+	%if (this.drag_dest_box)
 	{
 		<div class="tree_widget__box" class={{ "tree_widget__box--" ~ this.drag_dest_kind }}
 			style={{ this.drag_dest_box }}
@@ -81,6 +85,19 @@
 
 
 <template name="renderItemContent" args="TreeItem item, Collection<int> path">
+	%if (this.model.has_icons)
+	{
+		%if (item.icon_svg)
+		{
+			<span class="tree_widget__item_icon" @raw={{ item.icon_svg }} />
+		}
+		%else
+		{
+			<span class="tree_widget__item_icon">
+				<img src={{ item.icon_path }} />
+			</span>
+		}
+	}
 	%render this.renderItemLabel(item, path);
 </template>
 
@@ -135,7 +152,24 @@
 
 <script>
 
-Dnd dnd = null;
+/**
+ * Returns dest box
+ */
+computed string drag_dest_box()
+{
+	if (this.model.dnd and this.model.dnd.is_drag) return this.model.dnd.drag_dest_box;
+	return "";
+}
+
+
+/**
+ * Returns drag dest kind
+ */
+computed string drag_dest_kind()
+{
+	if (this.model.dnd and this.model.dnd.is_drag) return this.model.dnd.drag_dest_kind;
+	return "";
+}
 
 
 /**
@@ -155,6 +189,18 @@ void showContextMenu(var e)
 		y = e.clientY;
 	}
 	this.model.context_menu.show(x, y);
+}
+
+
+/**
+ * Mount component
+ */
+void mounted()
+{
+	if (this.model.dnd)
+	{
+		this.model.dnd.component = this;
+	}
 }
 
 
@@ -235,7 +281,7 @@ void onMouseDownItem(var e, Vector path)
 	);
 	
 	/* Set start drag item */
-	if (this.dnd) this.dnd.setStartDragItem(e);
+	if (this.model.dnd) this.model.dnd.onMouseDownItem(e, path);
 	
 	e.preventDefault();
 	e.stopPropagation();
@@ -260,16 +306,16 @@ void onMouseDown(var e)
  */
 void onMouseUp(var e)
 {
-	if (this.dnd) this.dnd.stopDrag();
+	if (this.model.dnd) this.model.dnd.stopDrag();
 }
 
 
 /**
  * Mouse move item
  */
-void onMouseMoveItem(var e, Dict item)
+void onMouseMoveItem(var e, Vector path)
 {
-	if (this.dnd) this.dnd.onMouseMoveItem(e, item);
+	if (this.model.dnd) this.model.dnd.onMouseMoveItem(e, path);
 }
 
 
@@ -278,7 +324,7 @@ void onMouseMoveItem(var e, Dict item)
  */
 void onMouseMove(var e)
 {
-	if (this.dnd) this.dnd.onMouseMove(e);
+	if (this.model.dnd) this.model.dnd.onMouseMove(e);
 }
 
 </script>
