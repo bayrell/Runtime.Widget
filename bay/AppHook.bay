@@ -29,6 +29,7 @@ use Runtime.Widget.CSS;
 class AppHook extends RuntimeHook
 {
 	const string ASSETS = "runtime.widget::assets";
+	const string INIT_WIDGET = "baylang::init_widget";
 	
 	
 	/**
@@ -38,6 +39,7 @@ class AppHook extends RuntimeHook
 	{
 		this.register(RuntimeHook::COMPONENTS, "components", 50);
 		this.register(WebHook::ROUTE_BEFORE, "registerAssets");
+		this.register(static::INIT_WIDGET, "initWidget");
 	}
 	
 	
@@ -69,5 +71,24 @@ class AppHook extends RuntimeHook
 		];
 		components.appendItems(params.get("components"));
 		params.set("components", components);
+	}
+	
+	
+	/**
+	 * Init widget
+	 */
+	void initWidget(Map params)
+	{
+		string widget_class = "BayLang.Constructor.Frontend.Editor.Widget.WidgetComponent";
+		var provider = params.get("provider");
+		
+		/* Section */
+		provider.registerWidget({
+			"name": "section",
+			"label": "Section",
+			"component": "Runtime.Widget.Section",
+			"widget": widget_class,
+			"props": {},
+		});
 	}
 }

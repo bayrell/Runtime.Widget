@@ -18,6 +18,7 @@
 
 <class name="Runtime.Widget.Section">
 
+<use name="Runtime.Widget.BoolEnum" />
 
 <style>
 .section__wrap{
@@ -108,6 +109,40 @@ string getWrapStyle()
 	if (this.min_height) res.push("min-height: " ~ this.min_height);
 	return rs::join(";", res);
 }
+
+
+/**
+ * Returns widget params
+ */
+static Vector<Map> widgetParams() =>
+[
+	{
+		"type": "param",
+		"name": "wrap",
+		"label": "Wrap",
+		"component": "Runtime.Widget.Select",
+		"default": "true",
+		"props": {
+			"options": [
+				{"key": "false", "value": "No"},
+				{"key": "true", "value": "Yes"},
+			],
+		},
+	},
+	{
+		"type": "param",
+		"name": "flex",
+		"label": "Flex",
+		"component": "Runtime.Widget.Select",
+		"default": "false",
+		"props": {
+			"options": [
+				{"key": "false", "value": "No"},
+				{"key": "true", "value": "Yes"},
+			],
+		},
+	}
+];
 
 </script>
 
