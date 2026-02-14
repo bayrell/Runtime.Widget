@@ -27,7 +27,6 @@
 <style>
 .tree_widget{
 	position: relative;
-	height: 100%;
 }
 .tree_widget__items > .tree_widget__items{
 	padding-left: 10px;
@@ -197,10 +196,22 @@ void showContextMenu(var e)
  */
 void mounted()
 {
+	window.addEventListener("mousemove", this.onMouseMove);
+	window.addEventListener("mouseup", this.onMouseUp);
 	if (this.model.dnd)
 	{
 		this.model.dnd.component = this;
 	}
+}
+
+
+/**
+ * Unmounted
+ */
+void unmounted()
+{
+	window.removeEventListener("mousemove", this.onMouseMove);
+	window.removeEventListener("mouseup", this.onMouseUp);
 }
 
 
