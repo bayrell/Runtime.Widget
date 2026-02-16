@@ -82,6 +82,15 @@ class AppHook extends RuntimeHook
 		string widget_class = "BayLang.Constructor.Frontend.Editor.Widget.WidgetComponent";
 		var provider = params.get("provider");
 		
+		/* Image */
+		provider.registerWidget({
+			"name": "image",
+			"label": "Image",
+			"component": "Runtime.Widget.Image",
+			"widget": widget_class,
+			"props": {},
+		});
+		
 		/* Section */
 		provider.registerWidget({
 			"name": "section",

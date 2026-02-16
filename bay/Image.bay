@@ -43,7 +43,7 @@
 	{
 		<img class="image"
 			class={{ this.class }}
-			src={{ this.src }}
+			src={{ this.layout.assets(this.src) }}
 			@key="image"
 		/>
 	}
@@ -59,6 +59,20 @@
 <script>
 
 props string src = "";
+
+
+/**
+ * Returns widget params
+ */
+static Vector<Map> widgetParams() =>
+[
+	{
+		"type": "param",
+		"name": "src",
+		"label": "Source",
+		"component": "BayLang.Constructor.Frontend.Components.SelectImageButton",
+	},
+];
 
 </script>
 
