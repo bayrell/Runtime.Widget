@@ -32,7 +32,6 @@ class SeoModel extends BaseModel
 	string component = classof SeoWidget;
 	string widget_name = "seo";
 	string canonical_url = "";
-	string description = "";
 	string favicon = "";
 	string article_published_time = "";
 	string article_modified_time = "";
@@ -49,7 +48,6 @@ class SeoModel extends BaseModel
 		rules.addType("article_modified_time", new StringType());
 		rules.addType("article_published_time", new StringType());
 		rules.addType("canonical_url", new StringType());
-		rules.addType("description", new StringType());
 		rules.addType("favicon", new StringType());
 		rules.addType("robots", new VectorType(new StringType()));
 		rules.addType("tags", new VectorType(new StringType()));

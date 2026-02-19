@@ -45,20 +45,25 @@
 	}
 	%else
 	{
+		<div class="form_fields">
 		%for (int i=0; i<this.fields.count(); i++)
 		{
 			%set Map field = this.fields.get(i);
-			%set Map props = field.get("props");
-			%set string component = field.get("component");
 			%set string name = field.get("name");
-			%if (not props){ %set props = {}; }
-			<FormRow name={{ name }} label={{ field.get("label") }} key={{ name }}
+			<FormRow label={{ field.get("label") }} key={{ name }}
+				name={{ name }} field={{ field }}
 				result={{ this.model.getResult(name) }}
 			>
-				<{component} name={{ name }} value={{ this.getValue(field) }}
-					@event:valueChange="this.setValue(field, event.value)" ...props />
+				<slot name="default" args="string name, Map field">
+					%set string component = field.get("component");
+					%set Map props = field.get("props");
+					%if (not props){ %set props = {}; }
+					<{component} name={{ name }} value={{ this.getValue(field) }}
+						@event:valueChange="this.setValue(field, event.value)" ...props />
+				</slot>
 			</FormRow>
 		}
+		</div>
 		%render this.renderWidget(this.model.result, {
 			"class": "result--form"
 		});
@@ -96,7 +101,7 @@ var getValue(Map field)
 		return value(this.model.item);
 	}
 	string name = field.get("name");
-	return this.model.item.get(name);
+	return this.model.item ? this.model.item.get(name) : "";
 }
 
 

@@ -35,10 +35,10 @@
 </style>
 
 <template>
-	<div class="form_row">
+	<div class="form_row" key={{ this.key }}>
 		<label>{{ this.label }}</label>
 		<div class="form_row__content">
-			%render this.renderSlot("default");
+			%render this.renderSlot("default", [this.name, this.field]);
 		</div>
 		%if (this.result)
 		{
@@ -51,6 +51,8 @@
 
 <script>
 
+props Map field = null;
+props string name = "";
 props string label = "";
 props ResultModel result = null;
 

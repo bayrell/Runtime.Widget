@@ -31,10 +31,10 @@
 	
 	<!-- Title and description -->
 	<meta property="og:title" content={{ this.layout.title }} />
-	%if (this.model.description != "")
+	%if (this.layout.description != "")
 	{
-		<meta property="og:description" content={{ this.model.description }} />
-		<meta name="description" content={{ this.model.description }} />
+		<meta property="og:description" content={{ this.layout.description }} />
+		<meta name="description" content={{ this.layout.description }} />
 	}
 	
 	<!-- Site name -->
