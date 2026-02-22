@@ -31,7 +31,7 @@ class TableModel extends BaseModel
 {
 	string component = classof Table;
 	Vector<Map> items = [];
-	BaseType item_type = null;
+	BaseType item_rules = null;
 	
 	
 	/**
@@ -40,9 +40,9 @@ class TableModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
-		rules.addType("items", new VectorType(rules.params ? rules.params.get("item_type") : null));
+		rules.addType("items", new VectorType(rules.params ? rules.params.get("item_rules") : null));
 		rules.setup.add(void (TableModel model, ObjectType rules){
-			model.item_type = rules.params ? rules.params.get("item_type") : null;
+			model.item_rules = rules.params ? rules.params.get("item_rules") : null;
 		});
 	}
 	
@@ -53,7 +53,7 @@ class TableModel extends BaseModel
 	void assignRules(ObjectType rules)
 	{
 		parent(rules);
-		this.item_type = rules.params.get("item_type");
+		this.item_rules = rules.params.get("item_rules");
 	}
 	
 	
@@ -71,7 +71,7 @@ class TableModel extends BaseModel
 	 */
 	void setItems(Vector items)
 	{
-		VectorType vector = new VectorType(this.item_type);
+		VectorType vector = new VectorType(this.item_rules);
 		this.items = vector.filter(items, []);
 	}
 }

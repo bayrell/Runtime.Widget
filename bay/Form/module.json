@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget.Form",
 	"assets":
 	[
+		"FieldErrors.bay",
 		"Form.bay",
 		"FormRow.bay",
 		"FormModel.bay"

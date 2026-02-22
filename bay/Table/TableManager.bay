@@ -32,7 +32,7 @@ use Runtime.Widget.Table.TableLoader;
 use Runtime.Widget.Table.TableModel;
 
 
-class Manager extends BaseModel
+class TableManager extends BaseModel
 {
 	FormModel form = null;
 	TableModel table = null;
@@ -64,28 +64,28 @@ class Manager extends BaseModel
 		rules.addType("form", new ObjectType{
 			"autocreate": true,
 			"extends": classof FormModel,
-			"pk_type": rules.params ? rules.params.get("pk_type") : null,
-			"item_type": rules.params ? rules.params.get("item_type") : null,
+			"primary_rules": rules.params ? rules.params.get("primary_rules") : null,
+			"item_rules": rules.params ? rules.params.get("item_rules") : null,
 		});
 		rules.addType("table", new ObjectType{
 			"autocreate": true,
 			"extends": classof TableModel,
-			"item_type": rules.params ? rules.params.get("item_type") : null,
+			"item_rules": rules.params ? rules.params.get("item_rules") : null,
 		});
 		rules.addType("dialog", new ObjectType{ "extends": classof DialogModel });
 		rules.addType("loader", new ObjectType{
 			"extends": classof TableLoader,
 			"foreign_key": rules.params ? rules.params.get("foreign_key") : null,
 		});
-		rules.setup.add(void (Manager model, ObjectType rules){
+		rules.setup.add(void (TableManager model, ObjectType rules){
 			rules.addType("foreign_key", model.foreign_rules);
 			
 			ObjectType form = rules.items.get("form").get(0);
-			form.params.set("pk_type", model.primary_rules);
-			form.params.set("item_type", model.item_rules);
+			form.params.set("primary_rules", model.primary_rules);
+			form.params.set("item_rules", model.item_rules);
 			
 			ObjectType table = rules.items.get("table").get(0);
-			table.params.set("item_type", model.item_rules);
+			table.params.set("item_rules", model.item_rules);
 			
 			ObjectType loader = rules.items.get("loader").get(0);
 			loader.params.set("foreign_key", model.foreign_rules);
@@ -103,10 +103,19 @@ class Manager extends BaseModel
 		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
 		if (params.has("foreign_rules")) this.foreign_rules = params.get("foreign_rules");
-		if (params.has("item_rules")) this.item_rules = params.get("item_rules");
-		if (params.has("primary_rules")) this.primary_rules = params.get("primary_rules");
+		if (params.has("item_rules"))
+		{
+			this.item_rules = params.get("item_rules");
+			if (this.item_rules instanceof Map) this.item_rules = new MapType(this.item_rules);
+		}
+		if (params.has("primary_rules"))
+		{
+			this.primary_rules = params.get("primary_rules");
+			if (this.primary_rules instanceof Map) this.primary_rules = new MapType(this.primary_rules);
+		}
 		if (params.has("page_name")) this.page_name = params.get("page_name");
 		if (params.has("title")) this.title = params.get("title");
+		if (this.foreign_rules instanceof Map) this.foreign_rules = new MapType(this.foreign_rules);
 	}
 	
 	

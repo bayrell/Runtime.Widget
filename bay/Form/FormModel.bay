@@ -25,6 +25,7 @@ use Runtime.Message;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Widget.ResultModel;
+use Runtime.Widget.Form.FieldErrors;
 use Runtime.Widget.Form.Form;
 
 
@@ -33,10 +34,10 @@ class FormModel extends BaseModel
 	string component = classof Form;
 	Map pk = null;
 	Map item = {};
-	Map field_errors = {};
+	Map field_errors = null;
 	ResultModel result = null;
-	BaseType pk_type = null;
-	BaseType item_type = null;
+	BaseType primary_rules = null;
+	BaseType item_rules = null;
 	
 	
 	/**
@@ -45,12 +46,12 @@ class FormModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
-		rules.addType("pk", rules.params ? rules.params.get("pk_type") : null);
-		rules.addType("item", rules.params ? rules.params.get("item_type") : null);
+		rules.addType("pk", rules.params ? rules.params.get("primary_rules") : null);
+		rules.addType("item", rules.params ? rules.params.get("item_rules") : null);
 		rules.addType("result", new ObjectType{"class_name": classof ResultModel});
 		rules.setup.add(void (FormModel model, ObjectType rules){
-			model.pk_type = rules.params ? rules.params.get("pk_type") : null;
-			model.item_type = rules.params ? rules.params.get("item_type") : null;
+			model.primary_rules = rules.params ? rules.params.get("primary_rules") : null;
+			model.item_rules = rules.params ? rules.params.get("item_rules") : null;
 		});
 	}
 	
@@ -71,6 +72,9 @@ class FormModel extends BaseModel
 	{
 		parent(params);
 		
+		this.field_errors = this.createWidget(classof FieldErrors, {
+			"error_name": "fields",
+		});
 		this.result = this.createWidget(classof ResultModel);
 	}
 	
@@ -90,35 +94,14 @@ class FormModel extends BaseModel
 	void setApiResult(ApiResult result)
 	{
 		this.result.setApiResult(result);
-		this.setFieldErrors(result.data.get("fields"));
-	}
-	
-	
-	/**
-	 * Set field errors
-	 */
-	void setFieldErrors(Map field_errors)
-	{
-		if (not field_errors) return;
-		
-		this.field_errors = {};
-		Vector keys = rtl::list(field_errors.keys());
-		for (int i=0; i<keys.count(); i++)
-		{
-			string field_name = keys.get(i);
-			Vector messages = field_errors.get(field_name);
-			string message = rs::join(", ", messages);
-			ResultModel result = new ResultModel();
-			result.setError(message);
-			this.field_errors.set(field_name, result);
-		}
+		this.field_errors.setApiResult(result);
 	}
 	
 	
 	/**
 	 * Returns result
 	 */
-	void getResult(string name)
+	ResultModel getResult(string name)
 	{
 		return this.field_errors.get(name);
 	}
@@ -138,10 +121,10 @@ class FormModel extends BaseModel
 	 */
 	void setPrimaryKey(Map item)
 	{
-		if (this.pk_type)
+		if (this.primary_rules)
 		{
-			Vector primary_key = this.pk_type.keys();
-			this.pk = this.pk_type.filter(item.intersect(primary_key), []);
+			Vector primary_key = this.primary_rules.keys();
+			this.pk = this.primary_rules.filter(item.intersect(primary_key), []);
 		}
 		else
 		{
@@ -155,7 +138,7 @@ class FormModel extends BaseModel
 	 */
 	void setItem(var item)
 	{
-		this.item = this.item_type ? this.item_type.filter(item, []) : item;
+		this.item = this.item_rules ? this.item_rules.filter(item, []) : item;
 	}
 	
 	
@@ -166,7 +149,7 @@ class FormModel extends BaseModel
 	{
 		this.pk = null;
 		this.item = this.data_object ? rtl::newInstance(this.data_object) : {};
-		this.field_errors = {};
+		this.field_errors.clear();
 		this.result.clear();
 	}
 }

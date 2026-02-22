@@ -2,10 +2,10 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
-		"Manager.bay",
 		"Table.bay",
 		"TableDialog.bay",
 		"TableLoader.bay",
+		"TableManager.bay",
 		"TableModel.bay",
 		"TableWrap.bay"
 	],

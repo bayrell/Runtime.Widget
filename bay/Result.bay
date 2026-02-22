@@ -51,7 +51,7 @@
 
 <template>
 	<div class="result" class={{ this.class }}
-		class={{ this.getErrorClass() }}>{{ this.model.message }}</div>
+		class={{ this.getErrorClass() }}>{{ this.model ? this.model.message : "" }}</div>
 </template>
 
 
@@ -62,6 +62,7 @@
  */
 string getErrorClass()
 {
+	if (this.model == null) return "result--hide";
 	if (this.model.message == "") return "result--hide";
 	if (this.model.isSuccess()) return "result--success";
 	if (this.model.isError()) return "result--error";
