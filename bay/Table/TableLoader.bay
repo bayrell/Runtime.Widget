@@ -92,6 +92,8 @@ class TableLoader extends BaseModel
 		});
 		if (api_result.isSuccess() and api_result.data.has("items"))
 		{
+			this.table.page = api_result.data.get("page");
+			this.table.pages = api_result.data.get("pages");
 			this.table.setItems(api_result.data.get("items"));
 		}
 		return api_result;

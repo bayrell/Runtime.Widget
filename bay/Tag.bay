@@ -24,10 +24,11 @@
 <style>
 .tag{
 	display: flex;
+	align-items: center;
 	flex-wrap: wrap;
 	font-family: var(--font-family);
-	font-size: var(--font-size);
-	background-color: var(--color-default);
+	font-size: var(--font-input-size);
+	background-color: var(--color-background);
 	border-width: var(--border-width);
 	border-color: var(--color-border);
 	border-style: solid;
@@ -35,8 +36,8 @@
 	box-shadow: none;
 	outline: transparent;
 	line-height: normal;
-	padding: var(--space);
-	min-height: 40px;
+	padding: calc(var(--space) * 0.75) calc(var(--space) * 1.5);
+	gap: calc(var(--space) * 0.5);
 	width: 100%;
 }
 .tag__item{
@@ -48,7 +49,7 @@
 	border-style: solid;
 	border-radius: 4px;
 	padding: 3px 5px;
-	margin: 5px;
+	/*margin: 5px;*/
 }
 .tag__text{
 	overflow-wrap: anywhere;
@@ -64,8 +65,8 @@
 .tag__span{
 	overflow-wrap: anywhere;
 	min-width: 100px;
-	padding: 3px;
-	margin: 5px;
+	/*padding: 3px;
+	margin: 5px;*/
 	outline: 0;
 }
 .tag__span:first-child{
@@ -113,11 +114,17 @@ props Vector<string> value = [];
 
 
 /**
+ * Copy value
+ */
+Vector copyValue() => this.value ? this.value.slice() : [];
+
+
+/**
  * Text change
  */
 void onTextChange(int i, string value)
 {
-	var old_value = this.value.slice();
+	var old_value = this.copyValue();
 	this.value.set(i, value);
 	
 	/* Send value change */
@@ -137,7 +144,7 @@ void onTextKeyDown(int i, string value, var e)
 	if (e.keyCode != 13) return;
 	
 	/* Set value */
-	var old_value = this.value.slice();
+	var old_value = this.copyValue();
 	this.value.set(i, value);
 	
 	/* Send value change */
@@ -157,7 +164,7 @@ void onTextKeyDown(int i, string value, var e)
  */
 void onCloseClick(int i)
 {
-	var old_value = this.value.slice();
+	var old_value = this.copyValue();
 	this.value.remove(i);
 	
 	/* Send value change */
@@ -178,13 +185,15 @@ void onSpanBlur(var e)
 	if (span.innerText == "") return;
 	
 	/* Add value */
-	var old_value = this.value.slice();
-	this.value.push(span.innerText);
+	var old_value = this.copyValue();
+	var value = this.value;
+	if (value !== null) value.push(span.innerText);
+	else value = [span.innerText];
 	span.innerText = "";
 	
 	/* Send value change */
 	this.emit(new ValueChangeMessage{
-		"value": this.value,
+		"value": value,
 		"old_value": old_value,
 		"data": this.data,
 	});
@@ -202,13 +211,14 @@ void onSpanKeyDown(var e)
 	if (span.innerText == "") return;
 	
 	/* Add value */
-	var old_value = this.value.slice();
-	this.value.push(span.innerText);
+	var old_value = this.copyValue();
+	var value = this.value ? this.value : [];
+	value.push(span.innerText);
 	span.innerText = "";
 	
 	/* Send value change */
 	this.emit(new ValueChangeMessage{
-		"value": this.value,
+		"value": value,
 		"old_value": old_value,
 		"data": this.data,
 	});

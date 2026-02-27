@@ -24,6 +24,7 @@ use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
 use Runtime.Serializer.VectorType;
+use Runtime.Web.Request;
 use Runtime.Widget.Seo.SeoWidget;
 
 
@@ -71,10 +72,11 @@ class SeoModel extends BaseModel
 	void setCanonicalUrl(string canonical_url)
 	{
 		/* Add domain */
-		if (this.layout.request_host)
+		Request request = this.layout.get("request");
+		if (request.host)
 		{
-			canonical_url = "//" ~ this.layout.request_host ~ canonical_url;
-			if (this.layout.request_https) canonical_url = "https:" ~ canonical_url;
+			canonical_url = "//" ~ request.host ~ canonical_url;
+			if (request.is_https) canonical_url = "https:" ~ canonical_url;
 			else canonical_url = "http:" ~ canonical_url;
 		}
 		

@@ -71,9 +71,7 @@ class SearchApi extends BaseApi
 	/**
 	 * Returns serialize rules for pk
 	 */
-	void getPrimaryRules(BaseType rules)
-	{
-	}
+	MapType getPrimaryRules() => this.relation.getPrimaryRules();
 	
 	
 	/**
@@ -96,8 +94,7 @@ class SearchApi extends BaseApi
 		Vector errors = [];
 		
 		/* Get primary key rule */
-		BaseType rule = new MapType();
-		this.getPrimaryRules(rule);
+		MapType rule = this.getPrimaryRules();
 		if (not rule)
 		{
 			throw new ApiError(new RuntimeException("Primary rule not found"));
@@ -251,8 +248,11 @@ class SearchApi extends BaseApi
 	 */
 	void getDataRules(MapType rules)
 	{
-		rules.addType("page", new IntegerType{ "default": 0 });
-		rules.addType("limit", new IntegerType{ "default": 10 });
+		if (this.action == "search")
+		{
+			rules.addType("page", new IntegerType{ "default": 0 });
+			rules.addType("limit", new IntegerType{ "default": 10 });
+		}
 	}
 	
 	

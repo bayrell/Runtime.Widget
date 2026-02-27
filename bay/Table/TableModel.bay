@@ -21,6 +21,7 @@ namespace Runtime.Widget.Table;
 use Runtime.BaseModel;
 use Runtime.Message;
 use Runtime.Serializer.BaseType;
+use Runtime.Serializer.IntegerType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.VectorType;
@@ -31,6 +32,8 @@ class TableModel extends BaseModel
 {
 	string component = classof Table;
 	Vector<Map> items = [];
+	int page = 0;
+	int pages = 0;
 	BaseType item_rules = null;
 	
 	
@@ -40,6 +43,8 @@ class TableModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
+		rules.addType("page", new IntegerType());
+		rules.addType("pages", new IntegerType());
 		rules.addType("items", new VectorType(rules.params ? rules.params.get("item_rules") : null));
 		rules.setup.add(void (TableModel model, ObjectType rules){
 			model.item_rules = rules.params ? rules.params.get("item_rules") : null;

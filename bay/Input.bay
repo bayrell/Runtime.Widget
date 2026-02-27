@@ -33,7 +33,7 @@
 	border-style: solid;
 	border-radius: var(--border-radius);
 	box-shadow: none;
-	color: var(--text-color);
+	color: var(--color-text);
 	outline: transparent;
 	line-height: normal;
 	min-height: 32px;
@@ -51,6 +51,7 @@
 	%set Map props = this.getProps();
 	<input
 		class="input"
+		class={{ this.class }}
 		type={{ this.type }}
 		name={{ this.name }}
 		value={{ this.getValue() }}

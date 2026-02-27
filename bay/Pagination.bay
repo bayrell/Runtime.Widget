@@ -154,8 +154,8 @@ props string name = "";
  */
 string getPageUrl(int page)
 {
-	string uri = this.layout.request_full_uri;
-	return rs::url_get_add(uri, this.name, page);
+	var request = this.layout.get("request");
+	return rs::url_get_add(request.full_uri, this.name, page);
 }
 
 

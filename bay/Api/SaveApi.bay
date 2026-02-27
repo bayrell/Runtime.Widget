@@ -299,7 +299,7 @@ class SaveApi extends BaseApi
 		await this.onSaveBefore();
 		
 		/* Save item */
-		await this.relation.save(this.item);
+		await this.item.save();
 		
 		/* Save after */
 		Vector rules = this.rules();
@@ -327,7 +327,7 @@ class SaveApi extends BaseApi
 		await this.onDeleteBefore();
 		
 		/* Delete item */
-		await this.relation.delete(this.item);
+		await this.item.delete();
 		
 		/* Delete after */
 		Vector rules = this.rules();

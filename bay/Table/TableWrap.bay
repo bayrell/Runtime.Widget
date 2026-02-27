@@ -22,10 +22,14 @@
 <use name="Runtime.Widget.Form.FormRow" component="true" />
 <use name="Runtime.Widget.Table.Table" component="true" />
 <use name="Runtime.Widget.Table.TableDialog" component="true" />
+<use name="Runtime.Widget.Pagination" component="true" />
 
 <style>
 .table_wrap > .row_buttons{
 	margin-bottom: calc(var(--space) * 2);
+}
+.table_pagination{
+	text-align: center;
 }
 </style>
 
@@ -39,7 +43,9 @@
 <template name="renderDialog">
 	%if (this.dialog == "true")
 	{
-		<TableDialog model={{ this.model.dialog }} manager={{ this.model }}>
+		<TableDialog class={{ "dialog--" ~ this.model.dialog_action }}
+			model={{ this.model.dialog }} manager={{ this.model }}
+		>
 			<slot name="save">
 				<Form fields={{ this.model.form_fields }} model={{ this.model.form }} />
 			</slot>
@@ -96,6 +102,15 @@
 						%render this.renderTableValue(item, field, row_number);
 					</td>
 				}
+			</slot>
+			<slot name="pagination">
+				<tr><td class="table_pagination" colspan={{ this.model.table_fields.count() }}>
+					<Pagination
+						name={{ this.model.page_name }}
+						page={{ this.model.table.page + 1 }}
+						pages={{ this.model.table.pages }}
+					/>
+				</td></tr>
 			</slot>
 		</Table>
 		%render this.renderDialog();

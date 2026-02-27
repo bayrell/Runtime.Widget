@@ -65,6 +65,10 @@
 					</tr>
 				}
 			}
+			%if (this.model.pages > 1)
+			{
+				%render this.renderSlot("pagination");
+			}
 		</tbody>
 	</table>
 </template>
