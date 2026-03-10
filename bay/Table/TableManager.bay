@@ -147,6 +147,10 @@ class TableManager extends BaseModel
 		if (params.has("form_fields")) this.form_fields = params.get("form_fields");
 		if (params.has("table_fields")) this.table_fields = params.get("table_fields");
 		
+		/* Setup item rules */
+		this.form.item_rules = params.get("item_rules");
+		this.table.item_rules = params.get("item_rules");
+		
 		/* Add fields */
 		Vector fields = this.form_fields ? this.form_fields : [];
 		if (this.table_fields) fields = fields.concat(this.table_fields);
