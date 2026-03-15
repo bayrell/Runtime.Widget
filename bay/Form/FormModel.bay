@@ -113,6 +113,13 @@ class FormModel extends BaseModel
 	void setValue(string name, var value)
 	{
 		this.item.set(name, value);
+		this.listener.emit(new ValueChangeMessage{
+			"name": "setValue",
+			"data": {
+				"key": name,
+				"value": value,
+			}
+		})
 	}
 	
 	

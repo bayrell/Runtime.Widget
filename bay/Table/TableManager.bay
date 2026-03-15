@@ -171,6 +171,15 @@ class TableManager extends BaseModel
 	
 	
 	/**
+	 * Set api params
+	 */
+	void setApiParams(Map params)
+	{
+		this.loader.setApiParams(params);
+	}
+	
+	
+	/**
 	 * Set foreign key
 	 */
 	void setForeignKey(Map key)
@@ -247,6 +256,15 @@ class TableManager extends BaseModel
 	void onDialogHide()
 	{
 		this.dialog_action = "";
+	}
+	
+	
+	/**
+	 * Reload
+	 */
+	async ApiResult reload()
+	{
+		return await this.loader.reload();
 	}
 	
 	

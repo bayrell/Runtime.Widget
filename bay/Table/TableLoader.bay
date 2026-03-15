@@ -35,6 +35,7 @@ class TableLoader extends BaseModel
 	string page_name = "page";
 	int page = 0;
 	int limit = 10;
+	Map api_params = null;
 	
 	
 	/**
@@ -66,6 +67,25 @@ class TableLoader extends BaseModel
 	
 	
 	/**
+	 * Set api params
+	 */
+	void setApiParams(Map params)
+	{
+		this.api_params = params;
+	}
+	
+	
+	/**
+	 * Merge api params
+	 */
+	Map mergeParams(Map data)
+	{
+		if (!this.api_params) return data;
+		return this.api_params.concat(data);
+	}
+	
+	
+	/**
 	 * Load data
 	 */
 	async ApiResult loadData(RenderContainer container)
@@ -84,11 +104,11 @@ class TableLoader extends BaseModel
 		ApiResult api_result = await this.layout.sendApi({
 			"api_name": this.api_name,
 			"method_name": this.method_name,
-			"data": {
+			"data": this.mergeParams({
 				"page": this.page,
 				"limit": this.limit,
 				"foreign_key": this.foreign_key,
-			},
+			}),
 		});
 		if (api_result.isSuccess() and api_result.data.has("items"))
 		{

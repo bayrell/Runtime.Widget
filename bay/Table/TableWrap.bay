@@ -40,6 +40,13 @@
 	}
 </template>
 
+<template name="renderFilter">
+	%if (this.slot("filter"))
+	{
+		%render this.renderSlot("filter");
+	}
+</template>
+
 <template name="renderDialog">
 	%if (this.dialog == "true")
 	{
@@ -86,6 +93,7 @@
 <template>
 	<div class="table_wrap">
 		%render this.renderTopButtons();
+		%render this.renderFilter();
 		<Table model={{ this.model.table }}>
 			<slot name="header">
 				%for (int i=0; i<this.model.table_fields.count(); i++)

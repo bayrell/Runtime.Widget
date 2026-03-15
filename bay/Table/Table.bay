@@ -28,6 +28,7 @@
 	th, td{
 		padding: var(--space);
 		border-bottom: 1px var(--color-border) solid;
+		font-size: var(--font-size);
 	}
 	th{
 		font-weight: bold;
