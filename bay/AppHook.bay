@@ -24,6 +24,7 @@ use Runtime.Web.RenderContainer;
 use Runtime.Web.Hooks.AppHook as WebHook;
 use Runtime.Widget.Assets;
 use Runtime.Widget.CSS;
+use Runtime.Widget.Translate.Translator;
 
 
 class AppHook extends RuntimeHook
@@ -38,6 +39,7 @@ class AppHook extends RuntimeHook
 	void register_hooks()
 	{
 		this.register(RuntimeHook::COMPONENTS, "components", 50);
+		this.register(RuntimeHook::CREATE_LAYOUT, "registerTranslator");
 		this.register(WebHook::ROUTE_BEFORE, "registerAssets");
 		this.register(static::INIT_WIDGET, "initWidget");
 	}
@@ -58,6 +60,16 @@ class AppHook extends RuntimeHook
 		
 		/* Init assets */
 		@.hook(static::ASSETS, {"assets": assets});
+	}
+	
+	
+	/**
+	 * Register translator
+	 */
+	void registerTranslator(Map params)
+	{
+		RenderContainer container = params.get("container");
+		container.layout.storage.set("translator", new Translator(container.layout));
 	}
 	
 	
