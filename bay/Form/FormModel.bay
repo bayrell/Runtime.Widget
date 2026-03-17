@@ -33,6 +33,7 @@ use Runtime.Widget.Messages.ValueChangeMessage;
 class FormModel extends BaseModel
 {
 	string component = classof Form;
+	string data_object = "";
 	Map pk = null;
 	Map item = {};
 	Map field_errors = null;
@@ -63,6 +64,8 @@ class FormModel extends BaseModel
 	void initParams(Map params)
 	{
 		parent(params);
+		
+		if (params.has("data_object")) this.data_object = params.get("data_object");
 	}
 	
 	

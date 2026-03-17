@@ -42,9 +42,9 @@ class FilterModel extends BaseModel
 	
 	
 	/**
-	 * Init widget
+	 * Init params
 	 */
-	void initWidget(Map params)
+	void initParams(Map params)
 	{
 		parent(params);
 		
