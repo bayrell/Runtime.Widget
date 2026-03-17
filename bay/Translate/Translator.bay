@@ -35,4 +35,13 @@ class Translator extends BaseModel
         parent();
         this.layout = layout;
     }
+    
+    
+    /**
+     * Translate
+     */
+    string translate(string domain, string key, string default_value = "")
+    {
+        return default_value ? default_value : key;
+    }
 }

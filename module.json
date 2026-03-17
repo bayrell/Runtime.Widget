@@ -23,6 +23,7 @@
 		"Container.bay",
 		"Section.bay",
 		"Select.bay",
+		"SelectModel.bay",
 		"SelectLabel.bay",
 		"SortableList.bay",
 		"SortableFieldList.bay",

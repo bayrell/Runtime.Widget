@@ -18,8 +18,8 @@
 
 <class name="Runtime.Widget.RangePicker">
 
+<use name="Runtime.DateRange" />
 <use name="Runtime.DateTime" />
-<use name="Runtime.DateTimeRange" />
 <use name="Runtime.Widget.Messages.ValueChangeMessage" />
 <use name="Runtime.Widget.DatePicker" component="true" />
 <use name="Runtime.Widget.Translator" />
@@ -27,6 +27,7 @@
 <style>
 .range_picker{
 	display: flex;
+	align-items: center;
 	gap: calc(2 * var(--space));
 	.date_picker{
 		flex: 1;
@@ -57,15 +58,16 @@
 /**
  * Props
  */
-props DateTimeRange value = null;
+props DateRange value = null;
+props string name = "";
 props string only_date = "false";
 
 
 /**
  * Returns start and end date
  */
-DateTime getStartDate() => this.value ? this.value.start_date : null;
-DateTime getEndDate() => this.value ? this.value.start_date : null;
+computed DateTime getStartDate() => this.value ? this.value.start_date : null;
+computed DateTime getEndDate() => this.value ? this.value.end_date : null;
 
 
 /**
@@ -81,7 +83,8 @@ string translate(string key, string default_value) =>
  */
 void updateStartDate(DateTime value)
 {
-	DateTimeRange range = rtl::copy(this.value);
+	DateRange range = this.value ?
+		rtl::copy(this.value) : new DateRange();
 	range.start_date = value;
 	this.emit(new ValueChangeMessage{
 		"value": range,
@@ -96,7 +99,8 @@ void updateStartDate(DateTime value)
  */
 void updateEndDate(DateTime value)
 {
-	DateTimeRange range = rtl::copy(this.value);
+	DateRange range = this.value ?
+		rtl::copy(this.value) : new DateRange();
 	range.end_date = value;
 	this.emit(new ValueChangeMessage{
 		"value": range,

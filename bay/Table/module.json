@@ -2,6 +2,8 @@
 	"name": "Runtime.Widget.Table",
 	"assets":
 	[
+		"Filter.bay",
+		"FilterModel.bay",
 		"Table.bay",
 		"TableDialog.bay",
 		"TableLoader.bay",
