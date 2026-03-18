@@ -71,7 +71,7 @@ class TableLoader extends BaseModel
 	 */
 	void setApiParams(Map params)
 	{
-		this.api_params = params;
+		this.api_params = this.api_params ? this.api_params.concat(params) : params.copy();
 	}
 	
 	

@@ -19,10 +19,17 @@
 namespace Runtime.Widget.Table;
 
 use Runtime.BaseModel;
-use Runtime.Serializer.VectorType;
+use Runtime.DateRange;
+use Runtime.DateTime;
+use Runtime.Serializer.DateTimeType;
 use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.MapType;
+use Runtime.Serializer.StringType;
+use Runtime.Serializer.VectorType;
+use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.Filter;
 use Runtime.Widget.Table.TableLoader;
+
 
 class FilterModel extends BaseModel
 {
@@ -38,6 +45,21 @@ class FilterModel extends BaseModel
 	static void serialize(ObjectType rules)
 	{
 		parent(rules);
+		rules.setup.add(void (FilterModel model, ObjectType rules){
+			
+			Map params = {};
+			for (Map field in model.fields)
+			{
+				string key = field.get("name");
+				string field_type = field.get("type");
+				if (field_type == "date") params.set(key, new DateTimeType());
+				else if (field_type == "date_range") params.set(key, new ObjectType{ "class_name": classof DateRange });
+				else params.set(key, new StringType());
+			}
+			
+			rules.addType("item", new MapType(params));
+			
+		});
 	}
 	
 	
@@ -59,21 +81,70 @@ class FilterModel extends BaseModel
 		{
 			this.fields = params.get("fields");
 		}
-		
-		/* Init item from params */
-		if (params.has("item"))
-		{
-			this.item = params.get("item");
-		}
 	}
+	
+	
+	/**
+	 * Load data
+	 */
+	async void loadData(RenderContainer container)
+	{
+		parent(container);
+		this.item = this.convert(container.layout.get("request").query, "item");
+		this.loader.setApiParams(this.item);
+	}
+	
+	
+	/**
+	 * Convert item
+	 */
+	Map convert(Map data, string format)
+	{
+		Map result = {};
+		for (Map field in this.fields)
+		{
+			string key = field.get("name");
+			if (not data.has(key)) continue;
+			
+			string value = data.get(key);
+			string field_type = field.get("type");
+			if (field_type == "date")
+			{
+				if (format == "item") value = DateTime::create(value);
+				else value = value ? value.getDate() : "";
+			}
+			else if (field_type == "date_range")
+			{
+				if (format == "item")
+				{
+					Vector arr = rs::split(",", value);
+					value = new DateRange();
+					if (arr.get(0)) value.start_date = DateTime::create(arr.get(0));
+					if (arr.count() > 1 and arr.get(1)) value.end_date = DateTime::create(arr.get(1));
+				}
+				else
+				{
+					Vector arr = value ? [value.start_date, value.end_date] : [];
+					value = rs::join(",", arr.map(
+						string (DateTime value) => value ? value.getDate() : "")
+					);
+				}
+			}
+			
+			result.set(key, value);
+		}
+		return result;
+	}
+	
 	
 	/**
 	 * Get value by field name
 	 */
 	var getValue(string name)
 	{
-		return this.item.get(name);
+		return this.item.has(name) ? this.item.get(name) : "";
 	}
+	
 	
 	/**
 	 * Set value by field name
@@ -83,12 +154,12 @@ class FilterModel extends BaseModel
 		this.item.set(name, value);
 	}
 	
+	
 	/**
 	 * Apply filter
 	 */
 	async void applyFilter()
 	{
-		this.loader.setApiParams(this.item);
-		await this.loader.reload();
+		document.location = rs::urlGetAdd(document.location, this.convert(this.item, "query"));
 	}
 }

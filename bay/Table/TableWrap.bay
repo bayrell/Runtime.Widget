@@ -99,14 +99,16 @@
 				%for (int i=0; i<this.model.table_fields.count(); i++)
 				{
 					%set Map field = this.model.table_fields.get(i);
-					<th>{{ field.has("label") ? field.get("label") : "" }}</th>
+					<th class={{ "th--" ~ field.get("name") }}>
+						{{ field.has("label") ? field.get("label") : "" }}
+					</th>
 				}
 			</slot>
 			<slot name="row" args="Map item, int row_number">
 				%for (int i=0; i<this.model.table_fields.count(); i++)
 				{
 					%set Map field = this.model.table_fields.get(i);
-					<td>
+					<td class={{ "td--" ~ field.get("name") }}>
 						%render this.renderTableValue(item, field, row_number);
 					</td>
 				}
