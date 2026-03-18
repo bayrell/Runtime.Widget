@@ -76,18 +76,11 @@ props string only_date = "false";
 
 
 /**
- * Padding
- */
-string pad2(int value) =>
-	value < 10 ? "0" ~ value : rtl::toString(value);
-
-
-/**
  * Returns value
  */
 computed string getValueDate()
 {
-	return this.value ? rs::substr(this.value.format(), 0, 10) : "";
+	return this.value ? this.value.getDate() : "";
 }
 
 
@@ -97,9 +90,7 @@ computed string getValueDate()
 computed string getValueTime()
 {
 	if (!this.value) return "";
-	string h = this.pad2(this.value.h);
-	string s = this.pad2(this.value.s);
-	return h ~ ":" ~ s;
+	return rs::pad2(this.value.h) ~ ":" ~ rs::pad2(this.value.i);
 }
 
 
