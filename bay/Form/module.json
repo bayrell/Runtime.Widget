@@ -4,8 +4,11 @@
 	[
 		"FieldErrors.bay",
 		"Form.bay",
+		"FormMessage.bay",
+		"FormModel.bay",
 		"FormRow.bay",
-		"FormModel.bay"
+		"FormSubmit.bay",
+		"FormSubmitModel.bay"
 	],
 	"require": [
 		"Runtime.Widget"

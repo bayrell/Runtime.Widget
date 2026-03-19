@@ -64,6 +64,16 @@
 			</FormRow>
 		}
 		</div>
+	}
+</template>
+
+<template name="renderResult">
+	%if (this.slot("result"))
+	{
+		%render this.renderSlot("result");
+	}
+	%else
+	{
 		%render this.renderWidget(this.model.result, {
 			"class": "result--form"
 		});
@@ -82,6 +92,7 @@
 		%render this.renderTitle();
 		%render this.renderContent();
 		%render this.renderButtons();
+		%render this.renderResult();
 	</form>
 </template>
 

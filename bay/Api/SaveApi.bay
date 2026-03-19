@@ -62,7 +62,7 @@ class SaveApi extends BaseApi
 	 */
 	void constructor(Map params = null)
 	{
-		parent();
+		parent(params);
 		
 		/* Create relation */
 		this.relation = new Relation(this.getRecordName());

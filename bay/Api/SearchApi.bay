@@ -55,9 +55,9 @@ class SearchApi extends BaseApi
 	/**
 	 * Constructor
 	 */
-	void constructor()
+	void constructor(Map params = null)
 	{
-		parent();
+		parent(params);
 		this.relation = new Relation(this.getRecordName());
 	}
 	
