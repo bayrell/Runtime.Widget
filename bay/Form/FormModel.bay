@@ -27,7 +27,7 @@ use Runtime.Serializer.ObjectType;
 use Runtime.Widget.ResultModel;
 use Runtime.Widget.Form.FieldErrors;
 use Runtime.Widget.Form.Form;
-use Runtime.Widget.Messages.FormMessage;
+use Runtime.Widget.Form.FormMessage;
 
 
 class FormModel extends BaseModel

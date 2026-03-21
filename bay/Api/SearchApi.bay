@@ -148,7 +148,7 @@ class SearchApi extends BaseApi
 	int getLimit()
 	{
 		int limit = rtl::toInt(this.data.get("limit", 10));
-		if (not rtl::isInteger(limit)) limit = 0;
+		if (not rtl::isInteger(limit) or limit < 0) limit = 0;
 		
 		int max_limit = this.getMaxLimit();
 		if (limit > max_limit and max_limit >= 0) limit = max_limit;

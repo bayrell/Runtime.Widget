@@ -215,7 +215,8 @@ body, html{
 .clear{ clear: both; }
 .hidden{ display: none; }
 .inline-block{ display: inline-block; }
-.scroll-lock{ overflow: hidden; .core_ui_root{ padding-right: 15px; }}
+.scroll-lock{ overflow: hidden; }
+.scroll-padding .root_container{ padding-right: 15px; }
 </style>
 
 

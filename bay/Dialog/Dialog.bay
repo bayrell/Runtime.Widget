@@ -184,12 +184,21 @@ void updated()
 		{
 			body.classList.add("scroll-lock");
 		}
+		bool is_scroll_padding = document.body.scrollHeight > document.body.clientHeight;
+		if (is_scroll_padding)
+		{
+			body.classList.add("scroll-padding");
+		}
 	}
 	else
 	{
 		if (body.classList.contains("scroll-lock"))
 		{
 			body.classList.remove("scroll-lock");
+		}
+		if (body.classList.contains("scroll-padding"))
+		{
+			body.classList.remove("scroll-padding");
 		}
 	}
 }

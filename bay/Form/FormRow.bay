@@ -26,7 +26,7 @@
 	&:last-child{
 		margin-bottom: calc(var(--space) * 2);
 	}
-	label{
+	&__label{
 		display: block;
 		font-weight: bold;
 		margin-bottom: calc(var(--space) * 0.5);
@@ -36,7 +36,7 @@
 
 <template>
 	<div class="form_row" key={{ this.key }}>
-		<label>{{ this.label }}</label>
+		<div class="form_row__label">{{ this.label }}</div>
 		<div class="form_row__content">
 			%render this.renderSlot("default", [this.name, this.field]);
 		</div>

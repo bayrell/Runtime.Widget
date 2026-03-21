@@ -161,6 +161,14 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * After setup data
+	 */
+	void checkData(Vector errors)
+	{
+	}
+	
+	
+	/**
 	 * Set data
 	 */
 	void setData(Map data)
@@ -189,6 +197,9 @@ class SaveApi extends BaseApi
 			BaseRule item = rules.get(i);
 			this.update_data = item.filter(this.update_data, errors);
 		}
+		
+		/* Check data */
+		this.checkData(errors);
 		
 		/* Check error */
 		if (errors.count() > 0)
