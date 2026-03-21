@@ -21,7 +21,9 @@ namespace Runtime.Widget.Table;
 use Runtime.ApiResult;
 use Runtime.BaseModel;
 use Runtime.Serializer.IntegerType;
+use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
+use Runtime.Serializer.StringType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Table.TableModel;
 
@@ -47,6 +49,7 @@ class TableLoader extends BaseModel
 		rules.addType("foreign_key", rules.params ? rules.params.get("foreign_key") : null);
 		rules.addType("page", new IntegerType());
 		rules.addType("limit", new IntegerType());
+		rules.addType("api_params", new MapType(new StringType()));
 	}
 	
 	
