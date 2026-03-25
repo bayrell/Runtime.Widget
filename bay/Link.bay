@@ -20,20 +20,24 @@
 
 
 <template>
-	%set Dict attrs = {};
-	%if (this.target != "")
-	{
-		%set attrs = attrs.set("target", this.target);
-	}
-	<a class={{ this.class }} href={{ this.href }} ...attrs>{{ this.text }}</a>
+	<a class={{ this.class }} href={{ this.href }} ...this.attrs>%render this.renderSlot("default");</a>
 </template>
 
 
 <script>
 
 props string href = "";
-props string text = "";
 props string target = "_self";
+
+/**
+ * Get attrs
+ */
+computed Map attrs()
+{
+	Map attrs = {};
+	if (this.target != "") attrs.set("target", this.target);
+	return attrs;
+}
 
 </script>
 
