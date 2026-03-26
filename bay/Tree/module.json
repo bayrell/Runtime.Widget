@@ -18,7 +18,8 @@
 	"dest":
 	{
 		"php": "./../../php/Tree",
-		"es6": "./../../es6/Tree"
+		"es6": "./../../es6/Tree",
+		"nodejs": "./../../nodejs/Tree"
 	},
 	"allow":
 	[

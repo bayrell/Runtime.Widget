@@ -3,7 +3,6 @@
 	"assets":
 	[
 		"AppHook.bay",
-		"Assets.bay",
 		"BoolEnum.bay",
 		"Button.bay",
 		"CSS.bay",
@@ -35,7 +34,6 @@
 		"UploadFileButton.bay",
 		"Messages/ClickMessage.bay",
 		"Messages/ValueChangeMessage.bay",
-		"Translate/Translator.bay",
 		"ModuleDescription.bay"
 	],
 	"require": [
@@ -100,7 +98,8 @@
 	"dest":
 	{
 		"php": "./php",
-		"es6": "./es6"
+		"es6": "./es6",
+		"nodejs": "./nodejs"
 	},
 	"allow":
 	[

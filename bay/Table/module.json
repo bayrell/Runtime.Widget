@@ -21,7 +21,8 @@
 	"dest":
 	{
 		"php": "./../../php/Table",
-		"es6": "./../../es6/Table"
+		"es6": "./../../es6/Table",
+		"nodejs": "./../../nodejs/Table"
 	},
 	"allow":
 	[

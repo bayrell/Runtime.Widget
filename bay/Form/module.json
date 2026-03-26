@@ -20,7 +20,8 @@
 	"dest":
 	{
 		"php": "./../../php/Form",
-		"es6": "./../../es6/Form"
+		"es6": "./../../es6/Form",
+		"nodejs": "./../../nodejs/Form"
 	},
 	"allow":
 	[

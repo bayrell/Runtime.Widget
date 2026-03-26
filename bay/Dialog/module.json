@@ -20,7 +20,8 @@
 	"dest":
 	{
 		"php": "./../../php/Dialog",
-		"es6": "./../../es6/Dialog"
+		"es6": "./../../es6/Dialog",
+		"nodejs": "./../../nodejs/Dialog"
 	},
 	"allow":
 	[

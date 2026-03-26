@@ -15,7 +15,8 @@
 	"dest":
 	{
 		"php": "./../../php/Sortable",
-		"es6": "./../../es6/Sortable"
+		"es6": "./../../es6/Sortable",
+		"nodejs": "./../../nodejs/Sortable"
 	},
 	"allow":
 	[

@@ -17,7 +17,8 @@
 	"dest":
 	{
 		"php": "./../../php/Tab",
-		"es6": "./../../es6/Tab"
+		"es6": "./../../es6/Tab",
+		"nodejs": "./../../nodejs/Tab"
 	},
 	"allow":
 	[

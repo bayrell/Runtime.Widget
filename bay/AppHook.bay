@@ -39,37 +39,7 @@ class AppHook extends RuntimeHook
 	void register_hooks()
 	{
 		this.register(RuntimeHook::COMPONENTS, "components", 50);
-		this.register(RuntimeHook::CREATE_LAYOUT, "registerTranslator");
-		this.register(WebHook::ROUTE_BEFORE, "registerAssets");
 		this.register(static::INIT_WIDGET, "initWidget");
-	}
-	
-	
-	/**
-	 * Register assets
-	 */
-	async void registerAssets(Map params)
-	{
-		RenderContainer container = params.get("container");
-		BaseLayout layout = container.layout;
-		if (not layout) return;
-		
-		/* Create assets */
-		Assets assets = new Assets();
-		layout.storage.set("assets", assets);
-		
-		/* Init assets */
-		@.hook(static::ASSETS, {"assets": assets});
-	}
-	
-	
-	/**
-	 * Register translator
-	 */
-	void registerTranslator(Map params)
-	{
-		RenderContainer container = params.get("container");
-		container.layout.storage.set("translator", new Translator(container.layout));
 	}
 	
 	
