@@ -28,6 +28,7 @@ use Runtime.Serializer.ObjectType;
 use Runtime.Web.RenderContainer;
 use Runtime.Widget.Dialog.DialogModel;
 use Runtime.Widget.Form.FormModel;
+use Runtime.Widget.Form.FormMessage;
 use Runtime.Widget.Table.TableLoader;
 use Runtime.Widget.Table.TableModel;
 
@@ -144,6 +145,8 @@ class TableManager extends BaseModel
 			"table": this.table,
 		});
 		
+		if (params.has("data_object")) this.form.data_object = params.get("data_object");
+		
 		if (params.has("form_fields")) this.form_fields = params.get("form_fields");
 		if (params.has("table_fields")) this.table_fields = params.get("table_fields");
 		
@@ -158,6 +161,9 @@ class TableManager extends BaseModel
 			if (not field.has("component")) return;
 			this.layout.components.push(field.get("component"));
 		});
+		
+		/* Add listener */
+		this.form.addEventListener("setValue", method this.onFormSetValue);
 	}
 	
 	
@@ -256,6 +262,26 @@ class TableManager extends BaseModel
 	void onDialogHide()
 	{
 		this.dialog_action = "";
+	}
+	
+	
+	/**
+	 * Form set value
+	 */
+	async void onFormSetValue(FormMessage message)
+	{
+		if (message.save_draft)
+		{
+			ApiResult result = await this.layout.sendApi({
+				"api_name": this.api_name,
+				"method_name": "save_draft",
+				"data": {
+					"pk": this.form.pk,
+					"item": this.form.item,
+					"foreign_key": this.foreign_key,
+				},
+			});
+		}
 	}
 	
 	

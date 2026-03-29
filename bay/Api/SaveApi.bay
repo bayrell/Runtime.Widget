@@ -65,7 +65,7 @@ class SaveApi extends BaseApi
 		parent(params);
 		
 		/* Create relation */
-		this.relation = new Relation(this.getRecordName());
+		this.relation = new Relation(static::getRecordName());
 	}
 	
 	
@@ -131,6 +131,12 @@ class SaveApi extends BaseApi
 			throw new ApiError(new FieldException({
 				"error": TypeError::getMap(errors),
 			}));
+		}
+		
+		/* Pk is null */
+		if (!pk)
+		{
+			throw new ApiError(new RuntimeException("Primary key not found"));
 		}
 		
 		return pk;
@@ -313,7 +319,7 @@ class SaveApi extends BaseApi
 		await this.item.save();
 		
 		/* Save after */
-		Vector rules = this.rules();
+		rules = this.rules();
 		for (int i=0; i<rules.count(); i++)
 		{
 			BaseRule rule = rules.get(i);
@@ -341,7 +347,7 @@ class SaveApi extends BaseApi
 		await this.item.delete();
 		
 		/* Delete after */
-		Vector rules = this.rules();
+		rules = this.rules();
 		for (int i=0; i<rules.count(); i++)
 		{
 			BaseRule rule = rules.get(i);

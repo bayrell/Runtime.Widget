@@ -26,4 +26,5 @@ class FormMessage extends Message
 	ApiResult result = null;
 	string key = "";
 	var value = null;
+	bool save_draft = false;
 }

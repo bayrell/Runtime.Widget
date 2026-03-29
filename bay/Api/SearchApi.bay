@@ -58,7 +58,7 @@ class SearchApi extends BaseApi
 	void constructor(Map params = null)
 	{
 		parent(params);
-		this.relation = new Relation(this.getRecordName());
+		this.relation = new Relation(static::getRecordName());
 	}
 	
 	
@@ -202,10 +202,10 @@ class SearchApi extends BaseApi
 		}
 		
 		/* Search */
-		this.items = this.relation.fetchAll(q);
+		this.items = await this.relation.fetchAll(q);
 		
 		/* Search after */
-		Vector rules = this.rules();
+		rules = this.rules();
 		for (int i=0; i<rules.count(); i++)
 		{
 			BaseRule rule = rules.get(i);

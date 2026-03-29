@@ -35,7 +35,7 @@
 </style>
 
 <template>
-	<div class="form_row" key={{ this.key }}>
+	<div class="form_row">
 		<div class="form_row__label">{{ this.label }}</div>
 		<div class="form_row__content">
 			%render this.renderSlot("default", [this.name, this.field]);

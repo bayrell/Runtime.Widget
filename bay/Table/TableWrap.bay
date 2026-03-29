@@ -90,10 +90,13 @@
 	}
 </template>
 
-<template>
-	<div class="table_wrap">
-		%render this.renderTopButtons();
-		%render this.renderFilter();
+<template name="renderTable">
+	%if (this.slot("table"))
+	{
+		%render this.renderSlot("table");
+	}
+	%else
+	{
 		<Table model={{ this.model.table }}>
 			<slot name="header">
 				%for (int i=0; i<this.model.table_fields.count(); i++)
@@ -123,6 +126,14 @@
 				</td></tr>
 			</slot>
 		</Table>
+	}
+</template>
+
+<template>
+	<div class="table_wrap">
+		%render this.renderTopButtons();
+		%render this.renderFilter();
+		%render this.renderTable();
 		%render this.renderDialog();
 	</div>
 </template>
