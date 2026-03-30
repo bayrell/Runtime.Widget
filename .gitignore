@@ -1,3 +1,4 @@
 /es6
 /php
-/nodejs
+/nodejs/*
+!/nodejs/index.js
