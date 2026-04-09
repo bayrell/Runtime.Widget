@@ -30,6 +30,7 @@ class SelectModel extends BaseModel
 	/* Options for select */
 	Vector<Map> options = [];
 	
+	
 	/**
 	 * Serialize object
 	 */
@@ -42,6 +43,7 @@ class SelectModel extends BaseModel
 		}));
 	}
 	
+	
 	/**
 	 * Set options
 	 */
@@ -49,6 +51,7 @@ class SelectModel extends BaseModel
 	{
 		this.options = options;
 	}
+	
 	
 	/**
 	 * Add option
@@ -58,10 +61,24 @@ class SelectModel extends BaseModel
 		this.options.push(option);
 	}
 	
+	
 	/**
 	 * Returns options
 	 */
 	Vector getOptions() => this.options;
+	
+	
+	/**
+	 * Returns value
+	 */
+	string getValue(int id)
+	{
+		Map option = this.options.find(
+			bool (Map item) => item.get("key") == id
+		);
+		return option ? option.get("value") : "";
+	}
+	
 	
 	/**
 	 * Load data

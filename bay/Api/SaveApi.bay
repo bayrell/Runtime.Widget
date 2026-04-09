@@ -48,7 +48,7 @@ class SaveApi extends BaseApi
 	Map original_data = {};
 	Map update_data = {};
 	Map primary_key = null;
-	Map foreign_key = null;
+	Map foreign_key = {};
 	
 	
 	/**
@@ -92,7 +92,7 @@ class SaveApi extends BaseApi
 	/**
 	 * Returns item fields
 	 */
-	Vector getItemFields() => [];
+	Vector getItemFields(string action) => [];
 	
 	
 	/**
@@ -162,7 +162,7 @@ class SaveApi extends BaseApi
 	 */
 	void setForeignKey(Map data)
 	{
-		this.foreign_key = data;
+		this.foreign_key = data ? data : {};
 	}
 	
 	
@@ -233,7 +233,10 @@ class SaveApi extends BaseApi
 		if (pk == null) return;
 		
 		Vector<QueryFilter> filter = this.relation.getPrimaryFilter(pk);
-		Query q = this.relation.select().setFilter(filter).limit(1);
+		Query q = this.relation.select()
+			.fields(this.getItemFields("search"))
+			.setFilter(filter).limit(1)
+		;
 		await this.buildQuery(q);
 		this.item = await this.relation.fetchRecord(q);
 	}
@@ -366,7 +369,7 @@ class SaveApi extends BaseApi
 		{
 			Map item = this.item.getData();
 			item = this.convertItem(item);
-			this.result.data.set("item", item.intersect(this.getItemFields()));
+			this.result.data.set("item", item.intersect(this.getItemFields("convert")));
 		}
 	}
 	

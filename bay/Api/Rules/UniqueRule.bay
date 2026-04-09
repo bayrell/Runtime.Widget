@@ -48,7 +48,7 @@ class UniqueRule extends BaseRule
 			}
 		}
 		
-		Map row = api.relation.fetch(q);
+		Map row = await api.relation.fetch(q);
 		if (row)
 		{
 			Map error = {};

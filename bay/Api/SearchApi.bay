@@ -43,7 +43,7 @@ class SearchApi extends BaseApi
 	Relation relation = null;
 	QueryResult items = null;
 	Map primary_key = null;
-	Map foreign_key = null;
+	Map foreign_key = {};
 	
 	
 	/**
@@ -77,7 +77,7 @@ class SearchApi extends BaseApi
 	/**
 	 * Returns item fields
 	 */
-	Vector getItemFields() => [];
+	Vector getItemFields(string action) => [];
 	
 	
 	/**
@@ -132,7 +132,7 @@ class SearchApi extends BaseApi
 	 */
 	void setForeignKey(Map foreign_key)
 	{
-		this.foreign_key = foreign_key;
+		this.foreign_key = foreign_key ? foreign_key : {};
 	}
 	
 	
@@ -182,12 +182,28 @@ class SearchApi extends BaseApi
 	
 	
 	/**
+	 * Before search
+	 */
+	async void onSearchBefore()
+	{
+	}
+	
+	
+	/**
+	 * After search
+	 */
+	async void onSearchAfter()
+	{
+	}
+	
+	
+	/**
 	 * Search items
 	 */
 	async void search()
 	{
 		/* Build query */
-		Query q = this.relation.select();
+		Query q = this.relation.select().fields(this.getItemFields("search"));
 		q.limit(this.getLimit());
 		q.page(this.getPage());
 		q.calcFoundRows();
@@ -201,6 +217,8 @@ class SearchApi extends BaseApi
 			await rule.onSearchBefore(this, q);
 		}
 		
+		await this.onSearchBefore();
+		
 		/* Search */
 		this.items = await this.relation.fetchAll(q);
 		
@@ -211,6 +229,8 @@ class SearchApi extends BaseApi
 			BaseRule rule = rules.get(i);
 			await rule.onSearchAfter(this);
 		}
+		
+		await this.onSearchAfter();
 	}
 	
 	
@@ -223,7 +243,7 @@ class SearchApi extends BaseApi
 		{
 			this.result.data.set("items", this.items.map(Map (Map data){
 				data = this.convertItem(data);
-				return data.intersect(this.getItemFields());
+				return data.intersect(this.getItemFields("convert"));
 			}));
 			this.result.data.set("count", this.items.getCount());
 			this.result.data.set("limit", this.items.getLimit());
@@ -236,7 +256,7 @@ class SearchApi extends BaseApi
 			if (data)
 			{
 				data = this.convertItem(data);
-				data = data.intersect(this.getItemFields());
+				data = data.intersect(this.getItemFields("convert"));
 			}
 			this.result.data.set("item", data);
 		}
