@@ -29,6 +29,7 @@ use Runtime.Widget.Api.Rules.BaseRule;
 class UniqueRule extends BaseRule
 {
 	string field_name = "";
+	Vector key = null;
 	
 	
 	/**
@@ -36,9 +37,21 @@ class UniqueRule extends BaseRule
 	 */
 	async void onSaveBefore(SaveApi api)
 	{
+		string field_name = this.field_name;
+		Vector key = this.key
+		if (not key)
+		{
+			key = [field_name];
+		}
+		
 		Vector keys = api.relation.getPrimaryKeys();
-		Query q = api.relation.select(keys)
-			.where(this.field_name, "=", api.item.get(this.field_name));
+		Query q = api.relation.select(keys);
+		
+		for (string name in key)
+		{
+			q.where(name, "=", api.item.get(name));
+		}
+		
 		if (api.item.isUpdate())
 		{
 			Map pk = api.relation.getPrimaryKey(api.item.old());

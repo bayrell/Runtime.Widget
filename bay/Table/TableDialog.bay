@@ -47,18 +47,18 @@
 		%set string action = this.manager.getDialogAction();
 		%if (action == "add")
 		{
-			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 			<Button @event:click="this.manager.onSave()" class="button--primary">Create</Button>
+			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 		}
 		%else if (action == "edit")
 		{
-			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 			<Button @event:click="this.manager.onSave()" class="button--primary">Save</Button>
+			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 		}
 		%else if (action == "delete")
 		{
-			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 			<Button @event:click="this.manager.onDelete()" class="button--danger">Delete</Button>
+			<Button @event:click="this.manager.dialog.hide()">Cancel</Button>
 		}
 	</div>
 </template>

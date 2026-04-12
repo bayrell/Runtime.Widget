@@ -20,6 +20,7 @@ namespace Runtime.Widget.Api;
 
 use Runtime.Exceptions.ApiError;
 use Runtime.Exceptions.FieldException;
+use Runtime.Exceptions.ItemNotFound;
 use Runtime.Exceptions.RuntimeException;
 use Runtime.Serializer.BaseType;
 use Runtime.Serializer.IntegerType;
@@ -175,7 +176,6 @@ class SearchApi extends BaseApi
 	{
 		if (this.isItem())
 		{
-			q.addFilter(this.relation.getPrimaryFilter(this.primary_key));
 			q.limit(1);
 		}
 	}
@@ -186,6 +186,12 @@ class SearchApi extends BaseApi
 	 */
 	async void onSearchBefore()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSearchBefore(this);
+		}
 	}
 	
 	
@@ -194,6 +200,12 @@ class SearchApi extends BaseApi
 	 */
 	async void onSearchAfter()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSearchAfter(this);
+		}
 	}
 	
 	
@@ -203,33 +215,20 @@ class SearchApi extends BaseApi
 	async void search()
 	{
 		/* Build query */
-		Query q = this.relation.select().fields(this.getItemFields("search"));
+		Query q = this.relation.select()
+			.fields(this.getItemFields("search"));
 		q.limit(this.getLimit());
 		q.page(this.getPage());
 		q.calcFoundRows();
 		await this.buildQuery(q);
 		
 		/* Search before */
-		Vector rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onSearchBefore(this, q);
-		}
-		
 		await this.onSearchBefore();
 		
 		/* Search */
 		this.items = await this.relation.fetchAll(q);
 		
 		/* Search after */
-		rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onSearchAfter(this);
-		}
-		
 		await this.onSearchAfter();
 	}
 	
@@ -253,11 +252,12 @@ class SearchApi extends BaseApi
 		else if (this.isItem() and this.items)
 		{
 			Map data = this.items.get(0);
-			if (data)
+			if (not data)
 			{
-				data = this.convertItem(data);
-				data = data.intersect(this.getItemFields("convert"));
+				throw new ApiError(new ItemNotFound("Item"));
 			}
+			data = this.convertItem(data);
+			data = data.intersect(this.getItemFields("convert"));
 			this.result.data.set("item", data);
 		}
 	}
@@ -313,10 +313,6 @@ class SearchApi extends BaseApi
 		
 		/* Filter data */
 		this.filterData();
-		
-		/* Set primary key */
-		Map pk = this.request.get("pk");
-		this.setPrimaryKey(pk);
 		
 		/* Set foreign key */
 		this.setForeignKey(this.data.get("foreign_key"));

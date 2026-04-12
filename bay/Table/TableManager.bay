@@ -144,6 +144,7 @@ class TableManager extends BaseModel
 			"page_name": this.page_name,
 			"table": this.table,
 		});
+		this.loader.table = this.table;
 		
 		if (params.has("data_object")) this.form.data_object = params.get("data_object");
 		
@@ -300,15 +301,9 @@ class TableManager extends BaseModel
 	async void onSave()
 	{
 		this.form.setWaitMessage();
-		ApiResult result = await this.layout.sendApi({
-			"api_name": this.api_name,
-			"method_name": "save",
-			"data": {
-				"pk": this.form.pk,
-				"item": this.form.item,
-				"foreign_key": this.foreign_key,
-			},
-		});
+		ApiResult result = await this.loader.save(
+			this.form.pk, this.form.item
+		)
 		this.form.setApiResult(result);
 		if (result.isSuccess())
 		{
@@ -324,14 +319,9 @@ class TableManager extends BaseModel
 	async void onDelete()
 	{
 		this.form.setWaitMessage();
-		ApiResult result = await this.layout.sendApi({
-			"api_name": this.api_name,
-			"method_name": "delete",
-			"data": {
-				"pk": this.form.pk,
-				"foreign_key": this.foreign_key,
-			},
-		});
+		ApiResult result = await this.loader.delete(
+			this.form.pk
+		);
 		this.form.setApiResult(result);
 		if (result.isSuccess())
 		{

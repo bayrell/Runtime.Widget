@@ -70,6 +70,24 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Returns true if create
+	 */
+	bool isCreate()
+	{
+		if (this.action != "save") return false;
+		Map pk = this.request.get("pk");
+		return pk == null;
+	}
+	
+	
+	/**
+	 * Returns true if update
+	 */
+	bool isUpdate() => not this.isCreate() and
+		this.action == "save";
+	
+	
+	/**
 	 * Returns save rules
 	 */
 	Vector<BaseRule> rules() => [];
@@ -271,6 +289,12 @@ class SaveApi extends BaseApi
 	 */
 	async void onSaveBefore()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSaveBefore(this);
+		}
 	}
 	
 	
@@ -279,6 +303,12 @@ class SaveApi extends BaseApi
 	 */
 	async void onSaveAfter()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onSaveAfter(this);
+		}
 	}
 	
 	
@@ -287,6 +317,12 @@ class SaveApi extends BaseApi
 	 */
 	async void onDeleteBefore()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onDeleteBefore(this);
+		}
 	}
 	
 	
@@ -295,6 +331,12 @@ class SaveApi extends BaseApi
 	 */
 	async void onDeleteAfter()
 	{
+		Vector rules = this.rules();
+		for (int i=0; i<rules.count(); i++)
+		{
+			BaseRule rule = rules.get(i);
+			await rule.onDeleteAfter(this);
+		}
 	}
 	
 	
@@ -306,28 +348,17 @@ class SaveApi extends BaseApi
 		/* Set items */
 		Vector save_fields = this.getSaveFields();
 		Map save_data = not save_fields ?
-			this.update_data.copy() : this.update_data.intersect(save_fields);
+			this.update_data.copy() :
+			this.update_data.intersect(save_fields);
 		this.item.assign(save_data);
 		
 		/* Save before */
-		Vector rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onSaveBefore(this);
-		}
 		await this.onSaveBefore();
 		
 		/* Save item */
 		await this.item.save();
 		
 		/* Save after */
-		rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onSaveAfter(this);
-		}
 		await this.onSaveAfter();
 	}
 	
@@ -337,25 +368,10 @@ class SaveApi extends BaseApi
 	 */
 	async void delete()
 	{
-		/* Delete before */
-		Vector rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onDeleteBefore(this);
-		}
 		await this.onDeleteBefore();
 		
 		/* Delete item */
 		await this.item.delete();
-		
-		/* Delete after */
-		rules = this.rules();
-		for (int i=0; i<rules.count(); i++)
-		{
-			BaseRule rule = rules.get(i);
-			await rule.onDeleteAfter(this);
-		}
 		await this.onDeleteAfter();
 	}
 	

@@ -36,6 +36,7 @@ class FormModel extends BaseModel
 	string data_object = "";
 	Map pk = null;
 	Map item = {};
+	Vector fields = [];
 	Map field_errors = null;
 	ResultModel result = null;
 	BaseType primary_rules = null;
@@ -66,6 +67,7 @@ class FormModel extends BaseModel
 		parent(params);
 		
 		if (params.has("data_object")) this.data_object = params.get("data_object");
+		if (params.has("fields")) this.fields = params.get("fields");
 	}
 	
 	

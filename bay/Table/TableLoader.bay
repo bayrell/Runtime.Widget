@@ -34,6 +34,8 @@ class TableLoader extends BaseModel
 	Map foreign_key = null;
 	string api_name = "";
 	string method_name = "search";
+	string save_method_name = "save";
+	string delete_method_name = "delete";
 	string page_name = "page";
 	int page = 0;
 	int limit = 10;
@@ -63,6 +65,8 @@ class TableLoader extends BaseModel
 		if (params.has("foreign_key")) this.foreign_key = params.get("foreign_key");
 		if (params.has("api_name")) this.api_name = params.get("api_name");
 		if (params.has("method_name")) this.method_name = params.get("method_name");
+		if (params.has("save_method_name")) this.save_method_name = params.get("save_method_name");
+		if (params.has("delete_method_name")) this.delete_method_name = params.get("delete_method_name");
 		if (params.has("page_name")) this.page_name = params.get("page_name");
 		if (params.has("page")) this.page = params.get("page");
 		if (params.has("limit")) this.limit = params.get("limit");
@@ -120,5 +124,40 @@ class TableLoader extends BaseModel
 			this.table.setItems(api_result.data.get("items"));
 		}
 		return api_result;
+	}
+	
+	
+	/**
+	 * Save
+	 */
+	async ApiResult save(Map pk, Map item)
+	{
+		ApiResult result = await this.layout.sendApi({
+			"api_name": this.api_name,
+			"method_name": this.save_method_name,
+			"data": {
+				"pk": pk,
+				"item": item,
+				"foreign_key": this.foreign_key,
+			}
+		});
+		return result;
+	}
+	
+	
+	/**
+	 * Delete
+	 */
+	async ApiResult delete(Map pk)
+	{
+		ApiResult result = await this.layout.sendApi({
+			"api_name": this.api_name,
+			"method_name": this.delete_method_name,
+			"data": {
+				"pk": pk,
+				"foreign_key": this.foreign_key,
+			}
+		});
+		return result;
 	}
 }
