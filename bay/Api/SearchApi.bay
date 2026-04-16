@@ -215,12 +215,11 @@ class SearchApi extends BaseApi
 	 */
 	async void search()
 	{
-		/* Build query */
+		/* Create query */
 		Query q = this.relation.select();
 		q.limit(this.getLimit());
 		q.page(this.getPage());
 		q.calcFoundRows();
-		await this.buildQuery(q);
 		
 		/* Build fields */
 		Vector fields = this.getItemFields("search")
@@ -236,6 +235,9 @@ class SearchApi extends BaseApi
 				return field;
 			});
 		q.fields(fields);
+		
+		/* Build query */
+		await this.buildQuery(q);
 		
 		/* Search before */
 		await this.onSearchBefore();
