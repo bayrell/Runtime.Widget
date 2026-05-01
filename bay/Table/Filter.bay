@@ -63,6 +63,24 @@
 }
 </style>
 
+<template name="renderSearchButtons">
+	%if (this.slot("buttons"))
+	{
+		%render this.renderSlot("buttons");
+	}
+	%else
+	{
+		<div class="table_filter__search">
+			<Button
+				class="button--primary"
+				@event:click="this.onSearchClick()"
+			>
+				{{ this.translate("search") }}
+			</Button>
+		</div>
+	}
+</template>
+
 <template>
 	<div class="table_filter">
 		<!-- Filter Header -->
@@ -94,14 +112,7 @@
 		}
 
 		<!-- Search Button -->
-		<div class="table_filter__search">
-			<Button
-				class="button--primary"
-				@event:click="this.onSearchClick()"
-			>
-				{{ this.translate("search") }}
-			</Button>
-		</div>
+		%render this.renderSearchButtons();
 	</div>
 </template>
 
