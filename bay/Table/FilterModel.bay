@@ -52,7 +52,8 @@ class FilterModel extends BaseModel
 			{
 				string key = field.get("name");
 				string field_type = field.get("type");
-				if (field_type == "date") params.set(key, new DateTimeType());
+				if (field_type == "array") params.set(key, new VectorType(new StringType()));
+				else if (field_type == "date") params.set(key, new DateTimeType());
 				else if (field_type == "date_range") params.set(key, new ObjectType{ "class_name": classof DateRange });
 				else params.set(key, new StringType());
 			}
@@ -108,7 +109,12 @@ class FilterModel extends BaseModel
 			
 			string value = data.get(key);
 			string field_type = field.get("type");
-			if (field_type == "date")
+			if (field_type == "array")
+			{
+				if (format == "item") value = rs::split(",", value).map(string (string s) => rs::trim(s)).filter(bool (string s) => s != "");
+				else value = rs::join(",", value);
+			}
+			else if (field_type == "date")
 			{
 				if (format == "item") value = DateTime::create(value);
 				else value = value ? value.getDate() : "";
