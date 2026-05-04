@@ -54,7 +54,15 @@
 			model={{ this.model.dialog }} manager={{ this.model }}
 		>
 			<slot name="save">
-				<Form fields={{ this.model.form_fields }} model={{ this.model.form }} />
+				%if (this.slot("form"))
+				{
+					%render this.renderSlot("form");
+				}
+				%else
+				{
+					<Form fields={{ this.model.form_fields }}
+						model={{ this.model.form }} />
+				}
 			</slot>
 		</TableDialog>
 	}
