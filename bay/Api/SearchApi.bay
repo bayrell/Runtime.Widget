@@ -215,6 +215,9 @@ class SearchApi extends BaseApi
 	 */
 	async void search()
 	{
+		/* Search before */
+		await this.onSearchBefore();
+		
 		/* Create query */
 		Query q = this.relation.select();
 		q.limit(this.getLimit());
@@ -238,9 +241,6 @@ class SearchApi extends BaseApi
 		
 		/* Build query */
 		await this.buildQuery(q);
-		
-		/* Search before */
-		await this.onSearchBefore();
 		
 		/* Search */
 		this.items = await this.relation.fetchAll(q);
