@@ -53,8 +53,17 @@ class FormModel extends BaseModel
 		rules.addType("item", rules.params ? rules.params.get("item_rules") : null);
 		rules.addType("result", new ObjectType{"class_name": classof ResultModel});
 		rules.setup.add(void (FormModel model, ObjectType rules){
-			model.primary_rules = rules.params ? rules.params.get("primary_rules") : null;
-			model.item_rules = rules.params ? rules.params.get("item_rules") : null;
+			if (not rules.params) return;
+			if (rules.params.has("primary_rules"))
+			{
+				model.primary_rules = rules.params
+					.get("primary_rules");
+			}
+			if (rules.params.has("item_rules"))
+			{
+				model.item_rules = rules.params
+					.get("item_rules");
+			}
 		});
 	}
 	
@@ -67,6 +76,7 @@ class FormModel extends BaseModel
 		parent(params);
 		
 		if (params.has("data_object")) this.data_object = params.get("data_object");
+		if (params.has("primary_rules")) this.primary_rules = params.get("primary_rules");
 		if (params.has("fields")) this.fields = params.get("fields");
 	}
 	
@@ -82,6 +92,15 @@ class FormModel extends BaseModel
 			"error_name": "fields",
 		});
 		this.result = this.createWidget(classof ResultModel);
+		
+		/* Add fields components */
+		this.fields.each(void (Map field){
+			string component = field.get("component");
+			if (component)
+			{
+				this.layout.addComponent(component);
+			}
+		});
 	}
 	
 	
