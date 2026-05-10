@@ -50,18 +50,21 @@
 		{
 			%set Map field = this.fields.get(i);
 			%set string name = field.get("name");
-			<FormRow label={{ field.get("label") }} key={{ name }}
-				name={{ name }} field={{ field }}
-				result={{ this.model.getResult(name) }}
-			>
-				<slot name="default" args="string name, Map field">
-					%set string component = field.get("component");
-					%set Map props = field.get("props");
-					%if (not props){ %set props = {}; }
-					<{component} name={{ name }} value={{ this.getValue(field) }}
-						@event:valueChange="this.setValue(field, event.value)" ...props />
-				</slot>
-			</FormRow>
+			%if (this.isVisible(field))
+			{
+				<FormRow label={{ field.get("label") }} key={{ name }}
+					name={{ name }} field={{ field }}
+					result={{ this.model.getResult(name) }}
+				>
+					<slot name="default" args="string name, Map field">
+						%set string component = field.get("component");
+						%set Map props = field.get("props");
+						%if (not props){ %set props = {}; }
+						<{component} name={{ name }} value={{ this.getValue(field) }}
+							@event:valueChange="this.setValue(field, event.value)" ...props />
+					</slot>
+				</FormRow>
+			}
 		}
 		</div>
 	}
@@ -131,6 +134,20 @@ void setValue(Map field, var value)
 		string name = field.get("name");
 		this.model.setValue(name, value);
 	}
+}
+
+
+/**
+ * Returns true if visible
+ */
+bool isVisible(Map field)
+{
+	if (not field.has("visible")) return true;
+	
+	fn visible = field.get("visible");
+	if (rtl::isFunction(visible)) return visible(this.model.item, field);
+	
+	return visible;
 }
 
 </script>

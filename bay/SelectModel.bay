@@ -19,6 +19,7 @@
 namespace Runtime.Widget;
 
 use Runtime.BaseModel;
+use Runtime.Serializer.BaseType;
 use Runtime.Serializer.MapType;
 use Runtime.Serializer.ObjectType;
 use Runtime.Serializer.StringType;
@@ -29,6 +30,7 @@ class SelectModel extends BaseModel
 {
 	/* Options for select */
 	Vector<Map> options = [];
+	Map options_type = {};
 	
 	
 	/**
@@ -41,6 +43,26 @@ class SelectModel extends BaseModel
 			"key": new StringType(),
 			"value": new StringType(),
 		}));
+		rules.setup.add(void (SelectModel model, ObjectType rules){
+			model.options_type.each(void (BaseType rule, string key){
+				MapType item = rules.items
+					.get("options").get(0).fields.get(0);
+				item.addType(key, rule);
+			});
+		});
+	}
+	
+	
+	/**
+	 * Init params
+	 */
+	void initParams(Map params)
+	{
+		parent(params);
+		
+		if (not params) return;
+		if (params.has("options_type"))
+			this.options_type = params.get("options_type");
 	}
 	
 	
@@ -77,6 +99,17 @@ class SelectModel extends BaseModel
 			bool (Map item) => item.get("key") == id
 		);
 		return option ? option.get("value") : "";
+	}
+	
+	
+	/**
+	 * Returns option
+	 */
+	Map getOption(int id)
+	{
+		return this.options.find(
+			bool (Map item) => item.get("key") == id
+		);
 	}
 	
 	
