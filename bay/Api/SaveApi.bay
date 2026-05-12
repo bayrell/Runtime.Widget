@@ -391,6 +391,26 @@ class SaveApi extends BaseApi
 	
 	
 	/**
+	 * Find item
+	 */
+	async Record find()
+	{
+		/* Set primary key */
+		Map pk = this.request.get("pk");
+		this.setPrimaryKey(pk);
+		
+		/* Set foreign key */
+		this.setForeignKey(this.data.get("foreign_key"));
+		
+		/* Find item */
+		await this.findItem(pk);
+		
+		/* Returns item */
+		return this.item;
+	}
+	
+	
+	/**
 	 * Save form
 	 */
 	async void actionSave()
