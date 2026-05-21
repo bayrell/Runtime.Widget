@@ -177,6 +177,7 @@ class SearchApi extends BaseApi
 	{
 		if (this.isItem())
 		{
+			q.addFilter(this.relation.getPrimaryFilter(this.primary_key));
 			q.limit(1);
 		}
 	}
@@ -333,6 +334,10 @@ class SearchApi extends BaseApi
 		
 		/* Set foreign key */
 		this.setForeignKey(this.data.get("foreign_key"));
+		
+		/* Set primary key */
+		Map pk = this.request.data.get("pk");
+		this.setPrimaryKey(pk);
 		
 		/* Search */
 		await this.search();

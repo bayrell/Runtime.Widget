@@ -29,7 +29,6 @@ use Runtime.Widget.Translate.Translator;
 
 class AppHook extends RuntimeHook
 {
-	const string ASSETS = "runtime.widget::assets";
 	const string INIT_WIDGET = "baylang::init_widget";
 	
 	
