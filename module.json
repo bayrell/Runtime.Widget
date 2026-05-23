@@ -2,6 +2,7 @@
 	"name": "Runtime.Widget",
 	"assets":
 	[
+		"Accordion.bay",
 		"AppHook.bay",
 		"BoolEnum.bay",
 		"Button.bay",
@@ -23,7 +24,9 @@
 		"Section.bay",
 		"Select.bay",
 		"SelectModel.bay",
-		"SelectLabel.bay",
+		"SelectText.bay",
+		"Slider.bay",
+		"SliderItem.bay",
 		"SortableList.bay",
 		"SortableFieldList.bay",
 		"Tag.bay",

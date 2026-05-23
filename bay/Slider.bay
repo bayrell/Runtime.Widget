@@ -1,0 +1,128 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+<class name="Runtime.Widget.Slider">
+
+<use name="Runtime.Widget.Button" component="true" />
+<use name="Runtime.Widget.SliderItem" component="true" />
+
+<style>
+.slider {
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+}
+
+.slider__slides {
+	display: flex;
+	transition: transform 0.5s ease-in-out;
+}
+
+.slider__slide {
+	min-width: 100%;
+	box-sizing: border-box;
+}
+
+.slider__controls {
+	display: flex;
+	justify-content: center;
+	gap: var(--space);
+	margin-top: var(--space);
+}
+
+.slider__button {
+	cursor: pointer;
+}
+
+/* Стили для слайдов */
+.slide__content {
+	max-width: 100%;
+}
+
+.slide__title {
+	font-size: var(--font-size-h2);
+	margin-bottom: var(--space);
+	color: var(--color-heading-text);
+}
+
+.slide__text {
+	font-size: var(--font-size);
+	color: var(--color-text);
+}
+
+.slide__image {
+	max-width: 100%;
+	height: auto;
+	border-radius: var(--border-radius);
+}
+</style>
+
+<template>
+	<div class="slider" ref="slider">
+		<div class="slider__slides" style="transform: translateX(-{{ this.currentIndex * 100 }}%)">
+			%render this.renderDefault("default");
+		</div>
+		<div class="slider__controls">
+			<Button
+				class="slider__button slider__button--prev"
+				@click="prevSlide"
+			>Prev</Button>
+			<Button
+				class="slider__button slider__button--next"
+				@click="nextSlide"
+			>Next</Button>
+		</div>
+	</div>
+</template>
+
+<script>
+int currentIndex = 0;
+props Vector slides = [];
+
+computed int slidesCount()
+{
+	var slider = this.getRef("slider");
+	return slider.querySelectorAll(".slider_item").length;
+}
+
+void nextSlide()
+{
+	if (this.currentIndex < this.slidesCount - 1)
+	{
+		this.currentIndex++;
+	}
+	else
+	{
+		this.currentIndex = 0;
+	}
+}
+
+void prevSlide()
+{
+	if (this.currentIndex > 0)
+	{
+		this.currentIndex--;
+	}
+	else
+	{
+		this.currentIndex = this.slidesCount - 1;
+	}
+}
+</script>
+
+</class>

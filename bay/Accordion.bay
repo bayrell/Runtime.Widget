@@ -1,0 +1,141 @@
+/*!
+ *  BayLang Technology
+ *
+ *  (c) Copyright 2016-2025 "Ildar Bikmamatov" <support@bayrell.org>
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+<class name="Runtime.Widget.Accordion">
+
+<style>
+.accordion {
+	border: 1px solid var(--color-border);
+	border-radius: var(--border-radius);
+	overflow: hidden;
+}
+
+.accordion__item {
+	border-bottom: 1px solid var(--color-border);
+}
+
+.accordion__item:last-child {
+	border-bottom: none;
+}
+
+.accordion__header {
+	padding: var(--space);
+	background: var(--color-surface);
+	cursor: pointer;
+	font-weight: bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.accordion__header:hover {
+	background: var(--color-default-hover);
+}
+
+.accordion__content {
+	padding: var(--space);
+	background: var(--color-background);
+	display: block;
+	height: 0;
+	overflow: hidden;
+	transition: height var(--transition-type) var(--transition);
+}
+
+.accordion__content.open {
+	height: auto;
+}
+</style>
+
+<template>
+	<div class="accordion" ref="accordion">
+		%for (Map item in this.items)
+		{
+			<div class="accordion__item">
+				<div class="accordion__header" @event:click="this.toggle(item, event)">
+					{{ item.title }}
+					<span>{{ this.isOpen(item) ? '-' : '+' }}</span>
+				</div>
+				<div class="accordion__content" class={{ this.isOpen(item) ? "open" : "" }}>
+					<div class="value">{{ item.content }}</div>
+				</div>
+			</div>
+		}
+	</div>
+</template>
+
+<script>
+props Vector<Map> items = [];
+props bool multiple = false;
+Vector<String> open_ids = [];
+
+bool isOpen(Map item)
+{
+	return this.open_ids.indexOf(item.id) >= 0;
+}
+
+void mounted()
+{
+	var accordion = this.getRef("accordion");
+	var items = accordion.querySelectorAll(".accordion__content");
+	for (int i=0; i<items.length; i++)
+	{
+		var elem = items[i];
+		elem.styleHeight = elem.scrollHeight;
+	}
+}
+
+void toggle(Map item, var event)
+{
+	bool is_open = this.isOpen(item);
+	if (is_open)
+	{
+		if (this.multiple)
+		{
+			int index = this.open_ids.indexOf(item.id);
+			if (index >= 0)
+			{
+				this.open_ids.splice(index, 1);
+			}
+		}
+		else
+		{
+			this.open_ids = [];
+		}
+	}
+	else
+	{
+		if (this.multiple)
+		{
+			this.open_ids.push(item.id);
+		}
+		else
+		{
+			this.open_ids = [item.id];
+		}
+	}
+	
+	var elem = event.currentTarget.parentElement.querySelector(".accordion__content");
+	if (is_open) elem.style.height = elem.styleHeight;
+	else elem.style.height = 0;
+	
+	event.preventDefault();
+	event.stopPropagation();
+}
+</script>
+
+</class>
