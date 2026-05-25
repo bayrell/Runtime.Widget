@@ -31,22 +31,34 @@
 .slider__slides {
 	display: flex;
 	transition: transform 0.5s ease-in-out;
-}
-
-.slider__slide {
-	min-width: 100%;
-	box-sizing: border-box;
-}
-
-.slider__controls {
-	display: flex;
-	justify-content: center;
-	gap: var(--space);
-	margin-top: var(--space);
+	
+	.slider_item{
+		min-width: 100%;
+	}
 }
 
 .slider__button {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	position: absolute;
 	cursor: pointer;
+	background-color: var(--color-primary);
+	border-radius: 50%;
+	top: calc(50% - 19px);
+	width: 39px;
+	height: 39px;
+	svg{
+		color: var(--color-primary-text);
+	}
+}
+
+.slider__button--prev{
+	left: 0px;
+}
+
+.slider__button--next{
+	right: 0;
 }
 
 /* Стили для слайдов */
@@ -74,18 +86,20 @@
 
 <template>
 	<div class="slider" ref="slider">
-		<div class="slider__slides" style="transform: translateX(-{{ this.currentIndex * 100 }}%)">
-			%render this.renderDefault("default");
+		<div class="slider__slides" style={{ "transform: translateX(" ~ - this.currentIndex * 100 ~ "%)" }}>
+			%render this.renderSlot("default");
 		</div>
-		<div class="slider__controls">
-			<Button
-				class="slider__button slider__button--prev"
-				@click="prevSlide"
-			>Prev</Button>
-			<Button
-				class="slider__button slider__button--next"
-				@click="nextSlide"
-			>Next</Button>
+		<div
+			class="slider__button slider__button--prev"
+			@event:click="this.prevSlide()"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-left"><polyline points="15 18 9 12 15 6"></polyline></svg>
+		</div>
+		<div
+			class="slider__button slider__button--next"
+			@event:click="this.nextSlide()"
+		>
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-chevron-right"><polyline points="9 18 15 12 9 6"></polyline></svg>
 		</div>
 	</div>
 </template>
